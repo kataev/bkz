@@ -1,0 +1,42 @@
+<div dojoType="dijit.layout.BorderContainer">
+    <div dojoType="dijit.MenuBar" region='top'>
+        <div dojoType="dijit.PopupMenuBarItem">
+        <span>
+            Создать
+        </span>
+
+            <div dojoType="dijit.Menu">
+                <div data-dojo-type="dijit.MenuItem">
+                    Накладную
+                </div>
+                <div data-dojo-type="dijit.MenuItem">
+                    Кирпич
+                </div>
+            </div>
+        </div>
+        <div dojoType="dijit.MenuBarItem" iconClass="dijitEditorIcon dijitEditorIconCut">
+        <span>
+            Save
+        </span>
+        </div>
+    </div>
+    <div dojoType="dijit.layout.ContentPane" region='center'>
+        <form action="{{ url }}" method="{{ method }}" data-dojo-type='dijit.form.Form'>
+                <ul>
+                    {% for field in form %}
+                        {% if field.name == 'transfers' or field.name == 'solds' %}
+
+                        {% else %}
+                            <li>
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+{#                    <li class='subm'>#}
+{#                        <button data-dojo-type="dijit.form.Button" type='submit'>Сохранить и продолжить</button>#}
+{#                    </li>#}
+                </ul>
+        </form>
+    </div>
+</div>

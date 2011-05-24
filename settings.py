@@ -1,4 +1,4 @@
-# Django settings for whs project.
+# -*- coding: utf-8 -*-
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,10 +11,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'whs',                      # Or path to database file if using sqlite3.
-        'USER': 'kd',                      # Not used with sqlite3.
-        'PASSWORD': '89026441284',                  # Not used with sqlite3.
+        'USER': 'django',                      # Not used with sqlite3.
+        'PASSWORD': 'django',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -45,7 +45,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/home/whs/kd/media/'
+MEDIA_ROOT = '/home/django/whs/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -56,7 +56,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/home/kd/whs/static/'
+STATIC_ROOT = '/home/django/whs/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -69,7 +69,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/kd/whs/static/',
+    '/home/django/whs/static/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -96,7 +96,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'whs.urls'
 
 TEMPLATE_DIRS = (
-    '/home/kd/whs/templates/'
+    '/home/django/whs/templates/'
 )
 
 INSTALLED_APPS = (
@@ -117,6 +117,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'dojango',
+    'whs.bricks',
+    'whs.main',
+    'whs.bills',
+
 )
 
 # A sample logging configuration. The only tangible logging

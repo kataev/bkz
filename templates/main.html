@@ -1,0 +1,127 @@
+<html>
+<head>
+    <title></title>
+    <style>
+        @import "http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/claro/claro.css";
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0; /*font-size: 10px;*/
+            font: 12px Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+            *font-size: 75%;
+        }
+
+        h1 {
+            font-size: 10%;
+        }
+
+        li {
+            padding-bottom: 2px;
+            padding-top: 2px; /*width: 300px;*/
+        }
+
+        li.subm {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input {
+            width: 100px;
+        }
+
+        label {
+            width: 120px;
+            float: left;
+            text-align: right;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        ul {
+            list-style-type: none; /*width: 500px;*/
+            padding-left: 0px;
+            margin-left: 0px;
+        }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js.uncompressed.js"
+            djConfig="parseOnLoad: true,locale: 'ru'">
+    </script>
+    <script type="text/javascript">
+        dojo.require("dijit.layout.BorderContainer");
+        dojo.require("dijit.layout.TabContainer");
+        dojo.require("dijit.layout.ContentPane");
+//        dojo.require("dijit.Dialog");
+        dojo.require("dojo.data.ItemFileReadStore");
+        dojo.require("dijit.MenuBar");
+        dojo.require("dijit.PopupMenuBarItem");
+        dojo.require("dijit.Menu");
+        dojo.require("dijit.MenuItem");
+        dojo.require("dijit.PopupMenuItem");
+        dojo.require('dijit.form.ValidationTextBox');
+        dojo.require('dijit.form.DateTextBox');
+        dojo.require('dijit.form.NumberTextBox');
+        dojo.require('dijit.form.Form');
+        dojo.require('dijit.form.Button');
+        dojo.require('dijit.form.Select');
+        dojo.require('dijit.form.MultiSelect');
+        //        dojo.require("dijit.layout.StackContainer");
+        dojo.require("dijit.form.Button");
+        //        dojo.require("dojo.parser");
+
+        dojo.addOnLoad(function(){
+           dojo.query('.menuCreate .dijitMenuItemLabel').connect('onclick',function(evt){
+               var form = dojo.xhrGet({url:'./form/'+ dijit.getEnclosingWidget(evt.srcElement).modelName + '/',handleAs:'json'})
+               form.then(function(data){
+//                   console.log(data);
+                   var div = dojo.create('div',{innerHTML:data.html})
+                   dojo.query('.helptext',div).style({display:'none'})
+                   dojo.query('*',div).removeAttr('id');
+                   var contentPane = new dijit.layout.ContentPane({title:data.title,style:'padding:0px;',closable:true},div);
+//                   var contentPane = dijit.byNode(cont.children[0])
+//                   dojo.parser.parse(contentPane.domNode);
+                   var border=dijit.byNode(dojo.query('.dijitBorderContainer',contentPane.domNode)[0])
+                   console.log('border',border,'content',contentPane);
+                   dijit.byId('TabContainer').addChild(contentPane);
+               });
+            dojo.connect(dijit.byId('TabContainer'),"removeChild",function(child){
+                console.log("just removed: ", child);
+                child.destroyRecursive();
+                console.log("destroyed");
+                });
+
+
+           });
+        });
+
+    </script>
+</head>
+<body class="claro">
+<div dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%;">
+    <div dojoType="dijit.MenuBar" region='top'>
+        <div dojoType="dijit.PopupMenuBarItem">
+        <span>
+            Создать
+        </span>
+            <div dojoType="dijit.Menu" class='menuCreate'>
+                <div data-dojo-type="dijit.MenuItem" data-dojo-props='operation:"create",modelName:"bills"'>
+                    Накладную
+                </div>
+                <div data-dojo-type="dijit.MenuItem" data-dojo-props='operation:"create",modelName:"bricks"'>
+                    Кирпич
+                </div>
+            </div>
+        </div>
+        <div dojoType="dijit.MenuBarItem">
+        <span>
+            Excel
+        </span>
+        </div>
+    </div>
+    <div dojoType="dijit.layout.TabContainer" id='TabContainer' region='center'>
+
+    </div>
+</div>
+</body>
+</html>
