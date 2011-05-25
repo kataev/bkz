@@ -45,56 +45,28 @@
         }
 
     </style>
+    <script>
+			// We're specifying our Dojo Configuration this way,
+			// as it's a bit more complex and easier to type out
+			// than a data-dojo-config string
+			var dojoConfig = {
+				isDebug: true,
+				// The next two pieces define how we can load our custom modules
+				// baseUrl species where to work from as a baseline
+				// Here we're setting it to be the current directory
+				baseUrl: './',
+				// modulePaths takes an object with keys that are the namespace,
+				// and values that are the path - in this case, just a folder
+				// named 'custom' under the baseUrl
+				modulePaths: {
+					'whs': 'static'
+				}
+			}
+		</script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js.uncompressed.js"
             djConfig="parseOnLoad: true,locale: 'ru'">
     </script>
-    <script type="text/javascript">
-        dojo.require("dijit.layout.BorderContainer");
-        dojo.require("dijit.layout.TabContainer");
-        dojo.require("dijit.layout.ContentPane");
-//        dojo.require("dijit.Dialog");
-        dojo.require("dojo.data.ItemFileReadStore");
-        dojo.require("dijit.MenuBar");
-        dojo.require("dijit.PopupMenuBarItem");
-        dojo.require("dijit.Menu");
-        dojo.require("dijit.MenuItem");
-        dojo.require("dijit.PopupMenuItem");
-        dojo.require('dijit.form.ValidationTextBox');
-        dojo.require('dijit.form.DateTextBox');
-        dojo.require('dijit.form.NumberTextBox');
-        dojo.require('dijit.form.Form');
-        dojo.require('dijit.form.Button');
-        dojo.require('dijit.form.Select');
-        dojo.require('dijit.form.MultiSelect');
-        //        dojo.require("dijit.layout.StackContainer");
-        dojo.require("dijit.form.Button");
-        //        dojo.require("dojo.parser");
-
-        dojo.addOnLoad(function(){
-           dojo.query('.menuCreate .dijitMenuItemLabel').connect('onclick',function(evt){
-               var form = dojo.xhrGet({url:'./form/'+ dijit.getEnclosingWidget(evt.srcElement).modelName + '/',handleAs:'json'})
-               form.then(function(data){
-//                   console.log(data);
-                   var div = dojo.create('div',{innerHTML:data.html})
-                   dojo.query('.helptext',div).style({display:'none'})
-                   dojo.query('*',div).removeAttr('id');
-                   var contentPane = new dijit.layout.ContentPane({title:data.title,style:'padding:0px;',closable:true},div);
-//                   var contentPane = dijit.byNode(cont.children[0])
-//                   dojo.parser.parse(contentPane.domNode);
-                   var border=dijit.byNode(dojo.query('.dijitBorderContainer',contentPane.domNode)[0])
-                   console.log('border',border,'content',contentPane);
-                   dijit.byId('TabContainer').addChild(contentPane);
-               });
-            dojo.connect(dijit.byId('TabContainer'),"removeChild",function(child){
-                console.log("just removed: ", child);
-                child.destroyRecursive();
-                console.log("destroyed");
-                });
-
-
-           });
-        });
-
+    <script src="static/script.js">
     </script>
 </head>
 <body class="claro">
@@ -120,7 +92,9 @@
         </div>
     </div>
     <div dojoType="dijit.layout.TabContainer" id='TabContainer' region='center'>
-
+<div dojoType="dijit.layout.ContentPane" title="Start">
+    <div id='test'></div>
+</div>
     </div>
 </div>
 </body>

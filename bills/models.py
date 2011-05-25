@@ -21,8 +21,8 @@ class transferForm(ModelForm):
 
 ## Отгрузка
 class solds(oper):
-    price=models.DecimalField(u"Цена за единицу кирпича в Рублях",max_digits=8, decimal_places=4,help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
-    delivery=models.DecimalField(u"Цена доставки",max_digits=6, decimal_places=3,blank=True,null=True,help_text=u'0 если доставки нет')
+    price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
+    delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
     transfers = models.ManyToManyField(transfers,blank=True,null=True,help_text=u'Перевод для этой продажи')
 
     class Meta():
