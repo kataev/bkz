@@ -11,7 +11,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core import  serializers
     
 def main(response):
-    rendered = render_to_string('main.html',{})
+    models = {'bills':bills,'bricks':bricks,'solds':solds,'transfers':transfers}
+    def f(model):
+        return models[model]._meta.verbose_name_plural
+
+    rendered = render_to_string('main.html',{'models':map(f,models)})
     return HttpResponse(rendered,mimetype="text/html;charset=utf-8")
 
 
@@ -35,15 +39,16 @@ def test(response):
     return response
 
 def form(request,modelName,id=0):
-    models = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}
-    forms = {'bricks':brickForm,'bills':billForm,'solds':soldForm,'transfers':transferForm}
-    if modelName not in models.keys():
-        return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
+    model = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}[modelName]
+    form = {'bricks':brickForm,'bills':billForm,'solds':soldForm,'transfers':transferForm}[modelName]
 
-    model = models[modelName]
-    form = forms[modelName]
+    modelType=model.__base__.__name__
+
+#    if modelName not in models.keys():
+#        return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
 
     if request.method == 'GET':
+
         if int(id)==0:
             f=form()
             method='POST'
@@ -62,11 +67,16 @@ def form(request,modelName,id=0):
                 return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
             method='PUT'
 
-        if request.is_ajax():
-            rendered = render_to_string('form.html',{'form':f,'url':url,'method':method,'title':title})
-            return HttpResponse(json({'method':method,'title':title,'html':rendered}),mimetype="text/html;charset=utf-8;")
+        if modelName in ['solds','transfers']:
+            temp='opers.html'
         else:
-            rendered = render_to_string('form.html',{'form':f,'url':'./','method':'POST','title':title})
+            temp='form.html'
+
+        if request.is_ajax():
+            rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title})
+            return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="text/html;charset=utf-8;")
+        else:
+            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title})
             return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
 
     if request.method == 'POST' and int(id)==0:

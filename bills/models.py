@@ -11,6 +11,7 @@ class transfers(models.Model):
     time_change=models.DateTimeField(auto_now=True)
     class Meta():
             verbose_name = u"Перевод"
+            verbose_name_plural = "Переводы"
 
 #    def __unicode__(self):
 #        return 'Transfer %i' %self.pk
@@ -27,6 +28,7 @@ class solds(oper):
 
     class Meta():
             verbose_name = u"Отгрузка"
+            verbose_name_plural =  u"Отгрузка"
 
     #def __unicode__(self):
     #    return u'id '+str(self.id)
@@ -37,11 +39,12 @@ class soldForm(ModelForm):
 
 ## Накладная
 class bills(doc):
-    solds = models.ManyToManyField(solds,blank=True,null=True,help_text=u'Отгрузки')
-    transfers = models.ManyToManyField(transfers,blank=True,null=True,help_text=u'Переводы')
+    solds = models.ManyToManyField(solds,blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
+    transfers = models.ManyToManyField(transfers,blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
     class Meta():
             verbose_name = u"Накладная"
+            verbose_name_plural = u"Накладные"
 
 class billForm(ModelForm):
     class Meta:

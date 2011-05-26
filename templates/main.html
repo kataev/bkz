@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title></title>
+    <title>Новый склад</title>
     <style>
         @import "http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/claro/claro.css";
 
@@ -11,6 +11,7 @@
             font: 12px Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
             *font-size: 75%;
         }
+        
 
         h1 {
             font-size: 10%;
@@ -40,29 +41,59 @@
 
         ul {
             list-style-type: none; /*width: 500px;*/
-            padding-left: 0px;
-            margin-left: 0px;
+            padding: 0px;
+            margin: 0px;
         }
 
+        .class_euro{
+            border-bottom: 1px dotted red;
+        }
+
+
+        .BrickWidget  {
+            width: 200px;
+            overflow: hidden;
+            height:15px;
+        }
+
+        .color_red  {
+            background: Salmon;
+        }
+
+        .color_yellow {
+            background: PeachPuff;
+        }
+
+        .color_brown {
+            background: Tan;
+        }
+
+        .color_light {
+            background: Lightseagreen;
+        }
+
+        .color_white {
+            background-color: Snow;
+        }
     </style>
     <script>
-			// We're specifying our Dojo Configuration this way,
-			// as it's a bit more complex and easier to type out
-			// than a data-dojo-config string
-			var dojoConfig = {
-				isDebug: true,
-				// The next two pieces define how we can load our custom modules
-				// baseUrl species where to work from as a baseline
-				// Here we're setting it to be the current directory
-				baseUrl: './',
-				// modulePaths takes an object with keys that are the namespace,
-				// and values that are the path - in this case, just a folder
-				// named 'custom' under the baseUrl
-				modulePaths: {
-					'whs': 'static'
-				}
-			}
-		</script>
+        // We're specifying our Dojo Configuration this way,
+        // as it's a bit more complex and easier to type out
+        // than a data-dojo-config string
+        var dojoConfig = {
+            isDebug: true,
+            // The next two pieces define how we can load our custom modules
+            // baseUrl species where to work from as a baseline
+            // Here we're setting it to be the current directory
+            baseUrl: './',
+            // modulePaths takes an object with keys that are the namespace,
+            // and values that are the path - in this case, just a folder
+            // named 'custom' under the baseUrl
+            modulePaths: {
+                'whs': 'static'
+            }
+        }
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js.uncompressed.js"
             djConfig="parseOnLoad: true,locale: 'ru'">
     </script>
@@ -91,10 +122,20 @@
         </span>
         </div>
     </div>
+    <div dojoType="dijit.layout.AccordionContainer" style="width:200px;" region='left'>
+        {% for model in models %}
+            <div dojoType="dijit.layout.ContentPane" title="{{ model }}">
+                Hi!
+            </div>
+        {% endfor %}
+    </div>
     <div dojoType="dijit.layout.TabContainer" id='TabContainer' region='center'>
-<div dojoType="dijit.layout.ContentPane" title="Start">
-    <div id='test'></div>
-</div>
+        <div dojoType="dijit.layout.ContentPane" title="Start">
+            <div id='test'></div>
+
+
+        
+        </div>
     </div>
 </div>
 </body>

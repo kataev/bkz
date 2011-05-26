@@ -1,5 +1,7 @@
 dojo.provide("whs.Form");
 
+dojo.require("whs.OpersWidget");
+
 dojo.declare('whs.Form', null, {
             submit:null,form:null,
             constructor:function(modelName, id) {
@@ -29,6 +31,22 @@ dojo.declare('whs.Form', null, {
                                     .then(function(data) {
                                 if (data.status != 'fail') {
                                     console.log('ok', data)
+                                    submit.set('label', 'Сохранено');
+                                    if (submit.mouseAnim) {
+                                        submit.mouseAnim.stop();
+                                    }
+
+                                    // Set up the new animation
+                                    submit.mouseAnim = dojo.animateProperty({
+                                                node: submit.focusNode,
+                                                properties: {
+                                                    backgroundColor: 'green'
+                                                },
+                                                onEnd: dojo.hitch(this, function() {
+                                                    // Clean up our mouseAnim property
+                                                    submit.mouseAnim = null;
+                                                })
+                                            }).play();
 //                                    dijit.byId('stackContainer').forward()
                                 }
                                 else {

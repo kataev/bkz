@@ -88,6 +88,7 @@ class bricks(models.Model):
     class Meta():
         ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
         verbose_name = u"Кирпич"
+        verbose_name_plural = u'Кирпичи'
 
 
 class brickForm(ModelForm):

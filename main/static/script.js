@@ -1,13 +1,15 @@
 
 dojo.require("whs.BrickWidget");
-dojo.require("whs.OpersWidget");
+dojo.require("whs.BrickSelectWidget");
+//dojo.require("whs.OpersWidget");
 dojo.require("whs.Form");
 
 
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
-dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.AccordionContainer");
 //        dojo.require("dijit.Dialog");
 dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("dijit.MenuBar");
@@ -31,25 +33,32 @@ dojo.require("dojo.store.Memory");
 dojo.require("dojo.store.Cache");
 
 
+BrickClass = ['class_red','class_yellow','class_brown','class_light','class_white','class_euro','class_other']
+//BrickColor = ['brick_red','brick_yellow','brick_brown','brick_light','brick_white']
+BrickColor={'Кр':'color_red','Же':'color_yellow','Ко':'color_brown','Св':'color_light','Бе':'color_white'}
 
 dojo.addOnLoad(function() {
 //dojo.parser.parse();
 memoryStore = new dojo.store.Memory({});
 restStore = new dojo.store.JsonRest({target:"/json/bricks/"});
 brick = new dojo.store.Cache(restStore, memoryStore);
+
+//dojo.place(new whs.BrickSelectWidget().domNode,'test')
+new whs.Form('bills',1)
 });
 
-//dojo.addOnLoad(function() {
-////    brick.query();
-////    for (var a = 1;a<190;a++){
-////        var br = new whs.BrickWidget({BrickId:a});dojo.place(br.domNode,'test');
-////
-////    }
+dojo.addOnLoad(function() {
+//    brick.query();
+//    for (var a = 1;a<190;a++){
+//        var br = new whs.BrickWidget({BrickId:a});dojo.place(br.domNode,'test');
+//
+//    }
 //
 //
-//    dojo.query('.menuCreate .dijitMenuItemLabel').connect('onclick', function(evt) {
-//        new whs.Form(dijit.getEnclosingWidget(evt.srcElement).modelName,0);
-////        form.then(function(data) {
+    dojo.query('.menuCreate .dijitMenuItemLabel').connect('onclick', function(evt) {
+        new whs.Form(dijit.getEnclosingWidget(evt.srcElement).modelName,0);
+
+//        form.then(function(data) {
 //////                   console.log(data);
 ////            var div = dojo.create('div', {innerHTML:data.html})
 ////            dojo.query('.helptext', div).style({display:'none'})
@@ -69,5 +78,5 @@ brick = new dojo.store.Cache(restStore, memoryStore);
 ////        });
 //
 //
-//    });
-//});
+    });
+});
