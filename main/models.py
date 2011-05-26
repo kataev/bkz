@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from whs.bricks.models import bricks
+from dojango.forms import DateField,DateInput
 
 class oper(models.Model):
     brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
@@ -10,6 +11,7 @@ class oper(models.Model):
 
     class Meta:
         abstract = True
+
 
 class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))

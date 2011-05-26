@@ -68,16 +68,16 @@ def form(request,modelName,id=0):
             method='PUT'
 
         if modelName in ['solds','transfers']:
-            temp='opers.html'
+            temp=modelName+'.html'
         else:
             temp='form.html'
 
         if request.is_ajax():
-            rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title})
+            rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title,'ajax':True})
             return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="text/html;charset=utf-8;")
         else:
-            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title})
-            return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
+#            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title,'ajax':False})
+            return HttpResponse(f.as_ul()+'<button type="submit">SAVE</button>',mimetype="text/html;charset=utf-8;")
 
     if request.method == 'POST' and int(id)==0:
         data=request.POST.copy() # Копируем массив, ибо request - read only
@@ -85,7 +85,8 @@ def form(request,modelName,id=0):
             data[field]=data[field].replace(',','.')
         f = form(data)
         if f.is_valid():
-            ins = f.save()
+            ins = f.save(commit=False)
+#            f.save_m2m()
             return redirect(ins)
         else:
 #            del form.errors['__all__']
@@ -96,12 +97,17 @@ def form(request,modelName,id=0):
             data=request.POST.copy()
         else:
             data=request.PUT.copy() # Копируем массив, ибо request - read only
+        print data
         for field in data:
+            if field in ('solds','transfers'):
+                continue
+            print field,data[field]
             data[field]=data[field].replace(',','.')
         print model.objects.get(pk=id)
         f = form(data,instance=model.objects.get(pk=id))
         if f.is_valid():
             ins = f.save()
+#            f.save_m2m()
             return redirect(ins)
         else:
 #            del form.errors['__all__']

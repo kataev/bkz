@@ -4,7 +4,7 @@ dojo.require("whs.BrickSelectWidget");
 //dojo.require("whs.OpersWidget");
 dojo.require("whs.Form");
 
-
+ dojo.require("dojo.date.locale");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
@@ -44,7 +44,9 @@ restStore = new dojo.store.JsonRest({target:"/json/bricks/"});
 brick = new dojo.store.Cache(restStore, memoryStore);
 
 //dojo.place(new whs.BrickSelectWidget().domNode,'test')
+//dojo.date.locale.addCustomFormats('d.M.y m.h','m.h')
 new whs.Form('bills',1)
+
 });
 
 dojo.addOnLoad(function() {

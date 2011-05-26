@@ -9,13 +9,13 @@
 {#                    {% if field.name == 'transfers' or field.name == 'solds' %}#}
 
 {#                    {% else %}#}
-                        <li>
+                        <li {% if field.field.widget.dojo_type == 'dijit.form.MultiSelect' or ajax == True %}style='display:none;'{% endif %}>
                             <label>{{ field.label }}</label>
                             {{ field }}
                         </li>
 {#                    {% endif %}#}
                 {% endfor %}
-
+            {% if ajax == False %}<button type='submit'>Save</button>{% endif %}
             </ul>
         </form>
     </div>

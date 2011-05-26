@@ -9,7 +9,7 @@ dojo.declare("whs.BrickSelectWidget", [dijit.form.TextBox], {
             templateString:
                     dojo.cache("whs.BrickSelectWidget", "templates/BrickSelectWidget.html"),
 //            baseClass: "BrickSelectWidget",
-            placeHolder:'Шелкните для выбора кирпича',
+            placeHolder:'Щелкните для выбора кирпича',
     _setDisplayedValueAttr: function(/*String*/ value){
 			// summary:
 			//		Hook so set('displayedValue', ...) works.

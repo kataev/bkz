@@ -12,7 +12,7 @@ dojo.declare('whs.Form', null, {
                 var submit;
                 var form;
                 var contentPane;
-                var opers;
+                var opers = {};
                 dojo.xhrGet({url:url,handleAs:'json'})
                         .then(function(data) {
                     var div = dojo.create('div', {innerHTML:data.html});
@@ -21,12 +21,11 @@ dojo.declare('whs.Form', null, {
                     contentPane = new dijit.layout.ContentPane({title:data.title,style:'padding:0px;',closable:true}, div);
                     submit = dijit.getEnclosingWidget(dojo.query('.FormSubmit', div)[0]);
                     form = dijit.getEnclosingWidget(dojo.query('form', div)[0]);
-                    opers=dojo.map(dojo.query('[multiple]',div),function(item){
-                        return dijit.byNode(item).get('Value');
+                    dojo.query('[multiple]', div).forEach(function(item) {
+                        var w = dijit.byNode(item)
+                        opers[w.name] = [w.value];
                     });
-                    console.log(opers);
-
-
+//                    console.log(opers);
                     dojo.connect(submit, 'onClick', function(e) {
                         console.log('cliked');
                         if (form.validate()) {
@@ -79,8 +78,34 @@ dojo.declare('whs.Form', null, {
 
 
                     if (data.modelType == 'doc') {
+                        var OpersTable = dojo.create('table', {style:'font-size:100%;'});
+                        for (var a in opers) {
+                            dojo.forEach(opers[a][0], function(item, i) {
+//                                console.log('item',item);
+                                if (item==''){return 0;}
+                                dojo.xhrGet({url:'./form/'+a+'/'+item+'/',handleAs:'json'}).then(function(data) {
+                                    var tr = dojo.create('tr', {innerHTML:data.html,opersId:item}, OpersTable);
+                                    var s=[]
+                                    dojo.query('*', tr).removeAttr('id');
+                                    dojo.query('[name="amount"],[name="price"],[name="delivery"]', tr).attr('style','width:60px;')
+//                                    dojo.query('[name="brick"]', tr).attr('dojoType','whs.BrickSelectWidget')
+                                    var a = dojo.parser.parse(OpersTable);
+//                                    console.log(a);
+                                    for (var widget in a){
+                                        if (a[widget].name=='transfers'){
+                                            a[widget].values.forEach(function(it,i){
+                                            s[it]=item;
+                                            })
+
+                                        }
+                                    }
+
+                                });
+                            });
+                        }
+                        a = null
                         var border = dijit.byNode(dojo.query('.dijitContainer', contentPane.containerNode)[0]);
-                        var contentPane1 = new dijit.layout.ContentPane({style:'padding:0px;height:300px;',region:'bottom'});
+                        var contentPane1 = new dijit.layout.ContentPane({style:'padding:0px;height:300px;',content:OpersTable,region:'bottom'});
                         var toolbar = new dijit.Toolbar({region:'bottom',layoutPriority:2});
                         dojo.forEach(["Cut", "Copy", "Paste"], function(label) {
                             var button = new dijit.form.Button({
@@ -93,37 +118,37 @@ dojo.declare('whs.Form', null, {
                             toolbar.addChild(button);
                         });
 
-                    border.addChild(toolbar)
-                    border.addChild(contentPane1)
+                        border.addChild(toolbar)
+                        border.addChild(contentPane1)
 
-                    console.log(border);
-                }
+//                    console.log(border);
+                    }
 
 
-                dijit.byId('TabContainer').addChild(contentPane);
-                dijit.byId('TabContainer').selectChild(contentPane);
-                dojo.connect(dijit.byId('TabContainer'), "removeChild", function(child) {
-                    console.log("just removed: ", child);
-                    child.destroyRecursive();
-                    console.log("destroyed");
-                });
-            },
-function(error) {
-    var contentPane = new dijit.layout.ContentPane({title:'error'.title,style:'padding:0px;',closable:true});
-    dijit.byId('TabContainer').addChild(contentPane);
-    dijit.byId('TabContainer').selectChild(contentPane);
-    dojo.connect(dijit.byId('TabContainer'), "removeChild", function(child) {
-        console.log("just removed: ", child);
-        child.destroyRecursive();
-        console.log("destroyed");
-    });
-}
-)
-;
+                    dijit.byId('TabContainer').addChild(contentPane);
+                    dijit.byId('TabContainer').selectChild(contentPane);
+                    dojo.connect(dijit.byId('TabContainer'), "removeChild", function(child) {
+                        console.log("just removed: ", child);
+                        child.destroyRecursive();
+                        console.log("destroyed");
+                    });
+                },
+                        function(error) {
+                            var contentPane = new dijit.layout.ContentPane({title:'error'.title,style:'padding:0px;',closable:true});
+                            dijit.byId('TabContainer').addChild(contentPane);
+                            dijit.byId('TabContainer').selectChild(contentPane);
+                            dojo.connect(dijit.byId('TabContainer'), "removeChild", function(child) {
+                                console.log("just removed: ", child);
+                                child.destroyRecursive();
+                                console.log("destroyed");
+                            });
+                        }
+                )
+                        ;
 
 
 //                var border = dijit.byNode(dojo.query('.dijitBorderContainer', contentPane.domNode)[0]);
 
-}
-})
-;
+            }
+        })
+        ;
