@@ -9,9 +9,14 @@ dojo.require("dijit._Templated");
 
 
 dojo.declare("whs.OpersWidget", [dijit._Widget, dijit._Templated], {
+            constructor: function(name,id){
+                                
+            },
+
             label:'Loading...',
-            templateString:
-                    dojo.cache("whs.OpersWidget", "templates/OpersWidget.html"),
+
+//            templateString:
+//                    dojo.cache("whs.OpersWidget", "templates/OpersWidget.html"),
             baseClass: "OpersWidget",
             resize: function(){},
             postCreate: function() {

@@ -7,15 +7,14 @@ dojo.require("dijit._Templated");
 
 dojo.declare("whs.BrickWidget", [dijit._Widget, dijit._Templated], {
             label:'Loading...',
-            BrickId:'',
-            store:null,
-            BrickClass:null,
+            BrickId:null,
 //    avatar: dojo.moduleUrl("whs.BrickWidget", "images/defaultAvatar.png"),
             templateString:
                     dojo.cache("whs.BrickWidget", "templates/BrickWidget.html"),
             baseClass: "BrickWidget",
-            constructor:function(attr) {
-                this.BrickId = attr.BrickId;
+            constructor:function(id) {
+                this.BrickId = id;
+                console.log(id);
 
             },
             _setBrickIdAttr:function(id) {
@@ -25,7 +24,7 @@ dojo.declare("whs.BrickWidget", [dijit._Widget, dijit._Templated], {
                 }
             },
             _setLabelAttr:function(label) {
-                if (this.BrickId != '') {
+                if (this.BrickId) {
                     this.label = label;
                     this.labelNode.innerHTML = label;
                     this.domNode.title=label;
@@ -45,7 +44,8 @@ dojo.declare("whs.BrickWidget", [dijit._Widget, dijit._Templated], {
                 var set = dojo.hitch(this,'_setLabelAttr');
                 var class = dojo.hitch(this,'_setBrickClassAttr');
                 var color = dojo.hitch(this,'_setBrickColorAttr');
-                dojo.when(brick.get(this.BrickId), function(data){
+                console.log('as')
+                return this.BrickId ? dojo.when(brick.get(this.BrickId), function(data){
                     var b = data[0].fields;
                     var label='';
 
@@ -74,6 +74,6 @@ dojo.declare("whs.BrickWidget", [dijit._Widget, dijit._Templated], {
                         }
                     }
                     set(label);
-                });
+                }) : undefined;
             }
         })

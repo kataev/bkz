@@ -45,7 +45,7 @@ brick = new dojo.store.Cache(restStore, memoryStore);
 
 //dojo.place(new whs.BrickSelectWidget().domNode,'test')
 //dojo.date.locale.addCustomFormats('d.M.y m.h','m.h')
-new whs.Form('bills',1)
+new whs.Form('bills',2);
 
 });
 

@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from whs.bricks.models import *
 from whs.bills.models import *
 from django.core.exceptions import ObjectDoesNotExist
-from django.core import  serializers
+from django.core import serializers
     
 def main(response):
     models = {'bills':bills,'bricks':bricks,'solds':solds,'transfers':transfers}
@@ -20,16 +20,23 @@ def main(response):
 
 
 def rest(response,modelName,id_str):
-    model = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}[modelName]
+
+    try:
+        model = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}[modelName]
+    except KeyError:
+        return HttpResponse(json({'status':'error','message':'KeyError'}),mimetype="application/json;charset=utf-8")
+
     id=[]
 
     for i in id_str.split('/'):
             id.append(i)
-
-    if len(id_str)==0:
-        query = model.objects.all()
-    else:
-        query = model.objects.filter(pk__in=id)
+    try:
+        if len(id_str)==0:
+            query = model.objects.all()
+        else:
+            query = model.objects.filter(pk__in=id)
+    except ValueError:
+        return HttpResponse(json({'status':'error','message':'ValueError'}),mimetype="application/json;charset=utf-8")
 
     return HttpResponse(serializers.serialize('json',query),mimetype="text/html;charset=utf-8")
 
@@ -74,10 +81,10 @@ def form(request,modelName,id=0):
 
         if request.is_ajax():
             rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title,'ajax':True})
-            return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="text/html;charset=utf-8;")
+            return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="application/json;charset=utf-8;")
         else:
-#            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title,'ajax':False})
-            return HttpResponse(f.as_ul()+'<button type="submit">SAVE</button>',mimetype="text/html;charset=utf-8;")
+            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title,'ajax':False})
+            return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
 
     if request.method == 'POST' and int(id)==0:
         data=request.POST.copy() # Копируем массив, ибо request - read only
