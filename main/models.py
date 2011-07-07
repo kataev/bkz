@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from whs.bricks.models import bricks
-from dojango.forms import DateField,DateInput
+#from dojango.forms import DateField,DateInput
+
+#class BrickWidget(model.ForeignKey)
+
 
 class oper(models.Model):
     brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')

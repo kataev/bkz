@@ -1,30 +1,42 @@
-# -*- coding: utf-8 -*-
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from cjson import encode as json
-import datetime
-import csv
-from whs.bricks.models import *
+#-*- coding: utf-8 -*-
+#from django.http import HttpResponse
+#from django.template.loader import render_to_string
+#from cjson import encode as json
+#import datetime
+#import csv
+#from django.db.models import Count
 
-#def form(request):
-#   if request.method == 'POST': # Если пост то обрабатываем данные
-#        post=request.POST.copy() # Копируем массив, ибо request - read only
-#        f=bricksForm
+#from whs.bricks.models import *
+
+#def show_tree(request):
+#    store = MPTreeStore()
+#    return HttpResponse(store.to_json(), mimetype='application/json')
 #
-#        for field in post:
-#            post[field]=post[field].replace(',','.')
+#def show_brick(request):
+#    store = BrickStore()
+#    return HttpResponse(store.to_json(), mimetype='application/json')
 #
-#        form = f(post)
 #
-#        if form.is_valid():
-#            inst = form.save()
-#            return HttpResponse(json({'status':'ok','id':inst.pk}),mimetype="application/json;charset=utf-8")
+#
+#def fill_tree(request):
+#    get = lambda node_id: Category.objects.get(pk=node_id)
+#    root = Category.add_root(name=bricks._meta.verbose_name,count=0)
+#    a = True
+#    for cl in bricks.objects.values('brick_class').annotate(count=Count('brick_class')).order_by():
+#        if a:
+#            b = get(root.id).add_child(name=cl['brick_class'],count=int(cl['count']))
+#            a=False
 #        else:
-#            del form.errors['__all__']
-#            return HttpResponse(json({'status':'error','message':form.errors}),mimetype="application/json;charset=utf-8")
-#    else:
-#        rendered = render_to_string('form.html',{'energy_form':energyForm(prefix='energy').as_ul(),'teplo_form':teploForm(prefix='teplo').as_ul()})
-#        return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
+#            cl_node = get(b.id).add_sibling(name=cl['brick_class'],count=int(cl['count']))
 #
+##        for w in bricks.objects.values('weight').annotate(count=Count('weight')).order_by():
+##            w_node = get(cl_node.id).add_child(name=w['weight'],count=int(w['count']))
+##
+##            for v in bricks.objects.values('view').annotate(count=Count('view')).order_by():
+##                v_node = get(w_node.id).add_child(name=v['view'],count=int(v['count']))
+##
+###                for m in bricks.objects.values('mark').annotate(count=Count('mark')).order_by():
+###                    m_node = get(v_node.id).add_child(name=m['mark'],count=int(m['count']))
 #
-#def forms(request):
+#    store = MPTreeStore(is_nested=True)
+#    return HttpResponse(store.to_json(), mimetype='application/json')

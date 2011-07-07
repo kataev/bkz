@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from dojango.forms import ModelForm
-from django.core.exceptions import ValidationError
+#from django.core.exceptions import ValidationError
+#from treebeard.mp_tree import MP_Node
+#from dojango.data.modelstore import  *
 
 
 class bricks(models.Model):
@@ -57,7 +59,12 @@ class bricks(models.Model):
         if self.brick_class!=5: # Если не евро, то вызываю метод из choises
             return self.get_view_display()
         else:
+            if self.view not in self.euro_view.keys():
+                print (self.pk,self.view)
+#            try:
             return self.euro_view[self.view] #Если евро, то подставляем в хитрый словарь
+#            except KeyError:
+#                return ''
         
     
     def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
@@ -69,12 +76,12 @@ class bricks(models.Model):
         
         if self.brick_class==5: # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
             t = Template(u'КЕ $view_d $mark $defect $refuse $features $tip')
-            self.view=self.get_view()
+            view=self.get_view()
         else:
-            self.view=self.get_view()[:1] # Если обычный кирпич, то выводим Л(ицевой) и Р(ядовой)
+            view=self.get_view()[:1] # Если обычный кирпич, то выводим Л(ицевой) и Р(ядовой)
         
         return t.substitute(weight_d = self.get_weight_display()[:1], # подставляем же! и возвращяем
-                         view_d = self.view,
+                         view_d = view,
                          mark = self.get_mark_display(),
                          refuse = self.refuse,
                          defect = self.get_defect_display(),
@@ -95,106 +102,19 @@ class brickForm(ModelForm):
     class Meta:
         model=bricks
 
-#class oper(models.Model):
-#    brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
-#    amount=models.PositiveIntegerField(u"Кол-во",help_text=u'Кол-во кирпича для операции')
-#    time_change=models.DateTimeField(auto_now=True)
-#    # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
+#class BrickStore(Store):
+##    id = StoreField()
+#    brick_class    = StoreField()
+#    color     = StoreField(get_value=ObjectMethod('get_color_display'))
+#    mark     = StoreField(get_value=ObjectMethod('get_mark_display'))
+#    view     = StoreField( get_value=ObjectMethod('get_view_display') )
+#    weight     = StoreField( get_value=ObjectMethod('get_weight_display') )
+#    color_type     = StoreField(get_value=ObjectMethod('get_color_type_display'))
+#    refuse     = StoreField()
+#    features     = StoreField()
+#    defect     = StoreField()
+#    total     = StoreField()
 #
-#
-#    class Meta:
-#        abstract = True
-#
-#class doc(models.Model):
-#
-#    draft_c=((False,u'Чистовик'),(True,u'Черновик'))
-#
-#    number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
-#    doc_date=models.DateField(u'Дата',max_length=60,help_text=u'Дата документа')
-#    info=models.CharField(u'Примечание',max_length=60,blank=True,help_text=u'Любая полезная информация')
-#    time_change=models.DateTimeField(auto_now=True)
-#    draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
-#
-#    class Meta:
-#        abstract = True
-#
-#class transfer(models.Model):
-#    brick_from=models.ForeignKey(bricks,related_name='from',verbose_name=u'Откуда',help_text=u'Из какого кирпича')
-#    brick_to=models.ForeignKey(bricks,related_name='to',verbose_name=u'Куда',help_text=u'В какой')
-#    amount=models.PositiveIntegerField(u"Кол-во",help_text=u'Число, больше остатка')
-#    time_change=models.DateTimeField(auto_now=True)
-#
-#    def __unicode__(self):
-#        return 0
-#
-#class transfer_form(ModelForm):
-#    class Meta:
-#        model=transfer
-#
-## Приход
-#class arrival(oper):
-#    pass
-#    class Meta():
-#            verbose_name = u"Приход"
-#
-#class arrival_form(ModelForm):
-#    class Meta:
-#        model=arrival
-#
-#
-## Накладная
-#class sold(oper):
-#    price=models.DecimalField(u"Цена за единицу кирпича в Рублях",max_digits=8, decimal_places=4,help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
-#    delivery=models.DecimalField(u"Цена доставки",max_digits=6, decimal_places=3,blank=True,null=True,help_text=u'0 если доставки нет')
-#    transfers = models.ManyToManyField(transfer,blank=True,null=True,help_text=u'Перевод для этой продажи')
-#
-#    class Meta():
-#            verbose_name = u"Отгрузка"
-#
-#    #def __unicode__(self):
-#    #    return u'id '+str(self.id)
-#
-#class sold_form(ModelForm):
-#    class Meta:
-#        model=sold
-#
-#class bills(doc):
-#    solds = models.ManyToManyField(sold,blank=True,null=True,help_text=u'Отгрузки')
-#    transfers = models.ManyToManyField(transfer,blank=True,null=True,help_text=u'Переводы') # НЕ НУЖЕН ПО ИДЕЕЕЕЕЕ!!!! Ведь солд и трансфер связаны m2m, их можно и так норм достать!
-#
-#    class Meta():
-#            verbose_name = u"Накладная"
-#
-#class bills_form(ModelForm):
-#    class Meta:
-#        model=bills
-#        widgets = {
-#            'draft': CheckboxInput(attrs={'value': True})
-#        }
-#
-#
-#
-##Списание
-#class cons(oper):
-#    pass
-#
-#
-#class inventory(doc): # Инвентаризация
-#    opers = models.ManyToManyField(cons,blank=True,null=True)
-#    class Meta():
-#            verbose_name = u"Инвенторизация"
-#
-#class inventory_form(ModelForm):
-#    class Meta:
-#        model=inventory
-#
-#
-## Приход
-#class coming(doc):
-#    opers = models.ManyToManyField(arrival,blank=True,null=True)
-#    class Meta():
-#            verbose_name = u"Приход за день"
-#
-#class coming_form(ModelForm):
-#    class Meta:
-#        model=coming
+#    class Meta(object):
+#        objects = bricks.objects.all()
+##        label = bricks._meta.verbose_name

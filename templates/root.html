@@ -1,0 +1,44 @@
+{% extends "dojango/base.html" %}
+
+{% block dojango_page_title %}Склад кирпича - Главная страница{% endblock %}
+
+{# add your own javascript/css stuff here #}
+{% block dojango_header_extra %}
+    <script type="text/javascript">
+        dojo.addOnLoad(function() {
+            dojo.parser.parse();
+        });
+
+    </script>
+    <style>
+        span.helptext {
+            display:none;
+        }
+
+        div#menu {
+            height: 18px;
+            background-color: #fff8dc;
+            padding: 2px;
+            margin: 2px 2px 0px 2px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block dojango_content %}
+    <div style='width:800px;margin:auto;'>
+        <div id='menu'>
+            <a href='/bills/'>Накладные</a>
+            <a href='/bills/add/'>Добавить накладную</a>
+        </div>
+        <div id='content'>
+            {% block content %}
+
+
+            {% endblock %}
+        </div>
+
+    </div>
+{% endblock %}
+
+

@@ -148,7 +148,10 @@ dojo.declare('whs.Form', null, {
 
 
 //                var border = dijit.byNode(dojo.query('.dijitBorderContainer', contentPane.domNode)[0]);
-
+                this.submit =  submit;
+                this.form = form;
+                this.contentPane = contentPane;
+                this.opers = opers;
             }
         })
         ;

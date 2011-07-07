@@ -3,7 +3,8 @@ dojo.require("whs.BrickWidget");
 dojo.require("whs.BrickSelectWidget");
 //dojo.require("whs.OpersWidget");
 dojo.require("whs.Form");
-
+dojo.require("dojo.data.ItemFileReadStore");
+dojo.require("dijit.Tree");
  dojo.require("dojo.date.locale");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.layout.BorderContainer");
@@ -32,6 +33,9 @@ dojo.require("dojo.store.JsonRest");
 dojo.require("dojo.store.Memory");
 dojo.require("dojo.store.Cache");
 
+dojo.require("dojo.data.ItemFileWriteStore");
+dojo.require("dojox.grid.DataGrid");
+
 
 BrickClass = ['class_red','class_yellow','class_brown','class_light','class_white','class_euro','class_other']
 //BrickColor = ['brick_red','brick_yellow','brick_brown','brick_light','brick_white']
@@ -39,20 +43,61 @@ BrickColor={'Кр':'color_red','Же':'color_yellow','Ко':'color_brown','Св'
 
 dojo.addOnLoad(function() {
 //dojo.parser.parse();
+
+var schema = {"type": "object", "description": "\u041a\u0438\u0440\u043f\u0438\u0447", "properties": {"refuse": {"type": "string", "maxLength": 10}, "features": {"type": "string", "maxLength": 60}, "weight": {"type": "string", "maxLength": 60}, "color": {"type": "string", "maxLength": 60}, "name": {"type": "string", "maxLength": 160}, "color_type": {"type": "string", "maxLength": 6}, "defect": {"type": "string", "maxLength": 60}, "mark": {}, "brick_class": {"type": "integer"}, "total": {}, "id": {"type": "integer"}, "view": {"type": "string", "maxLength": 60}}}
+
 memoryStore = new dojo.store.Memory({});
 restStore = new dojo.store.JsonRest({target:"/json/bricks/"});
 brick = new dojo.store.Cache(restStore, memoryStore);
 
+pMenu = new dijit.Menu({
+//            targetNodeIds: ["prog_menu"]
+        });
+        pMenu.addChild(new dijit.MenuItem({
+            label: "Menu Item With an icon",
+            iconClass: "dijitEditorIcon dijitEditorIconCut",
+            onClick: function() {
+                whs.Form('bricks',0)
+            }
+        }));
+        pMenu.startup();
+
+
+store = new dojo.data.ItemFileWriteStore({url:"brick/"});
+gridLayout = [
+//    { name: 'Id', field: 'id'},
+    { name: 'Label', field: 'label',width:'190px',noscroll:true}
+//    { name: 'total', field: 'total'}
+];
+
+var grid = new dojox.grid.DataGrid({
+    region:'center',
+    headerMenu:pMenu,
+//    editable:true,
+    query:{mark:'*'},
+    store: store,
+    structure: gridLayout
+}, dojo.byId("br"));
+    
+    grid.startup()
+dojo.connect(grid,'onRowContextMenu',function(e){
+
+    console.log(e)
+})
+
+
+
+
 //dojo.place(new whs.BrickSelectWidget().domNode,'test')
 //dojo.date.locale.addCustomFormats('d.M.y m.h','m.h')
-new whs.Form('bills',2);
+//new whs.Form('bills',2);
 
 });
 
 dojo.addOnLoad(function() {
 //    brick.query();
-//    for (var a = 1;a<190;a++){
-//        var br = new whs.BrickWidget({BrickId:a});dojo.place(br.domNode,'test');
+//    for (var a = 1;a<10;++a){
+//        var br = new whs.BrickSelectWidget({BrickId:a});dojo.place(br.domNode,'test');
 //
 //    }
 //
