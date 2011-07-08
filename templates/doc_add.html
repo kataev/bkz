@@ -3,17 +3,24 @@
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 
 {% block content %}
+
+
     <script type="text/javascript">
+        dojo.registerModulePath("whs", "/static");
+        dojo.require('whs.select.Brick');
+
         dojo.addOnLoad(function() {
             form = dijit.byId('form');
             dojo.connect(form, 'onSubmit', function(e) {
                 dojo.stopEvent(e);
+                console.log(form.value);
                 if (form.validate()) {
                     dojo.xhrPost({
-                                form:e.target,
+                                postData:dojo.objectToQuery(form.get('value')),
+                                url:form.action,
                                 handleAs:'json'
                             }, function(error) {
-                        contentPane.containerNode.innerHTML = 'Что то пошло не так';
+//                        contentPane.containerNode.innerHTML = 'Что то пошло не так';
                     })
                             .then(function(data) {
                         if (data.status) {
@@ -40,24 +47,46 @@
             });
         });
     </script>
-    <form action="/add/sold/" dojoType="dijit.form.Form" method="POST" id='form'>
-        {% for field in form %}
+    <style>
+        ul {
+            list-style-type: none;
+        }
 
-            {% if field.name == 'brick' %}
-{#                {{ field }}#}
-                {{ form.fields.brick.label }}
-                <select dojoType='dijit.form.Select'>
-                    {% for b in form.fields.brick.queryset %}
-                    <option value='{{ b.pk }}'>{{ b }}</option>
-                    {% endfor %}
-                
-                </select>
-            {% else %}
-            {{ field }}
-            {% endif %}
-        {% endfor %}
+        ul li {
+            padding-top: 5px;
+        }
 
+        ul li label {
+            width: 100px;
+            display: block;
+        }
+    </style>
+    {#    <script type="text/javascript" src="/static/select/Brick/Brick.js"></script>#}
+    <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
+        <ul>
+            {% for field in form %}
+                <li>
+                    <label> {{ field.label }} </label>
+                    {% if field.name == 'brick' %}
+                        {#                {{ field }}#}
 
+                        <div dojoType='whs.select.Brick' data-dojo-attach-point="containerNode">
+                            {% for b in form.fields.brick.queryset %}
+<option value='{{ b.pk }}' {% if b.pk == field.value %} selected {% endif %} cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}' vi='{{ b.get_view_display }}'
+we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}' total='{{ b.total }}'>{{ b }}</option>{% endfor %}
+
+                                <div data-dojo-attach-point="selectNode" style='border:1px black solid;width:100px;height:150px;display:none;'>
+{#                                    {% for field in brickSelectForm %}#}
+{#                                        {{ field }}#}
+{#                                    {% endfor %}#}
+                            </div>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
         <button dojoType="dijit.form.Button" type="submit">
             Схоронить
         </button>

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from dojango.forms import ModelForm
-#from django.core.exceptions import ValidationError
-#from treebeard.mp_tree import MP_Node
-#from dojango.data.modelstore import  *
+from dojango.forms import ModelForm,RadioSelect,DropDownSelect
+
 
 
 class bricks(models.Model):
@@ -68,26 +66,34 @@ class bricks(models.Model):
         
     
     def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
-        from string import Template # Шаблоны йоба
-        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
-        
-        if self.weight==u'2':
-            t = Template(u'КР $mark $defect $refuse $features') # Шаблон для ебаного камня
-        
-        if self.brick_class==5: # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
-            t = Template(u'КЕ $view_d $mark $defect $refuse $features $tip')
-            view=self.get_view()
+#        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
+        values = self.__dict__
+        values['weight']=self.get_weight_display()
+        values['mark']= self.get_mark_display()
+#        values['color_type']= self.get_color_type_display()
+        template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s";
+
+        if self.color==u'Кр':
+            values['color'] = ''
         else:
-            view=self.get_view()[:1] # Если обычный кирпич, то выводим Л(ицевой) и Р(ядовой)
-        
-        return t.substitute(weight_d = self.get_weight_display()[:1], # подставляем же! и возвращяем
-                         view_d = view,
-                         mark = self.get_mark_display(),
-                         refuse = self.refuse,
-                         defect = self.get_defect_display(),
-                         features = self.features,
-                         tip = self.get_color_type_display()
-                         ).strip().replace('  ',' ')
+            values['color'] = self.get_color_display()
+
+        if self.weight==u'2':
+            template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
+#
+        if self.brick_class==5: # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
+            template = u'КЕ %(view)s %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s'
+#            values['view']=self.euro_view[self.view]
+
+
+        return (template % values).strip().replace('  ',' ')
+
+#                         mark = self.get_mark_display(),
+#                         refuse = self.refuse,
+#                         defect = self.get_defect_display(),
+#                         features = self.features,
+#                         tip = self.get_color_type_display()
+#                         ).strip().replace('  ',' ')
     def get_absolute_url(self):
         return "/json/bricks/%i/" % self.id
 
@@ -101,6 +107,19 @@ class bricks(models.Model):
 class brickForm(ModelForm):
     class Meta:
         model=bricks
+
+class brickSelectForm(ModelForm):
+    class Meta:
+        model=bricks
+        exclude = ['total','name','features','color_type','refuse']
+        widgets = {
+            'color': RadioSelect(),
+            'brick_class': RadioSelect(),
+            'mark': RadioSelect(),
+            'view': RadioSelect(),
+            'weight': RadioSelect(),
+            'defect': RadioSelect(),
+        }
 
 #class BrickStore(Store):
 ##    id = StoreField()

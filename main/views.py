@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from django.views.decorators.http import require_http_methods
-#from django.db.models.loading import get_models, get_app
+from cjson import encode as json
 
 from whs.bricks.models import *
 from whs.bills.models import *
@@ -31,9 +31,34 @@ def sold_add(request):
     f = soldForm()
     dojo_collector.add_module("dijit.form.Form")
     dojo_collector.add_module("dijit.form.Button")
+    dojo_collector.add_module("dijit.form.Select")
+#    dojo_collector.add_module("dijit._Widget")
+
 #    f.fields['brick'].widget.dojo_type='whs.select.brick'
     return render_to_response('doc_add.html',{'form':f,'title':'Новая отгрузка'},
                           context_instance=RequestContext(request))
+
+
+def sold_show(request,id):
+    id = int(id)
+    f = soldForm(instance=sold.objects.get(pk=id))
+    dojo_collector.add_module("dijit.form.Form")
+    dojo_collector.add_module("dijit.form.Button")
+    dojo_collector.add_module("dijit.form.Select")
+    return render_to_response('doc_add.html',{'form':f,'title':'','brickSelectForm':brickSelectForm()},
+                          context_instance=RequestContext(request))
+
+def brick_show(request,id):
+    id = int(id)
+    f = brickSelectForm(instance=bricks.objects.get(pk=id))
+    dojo_collector.add_module("dijit.form.Form")
+    dojo_collector.add_module("dijit.form.Button")
+    dojo_collector.add_module("dijit.form.Select")
+#    dojo_collector.add_module("dijit._Widget")
+#    f.fields['brick'].widget.dojo_type='whs.select.brick'
+    return render_to_response('doc_add.html',{'form':f,'title':''},
+                          context_instance=RequestContext(request))
+
 
 #@require_http_methods(['POST'])
 @json_response
@@ -46,6 +71,7 @@ def ajax_add(request,model_name):
     if request.is_ajax():
 #        return {'test':True}
         data=request.POST.copy() # Копируем массив, ибо request - read only
+        print data
         for field in data:
             data[field]=data[field].replace(',','.')
         f = form(data)
@@ -112,84 +138,93 @@ def ajax_add(request,model_name):
 #    response.status_code=400
 #    return response
 #
-#def form(request,modelName,id=0):
-#    model = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}[modelName]
-#    form = {'bricks':brickForm,'bills':billForm,'solds':soldForm,'transfers':transferForm}[modelName]
-#
-#    modelType=model.__base__.__name__
-#
-##    if modelName not in models.keys():
-##        return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
-#
-#    if request.method == 'GET':
-#
-#        if int(id)==0:
-#            f=form()
-#            method='POST'
-#            url = 'form/%s/' % modelName
-#            if modelName in ('bricks','transfers',):
-#                title=u'Новый %s' % model._meta.verbose_name.lower()
-#            else:
-#                title=u'Новая %s' % model._meta.verbose_name.lower()
-#        else:
-#            url = 'form/%s/%s/' % (modelName,id)
-#            method='PUT'
-#            title=u'%s %s' % (model._meta.verbose_name,id)
-#            try:
-#                f=form(instance=model.objects.get(pk=id))
-#            except ObjectDoesNotExist:
-#                return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
-#            method='PUT'
-#
-#        if modelName in ['solds','transfers']:
-#            temp=modelName+'.html'
-#        else:
-#            temp='form.html'
-#
+def form(request,modelName,id=0):
+    model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
+    form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm}[modelName]
+
+    modelType=model.__base__.__name__
+
+#    if modelName not in models.keys():
+#        return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
+
+    if request.method == 'GET':
+
+        if int(id)==0:
+            f=form()
+            method='Post'
+            url = 'form/%s/' % modelName
+            if modelName in ('bricks','transfers',):
+                title=u'Новый %s' % model._meta.verbose_name.lower()
+            else:
+                title=u'Новая %s' % model._meta.verbose_name.lower()
+        else:
+            url = 'form/%s/%s/' % (modelName,id)
+            method='Put'
+            title=u'%s %s' % (model._meta.verbose_name,id)
+            try:
+                f=form(instance=model.objects.get(pk=id))
+            except model.DoesNotExist:
+                return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
+            method='Put'
+
+        if modelName in ['solds','transfers']:
+            temp=modelName+'.html'
+        else:
+            temp='form.html'
+
 #        if request.is_ajax():
 #            rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title,'ajax':True})
 #            return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="application/json;charset=utf-8;")
 #        else:
 #            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title,'ajax':False})
 #            return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
-#
-#    if request.method == 'POST' and int(id)==0:
-#        data=request.POST.copy() # Копируем массив, ибо request - read only
-#        for field in data:
-#            data[field]=data[field].replace(',','.')
-#        f = form(data)
-#        if f.is_valid():
-#            ins = f.save(commit=False)
-##            f.save_m2m()
-#            return redirect(ins)
-#        else:
-##            del form.errors['__all__']
-#            return HttpResponse(json(f.errors),mimetype="application/json;charset=utf-8")
-#
-#    if int(id)!=0 and (request.method == 'POST' or request.method == 'PUT'):
-#        if request.method == 'POST':
-#            data=request.POST.copy()
-#        else:
-#            data=request.PUT.copy() # Копируем массив, ибо request - read only
-#        print data
-#        for field in data:
-#            if field in ('solds','transfers'):
-#                continue
+        dojo_collector.add_module("dijit.form.Form")
+        dojo_collector.add_module("dijit.form.Button")
+        dojo_collector.add_module("dijit.form.Select")
+        return render_to_response('doc_add.html',{'form':f,'title':title,'method':method},
+                          context_instance=RequestContext(request))
+
+    if request.method == 'POST' and int(id)==0:
+        print 'POST'
+        data=request.POST.copy() # Копируем массив, ибо request - read only
+        for field in data:
+            data[field]=data[field].replace(',','.')
+        f = form(data)
+        if f.is_valid():
+            ins = f.save(commit=False)
+#            f.save_m2m()
+            return HttpResponse(json({'status':True}),mimetype="application/json;charset=utf-8")
+        else:
+#            del form.errors['__all__']
+            return HttpResponse(json(f.errors),mimetype="application/json;charset=utf-8")
+
+    if int(id)!=0 and (request.method == 'POST' or request.method == 'PUT'):
+        print 'PUT'
+        if request.method == 'POST':
+            data=request.POST.copy()
+        else:
+            print request.PUT
+            data=request.PUT.copy() # Копируем массив, ибо request - read only
+        print data
+        for field in data:
+            if field in ('solds','transfers'):
+                continue
 #            print field,data[field]
-#            data[field]=data[field].replace(',','.')
-#        print model.objects.get(pk=id)
-#        f = form(data,instance=model.objects.get(pk=id))
-#        if f.is_valid():
-#            ins = f.save()
-##            f.save_m2m()
-#            return redirect(ins)
-#        else:
-##            del form.errors['__all__']
-#            return HttpResponse(json({'status':'error','message':f.errors}),mimetype="application/json;charset=utf-8")
-#
-#    if request.method == 'DELETE':
-#        if id == 0:
-#            return HttpResponse(json({'status':'error','message':'Нельзя удалять объект с id = 0'}),mimetype="application/json;charset=utf-8")
-#        else:
-#            model.objects.get(pk=id).delete()
-#            return HttpResponse(json({'status':'deleted','id':id}),mimetype="application/json;charset=utf-8")
+            data[field]=data[field].replace(',','.')
+        print model.objects.get(pk=id)
+        f = form(data,instance=model.objects.get(pk=id))
+        print f
+        if f.is_valid():
+            ins = f.save()
+#            f.save_m2m()
+            return HttpResponse(json({'status':True}),mimetype="application/json;charset=utf-8")
+        else:
+#            del form.errors['__all__']
+            return HttpResponse(json({'status':'error','message':f.errors}),mimetype="application/json;charset=utf-8")
+
+    if request.method == 'DELETE':
+        if id == 0:
+            return HttpResponse(json({'status':'error','message':'Нельзя удалять объект с id = 0'}),mimetype="application/json;charset=utf-8")
+        else:
+            model.objects.get(pk=id).delete()
+            return HttpResponse(json({'status':'deleted','id':id}),mimetype="application/json;charset=utf-8")
