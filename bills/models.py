@@ -23,6 +23,11 @@ class sold(oper):
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
 
+
+    def def save(self, *args, **kwargs):
+    
+        super(Blog, self).save(*args, **kwargs)
+
 class soldForm(ModelForm):
     class Meta:
         model=sold
