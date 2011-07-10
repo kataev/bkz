@@ -5,14 +5,26 @@
 {# add your own javascript/css stuff here #}
 {% block dojango_header_extra %}
     <script type="text/javascript">
+        var dojoConfig = {
+            isDebug: true,
+            locale: 'Ru-ru',
+            extraLocale:'Ru'
+        };
+
         dojo.addOnLoad(function() {
 //            dojo.parser.parse();
         });
 
     </script>
     <style>
+        /*body {*/
+            /*background-image: url('http://dl.dropbox.com/u/8716795/background.png');*/
+            /*background-repeat: no-repeat;*/
+            /*background-position: left bottom;*/
+        /*}*/
+
         span.helptext {
-            display:none;
+            display: none;
         }
 
         div#menu {
@@ -28,8 +40,11 @@
 {% block dojango_content %}
     <div style='width:800px;margin:auto;'>
         <div id='menu'>
-            <a href='/bills/'>Накладные</a>
-            <a href='/bills/add/'>Добавить накладную</a>
+            <a href='/admin/'>Админка</a>
+            <a href='/form/bills/'>Добавить накладную</a>
+            <a href='/form/transfer/'>Добавить перевод</a>
+            <a href='/form/sold/'>Добавить продажу</a>
+
         </div>
         <div id='content'>
             {% block content %}

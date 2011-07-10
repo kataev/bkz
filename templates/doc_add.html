@@ -3,8 +3,6 @@
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 
 {% block content %}
-
-
     <script type="text/javascript">
         dojo.registerModulePath("whs", "/static");
         dojo.require('whs.select.Brick');
@@ -13,10 +11,15 @@
             form = dijit.byId('form');
             dojo.connect(form, 'onSubmit', function(e) {
                 dojo.stopEvent(e);
-                console.log(form.value);
+//                console.log(form.value);
+                var value = form.get('value')
+                if ('doc_date' in value) {
+                    value['doc_date'] = dojo.date.locale.format(value['doc_date'], {datePattern:'y-M-d',selector:'date'});
+                }
+                console.log('form send data:', value);
                 if (form.validate()) {
                     dojo.xhrPost({
-                                postData:dojo.objectToQuery(form.get('value')),
+                                postData:dojo.objectToQuery(value),
                                 url:form.action,
                                 handleAs:'json'
                             }, function(error) {
@@ -24,18 +27,22 @@
                     })
                             .then(function(data) {
                         if (data.status) {
-                            console.log('ok', data)
+                            console.log('ok', data.id,data);
+                            dojo.create('li', {innerHTML:'ok'}, 'log');
+
                         }
                         else {
-                            console.log('fail', data)
+                            console.log('fail', data);
+                            dojo.create('li', {innerHTML:'fail'}, 'log');
+
                             for (var i in data.message) { // Цикл по словарю, берем dijit виджет
-                                var input = dijit.getEnclosingWidget(dojo.query('input[name="' + i + '"]', div))
-                                console.log(input);
+                                var input = dijit.byId('id_' + i)
+//                                console.log(input);
                                 input.state = 'Error';
                                 input._setStateClass();// Код не мой, я просто разместил объяву
-                                dijit.setWaiState(input, 'invalid', 'true');
+                                input.set('invalid', 'true');
                                 input._maskValidSubsetError = true;
-//                                        dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
+                                dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
                             }
                         }
                     });
@@ -72,13 +79,17 @@
 
                         <div dojoType='whs.select.Brick' data-dojo-attach-point="containerNode">
                             {% for b in form.fields.brick.queryset %}
-<option value='{{ b.pk }}' {% if b.pk == field.value %} selected {% endif %} cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}' vi='{{ b.get_view_display }}'
-we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}' total='{{ b.total }}'>{{ b }}</option>{% endfor %}
+                                <option value='{{ b.pk }}' {% if b.pk == field.value %} selected {% endif %}
+                                        cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}'
+                                        vi='{{ b.get_view_display }}'
+                                        we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'
+                                        total='{{ b.total }}'>{{ b }}</option>{% endfor %}
 
-                                <div data-dojo-attach-point="selectNode" style='border:1px black solid;width:100px;height:150px;display:none;'>
-{#                                    {% for field in brickSelectForm %}#}
-{#                                        {{ field }}#}
-{#                                    {% endfor %}#}
+                            <div data-dojo-attach-point="selectNode"
+                                 style='border:1px black solid;width:100px;height:150px;display:none;'>
+                                {#                                    {% for field in brickSelectForm %}#}
+                                {#                                        {{ field }}#}
+                                {#                                    {% endfor %}#}
                             </div>
                         </div>
                     {% else %}
@@ -91,6 +102,8 @@ we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}' total='{{ b.tota
             Схоронить
         </button>
     </form>
+    <ul id='log'>
+    </ul>
 {% endblock %}
 
 

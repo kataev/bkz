@@ -7,6 +7,7 @@ ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
 )
 
+
 MANAGERS = ADMINS
 
 DATABASES = {
@@ -20,6 +21,10 @@ DATABASES = {
     }
 }
 
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS' : False,
+}
 
 
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
@@ -54,7 +59,9 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
-USE_L10N = True
+#USE_L10N = True
+USE_L10N = False
+
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -113,6 +120,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'dojango.middleware.DojoCollector',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 )
 
 ROOT_URLCONF = 'whs.urls'
@@ -130,12 +138,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-#    'treebeard',
+    'south',
     'dojango',
     'whs.bricks',
     'whs.main',
     'whs.bills',
-
+    'debug_toolbar'
 )
 
 # A sample logging configuration. The only tangible logging

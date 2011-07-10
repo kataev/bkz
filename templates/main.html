@@ -2,10 +2,14 @@
 
 
 {% block content %}
-LOL
-
- {% endblock %}
-
-
-
-
+    <h3>Остатки кирпича по классам:</h3>
+<ul>
+{% for brick in brick_total %}<li>{{ brick.brick_class }}:{{ brick.total }}</li>
+{% endfor %}
+</ul>
+    <h3>Накладные за эту неделю:</h3>
+<ul>
+{% for bill in bills %}<li>{{ bill.name }} на {{ bill.money }} руб</li>
+{% endfor %}
+</ul>
+{% endblock %}

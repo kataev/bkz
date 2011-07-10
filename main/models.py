@@ -20,7 +20,7 @@ class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
 
     number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
-    doc_date=models.DateField(u'Дата',max_length=60,help_text=u'Дата документа')
+    doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
     info=models.CharField(u'Примечание',max_length=60,blank=True,help_text=u'Любая полезная информация')
     time_change=models.DateTimeField(auto_now=True)
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')

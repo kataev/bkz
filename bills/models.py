@@ -6,6 +6,7 @@ from dojango.forms import ModelForm
 from dojango.forms import DateField,DateInput
 from dojango.data.modelstore import  *
 from dojango.forms import ModelChoiceField
+import pytils
 
 class sold(oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
@@ -14,7 +15,10 @@ class sold(oper):
 
     class Meta():
             verbose_name = u"Отгрузка"
-            verbose_name_plural =  u"Отгрузка"
+            verbose_name_plural =  u"Отгрузки"
+
+    def __unicode__(self):
+        return u'Отгрузка %s, %d шт' % (self.brick,self.amount)
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
@@ -25,14 +29,16 @@ class soldForm(ModelForm):
 
 
 class transfer(oper):
-#    brick_from=models.ForeignKey(bricks,related_name='from',verbose_name=u'Откуда',help_text=u'Из какого кирпича')
-#    brick=models.ForeignKey(bricks,related_name='to',verbose_name=u'Куда',help_text=u'В какой')
-#    amount=models.PositiveIntegerField(u"Кол-во",help_text=u'Число, больше остатка')
-#    time_change=models.DateTimeField(auto_now=True)
-    sold = models.ManyToManyField(sold,blank=True,null=True,help_text=u'продажа')
+    sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка')
     class Meta():
             verbose_name = u"Перевод"
             verbose_name_plural = "Переводы"
+
+    def __unicode__(self):
+        if self.sold is None:
+            return u'Незаконченный перевод из %s, %d шт' % (self.brick,self.amount)
+        else:
+            return u'Перевод из %s в %s, %d шт' % (self.brick,self.sold.brick,self.amount)
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
@@ -54,7 +60,7 @@ class bill(doc):
             verbose_name_plural = u"Накладные"
 
     def __unicode__(self):
-        return 'Накладная %d' % self.id
+        return u'Накладная № %d от %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date))
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
@@ -62,17 +68,3 @@ class bill(doc):
 class billForm(ModelForm):
     class Meta:
         model=bill
-
-#class billStore(Store):
-##    id = StoreField()
-#    number = StoreField()
-#    doc_date = StoreField( get_value=ValueMethod('strftime', '%Y-%m-%d') )
-#    info = StoreField()
-##    time_change = StoreField( get_value=ValueMethod('__str__') )
-#    solds = ReferenceField()
-#    transfers = ReferenceField()
-#
-#
-#    class Meta(object):
-#        objects = bills.objects.all()
-##        label = bricks._meta.verbose_name

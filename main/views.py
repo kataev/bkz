@@ -5,7 +5,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from django.views.decorators.http import require_http_methods
 from cjson import encode as json
+from django.db.models import Sum
 
+import datetime
 from whs.bricks.models import *
 from whs.bills.models import *
 
@@ -13,7 +15,23 @@ from dojango.util import dojo_collector
 from dojango.decorators import json_response
 
 def main(request):
-    return render_to_response('main.html',
+#    bills = bill.objects.latest('doc_date')[:10]
+
+    brick_sum = bricks.objects.values('brick_class').annotate(total=Sum('total')).order_by('brick_class')
+    for br in brick_sum:
+        br['brick_class']=bricks.class_c[br['brick_class']][1]
+
+    bills = []
+    for b in bill.objects.filter(doc_date__gte=(datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday()))):
+        money=0
+        for s in b.solds.all():
+            money+=s.price * s.amount
+        bq = {'name':unicode(b),'money':money}
+        bills.append(bq)
+
+
+
+    return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills},
                           context_instance=RequestContext(request))
 
 
@@ -160,7 +178,7 @@ def form(request,modelName,id=0):
         else:
             url = 'form/%s/%s/' % (modelName,id)
             method='Put'
-            title=u'%s %s' % (model._meta.verbose_name,id)
+            title=u'Изменение %s № %s' % (model._meta.verbose_name_plural.lower(),id)
             try:
                 f=form(instance=model.objects.get(pk=id))
             except model.DoesNotExist:
@@ -181,6 +199,9 @@ def form(request,modelName,id=0):
         dojo_collector.add_module("dijit.form.Form")
         dojo_collector.add_module("dijit.form.Button")
         dojo_collector.add_module("dijit.form.Select")
+        dojo_collector.add_module("dojo.date")
+        dojo_collector.add_module("dojo.date.locale")
+
         return render_to_response('doc_add.html',{'form':f,'title':title,'method':method},
                           context_instance=RequestContext(request))
 
@@ -189,14 +210,13 @@ def form(request,modelName,id=0):
         data=request.POST.copy() # Копируем массив, ибо request - read only
         for field in data:
             data[field]=data[field].replace(',','.')
+        print data
         f = form(data)
         if f.is_valid():
-            ins = f.save(commit=False)
-#            f.save_m2m()
-            return HttpResponse(json({'status':True}),mimetype="application/json;charset=utf-8")
+            ins = f.save()
+            return HttpResponse(json({'status':True,'id':ins.pk}),mimetype="application/json;charset=utf-8")
         else:
-#            del form.errors['__all__']
-            return HttpResponse(json(f.errors),mimetype="application/json;charset=utf-8")
+            return HttpResponse(json({'status':False,'message':f.errors}),mimetype="application/json;charset=utf-8")
 
     if int(id)!=0 and (request.method == 'POST' or request.method == 'PUT'):
         print 'PUT'
@@ -209,22 +229,19 @@ def form(request,modelName,id=0):
         for field in data:
             if field in ('solds','transfers'):
                 continue
-#            print field,data[field]
             data[field]=data[field].replace(',','.')
         print model.objects.get(pk=id)
         f = form(data,instance=model.objects.get(pk=id))
-        print f
         if f.is_valid():
             ins = f.save()
-#            f.save_m2m()
-            return HttpResponse(json({'status':True}),mimetype="application/json;charset=utf-8")
+            return HttpResponse(json({'status':True,'id':ins.pk}),mimetype="application/json;charset=utf-8")
         else:
 #            del form.errors['__all__']
-            return HttpResponse(json({'status':'error','message':f.errors}),mimetype="application/json;charset=utf-8")
+            return HttpResponse(json({'status':False,'message':f.errors}),mimetype="application/json;charset=utf-8")
 
     if request.method == 'DELETE':
         if id == 0:
-            return HttpResponse(json({'status':'error','message':'Нельзя удалять объект с id = 0'}),mimetype="application/json;charset=utf-8")
+            return HttpResponse(json({'status':False,'message':'Нельзя удалять объект с id = 0'}),mimetype="application/json;charset=utf-8")
         else:
             model.objects.get(pk=id).delete()
-            return HttpResponse(json({'status':'deleted','id':id}),mimetype="application/json;charset=utf-8")
+            return HttpResponse(json({'status':True,'id':id}),mimetype="application/json;charset=utf-8")
