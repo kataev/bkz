@@ -31,7 +31,7 @@ def main(request):
 
 
 
-    return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills},
+    return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bricks.objects.all()},
                           context_instance=RequestContext(request))
 
 
@@ -103,59 +103,6 @@ def ajax_add(request,model_name):
     else:
         return 
 
-#def show_bill(request):
-#    store = billStore()
-#    return HttpResponse(store.to_json(), mimetype='application/json')
-#
-#
-#
-#def main(response):
-#    models = {'bills':bills,'bricks':bricks,'solds':solds,'transfers':transfers}
-#    def f(model):
-#        return models[model]._meta.verbose_name_plural
-#
-#    rendered = render_to_string('main.html',{'models':map(f,models)})
-#    return HttpResponse(rendered,mimetype="text/html;charset=utf-8")
-#
-#
-#def rest(request,modelName,id_str):
-#
-#    try:
-#        model = {'bricks':bricks,'bills':bills,'solds':solds,'transfers':transfers}[modelName]
-#    except KeyError:
-#        return HttpResponse(json({'status':'error','message':'KeyError'}),mimetype="application/json;charset=utf-8")
-#
-#    id=[]
-#
-#    for i in id_str.split('/'):
-#            id.append(i)
-#    data = {}
-#    data.update(request.GET.copy())
-#    for val in data:
-#        data[str(val)]=data.pop(val)
-#
-#    try:
-#        if len(id_str)==0:
-#            if len(request.GET) == 0:
-#                query = model.objects.all()
-#            else:
-##                for val,key in data:
-##                    print val,key
-##                    data[val]=str(data.pop[val])
-#                print data
-#                query = model.objects.filter(**data)
-#        else:
-#            query = model.objects.filter(pk__in=id)
-#    except (ValueError,TypeError),e:
-#        return HttpResponse(json({'status':'error','message':str(e)}),mimetype="application/json;charset=utf-8")
-#
-#    return HttpResponse(serializers.serialize('json',query),mimetype="application/json;charset=utf-8")
-#
-#def test(response):
-#    response= HttpResponse(json({'test':'test'}),mimetype="application/json; charset=utf-8")
-#    response.status_code=400
-#    return response
-#
 def form(request,modelName,id=0):
     model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
     form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm}[modelName]
@@ -245,3 +192,13 @@ def form(request,modelName,id=0):
         else:
             model.objects.get(pk=id).delete()
             return HttpResponse(json({'status':True,'id':id}),mimetype="application/json;charset=utf-8")
+
+
+def posting(request,modelName,id):
+    model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
+    id = int(id)
+    try:
+        model.objects.get(pk=id).posting()
+        return HttpResponse(json({'status':True,'id':id}),mimetype="application/json;charset=utf-8")
+    except:
+        return HttpResponse(json({'status':False,'id':id}),mimetype="application/json;charset=utf-8")

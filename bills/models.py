@@ -18,32 +18,29 @@ class sold(oper):
             verbose_name_plural =  u"Отгрузки"
 
     def __unicode__(self):
-        return u'Отгрузка %s, %d шт' % (self.brick,self.amount)
+        return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
 
 
-    def def save(self, *args, **kwargs):
-    
-        super(Blog, self).save(*args, **kwargs)
-
 class soldForm(ModelForm):
     class Meta:
         model=sold
+        exclude=('post')
 
 
 class transfer(oper):
-    sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка')
+    sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
     class Meta():
             verbose_name = u"Перевод"
             verbose_name_plural = "Переводы"
 
     def __unicode__(self):
         if self.sold is None:
-            return u'Незаконченный перевод из %s, %d шт' % (self.brick,self.amount)
+            return u'Незаконченный перевод № %d из %s, %d шт' % (self.pk,self.brick,self.amount)
         else:
-            return u'Перевод из %s в %s, %d шт' % (self.brick,self.sold.brick,self.amount)
+            return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
@@ -51,6 +48,8 @@ class transfer(oper):
 class transferForm(ModelForm):
     class Meta:
         model=transfer
+        exclude=('post')
+
 
 ## Отгрузка
 
@@ -70,6 +69,45 @@ class bill(doc):
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)
 
+    def posting(self):
+        transfers = self.transfers.all()
+        solds = self.solds.all()
+
+        errors= []
+        for t in transfers: # Обрабатываем
+            t.brick.total +=t.amount
+            t.sold.brick.total -= t.amount
+        for s in solds:
+            s.brick.total -=s.amount
+
+        for t in transfers: # Проверяем
+            if t.brick.total < 0:
+                error = {'brick':t.brick,'amount':t.brick.total*-1,'error':u'Не хватает кирпича','oper':t}
+                errors.append(error)
+            if t.sold.brick.total < 0:
+                error = {'brick':t.sold.brick,'amount':t.sold.brick.total*-1,'error':u'Не хватает кирпича в принимащей строне',"oper":t}
+                errors.append(error)
+        for s in solds:
+            if s.brick.total < 0:
+                error = {'brick':s.brick,'amount':s.brick.total*-1,'error':u'Не хватает кирпича','oper':s}
+                errors.append(error)
+        if len(errors) > 0:
+            return errors
+        else:
+            for t in transfers:
+                t.brick.save()
+                t.sold.brick.save()
+                t.post=True
+
+            for s in solds:
+                s.brick.save()
+                s.post=True
+            self.draft=True
+            return []
+
+
+
 class billForm(ModelForm):
     class Meta:
         model=bill
+        exclude=('draft')

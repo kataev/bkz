@@ -25,6 +25,8 @@ urlpatterns = patterns('',
 
     url(r'^add/(?P<model_name>\w+)/$', 'whs.main.views.ajax_add', name='ajax_add'),
 
+    url(r'^post/(?P<modelName>\w+)/(?P<id>\d+)/$', 'whs.main.views.posting', name='posting'),
+
 #    url(r'^test/$', 'whs.main.views.test', name='test'),
     url(r'^form/(?P<modelName>\w+)/(?P<id>\d+)/$', 'whs.main.views.form', name='form_id'),
     url(r'^form/(?P<modelName>\w+)/$', 'whs.main.views.form', name='form'),

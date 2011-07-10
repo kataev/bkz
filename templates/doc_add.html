@@ -55,6 +55,7 @@
         });
     </script>
     <style>
+    @import url('/static/style.css');
         ul {
             list-style-type: none;
         }
@@ -79,7 +80,7 @@
 
                         <div dojoType='whs.select.Brick' data-dojo-attach-point="containerNode">
                             {% for b in form.fields.brick.queryset %}
-                                <option value='{{ b.pk }}' {% if b.pk == field.value %} selected {% endif %}
+                                <option class='{{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %} selected {% endif %}
                                         cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}'
                                         vi='{{ b.get_view_display }}'
                                         we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'

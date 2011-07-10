@@ -5,7 +5,6 @@ from dojango.forms import ModelForm,RadioSelect,DropDownSelect
 
 
 class bricks(models.Model):
-    
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
     view_c=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
@@ -102,6 +101,28 @@ class bricks(models.Model):
         ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
         verbose_name = u"Кирпич"
         verbose_name_plural = u'Кирпичи'
+
+
+    css={
+        'view':{u'Л':u'facial',u'Р':u'common'},
+        'weight':{u'1':u'single',u'1.4':u'thickened',u'2':u'double'},
+        'color':{u'Кр':'c_red',u'Же':'c_ye',u'Ко':'c_br',u'Св':u'c_li',u'Бе':u'wh'},
+        'brick_class':[u'cl_red',u'cl_ye',u'cl_br',u'cl_li',u'cl_wh',u'cl_eu',u'cl_ot',],
+        'mark':{100:u'm100',125:u'm125',150:u'm150',175:u'm175',200:u'm200',250:u'm250',9000:u'm9000'},
+        'color_type':{'':'type0','1':"type1",'2':'type2','3':'type3'},
+        'defect':{u'':u'lux',u'<20':u'p_20',u'>20':u'm_20'},
+
+    }
+
+    def show_css(self):
+        css= ''
+        for key in self.css.keys():
+            try:
+                prop = getattr(self,key)
+                css+='%s ' % self.css[key][prop]
+            except :
+                pass
+        return css
 
 
 class brickForm(ModelForm):

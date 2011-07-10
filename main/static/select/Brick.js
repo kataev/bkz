@@ -63,7 +63,8 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                                 view:dojo.attr(node, 'vi'),
                                 weight:dojo.attr(node, 'we'),
                                 color:dojo.attr(node, 'color'),
-                                total:dojo.attr(node, 'total')
+                                total:dojo.attr(node, 'total'),
+                                css:dojo.attr(node, 'class')
                             });
                     dojo.destroy(node);
                 });
@@ -71,11 +72,14 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
 
 
                 var table = dojo.create('table');
+                dojo.attr(table,'id','brickselect');
                 store.query().forEach(function(el){
-                    var tr = dojo.create('tr',null,table);
+                    var tr = dojo.create('tr',{'class':el['css']},table);
                     dojo.attr(tr,'pk',el['id']);
                     for (a in el){
+                        if (a!='css'){
                         dojo.create('td',{innerHTML:el[a]},tr);
+                        }
                     }
 
                 });

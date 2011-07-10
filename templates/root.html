@@ -17,10 +17,13 @@
 
     </script>
     <style>
+
+        @import url('/static/style.css');
+
         /*body {*/
-            /*background-image: url('http://dl.dropbox.com/u/8716795/background.png');*/
-            /*background-repeat: no-repeat;*/
-            /*background-position: left bottom;*/
+        /*background-image: url('http://dl.dropbox.com/u/8716795/background.png');*/
+        /*background-repeat: no-repeat;*/
+        /*background-position: left bottom;*/
         /*}*/
 
         span.helptext {
@@ -40,19 +43,16 @@
 {% block dojango_content %}
     <div style='width:800px;margin:auto;'>
         <div id='menu'>
+            <a href='/'>Главная</a>
             <a href='/admin/'>Админка</a>
             <a href='/form/bills/'>Добавить накладную</a>
             <a href='/form/transfer/'>Добавить перевод</a>
             <a href='/form/sold/'>Добавить продажу</a>
-
         </div>
         <div id='content'>
             {% block content %}
-
-
             {% endblock %}
         </div>
-
     </div>
 {% endblock %}
 

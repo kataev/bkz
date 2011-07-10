@@ -7,9 +7,11 @@ from whs.bricks.models import bricks
 
 
 class oper(models.Model):
+#    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
     brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во",help_text=u'Кол-во кирпича для операции')
     time_change=models.DateTimeField(auto_now=True)
+    post=models.BooleanField('Проведенно?',default=False)
     # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
 
     class Meta:
