@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
 
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
@@ -140,6 +140,12 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'south',
     'dojango',
+    
+#    'indexer',
+#    'paging',
+    'sentry',
+    'sentry.client',
+
     'whs.bricks',
     'whs.main',
     'whs.bills',

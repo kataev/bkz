@@ -10,11 +10,9 @@
             dojo.connect(form, 'onSubmit', function(e) {
                 dojo.stopEvent(e);
                 var value = form.get('value')
-                if ('doc_date' in value) {
-                    var v = dojo.date.locale.format(value['doc_date'], {datePattern:'y-MM-d',selector:'date'}).split('-');
-                    if (v[1].lenght <= 1) {v[1]='0'+v[1]}
-                    value['doc_date'] = v[0]+'-'+v[1]+'-'+v[2];
-                }
+//                if ('doc_date' in value) {
+//                    value['doc_date'] = dojo.date.locale.format(value['doc_date'], {datePattern:'y-M-d',selector:'date'});
+//                }
                 console.log('form send data:', value);
                 if (form.validate()) {
                     dojo.xhrPost({
@@ -69,7 +67,35 @@
             {% for field in form %}
                 <li>
                     <label> {{ field.label }} </label>
+                    {% if field.name == 'brick' %}
+                        <div dojoType='whs.select.Brick' data-dojo-attach-point="containerNode">
+                            {% for b in form.fields.brick.queryset %}
+                                <option class='{{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %}
+                                        selected {% endif %}
+                                        cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}'
+                                        vi='{{ b.get_view_display }}'
+                                        we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'
+                                        total='{{ b.total }}'>{{ b }}</option>{% endfor %}
+                            <div data-dojo-attach-point="selectNode"
+                                 style='border:1px black solid;width:100px;height:150px;display:none;'>
+                            </div>
+                        </div>
+                    {% else %}
                         {{ field }}
+                    {% endif %}
+                    {% if field.name == 'amount' %}
+                        <input dojoType="dijit.form.NumberSpinner" id='poddon' style='width:60px;' value="1"
+                               smallDelta="1"
+                               constraints="{min:1,max:20000/288,places:0}" intermediateChanges="true" name="poddon"/>
+                        <select dojoType="dijit.form.Select" id='tara' name="tara">
+                            <option value='352' selected>
+                                Обычный поддон
+                            </option>
+                            <option value='288'>
+                                Маленький поддон
+                            </option>
+                        </select>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

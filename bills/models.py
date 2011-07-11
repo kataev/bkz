@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from whs.main.models import doc,oper
-from whs.bricks.models import bricks
 from django.db import models
 from dojango.forms import ModelForm
-from dojango.forms import DateField,DateInput
-from dojango.data.modelstore import  *
-from dojango.forms import ModelChoiceField
+#from dojango.forms import DateField,DateInput
+#from dojango.data.modelstore import  *
+#from dojango.forms import ModelChoiceField
 import pytils
+#from django.contrib.contenttypes.models import ContentType
+#from django.db.models.signals import pre_save
+#from django.dispatch import receiver
+#from django.contrib.admin.models import LogEntry, ADDITION
 
 class sold(oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
@@ -29,7 +32,6 @@ class soldForm(ModelForm):
         model=sold
         exclude=('post')
 
-
 class transfer(oper):
     sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
     class Meta():
@@ -49,10 +51,6 @@ class transferForm(ModelForm):
     class Meta:
         model=transfer
         exclude=('post')
-
-
-## Отгрузка
-
 
 ## Накладная
 class bill(doc):

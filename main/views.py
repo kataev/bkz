@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse
-from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
-from django.views.decorators.http import require_http_methods
 from cjson import encode as json
 from django.db.models import Sum
 
@@ -12,11 +10,14 @@ from whs.bricks.models import *
 from whs.bills.models import *
 
 from dojango.util import dojo_collector
-from dojango.decorators import json_response
+#from dojango.decorators import json_response
+
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
+from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import force_unicode
+
 
 def main(request):
-#    bills = bill.objects.latest('doc_date')[:10]
-
     brick_sum = bricks.objects.values('brick_class').annotate(total=Sum('total')).order_by('brick_class')
     for br in brick_sum:
         br['brick_class']=bricks.class_c[br['brick_class']][1]
@@ -34,83 +35,15 @@ def main(request):
     return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bricks.objects.all()},
                           context_instance=RequestContext(request))
 
-
-def bill_add(request):
-    f = billForm()
-#    f.fields['solds'].widget.dojo_type='whs.select.sold'
-#    f.fields['transfers'].widget.dojo_type='whs.select.transfer'
-    dojo_collector.add_module("dijit.form.Form")
-    dojo_collector.add_module("dijit.form.Button")
-
-    return render_to_response('doc_add.html',{'form':f,'title':'Новая накладная'},
-                          context_instance=RequestContext(request))
-
-def sold_add(request):
-    f = soldForm()
-    dojo_collector.add_module("dijit.form.Form")
-    dojo_collector.add_module("dijit.form.Button")
-    dojo_collector.add_module("dijit.form.Select")
-#    dojo_collector.add_module("dijit._Widget")
-
-#    f.fields['brick'].widget.dojo_type='whs.select.brick'
-    return render_to_response('doc_add.html',{'form':f,'title':'Новая отгрузка'},
-                          context_instance=RequestContext(request))
-
-
-def sold_show(request,id):
-    id = int(id)
-    f = soldForm(instance=sold.objects.get(pk=id))
-    dojo_collector.add_module("dijit.form.Form")
-    dojo_collector.add_module("dijit.form.Button")
-    dojo_collector.add_module("dijit.form.Select")
-    return render_to_response('doc_add.html',{'form':f,'title':'','brickSelectForm':brickSelectForm()},
-                          context_instance=RequestContext(request))
-
-def brick_show(request,id):
-    id = int(id)
-    f = brickSelectForm(instance=bricks.objects.get(pk=id))
-    dojo_collector.add_module("dijit.form.Form")
-    dojo_collector.add_module("dijit.form.Button")
-    dojo_collector.add_module("dijit.form.Select")
-#    dojo_collector.add_module("dijit._Widget")
-#    f.fields['brick'].widget.dojo_type='whs.select.brick'
-    return render_to_response('doc_add.html',{'form':f,'title':''},
-                          context_instance=RequestContext(request))
-
-
-#@require_http_methods(['POST'])
-@json_response
-def ajax_add(request,model_name):
-    forms = {'bill':billForm,'sold':soldForm,'transfer':transferForm}
-    try:
-        form = forms[model_name]
-    except KeyError:
-        return {'error':'KeyError'}
-    if request.is_ajax():
-#        return {'test':True}
-        data=request.POST.copy() # Копируем массив, ибо request - read only
-        print data
-        for field in data:
-            data[field]=data[field].replace(',','.')
-        f = form(data)
-        if f.is_valid():
-            ins = f.save()
-            return {'status':True}
-        else:
-            return f.errors
-
-
-    else:
-        return 
-
 def form(request,modelName,id=0):
-    model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
-    form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm}[modelName]
+    try:
+        model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
+        form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm}[modelName]
+    except :
+        return HttpResponse('404',mimetype="application/json;charset=utf-8")
+
 
     modelType=model.__base__.__name__
-
-#    if modelName not in models.keys():
-#        return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
 
     if request.method == 'GET':
 
@@ -146,10 +79,14 @@ def form(request,modelName,id=0):
         dojo_collector.add_module("dijit.form.Form")
         dojo_collector.add_module("dijit.form.Button")
         dojo_collector.add_module("dijit.form.Select")
+        dojo_collector.add_module("dijit.form.NumberSpinner")
         dojo_collector.add_module("dojo.date")
         dojo_collector.add_module("dojo.date.locale")
-
-        return render_to_response('doc_add.html',{'form':f,'title':title,'method':method},
+        if modelType=='doc':
+            return render_to_response('doc_add.html',{'form':f,'title':title,'method':method},
+                          context_instance=RequestContext(request))
+        else:
+            return render_to_response('oper_add.html',{'form':f,'title':title,'method':method},
                           context_instance=RequestContext(request))
 
     if request.method == 'POST' and int(id)==0:
@@ -161,6 +98,14 @@ def form(request,modelName,id=0):
         f = form(data)
         if f.is_valid():
             ins = f.save()
+            LogEntry.objects.log_action(
+                user_id         = 1,
+                content_type_id = ContentType.objects.get_for_model(ins).pk,
+                object_id       = ins.pk,
+                object_repr     = force_unicode(ins),
+                action_flag     = ADDITION
+                )
+
             return HttpResponse(json({'status':True,'id':ins.pk}),mimetype="application/json;charset=utf-8")
         else:
             return HttpResponse(json({'status':False,'message':f.errors}),mimetype="application/json;charset=utf-8")
@@ -178,9 +123,27 @@ def form(request,modelName,id=0):
                 continue
             data[field]=data[field].replace(',','.')
         print model.objects.get(pk=id)
-        f = form(data,instance=model.objects.get(pk=id))
+        i=model.objects.get(pk=id)
+        f = form(data,instance=i)
         if f.is_valid():
             ins = f.save()
+            mes = u''
+            print f.changed_data
+            if len(f.changed_data) > 0:
+                mes = u' Было измененно: '
+                for field in f.changed_data:
+                    mes+= f.fields[field].label.lower()
+                    mes+=','
+                print 'mess %s' % mes
+            LogEntry.objects.log_action(
+                user_id         = 1,
+                content_type_id = ContentType.objects.get_for_model(ins).pk,
+                object_id       = ins.pk,
+                object_repr     = force_unicode(ins) + mes[:-1],
+                action_flag     = CHANGE,
+                change_message  = mes[:-1]
+                )
+
             return HttpResponse(json({'status':True,'id':ins.pk}),mimetype="application/json;charset=utf-8")
         else:
 #            del form.errors['__all__']
@@ -191,14 +154,32 @@ def form(request,modelName,id=0):
             return HttpResponse(json({'status':False,'message':'Нельзя удалять объект с id = 0'}),mimetype="application/json;charset=utf-8")
         else:
             model.objects.get(pk=id).delete()
+            LogEntry.objects.log_action(
+                user_id         = 1,
+                content_type_id = ContentType.objects.get_for_model(ins).pk,
+                object_id       = ins.pk,
+                object_repr     = force_unicode(ins),
+                action_flag     = DELETION
+                )
             return HttpResponse(json({'status':True,'id':id}),mimetype="application/json;charset=utf-8")
 
 
 def posting(request,modelName,id):
-    model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
+    try:
+        model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
+    except :
+        return HttpResponse('404',mimetype="application/json;charset=utf-8")
     id = int(id)
     try:
-        model.objects.get(pk=id).posting()
+        ins = model.objects.get(pk=id)
+        ins.posting()
+        LogEntry.objects.log_action(
+                user_id         = 1,
+                content_type_id = ContentType.objects.get_for_model(ins).pk,
+                object_id       = ins.pk,
+                object_repr     = force_unicode(ins)+u' опубликован',
+                action_flag     = CHANGE
+                )
         return HttpResponse(json({'status':True,'id':id}),mimetype="application/json;charset=utf-8")
     except:
         return HttpResponse(json({'status':False,'id':id}),mimetype="application/json;charset=utf-8")
