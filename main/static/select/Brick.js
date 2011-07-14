@@ -1,13 +1,12 @@
 dojo.provide("whs.select.Brick");
 
 dojo.require('dijit.form._FormWidget')
-//dojo.require("dijit._Templated");
 dojo.require("dojo.store.Memory");
 dojo.require("dijit.Dialog");
 
 dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
             baseClass: 'selectBrick',
-    className:'sb',
+            className:'sb',
             templateString: dojo.cache("whs.select.Brick", "Brick.html"),
             store : new dojo.store.Memory({data:[]}),
             value:'',
@@ -21,13 +20,16 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
             _setValueAttr: function(value) {
                 this.value = value;
                 dojo.attr(this.inputNode, 'value', value);
-                if (this.store.get(value))
-                {
+                if (this.store.get(value)) {
                     console.log(this.store.get(value))
                     this._setLabelAttr(this.store.get(value).title);
                 }
 
             },
+            _getBrickAttr: function() {
+                return this.store.get(this.value);
+            },
+
             _getLabelAttr: function() {
                 return this.label;
             },
@@ -35,8 +37,6 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                 this.label = value;
                 this.labelNode.innerHTML = value;
             },
-
-
 
             postCreate: function() {
 //                var selectNode = this.selectNode;
@@ -48,12 +48,7 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                     setLabel(node.innerHTML);
                 });
 
-//                dojo.query('div', this.containerNode).forEach(function(node, i) {
-//                    console.log(node);
-//                })
-//                this.dojo.byId('BrickSelect')
-
-                dojo.query('option', this.containerNode).forEach(function(node, i) {
+                dojo.query('option.brick', this.containerNode).forEach(function(node, i) {
                     var pk = parseInt(dojo.attr(node, 'value'));
                     var title = node.innerHTML;
                     store.put({id:pk,
@@ -68,34 +63,44 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                             });
                     dojo.destroy(node);
                 });
+                var content = dojo.byId('bricksform');
 
+//                this.brickform = new dijit.form.Form(null,content);
 
+//                console.log(dijit.byId('bricksform'));
 
-                var table = dojo.create('table');
-                dojo.attr(table,'id','brickselect');
-                store.query().forEach(function(el){
-                    var tr = dojo.create('tr',{'class':el['css']},table);
-                    dojo.attr(tr,'pk',el['id']);
-                    for (a in el){
-                        if (a!='css'){
-                        dojo.create('td',{innerHTML:el[a]},tr);
+//                dojo.query('#bricksform select', this.containerNode).forEach(function(node, i) {
+//                    console.log(node,content);
+//                    var a= dojo.place(node,content)
+//                    dojo.destroy(node);
+//                    dojo.parser.parse(a);
+//                });
+//                dojo.place('bricksform', content)
+
+                var table = dojo.create('table', null, content);
+                dojo.attr(table, 'id', 'brickselect');
+                store.query().forEach(function(el) {
+                    var tr = dojo.create('tr', {'class':el['css']}, table);
+                    dojo.attr(tr, 'pk', el['id']);
+                    for (a in el) {
+                        if (a != 'css') {
+                            dojo.create('td', {innerHTML:el[a]}, tr);
                         }
                     }
 
                 });
 //
-                var dialog = new dijit.Dialog({title:'Выбор кирпича','content':table,style:'width:600px;',draggable:false});
-                dojo.query('tr',table).connect('onclick',function(e){
+                var dialog = new dijit.Dialog({title:'Выбор кирпича','content':content,style:'width:600px;',draggable:false});
+                dojo.query('tr', table).connect('onclick', function(e) {
                     console.log(e.target.parentElement);
-                    var value = dojo.attr(e.target.parentElement,'pk');
-
+                    var value = dojo.attr(e.target.parentElement, 'pk');
                     setValue(value);
                     dialog.hide();
                 });
-                dojo.connect(this.containerNode, 'onclick', function(e){
+                dojo.connect(this.containerNode, 'onclick', function(e) {
                     dialog.show();
                 });
-
+                console.log('ok')
 
             }
         });

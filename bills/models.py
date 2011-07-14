@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 from whs.main.models import doc,oper
+from whs.agents.models import agent
 from django.db import models
 from dojango.forms import ModelForm
-#from dojango.forms import DateField,DateInput
-#from dojango.data.modelstore import  *
-#from dojango.forms import ModelChoiceField
 import pytils
-#from django.contrib.contenttypes.models import ContentType
-#from django.db.models.signals import pre_save
-#from django.dispatch import receiver
-#from django.contrib.admin.models import LogEntry, ADDITION
+
 
 class sold(oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
@@ -36,7 +31,7 @@ class transfer(oper):
     sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
     class Meta():
             verbose_name = u"Перевод"
-            verbose_name_plural = "Переводы"
+            verbose_name_plural = u"Переводы"
 
     def __unicode__(self):
         if self.sold is None:
@@ -54,6 +49,7 @@ class transferForm(ModelForm):
 
 ## Накладная
 class bill(doc):
+    agent = models.ForeignKey(agent,verbose_name=u'КонтрАгент')
     solds = models.ManyToManyField(sold,blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
     transfers = models.ManyToManyField(transfer,blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
@@ -62,7 +58,7 @@ class bill(doc):
             verbose_name_plural = u"Накладные"
 
     def __unicode__(self):
-        return u'Накладная № %d от %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date))
+        return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name)
 
     def get_absolute_url(self):
         return "/json/%s/%i/" % (self._meta.module_name,self.id)

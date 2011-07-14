@@ -10,12 +10,13 @@ from whs.bricks.models import *
 from whs.bills.models import *
 
 from dojango.util import dojo_collector
-#from dojango.decorators import json_response
+
 
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
 
+le = [u'',u'Созданно ',u'Измененно ',u'Удалено ']
 
 def main(request):
     brick_sum = bricks.objects.values('brick_class').annotate(total=Sum('total')).order_by('brick_class')
@@ -65,28 +66,30 @@ def form(request,modelName,id=0):
                 return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
             method='Put'
 
-        if modelName in ['solds','transfers']:
-            temp=modelName+'.html'
-        else:
-            temp='form.html'
-
-#        if request.is_ajax():
-#            rendered = render_to_string(temp,{'form':f,'url':url,'method':method,'title':title,'ajax':True})
-#            return HttpResponse(json({'modelType':modelType,'method':method,'title':title,'html':rendered}),mimetype="application/json;charset=utf-8;")
-#        else:
-#            rendered = render_to_string(temp,{'modelType':modelType,'form':f,'url':'./','method':'POST','title':title,'ajax':False})
-#            return HttpResponse(rendered,mimetype="text/html;charset=utf-8;")
         dojo_collector.add_module("dijit.form.Form")
         dojo_collector.add_module("dijit.form.Button")
         dojo_collector.add_module("dijit.form.Select")
+        dojo_collector.add_module("dijit.form.DateTextBox")
         dojo_collector.add_module("dijit.form.NumberSpinner")
         dojo_collector.add_module("dojo.date")
         dojo_collector.add_module("dojo.date.locale")
+        dojo_collector.add_module("dojo.parser")
+        history = []
+        if id != 0:
+            for h in LogEntry.objects.filter(content_type=ContentType.objects.get_for_model(model).id,object_id=id):
+                history.append({'action_time':h.action_time,'change_message':le[h.action_flag]+h.change_message})
+
+
         if modelType=='doc':
-            return render_to_response('doc_add.html',{'form':f,'title':title,'method':method},
+            return render_to_response('doc_add.html',{'form':f,'title':title,'method':method,'history':history},
                           context_instance=RequestContext(request))
         else:
-            return render_to_response('oper_add.html',{'form':f,'title':title,'method':method},
+            if int(id)==0:
+                brick = brickForm()
+            else:
+                brick = brickForm(instance=model.objects.get(pk=id).brick)
+
+            return render_to_response('oper_add.html',{'form':f,'title':title,'method':method,'history':history,'brickform':brick},
                           context_instance=RequestContext(request))
 
     if request.method == 'POST' and int(id)==0:
@@ -130,7 +133,6 @@ def form(request,modelName,id=0):
             mes = u''
             print f.changed_data
             if len(f.changed_data) > 0:
-                mes = u' Было измененно: '
                 for field in f.changed_data:
                     mes+= f.fields[field].label.lower()
                     mes+=','

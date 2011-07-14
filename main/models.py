@@ -7,11 +7,16 @@ from whs.bricks.models import bricks
 
 
 class oper(models.Model):
+
+    poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
+
 #    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
     brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
-#    time_change=models.DateTimeField(auto_now=True)
-    post=models.BooleanField('Проведенно?',default=False)
+    tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)
+    poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
+    post=models.BooleanField(u'Проведенно?',default=False)
     # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
 
     class Meta:
@@ -20,10 +25,10 @@ class oper(models.Model):
 
 class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
-
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
     number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
     doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
-    info=models.CharField(u'Примечание',max_length=60,blank=True,help_text=u'Любая полезная информация')
+
 #    time_change=models.DateTimeField(auto_now=True)
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 

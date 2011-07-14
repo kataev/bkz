@@ -6,6 +6,19 @@
         dojo.require('whs.select.Brick');
 
         dojo.addOnLoad(function() {
+
+            spin = dijit.byId('id_tara');
+            amount = dijit.byId('id_amount')
+            poddon = dijit.byId('id_poddon');
+            console.log(spin, amount, poddon)
+            dojo.connect(spin, 'onChange', function() {
+                amount.set('value', spin.get('value') * poddon.get('value'));
+            });
+            dojo.connect(poddon, 'onChange', function() {
+                amount.set('value', spin.get('value') * poddon.get('value'));
+            });
+
+
             form = dijit.byId('form');
             dojo.connect(form, 'onSubmit', function(e) {
                 dojo.stopEvent(e);
@@ -19,8 +32,9 @@
                                 postData:dojo.objectToQuery(value),
                                 url:form.action,
                                 handleAs:'json'
-                            }, function(error) {
-                    }).then(function(data) {
+                            },
+                            function(error) {
+                            }).then(function(data) {
                         if (data.status) {
                             console.log('ok', data.id, data);
                             dojo.create('li', {innerHTML:'ok'}, 'log');
@@ -37,6 +51,10 @@
                                 dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
                             }
                         }
+                    }, function(e) {
+                        console.log('fail', e);
+                        dojo.create('li', {innerHTML:'fail 500'}, 'log');
+
                     });
                 }
                 else {
@@ -66,35 +84,45 @@
         <ul>
             {% for field in form %}
                 <li>
-                    <label> {{ field.label }} </label>
+                    {% if field.name not in 'poddon tara' %}
+                        <label> {{ field.label }} </label>
+                    {% endif %}
                     {% if field.name == 'brick' %}
-                        <div dojoType='whs.select.Brick' data-dojo-attach-point="containerNode">
+
+                        <div id='id_brick' dojoType='whs.select.Brick' id='{{ field.id }}'
+                             data-dojo-attach-point="containerNode">
                             {% for b in form.fields.brick.queryset %}
-                                <option class='{{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %}
+                                <option class='brick {{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %}
                                         selected {% endif %}
                                         cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}'
                                         vi='{{ b.get_view_display }}'
                                         we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'
                                         total='{{ b.total }}'>{{ b }}</option>{% endfor %}
-                            <div data-dojo-attach-point="selectNode"
-                                 style='border:1px black solid;width:100px;height:150px;display:none;'>
+
+                                <div id='bricksform'>
+                                {% for f in brickform %}
+                                    {% if f.name in 'brick_class mark view weight' %}
+                                        {{ f }}
+{#                                       <select class='brickform' dojoType='dijit.form.Select' value='{{ f.value }}'>#}
+{#                                           {% for op in f.field.choices %}#}
+{#                                           <option value='{{ op.0 }}'>{{ op.1 }}</option>#}
+{#                                           {% endfor %}#}
+{#                                       </select>#}
+                                    {% endif %}
+                                {% endfor %}
+
                             </div>
                         </div>
                     {% else %}
-                        {{ field }}
+                        {% if field.name not in 'poddon tara' %}
+                            {{ field }}
+                        {% endif %}
                     {% endif %}
                     {% if field.name == 'amount' %}
-                        <input dojoType="dijit.form.NumberSpinner" id='poddon' style='width:60px;' value="1"
-                               smallDelta="1"
-                               constraints="{min:1,max:20000/288,places:0}" intermediateChanges="true" name="poddon"/>
-                        <select dojoType="dijit.form.Select" id='tara' name="tara">
-                            <option value='352' selected>
-                                Обычный поддон
-                            </option>
-                            <option value='288'>
-                                Маленький поддон
-                            </option>
-                        </select>
+                        <input id='id_tara' dojoType="dijit.form.NumberSpinner" style='width:60px;'
+                               value="{{ form.tara.value }}" smallDelta="1"
+                               constraints="{min:0,max:20000/288,places:0}" intermediateChanges="true" name="tara"/>
+                        {{ form.poddon }}
                     {% endif %}
                 </li>
             {% endfor %}

@@ -35,7 +35,7 @@ class bricks(models.Model):
     
     
     defect_c=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
-    refuse_c=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'))
+    refuse_c=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'),(u'П',u'Полосы'))
            
     brick_class=models.IntegerField(u"Класс кирпича",max_length=60, choices=class_c)
     color=models.CharField(u"Цвет",max_length=60, choices=color_c)
@@ -81,12 +81,13 @@ class bricks(models.Model):
             template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
 #
         if self.brick_class==5: # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
+
             template = u'КЕ %(view)s %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s'
-#            values['view']=self.euro_view[self.view]
-
-
+            try:
+                values['view']=self.euro_view[self.view]
+            except :
+                pass
         return (template % values).strip().replace('  ',' ')
-
 #                         mark = self.get_mark_display(),
 #                         refuse = self.refuse,
 #                         defect = self.get_defect_display(),

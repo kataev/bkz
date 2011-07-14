@@ -12,8 +12,10 @@
                 var value = form.get('value')
                 if ('doc_date' in value) {
                     var v = dojo.date.locale.format(value['doc_date'], {datePattern:'y-MM-d',selector:'date'}).split('-');
-                    if (v[1].lenght <= 1) {v[1]='0'+v[1]}
-                    value['doc_date'] = v[0]+'-'+v[1]+'-'+v[2];
+                    if (v[1].lenght <= 1) {
+                        v[1] = '0' + v[1]
+                    }
+                    value['doc_date'] = v[0] + '-' + v[1] + '-' + v[2];
                 }
                 console.log('form send data:', value);
                 if (form.validate()) {
@@ -21,8 +23,9 @@
                                 postData:dojo.objectToQuery(value),
                                 url:form.action,
                                 handleAs:'json'
-                            }, function(error) {
-                    }).then(function(data) {
+                            },
+                            function(error) {
+                            }).then(function(data) {
                         if (data.status) {
                             console.log('ok', data.id, data);
                             dojo.create('li', {innerHTML:'ok'}, 'log');
@@ -63,14 +66,27 @@
             display: block;
         }
     </style>
-    {#    <script type="text/javascript" src="/static/select/Brick/Brick.js"></script>#}
+    <table>
+        {% for log in history %}
+            <tr>
+                <td>{{ log.action_time }}</td>
+                <td>{{ log.change_message }}</td>
+            </tr>
+        {% endfor %}
+    </table>
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
         <ul>
             {% for field in form %}
-                <li>
-                    <label> {{ field.label }} </label>
+                    <li>
+                        <label> {{ field.label }} </label>
+                        {% if field.name == 'doc_date' %}
+                            <input name="doc_date" required="true"
+                                   value="{{ field.value.isoformat }}"
+                                   promptMessage="Дата документа" type="text" id="id_doc_date" dojoType="dijit.form.DateTextBox" />
+                        {% else %}
                         {{ field }}
-                </li>
+                        {% endif %}
+                    </li>
             {% endfor %}
         </ul>
         <button dojoType="dijit.form.Button" type="submit">
