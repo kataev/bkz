@@ -62,6 +62,7 @@ class bill(doc):
     class Meta():
             verbose_name = u"Накладная"
             verbose_name_plural = u"Накладные"
+            ordering = ['-doc_date']
 
     def __unicode__(self):
         return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name[:50])

@@ -2,29 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="48ad2c95-ecc7-4f7e-ab05-4d3e40537c5c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bricks/t.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main/templatetags/hash_tag.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/bills.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/agents/import.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/old/brick.html" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/whs.bills.json" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/whs.bricks.json" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/whs.json" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/agents/import.py" afterPath="$PROJECT_DIR$/main/templatetags/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agents/admin.py" afterPath="$PROJECT_DIR$/agents/admin.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agents/models.py" afterPath="$PROJECT_DIR$/agents/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bills/i.py" afterPath="$PROJECT_DIR$/bills/i.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bills/models.py" afterPath="$PROJECT_DIR$/bills/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bricks/i.py" afterPath="$PROJECT_DIR$/bricks/i.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bricks/models.py" afterPath="$PROJECT_DIR$/bricks/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/models.py" afterPath="$PROJECT_DIR$/main/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/static/select/Brick.js" afterPath="$PROJECT_DIR$/main/static/select/Brick.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/static/select/Brick/Brick.html" afterPath="$PROJECT_DIR$/main/static/select/Brick/Brick.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/static/style.css" afterPath="$PROJECT_DIR$/main/static/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/views.py" afterPath="$PROJECT_DIR$/main/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/main.html" afterPath="$PROJECT_DIR$/templates/main.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/oper_add.html" afterPath="$PROJECT_DIR$/templates/oper_add.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/root.html" afterPath="$PROJECT_DIR$/templates/root.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urls.py" afterPath="$PROJECT_DIR$/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/bills.html" afterPath="$PROJECT_DIR$/templates/bills.html" />
     </list>
     <ignored path="whs.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,7 +37,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bills/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="51" column="8" selection-start="1686" selection-end="1686" vertical-scroll-proportion="0.0">
+            <state line="64" column="36" selection-start="2209" selection-end="2209" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -59,7 +46,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bricks/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="21" selection-start="3242" selection-end="3242" vertical-scroll-proportion="0.0">
+            <state line="86" column="16" selection-start="3869" selection-end="3877" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -68,7 +55,7 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="24" selection-start="1482" selection-end="1482" vertical-scroll-proportion="0.0">
+            <state line="68" column="35" selection-start="2582" selection-end="2582" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -77,7 +64,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="9" selection-start="492" selection-end="497" vertical-scroll-proportion="0.0">
+            <state line="43" column="0" selection-start="2284" selection-end="2317" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -86,7 +73,7 @@
       <file leaf-file-name="bills.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/bills.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="17" selection-start="391" selection-end="391" vertical-scroll-proportion="0.32818532">
+            <state line="84" column="55" selection-start="3002" selection-end="3002" vertical-scroll-proportion="1.5789474">
               <folding />
             </state>
           </provider>
@@ -95,7 +82,7 @@
       <file leaf-file-name="brick.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/brick.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="4" selection-start="19" selection-end="22" vertical-scroll-proportion="-0.625">
+            <state line="1" column="4" selection-start="19" selection-end="22" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -104,7 +91,7 @@
       <file leaf-file-name="Brick.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/static/select/Brick/Brick.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="47" selection-start="272" selection-end="272" vertical-scroll-proportion="-1.875">
+            <state line="3" column="47" selection-start="272" selection-end="272" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -142,7 +129,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/bills/models.py" />
         <option value="$PROJECT_DIR$/main/templatetags/hash_tag.py" />
         <option value="$PROJECT_DIR$/main/static/default.css" />
         <option value="$PROJECT_DIR$/bills/i.py" />
@@ -151,12 +137,13 @@
         <option value="$PROJECT_DIR$/templates/oper_add.html" />
         <option value="$PROJECT_DIR$/templates/old/brick.html" />
         <option value="$PROJECT_DIR$/main/static/style.css" />
-        <option value="$PROJECT_DIR$/main/models.py" />
         <option value="$PROJECT_DIR$/bricks/models.py" />
-        <option value="$PROJECT_DIR$/main/views.py" />
         <option value="$PROJECT_DIR$/templates/brick.html" />
         <option value="$PROJECT_DIR$/main/static/select/Brick.js" />
         <option value="$PROJECT_DIR$/main/static/select/Brick/Brick.html" />
+        <option value="$PROJECT_DIR$/main/models.py" />
+        <option value="$PROJECT_DIR$/bills/models.py" />
+        <option value="$PROJECT_DIR$/main/views.py" />
         <option value="$PROJECT_DIR$/templates/bills.html" />
       </list>
     </option>
@@ -187,7 +174,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Favorites" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -302,7 +289,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -397,6 +384,7 @@
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
     <option name="FORCE_UPDATE" value="false" />
+    <configuration useDefault="true">$USER_HOME$/.subversion_IDEA</configuration>
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="TaskManager">
@@ -415,7 +403,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21576433" sideWeight="0.6701878" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21576433" sideWeight="0.6701878" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -481,11 +469,6 @@
         <state line="11" column="70" selection-start="307" selection-end="307" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bills/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="8" selection-start="1686" selection-end="1686" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="56" selection-start="496" selection-end="496" vertical-scroll-proportion="0.0" />
@@ -493,16 +476,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/root.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="8" selection-start="411" selection-end="411" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="13" column="8" selection-start="411" selection-end="411" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/oper_add.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="0" selection-start="2942" selection-end="3881" vertical-scroll-proportion="0.0">
+        <state line="65" column="0" selection-start="2942" selection-end="3881" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bills/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="36" selection-start="2209" selection-end="2209" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bricks/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="16" selection-start="3869" selection-end="3877" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/brick.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="4" selection-start="19" selection-end="22" vertical-scroll-proportion="0.0">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/static/select/Brick/Brick.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="47" selection-start="272" selection-end="272" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/static/select/Brick.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="14" selection-start="511" selection-end="568" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/static/style.css">
@@ -510,51 +518,21 @@
         <state line="113" column="5" selection-start="2015" selection-end="2015" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="9" selection-start="492" selection-end="497" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bricks/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="21" selection-start="3242" selection-end="3242" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="24" selection-start="1482" selection-end="1482" vertical-scroll-proportion="0.0">
+        <state line="68" column="35" selection-start="2582" selection-end="2582" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/static/select/Brick.js">
+    <entry file="file://$PROJECT_DIR$/main/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="14" selection-start="511" selection-end="568" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/static/select/Brick/Brick.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="47" selection-start="272" selection-end="272" vertical-scroll-proportion="-1.875">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/brick.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="4" selection-start="19" selection-end="22" vertical-scroll-proportion="-0.625">
-          <folding />
-        </state>
+        <state line="43" column="0" selection-start="2284" selection-end="2317" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/bills.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="17" selection-start="391" selection-end="391" vertical-scroll-proportion="0.32818532">
+        <state line="84" column="55" selection-start="3002" selection-end="3002" vertical-scroll-proportion="1.5789474">
           <folding />
         </state>
       </provider>

@@ -17,7 +17,7 @@ from dojango.util import dojo_collector
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 le = [u'',u'Созданно ',u'Измененно ',u'Удалено ']
 
@@ -41,23 +41,49 @@ def main(request):
 def bills(request):
     query={}
     if request.method == 'GET':
-        if len(request.GET):
-            print 'GET',request.GET
-#            form = bills_filter_form(request.GET)
-#            if form.is_valid():
-#                print form.cleaned_data
-#            else:
-#                print form.errors
-#            if 'brick' in data.keys():
-#                query['solds__brick__pk']=data['brick']
-#            if 'data1' in data.keys():
-#                query['doc_date_gte']=
+        form = bills_filter_form(request.GET)
+        if form.is_valid():
+            for a in request.GET:
+                if a=='brick':
+                    query['solds__brick']=form.cleaned_data[a]
+                if a=='data1':
+                    query['doc_date_gte']=form.cleaned_data[a]
+                if a=='data2':
+                    query['doc_date_lte']=form.cleaned_data[a]
+                if a=='agent':
+                    query['agent']=form.cleaned_data[a]
+                if a=='number':
+                    query['number']=form.cleaned_data[a]
+
+#        bills=bill.objects.filter(**query)[:20]
+        paginator = Paginator(bill.objects.filter(**query), 25) # Show 25 contacts per page
+        page = request.GET.get('page')
+        try:
+            bills = paginator.page(page)
+        except TypeError,PageNotAnInteger:
+            bills = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            bills = paginator.page(paginator.num_pages)
+
+        url = {'next':'./?','prev':'./?'}
+        if 'page' in request.GET:
+            q = request.GET.copy()
+            q['page']=int(q['page'])+1
+            url['next']=q.urlencode()
+            q['page']=int(q['page'])-2
+            url['prev']+=q.urlencode()
+        else:
+            q = request.GET.copy()
+            q['page']=2
+            url['next']+=q.urlencode()
+        print url
 
         dojo_collector.add_module("dijit.form.Form")
         form = bills_filter_form(request.GET)
 #        print 'brick',form.fields['brick']
 #        form.fields['brick'].widget.dojo_type = 'whs.select.Brick'
-        return render_to_response('bills.html',{'form':form,'brickform':brickForm(),'bills':[]},
+        return render_to_response('bills.html',{'form':form,'brickform':brickForm(),'bills':bills,'url':url},
                           context_instance=RequestContext(request))
 
 

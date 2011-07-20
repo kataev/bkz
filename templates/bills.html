@@ -1,44 +1,91 @@
 {% extends "root.html" %}
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 {% block content %}
-
-<style>
-    #bill_filter ul {
-        padding-left:0px;
-    }
-
-    #bill_filter ul li {
-        float:left;
-        list-style-type:none;
-    }
-</style>
-<script type="text/javascript">
-dojo.addOnLoad(function(){
-    dijit.byId('f').onSubmit= function(e){
-//        dojo.stopEvent(e);
-        var val = this.get('value');
-        console.log(this)
-        for (a in val){
-            if (!val[a]){
-                console.log(a);
-                dojo.query('[name='+a+']',this.containerNode).attr('disabled','disabled');
-            }
+    <style>
+        #bill_filter ul {
+            padding-left: 0px;
         }
 
-    }
-});
-</script>
-<div id='bill_filter'>
-<form dojoType='dijit.form.Form' id='f' method='GET' action="./">
-    <ul>
-    <li>{% include 'brick.html' %}</li>
-    <li>{{ form.date1 }}</li>
-    <li>{{ form.date2 }}</li>
-    <li>{{ form.agent }}</li>
-    <li>{{ form.number }}</li>
-    <li><button dojoType="dijit.form.Button" type="submit">Submit</button></li>
-    <li><button dojoType="dijit.form.Button" type="reset">Reset</button></li>
-        </ul>
-</form>
-</div>
+        #bill_filter ul li {
+            float: left;
+            list-style-type: none;
+        }
+    </style>
+    <script type="text/javascript">
+        dojo.addOnLoad(function() {
+
+            dojo.query('.next, .prev').connect('onclick', function(e) {
+                var url = window.location.href;
+                var query = url.substring(url.indexOf("?") + 1, url.length);
+                var queryObject = dojo.queryToObject(query);
+                console.log('query',queryObject);
+                if ('page' in queryObject)
+                {   if (dojo.attr(e.target,'class')=='next'){
+                    queryObject.page=parseInt(queryObject.page)+1;
+                    }
+                    else {
+                    queryObject.page=parseInt(queryObject.page)-1;
+                }
+                } else {
+                    queryObject['page']=2;
+                }
+                var u = dojo.objectToQuery(queryObject);
+                console.log(u);
+                window.location='./?'+u;
+            });
+
+            dijit.byId('f').onSubmit = function(e) {
+//        dojo.stopEvent(e);
+                var val = this.get('value');
+                console.log(this)
+                for (a in val) {
+                    if (!val[a]) {
+                        console.log(a);
+                        dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
+                    }
+                }
+            }
+        });
+    </script>
+    <div id='bill_filter'>
+        <form dojoType='dijit.form.Form' id='f' method='GET' action="./">
+            <ul>
+                <li>{% include 'brick.html' %}</li>
+                <li>{{ form.date1 }}</li>
+                <li>{{ form.date2 }}</li>
+                <li>{{ form.agent }}</li>
+                <li>{{ form.number }}</li>
+                <li>
+                    <button dojoType="dijit.form.Button" type="submit">Submit</button>
+                </li>
+                <li>
+                    <button dojoType="dijit.form.Button" onclick="window.location='./'">Reset</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div style='clear:left;'>
+        <ol>
+            {% for bill in bills.object_list %}
+                <li>{{ bill }}</li>
+
+            {% endfor %}
+        </ol>
+        <div class="pagination">
+            <span class="step-links">
+                {% if bills.has_previous %}
+                    <a href='{{ url.prev }}'>Предыдущая</a>
+{#                    <span class='prev'>Предыдущая</span>#}
+                {% endif %}
+
+                <span class="current">
+            Страница {{ bills.number }} из {{ bills.paginator.num_pages }}.
+        </span>
+                {% if bills.has_next %}
+{#                    <span class="next">Следующая</span>#}
+                    <a href='{{ url.next }}'>Следующая</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
 {% endblock %}

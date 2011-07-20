@@ -41,3 +41,4 @@ class doc(models.Model):
 
     class Meta:
         abstract = True
+#        ordering = ['-doc_date']
