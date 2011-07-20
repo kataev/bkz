@@ -2,7 +2,7 @@
 from whs.main.models import doc,oper
 from whs.agents.models import agent
 from django.db import models
-from dojango.forms import ModelForm
+from dojango.forms import ModelForm,Textarea
 import pytils
 
 
@@ -19,13 +19,16 @@ class sold(oper):
         return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
 
     def get_absolute_url(self):
-        return "/json/%s/%i/" % (self._meta.module_name,self.id)
+        return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
 
 class soldForm(ModelForm):
     class Meta:
         model=sold
         exclude=('post')
+        widgets = {
+         'info': Textarea(attrs={}),
+         }
 
 class transfer(oper):
     sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
@@ -40,12 +43,15 @@ class transfer(oper):
             return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
 
     def get_absolute_url(self):
-        return "/json/%s/%i/" % (self._meta.module_name,self.id)
+        return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
 class transferForm(ModelForm):
     class Meta:
         model=transfer
         exclude=('post')
+        widgets = {
+         'info': Textarea(attrs={}),
+         }
 
 ## Накладная
 class bill(doc):
@@ -58,10 +64,10 @@ class bill(doc):
             verbose_name_plural = u"Накладные"
 
     def __unicode__(self):
-        return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name)
+        return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name[:50])
 
     def get_absolute_url(self):
-        return "/json/%s/%i/" % (self._meta.module_name,self.id)
+        return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
     def posting(self):
         transfers = self.transfers.all()
@@ -105,3 +111,6 @@ class billForm(ModelForm):
     class Meta:
         model=bill
         exclude=('draft')
+        widgets = {
+         'info': Textarea(attrs={}),
+         }

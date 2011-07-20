@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from whs.bricks.models import bricks
-#from dojango.forms import DateField,DateInput
+from whs.agents.models import agent
+from dojango import forms
 
 #class BrickWidget(model.ForeignKey)
 
+class bills_filter_form(forms.Form):
+    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
+    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
+    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич')
+    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
+    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')
 
 class oper(models.Model):
 
@@ -25,10 +32,10 @@ class oper(models.Model):
 
 class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
-    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
+    
     number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
     doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
-
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
 #    time_change=models.DateTimeField(auto_now=True)
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 

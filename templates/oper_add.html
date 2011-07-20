@@ -17,8 +17,6 @@
             dojo.connect(poddon, 'onChange', function() {
                 amount.set('value', spin.get('value') * poddon.get('value'));
             });
-
-
             form = dijit.byId('form');
             dojo.connect(form, 'onSubmit', function(e) {
                 dojo.stopEvent(e);
@@ -66,6 +64,13 @@
     <style>
         @import url('/static/style.css');
 
+        table tr {
+            cursor:pointer;
+        }
+        table tr:hover {
+            /*text-shadow: 0 2px #fff,0 4px #ccc;*/
+        }
+
         ul {
             list-style-type: none;
         }
@@ -78,9 +83,43 @@
             width: 100px;
             display: block;
         }
+    ul.filter h3 {
+        font-size:13px;
+        margin-bottom:0px;
+        margin-top:0px !important;
+
+    }
+    ul.filter {
+        margin:0px;
+        padding-left:5px;
+    }
+
+    div#bricksform > div {
+        clear:both;
+    }
+
+    ul.filter li.selected {
+    /*color: #5b80b2 !important;*/
+    border-bottom:1px black solid;
+    border-left: 5px solid green;
+    padding-left: 5px;
+    margin-left: -5px;
+    }
+        
+    ul.filter li {
+        cursor:pointer;
+        list-style:none;
+        font-size:11px;
+        padding-top:5px;
+        padding:0px;
+        margin:0px;
+    }
     </style>
     {#    <script type="text/javascript" src="/static/select/Brick/Brick.js"></script>#}
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
+    {% if form.is_bound %}
+    <a href='{{ form.instance.bill_set.get.get_absolute_url }}'>{{ form.instance.bill_set.get }}</a>
+    {% endif %}
         <ul>
             {% for field in form %}
                 <li>
@@ -88,9 +127,7 @@
                         <label> {{ field.label }} </label>
                     {% endif %}
                     {% if field.name == 'brick' %}
-
-                        <div id='id_brick' dojoType='whs.select.Brick' id='{{ field.id }}'
-                             data-dojo-attach-point="containerNode">
+                        <div id='id_brick' dojoType='whs.select.Brick' id='{{ field.id }}' data-dojo-attach-point="containerNode">
                             {% for b in form.fields.brick.queryset %}
                                 <option class='brick {{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %}
                                         selected {% endif %}
@@ -98,19 +135,23 @@
                                         vi='{{ b.get_view_display }}'
                                         we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'
                                         total='{{ b.total }}'>{{ b }}</option>{% endfor %}
-
-                                <div id='bricksform'>
+                                <div id='bricksform' style='height:800px;' >
+                        <div style='float:left;width:100px;height:480px;'>
+                        <h2 style='margin:0px;padding:0px;margin-bottom:-10px;'>Фильтр</h2>
+                        {% load hash_tag %}
                                 {% for f in brickform %}
                                     {% if f.name in 'brick_class mark view weight' %}
-                                        {{ f }}
-{#                                       <select class='brickform' dojoType='dijit.form.Select' value='{{ f.value }}'>#}
-{#                                           {% for op in f.field.choices %}#}
-{#                                           <option value='{{ op.0 }}'>{{ op.1 }}</option>#}
-{#                                           {% endfor %}#}
-{#                                       </select>#}
+                                        <h3 style='margin-top:5px;'>{{ f.label }}</h3>
+                                        <ul key='{{ f.name }}' class='filter'>
+                                           {% for op in f.field.choices %}
+<li val='{{ op.1 }}' class='{% if op.0 == f.value %}selected{% endif %} {{ brickform.Meta.model.css|hash:f.name|hash:op.0 }}'>
+                                                {{ op.1 }}
+                                            </li>
+                                           {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 {% endfor %}
-
+                        </div>
                             </div>
                         </div>
                     {% else %}

@@ -2,8 +2,6 @@
 from django.db import models
 from dojango.forms import ModelForm,RadioSelect,DropDownSelect
 
-
-
 class bricks(models.Model):
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
@@ -32,8 +30,6 @@ class bricks(models.Model):
             (9000,u'Брак'))
     
     type_c=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
-    
-    
     defect_c=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
     refuse_c=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'),(u'П',u'Полосы'))
            
@@ -49,21 +45,6 @@ class bricks(models.Model):
     name=models.CharField(u"Имя",max_length=160,default='')
     total=models.PositiveIntegerField(u"Текуший остаток",default=0)
     
-    def get_view(self):
-        if self.weight==u'2': # Если камень то вида у него нет
-            return u''
-        
-        if self.brick_class!=5: # Если не евро, то вызываю метод из choises
-            return self.get_view_display()
-        else:
-            if self.view not in self.euro_view.keys():
-                print (self.pk,self.view)
-#            try:
-            return self.euro_view[self.view] #Если евро, то подставляем в хитрый словарь
-#            except KeyError:
-#                return ''
-        
-    
     def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
 #        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
         values = self.__dict__
@@ -72,21 +53,22 @@ class bricks(models.Model):
 #        values['color_type']= self.get_color_type_display()
         template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s";
 
+        if self.weight == u'Двойной':
+            template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
+
         if self.color==u'Кр':
             values['color'] = ''
         else:
             values['color'] = self.get_color_display()
 
-        if self.weight==u'2':
-            template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
-#
-        if self.brick_class==5: # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
-
+        if self.brick_class==5 or self.brick_class==u'Евро': # Для евро, тут отключается ширина в выводе шаблона, и переопределяется вид
             template = u'КЕ %(view)s %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s'
             try:
                 values['view']=self.euro_view[self.view]
             except :
                 pass
+#                print u'KE name error',self.pk
+
         return (template % values).strip().replace('  ',' ')
 #                         mark = self.get_mark_display(),
 #                         refuse = self.refuse,
@@ -94,37 +76,39 @@ class bricks(models.Model):
 #                         features = self.features,
 #                         tip = self.get_color_type_display()
 #                         ).strip().replace('  ',' ')
-    def get_absolute_url(self):
-        return "/json/bricks/%i/" % self.id
 
+    def get_absolute_url(self):
+        return "/form/bricks/%i/" % self.id
+
+    def span(self):
+        return u'<span class="'+self.show_css()+'">'+unicode(self)+'</span>'
 
     class Meta():
         ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
         verbose_name = u"Кирпич"
         verbose_name_plural = u'Кирпичи'
 
-
     css={
         'view':{u'Л':u'facial',u'Р':u'common'},
         'weight':{u'1':u'single',u'1.4':u'thickened',u'2':u'double'},
-        'color':{u'Кр':'c_red',u'Же':'c_ye',u'Ко':'c_br',u'Св':u'c_li',u'Бе':u'wh'},
-        'brick_class':[u'cl_red',u'cl_ye',u'cl_br',u'cl_li',u'cl_wh',u'cl_eu',u'cl_ot',],
+        'color':{u'Кр':u'c_red',u'Же':u'c_ye',u'Ко':u'c_br',u'Св':u'c_li',u'Бе':u'wh'},
+        'brick_class':{0:u'cl_red',1:u'cl_ye',2:u'cl_br',3:u'cl_li',4:u'cl_wh',5:u'cl_eu',6:u'cl_ot'},
         'mark':{100:u'm100',125:u'm125',150:u'm150',175:u'm175',200:u'm200',250:u'm250',9000:u'm9000'},
-        'color_type':{'':'type0','1':"type1",'2':'type2','3':'type3'},
+        'color_type':{'':u'type0','1':u"type1",'2':u'type2','3':u'type3'},
         'defect':{u'':u'lux',u'<20':u'p_20',u'>20':u'm_20'},
-
     }
 
     def show_css(self):
-        css= ''
+        css= u''
+
         for key in self.css.keys():
             try:
+#                print self.css[key]
                 prop = getattr(self,key)
-                css+='%s ' % self.css[key][prop]
-            except :
+                css+=u'%s ' % self.css[key][prop]
+            except KeyError,e:
                 pass
         return css
-
 
 class brickForm(ModelForm):
     class Meta:

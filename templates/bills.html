@@ -1,0 +1,44 @@
+{% extends "root.html" %}
+{% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
+{% block content %}
+
+<style>
+    #bill_filter ul {
+        padding-left:0px;
+    }
+
+    #bill_filter ul li {
+        float:left;
+        list-style-type:none;
+    }
+</style>
+<script type="text/javascript">
+dojo.addOnLoad(function(){
+    dijit.byId('f').onSubmit= function(e){
+//        dojo.stopEvent(e);
+        var val = this.get('value');
+        console.log(this)
+        for (a in val){
+            if (!val[a]){
+                console.log(a);
+                dojo.query('[name='+a+']',this.containerNode).attr('disabled','disabled');
+            }
+        }
+
+    }
+});
+</script>
+<div id='bill_filter'>
+<form dojoType='dijit.form.Form' id='f' method='GET' action="./">
+    <ul>
+    <li>{% include 'brick.html' %}</li>
+    <li>{{ form.date1 }}</li>
+    <li>{{ form.date2 }}</li>
+    <li>{{ form.agent }}</li>
+    <li>{{ form.number }}</li>
+    <li><button dojoType="dijit.form.Button" type="submit">Submit</button></li>
+    <li><button dojoType="dijit.form.Button" type="reset">Reset</button></li>
+        </ul>
+</form>
+</div>
+{% endblock %}

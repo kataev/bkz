@@ -4,9 +4,9 @@ from whs.agents.models import agent
 
 
 class agentAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'form', 'address', 'phone')
+    list_display = ('name', 'form', 'address', 'phone','id')
     list_filter = ('form','type')
-    ordering = ('id','name')
+    ordering = ('name','id',)
 
 admin.site.register(agent, agentAdmin)
 

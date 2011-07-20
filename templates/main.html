@@ -9,7 +9,7 @@
 </ul>
     <h3>Накладные за эту неделю:</h3>
 <ul>
-{% for bill in bills %}<li>{{ bill.name }} на {{ bill.money }} руб</li>
+{% for bill in bills %}<li><a href='{{ bill.name.get_absolute_url }}'>{{ bill.name }} на {{ bill.money }} руб</a></li>
 {% endfor %}
 </ul>
 

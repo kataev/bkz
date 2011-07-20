@@ -12,14 +12,18 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
             value:'',
             label:'Щелкните для выбора кирпича',
             name:'brick',
-
+//            onChange: function(oldValue, newValue){
+//
+//            },
 
             _getValueAttr: function() {
                 return this.value;
             },
             _setValueAttr: function(value) {
-                this.value = value;
-                dojo.attr(this.inputNode, 'value', value);
+                this.onChange(this.value, parseInt(value));
+                console.log('brick id',value);
+                this.value = parseInt(value);
+                dojo.attr(this.inputNode, 'value', this.value);
                 if (this.store.get(value)) {
                     console.log(this.store.get(value))
                     this._setLabelAttr(this.store.get(value).title);
@@ -38,6 +42,10 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                 this.labelNode.innerHTML = value;
             },
 
+            reset : function() {
+                this._setLabelAttr('Щелкните для выбора кирпича');
+                this._setValueAttr('');
+            },
             postCreate: function() {
 //                var selectNode = this.selectNode;
                 var store = this.store;
@@ -47,13 +55,13 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                     setValue(parseInt(dojo.attr(node, 'value')));
                     setLabel(node.innerHTML);
                 });
-
-                dojo.query('option.brick', this.containerNode).forEach(function(node, i) {
+                console.log(this.containerNode);
+                dojo.query('option', this.containerNode).forEach(function(node, i) {
                     var pk = parseInt(dojo.attr(node, 'value'));
                     var title = node.innerHTML;
                     store.put({id:pk,
                                 title:title,
-                                'class':dojo.attr(node, 'cl'),
+                                'brick_class':dojo.attr(node, 'cl'),
                                 mark:dojo.attr(node, 'mark'),
                                 view:dojo.attr(node, 'vi'),
                                 weight:dojo.attr(node, 'we'),
@@ -77,29 +85,59 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
 //                });
 //                dojo.place('bricksform', content)
 
-                var table = dojo.create('table', null, content);
+                var table = dojo.create('table', {id:'table',style:''}, content);
                 dojo.attr(table, 'id', 'brickselect');
-                store.query().forEach(function(el) {
-                    var tr = dojo.create('tr', {'class':el['css']}, table);
-                    dojo.attr(tr, 'pk', el['id']);
-                    for (a in el) {
-                        if (a != 'css') {
-                            dojo.create('td', {innerHTML:el[a]}, tr);
-                        }
-                    }
 
-                });
+                var render = function () {
+                    var query = {};
+                    dojo.query('ul.filter').forEach(function(node, i) {
+                        var key = dojo.attr(node, 'key');
+                        var value = dojo.query('li.selected', node)[0]
+                        if (value != undefined) {
+                            console.log(key, dojo.attr(value, 'val'), value);
+                            query[key] = dojo.attr(value, 'val');
+                        }
+                    });
+                    console.log(query);
+                    dojo.empty(table);
+                    store.query(query).forEach(function(el) {
+                        var tr = dojo.create('tr', {'class':el['css']}, table);//
+                        dojo.attr(tr, 'pk', el['id']);
+                        for (a in el) {
+                            if (a == 'title' || a == 'total') {
+                                var td = dojo.create('td', {innerHTML:el[a]}, tr);
+                                if (a == 'title') {
+                                    dojo.addClass(td, 'title');
+                                }
+                            }
+                        }
+                    });
+                    dojo.query('tr', table).connect('onclick', function(e) {
+                        console.log(e.target.parentElement);
+                        var value = dojo.attr(e.target.parentElement, 'pk');
+                        setValue(value);
+                        dialog.hide();
+                    });
+                }
+                render();
+
 //
-                var dialog = new dijit.Dialog({title:'Выбор кирпича','content':content,style:'width:600px;',draggable:false});
-                dojo.query('tr', table).connect('onclick', function(e) {
-                    console.log(e.target.parentElement);
-                    var value = dojo.attr(e.target.parentElement, 'pk');
-                    setValue(value);
-                    dialog.hide();
-                });
+                var dialog = new dijit.Dialog({title:'Выбор кирпича',style:{weight:'600px'},'content':content,draggable:false});
+
                 dojo.connect(this.containerNode, 'onclick', function(e) {
                     dialog.show();
                 });
+
+                dojo.query('ul.filter li').connect('onclick', function(e) {
+
+                    dojo.query('li', e.target.parentNode).removeClass('selected');
+                    if (!dojo.hasClass(e.target, 'None')) {
+                        dojo.toggleClass(e.target, 'selected');
+                    }
+
+                    render();
+                });
+
                 console.log('ok')
 
             }

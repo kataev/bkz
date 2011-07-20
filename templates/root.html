@@ -8,17 +8,20 @@
         var dojoConfig = {
             isDebug: true,
             locale: 'Ru-ru',
-            'parseOnLoad':false
+            'parseOnLoad':true
         };
-
+        dojo.registerModulePath("whs", "/static");
+        dojo.require('whs.select.Brick');
         dojo.addOnLoad(function() {
-//            dojo.parser.parse();
+
+            dojo.parser.parse();
         });
 
     </script>
     <style>
 
         @import url('/static/style.css');
+        /*@import url('/static/default.css');*/
 
         /*body {*/
         /*background-image: url('http://dl.dropbox.com/u/8716795/background.png');*/
@@ -29,26 +32,42 @@
         span.helptext {
             display: none;
         }
-
-        div#menu {
-            height: 18px;
-            background-color: #fff8dc;
-            padding: 2px;
-            margin: 2px 2px 0px 2px;
+        ul#menu {
+            overflow: hidden;
+            border-left: 1px solid #ccc;
+            padding:0px;
         }
+        ul#menu li {
+            float: left;
+            /*margin-left: 20px;*/
+            list-style: none;
+            padding: 0 .8em;
+            border-right: 1px solid #ccc;
+        }
+
+        ul#menu li span {
+            /*cle*/
+            /*display:block;*/
+            /*clear:left;*/
+        }
+
     </style>
 {% endblock %}
 
 
 {% block dojango_content %}
     <div style='width:800px;margin:auto;'>
-        <div id='menu'>
-            <a href='/'>Главная</a>
-            <a href='/admin/'>Админка</a>
-            <a href='/form/bill/'>Добавить накладную</a>
-            <a href='/form/transfer/'>Добавить перевод</a>
-            <a href='/form/sold/'>Добавить продажу</a>
-        </div>
+    <div>
+        <ul id='menu'>
+            <li class='home'><a href='/'>Главная</a></li>
+            <li><a href='/admin/'>Админка</a></li>
+            <li><a href='/form/bill/'>Добавить накладную</a></li>
+            <li><a href='/bills/'>Накладные</a></li>
+            <li><a href='/agents/'>Контрагенты</a></li>
+            <li><a href='/form/bill/'>Произоводсво</a></li>
+
+        </ul>
+    </div>
         <div id='content'>
             {% block content %}
             {% endblock %}

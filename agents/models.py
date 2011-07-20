@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from dojango.forms import ModelForm, Textarea
 
 class agent(models.Model):
 
@@ -23,6 +24,12 @@ class agent(models.Model):
 
 
 
-
+class agentForm(ModelForm):
+    class Meta:
+        model=agent
+        widgets = {
+            'bank': Textarea(attrs={}),
+            'address': Textarea(attrs={}),
+        }
 
 

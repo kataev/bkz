@@ -8,6 +8,8 @@ from django.db.models import Sum
 import datetime
 from whs.bricks.models import *
 from whs.bills.models import *
+from whs.agents.models import *
+from whs.main.models import *
 
 from dojango.util import dojo_collector
 
@@ -15,6 +17,7 @@ from dojango.util import dojo_collector
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
+
 
 le = [u'',u'Созданно ',u'Измененно ',u'Удалено ']
 
@@ -24,22 +27,47 @@ def main(request):
         br['brick_class']=bricks.class_c[br['brick_class']][1]
 
     bills = []
-    for b in bill.objects.filter(doc_date__gte=(datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday()))):
+    for b in bill.objects.filter(doc_date__gte=(datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday()))).order_by('-doc_date'):
         money=0
         for s in b.solds.all():
             money+=s.price * s.amount
-        bq = {'name':unicode(b),'money':money}
+        bq = {'name':b,'money':money}
         bills.append(bq)
-
-
 
     return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bricks.objects.all()},
                           context_instance=RequestContext(request))
 
+
+def bills(request):
+    query={}
+    if request.method == 'GET':
+        if len(request.GET):
+            print 'GET',request.GET
+#            form = bills_filter_form(request.GET)
+#            if form.is_valid():
+#                print form.cleaned_data
+#            else:
+#                print form.errors
+#            if 'brick' in data.keys():
+#                query['solds__brick__pk']=data['brick']
+#            if 'data1' in data.keys():
+#                query['doc_date_gte']=
+
+        dojo_collector.add_module("dijit.form.Form")
+        form = bills_filter_form(request.GET)
+#        print 'brick',form.fields['brick']
+#        form.fields['brick'].widget.dojo_type = 'whs.select.Brick'
+        return render_to_response('bills.html',{'form':form,'brickform':brickForm(),'bills':[]},
+                          context_instance=RequestContext(request))
+
+
+
+
+
 def form(request,modelName,id=0):
     try:
-        model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer}[modelName]
-        form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm}[modelName]
+        model = {'bricks':bricks,'bill':bill,'sold':sold,'transfer':transfer,'agent':agent}[modelName]
+        form = {'bricks':brickForm,'bill':billForm,'sold':soldForm,'transfer':transferForm,'agent':agentForm}[modelName]
     except :
         return HttpResponse('404',mimetype="application/json;charset=utf-8")
 
@@ -50,21 +78,19 @@ def form(request,modelName,id=0):
 
         if int(id)==0:
             f=form()
-            method='Post'
-            url = 'form/%s/' % modelName
+            method='POST'
             if modelName in ('bricks','transfers',):
-                title=u'Новый %s' % model._meta.verbose_name.lower()
+                title=u'Новый %s' % model._meta.verbose_name.lower() #Refactor
             else:
                 title=u'Новая %s' % model._meta.verbose_name.lower()
         else:
-            url = 'form/%s/%s/' % (modelName,id)
             method='Put'
             title=u'Изменение %s № %s' % (model._meta.verbose_name_plural.lower(),id)
             try:
-                f=form(instance=model.objects.get(pk=id))
+                instance=model.objects.get(pk=id)
+                f=form(instance=instance)
             except model.DoesNotExist:
                 return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
-            method='Put'
 
         dojo_collector.add_module("dijit.form.Form")
         dojo_collector.add_module("dijit.form.Button")
@@ -73,22 +99,28 @@ def form(request,modelName,id=0):
         dojo_collector.add_module("dijit.form.NumberSpinner")
         dojo_collector.add_module("dojo.date")
         dojo_collector.add_module("dojo.date.locale")
-        dojo_collector.add_module("dojo.parser")
+#        dojo_collector.add_module("dojo.parser")
+
         history = []
-        if id != 0:
-            for h in LogEntry.objects.filter(content_type=ContentType.objects.get_for_model(model).id,object_id=id):
-                history.append({'action_time':h.action_time,'change_message':le[h.action_flag]+h.change_message})
+#        if id != 0:
+#            for h in LogEntry.objects.filter(content_type=ContentType.objects.get_for_model(model).id,object_id=id):
+#                history.append({'action_time':h.action_time,'change_message':le[h.action_flag]+h.change_message})
 
-
-        if modelType=='doc':
+        if modelName=='agent':
             return render_to_response('doc_add.html',{'form':f,'title':title,'method':method,'history':history},
                           context_instance=RequestContext(request))
-        else:
+
+        if modelType=='doc':
+            if id!=0:
+                f.fields['solds'].queryset=f.instance.solds.all()
+                f.fields['transfers'].queryset=f.instance.transfers.all()
+            return render_to_response('doc_add.html',{'form':f,'title':title,'method':method,'history':history},
+                          context_instance=RequestContext(request))
+        if modelType=='oper':
             if int(id)==0:
                 brick = brickForm()
             else:
                 brick = brickForm(instance=model.objects.get(pk=id).brick)
-
             return render_to_response('oper_add.html',{'form':f,'title':title,'method':method,'history':history,'brickform':brick},
                           context_instance=RequestContext(request))
 

@@ -28,6 +28,10 @@ css={
 
 }
 
+#table tr.lux td.title:before {
+    content:url('/static/money_gold.png');
+}
+
 .cl_red {
     background: Salmon;
 }
@@ -55,3 +59,56 @@ css={
 .cl_ot {
     background-color: gray;
 }
+
+
+
+        table tr {
+            cursor:pointer;
+        }
+        table tr:hover {
+            /*text-shadow: 0 2px #fff,0 4px #ccc;*/
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        ul li {
+            padding-top: 5px;
+        }
+
+        ul li label {
+            width: 100px;
+            display: block;
+        }
+    ul.filter h3 {
+        font-size:13px;
+        margin-bottom:0px;
+        margin-top:0px !important;
+
+    }
+    ul.filter {
+        margin:0px;
+        padding-left:5px;
+    }
+
+    div#bricksform > div {
+        clear:both;
+    }
+
+    ul.filter li.selected {
+    /*color: #5b80b2 !important;*/
+    border-bottom:1px black solid;
+    border-left: 5px solid green;
+    padding-left: 5px;
+    margin-left: -5px;
+    }
+
+    ul.filter li {
+        cursor:pointer;
+        list-style:none;
+        font-size:11px;
+        padding-top:5px;
+        padding:0px;
+        margin:0px;
+    }

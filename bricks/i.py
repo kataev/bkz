@@ -34,11 +34,14 @@ def check():
         b['b'+str(q['id'])]=q
 
 
-    for w in bricks.objects.values_list('id').all():
+    for w in bricks.objects.all():
         try:
-            del(b['b'+str(w[0])])
+            del(b['b'+str(w.pk)])
+
         except KeyError,e:
-            print w[0],e
+            print w.pk,e
+            w.delete()
+
 
     print b
 
