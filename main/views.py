@@ -34,8 +34,74 @@ def main(request):
         bq = {'name':b,'money':money}
         bills.append(bq)
 
-    return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bricks.objects.all()},
+    bri=[]
+    total = {'s':0,'tr_m':0,'tr_p':0,'t':0}
+
+    filter = {'doc_date__gte':datetime.date(2011,07,01)}
+
+    for br in bricks.objects.all():
+        er={'brick':br}
+        s = sold.objects.filter(brick=br)
+        er.update(bill.objects.filter(solds__in=s,**filter).aggregate(s=Sum('solds__amount')))
+        t = transfer.objects.filter(brick=br)
+        er.update(bill.objects.filter(transfers__in=t,**filter).aggregate(tr_m=Sum('transfers__amount'),tr_p=Sum('solds__amount')))
+        for e in er:
+            if not e == 'brick' and not er[e]==None:
+                total[e]+=er[e]
+        total['t']+=br.total
+
+        bri.append(er)
+
+    return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bri,'total':total},
                           context_instance=RequestContext(request))
+
+
+def agents(request):
+
+    query={}
+    form = agent_filter_form(request.GET)
+    if form.is_valid():
+        pass
+    if True:
+        for a in request.GET:
+            if a=='name':
+                query['name__contains']=form.cleaned_data[a]
+            if a=='form':
+                query['form']=form.cleaned_data[a]
+            if a=='type':
+                query['type']=form.cleaned_data[a]
+            if a=='agent':
+                query['address__contains']=form.cleaned_data[a]
+            if a=='inn':
+                query['inn__contains']=form.cleaned_data[a]
+                
+        paginator = Paginator(agent.objects.filter(**query), 25) # Show 25 contacts per page
+        page = request.GET.get('page')
+        try:
+            agents = paginator.page(page)
+        except TypeError,PageNotAnInteger:
+            agents = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            agents = paginator.page(paginator.num_pages)
+
+        url = {'next':'./?','prev':'./?'}
+        if 'page' in request.GET:
+            q = request.GET.copy()
+            q['page']=int(q['page'])+1
+            url['next']=q.urlencode()
+            q['page']=int(q['page'])-2
+            url['prev']+=q.urlencode()
+        else:
+            q = request.GET.copy()
+            q['page']=2
+            url['next']+=q.urlencode()
+        print url
+    dojo_collector.add_module("dijit.form.Form")
+    dojo_collector.add_module("dijit.form.Button")
+    return render_to_response('agents.html',{'form':form,'agents':agents},
+                          context_instance=RequestContext(request))
+
 
 
 def bills(request):
@@ -53,7 +119,7 @@ def bills(request):
                 if a=='agent':
                     query['agent']=form.cleaned_data[a]
                 if a=='number':
-                    query['number']=form.cleaned_data[a]
+                    query['number__contains']=form.cleaned_data[a]
 
 #        bills=bill.objects.filter(**query)[:20]
         paginator = Paginator(bill.objects.filter(**query), 25) # Show 25 contacts per page

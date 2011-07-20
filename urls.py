@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^post/(?P<modelName>\w+)/(?P<id>\d+)/$', 'whs.main.views.posting', name='posting'),
     url(r'^bills/$', 'whs.main.views.bills', name='bills'),
+    url(r'^agents/$', 'whs.main.views.agents', name='agents'),
 
     url(r'^form/(?P<modelName>\w+)/(?P<id>\d+)/$', 'whs.main.views.form', name='form_id'),
     url(r'^form/(?P<modelName>\w+)/$', 'whs.main.views.form', name='form'),

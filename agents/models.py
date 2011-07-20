@@ -15,6 +15,10 @@ class agent(models.Model):
     inn=models.CharField(u"Инн",blank=True,max_length=200)
     account=models.CharField(u"Счет",blank=True,max_length=200)
 
+    def bills(self):
+        return u'/bills/?agent=%s' % self.id
+
+
     class Meta:
         verbose_name=u'КонтрАгент'
         verbose_name_plural=u'КонтрАгенты'
@@ -32,4 +36,7 @@ class agentForm(ModelForm):
             'address': Textarea(attrs={}),
         }
 
-
+class agent_filter_form(ModelForm):
+    class Meta:
+        model=agent
+        field = ['name','form','type','address','inn']

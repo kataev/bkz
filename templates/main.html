@@ -1,23 +1,45 @@
 {% extends "root.html" %}
 
-
+{% load humanize %}
 {% block content %}
-    <h3>Остатки кирпича по классам:</h3>
-<ul>
-{% for brick in brick_total %}<li>{{ brick.brick_class }}:{{ brick.total }}</li>
-{% endfor %}
-</ul>
-    <h3>Накладные за эту неделю:</h3>
+<style>
+    td, th {
+        padding-left:10px;
+        padding-right:5px;
+        text-align:right;
+        
+    }
+    tr td:first-child,tr th:first-child {
+        text-align:left;
+    }
+
+</style>
 <ul>
 {% for bill in bills %}<li><a href='{{ bill.name.get_absolute_url }}'>{{ bill.name }} на {{ bill.money }} руб</a></li>
 {% endfor %}
 </ul>
 
 <table id='brickselect'>
+<thead>
+<tr>
+    <th>Brick</th><th>Tr from</th><th>Tr to</th><th>Solds</th><th>Total</th>
+</tr>
+    <thead>
+<tfoot>
+    <th style='text-align:right;'>Сумма:</th><th>{{ total.s|intcomma }}</th><th>{{ total.tr_m|intcomma }}</th><th>{{ total.tr_p|intcomma }}</th><th>{{ total.t|intcomma }}</th>
+</tfoot>
+<tbody>
 {% for brick in bricks %}
-    <tr class='{{ brick.show_css }}'>
-        <td>{{ brick }}</td><td>{{ brick.total }}</td>
+    <tr class='{{ brick.brick.show_css }}'>
+        <td>{{ brick.brick }}</td><td>{{ brick.s|default:'0'|intcomma }}</td><td>{{ brick.tr_m|default:'0'|intcomma }}</td><td>{{ brick.tr_p|default:'0'|intcomma }}</td><td>{{ brick.brick.total|default:'0'|intcomma }}</td>
     </tr>
 {% endfor %}
+</tbody>
+
 </table>
+        <h3>Остатки кирпича по классам:</h3>
+<ul>
+{% for brick in brick_total %}<li>{{ brick.brick_class }}:{{ brick.total|intword }}</li>
+{% endfor %}
+</ul>
 {% endblock %}

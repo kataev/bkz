@@ -7,6 +7,7 @@
         }
 
         #bill_filter ul li {
+            padding-left:5px;
             float: left;
             list-style-type: none;
         }
@@ -50,16 +51,12 @@
     <div id='bill_filter'>
         <form dojoType='dijit.form.Form' id='f' method='GET' action="./">
             <ul>
-                <li>{% include 'brick.html' %}</li>
-                <li>{{ form.date1 }}</li>
-                <li>{{ form.date2 }}</li>
-                <li>{{ form.agent }}</li>
-                <li>{{ form.number }}</li>
+                <li><label>По кирпичу:</label> {% include 'brick.html' %}</li>
+                <li><label>Период:</label>{{ form.date1 }} {{ form.date2 }}</li>
+                <li style='clear:left;'><label>По контрагенту</label>{{ form.agent }}</li>
+                <li><label>По номеру</label>{{ form.number }}</li>
                 <li>
-                    <button dojoType="dijit.form.Button" type="submit">Submit</button>
-                </li>
-                <li>
-                    <button dojoType="dijit.form.Button" onclick="window.location='./'">Reset</button>
+                    <button dojoType="dijit.form.Button" type="submit">Показать</button><button dojoType="dijit.form.Button" onclick="window.location='./'">Сбросить</button>
                 </li>
             </ul>
         </form>
@@ -79,7 +76,7 @@
                 {% endif %}
 
                 <span class="current">
-            Страница {{ bills.number }} из {{ bills.paginator.num_pages }}.
+            Страница {{ bills.number }}
         </span>
                 {% if bills.has_next %}
 {#                    <span class="next">Следующая</span>#}

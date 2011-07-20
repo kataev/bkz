@@ -13,6 +13,8 @@ class bills_filter_form(forms.Form):
     agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
     number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')
 
+
+
 class oper(models.Model):
 
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
