@@ -9,8 +9,7 @@ import datetime
 from whs.bricks.models import *
 from whs.bills.models import *
 from whs.agents.models import *
-from whs.main.models import *
-
+#from whs.main.models import *
 from dojango.util import dojo_collector
 
 
@@ -169,7 +168,7 @@ def form(request,modelName,id=0):
     if request.method == 'GET':
 
         if int(id)==0:
-            f=form()
+            f=form(request.GET)
             method='POST'
             if modelName in ('bricks','transfers',):
                 title=u'Новый %s' % model._meta.verbose_name.lower() #Refactor

@@ -108,7 +108,7 @@ class bricks(models.Model):
                 css+=u'%s ' % self.css[key][prop]
             except KeyError,e:
                 pass
-        return css
+        return css.strip()
 
 class brickForm(ModelForm):
     class Meta:

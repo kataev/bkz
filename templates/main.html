@@ -14,6 +14,7 @@
     }
 
 </style>
+{#<span dojoType='whs.br' pk=2 title='olololo'></span>#}
 <ul>
 {% for bill in bills %}<li><a href='{{ bill.name.get_absolute_url }}'>{{ bill.name }} на {{ bill.money }} руб</a></li>
 {% endfor %}
@@ -31,7 +32,7 @@
 <tbody>
 {% for brick in bricks %}
     <tr class='{{ brick.brick.show_css }}'>
-        <td>{{ brick.brick }}</td><td>{{ brick.s|default:'0'|intcomma }}</td><td>{{ brick.tr_m|default:'0'|intcomma }}</td><td>{{ brick.tr_p|default:'0'|intcomma }}</td><td>{{ brick.brick.total|default:'0'|intcomma }}</td>
+        <td><span dojoType='whs.br' class="{{ brick.brick.show_css }}" title='{{ brick.brick }}' pk={{ brick.brick.pk }}>{{ brick.brick }}</span></td><td>{{ brick.s|default:'0'|intcomma }}</td><td>{{ brick.tr_m|default:'0'|intcomma }}</td><td>{{ brick.tr_p|default:'0'|intcomma }}</td><td>{{ brick.brick.total|default:'0'|intcomma }}</td>
     </tr>
 {% endfor %}
 </tbody>

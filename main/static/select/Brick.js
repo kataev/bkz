@@ -1,8 +1,66 @@
 dojo.provide("whs.select.Brick");
 
-dojo.require('dijit.form._FormWidget')
+dojo.require('dijit.form._FormWidget');
 dojo.require("dojo.store.Memory");
 dojo.require("dijit.Dialog");
+
+
+dojo.provide("whs.select.Brick");
+
+dojo.require('dijit._Widget');
+dojo.require('dijit._Templated');
+dojo.require('dijit.Menu');
+
+
+dojo.declare("whs.br", [dijit._Widget,dijit._Templated], {
+    baseClass:'br',
+    title:'',
+    pk:0,
+    templateString:'<span class="${baseClass} ${class}">${title}</span>',
+    _setnameAttr : function(val){
+        this.name = val;
+        this.domNode.innerHTML = val;
+
+    },
+    postCreate:function(){
+        var pk = this.pk
+        pMenu = new dijit.Menu({
+            targetNodeIds: [this.domNode]
+        });
+        pMenu.addChild(new dijit.MenuItem({
+            label: "Показать накладные с этим кирпичем",
+            iconClass: "dijitEditorIcon dijitEditorIconCut",
+            onClick: function() {
+                window.location='/bills/?brick='+pk;
+            }
+        }));
+        pMenu.addChild(new dijit.MenuItem({
+            label: "Создать продажу с этим кирпичем",
+            iconClass: "dijitEditorIcon dijitEditorIconCut",
+            onClick: function() {
+                window.location='/form/sold/?brick='+pk;
+            }
+        }));
+        pMenu.addChild(new dijit.MenuItem({
+            label: "Создать перевод с этим кирпичем",
+            iconClass: "dijitEditorIcon dijitEditorIconCut",
+            onClick: function() {
+                window.location='/form/transfer/?brick='+pk;
+            }
+        }));
+    }
+//    _setPkAttr : function(val){
+//        console.log(val)
+//        this.pk=val;
+//    },
+//    _getNameAttr : function(){
+//        return this.Name;
+//
+//    }
+
+        });
+
+
 
 dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
             baseClass: 'selectBrick',

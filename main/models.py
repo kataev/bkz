@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from whs.bricks.models import bricks
-from whs.agents.models import agent
-from dojango import forms
-
+#from whs.bills.models import BrickSelect
+#from whs.agents.models import agent
+#from dojango import forms
 #class BrickWidget(model.ForeignKey)
 
-class bills_filter_form(forms.Form):
-    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
-    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
-    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич')
-    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
-    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')
 
 
 

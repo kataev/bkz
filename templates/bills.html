@@ -51,7 +51,7 @@
     <div id='bill_filter'>
         <form dojoType='dijit.form.Form' id='f' method='GET' action="./">
             <ul>
-                <li><label>По кирпичу:</label> {% include 'brick.html' %}</li>
+                <li><label>По кирпичу:</label>{{ form.brick }}</li>
                 <li><label>Период:</label>{{ form.date1 }} {{ form.date2 }}</li>
                 <li style='clear:left;'><label>По контрагенту</label>{{ form.agent }}</li>
                 <li><label>По номеру</label>{{ form.number }}</li>

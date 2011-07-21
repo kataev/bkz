@@ -117,48 +117,18 @@
     </style>
     {#    <script type="text/javascript" src="/static/select/Brick/Brick.js"></script>#}
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
-    {% if form.is_bound %}
-    <a href='{{ form.instance.bill_set.get.get_absolute_url }}'>{{ form.instance.bill_set.get }}</a>
-    {% endif %}
+{#    {% if form.instance %}#}
+{#    <a href='{{ form.instance.bill_set.get.get_absolute_url }}'>{{ form.instance.bill_set.get }}</a>#}
+{#    {% endif %}#}
         <ul>
             {% for field in form %}
                 <li>
                     {% if field.name not in 'poddon tara' %}
                         <label> {{ field.label }} </label>
                     {% endif %}
-                    {% if field.name == 'brick' %}
-                        <div id='id_brick' dojoType='whs.select.Brick' id='{{ field.id }}' data-dojo-attach-point="containerNode">
-                            {% for b in form.fields.brick.queryset %}
-                                <option class='brick {{ b.show_css }}' value='{{ b.pk }}' {% if b.pk == field.value %}
-                                        selected {% endif %}
-                                        cl='{{ b.get_brick_class_display }}' color='{{ b.get_color_display }}'
-                                        vi='{{ b.get_view_display }}'
-                                        we='{{ b.get_weight_display }}' mark='{{ b.get_mark_display }}'
-                                        total='{{ b.total }}'>{{ b }}</option>{% endfor %}
-                                <div id='bricksform' style='height:800px;' >
-                        <div style='float:left;width:100px;height:480px;'>
-                        <h2 style='margin:0px;padding:0px;margin-bottom:-10px;'>Фильтр</h2>
-                        {% load hash_tag %}
-                                {% for f in brickform %}
-                                    {% if f.name in 'brick_class mark view weight' %}
-                                        <h3 style='margin-top:5px;'>{{ f.label }}</h3>
-                                        <ul key='{{ f.name }}' class='filter'>
-                                           {% for op in f.field.choices %}
-<li val='{{ op.1 }}' class='{% if op.0 == f.value %}selected{% endif %} {{ brickform.Meta.model.css|hash:f.name|hash:op.0 }}'>
-                                                {{ op.1 }}
-                                            </li>
-                                           {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                {% endfor %}
-                        </div>
-                            </div>
-                        </div>
-                    {% else %}
                         {% if field.name not in 'poddon tara' %}
                             {{ field }}
                         {% endif %}
-                    {% endif %}
                     {% if field.name == 'amount' %}
                         <input id='id_tara' dojoType="dijit.form.NumberSpinner" style='width:60px;'
                                value="{{ form.tara.value }}" smallDelta="1"

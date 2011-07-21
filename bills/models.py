@@ -1,9 +1,70 @@
 # -*- coding: utf-8 -*-
 from whs.main.models import doc,oper
+from whs.bricks.models import bricks
 from whs.agents.models import agent
 from django.db import models
-from dojango.forms import ModelForm,Textarea
+
+import dojango.forms as forms
 import pytils
+from django.utils.encoding import StrAndUnicode, force_unicode
+from itertools import chain
+
+
+
+
+class BrickSelect(forms.Select):
+    dojo_type = 'whs.select.Brick'
+
+    def render_option(self,brick,selected_choices, option_value=None, option_label=None):
+#        print brick,selected_choices,option_label,option_value
+#        option_value = force_unicode(option_value)
+        if brick is None:
+            return u'<option>------</option>'
+        else:
+            selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
+            return u'<option class="%(class)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+                'class':brick.show_css(),
+#                'cl':brick.brick_class,
+#                'color':brick.color,
+                'pk':brick.pk,
+                'selected_html':selected_html,
+                'title':brick
+
+            }
+
+    def render_options(self, choices, selected_choices):
+        # Normalize to strings.
+        selected_choices = set([v for v in selected_choices])
+        output = []
+        br =  bricks.objects.all().order_by('pk')
+        for option_value, option_label in chain(self.choices, choices):
+            if isinstance(option_label, (list, tuple)):
+                output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
+                for option in option_label:
+                    try:
+                        print option_value
+                        val = int(option_value)
+                        output.append(self.render_option(br.get(pk=val),selected_choices,*option))
+                    except ValueError:
+                        output.append(self.render_option(None,selected_choices,*option))
+                output.append(u'</optgroup>')
+            else:
+                try:
+                    val = br.get(pk=option_value)
+                except :
+                    val = None
+                output.append(self.render_option(val,selected_choices))
+        return u'\n'.join(output)
+
+class bills_filter_form(forms.Form):
+    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
+    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
+    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич',widget=BrickSelect())
+    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
+    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')
+
+
+
 
 
 class sold(oper):
@@ -22,12 +83,13 @@ class sold(oper):
         return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
 
-class soldForm(ModelForm):
+class soldForm(forms.ModelForm):
     class Meta:
         model=sold
         exclude=('post')
         widgets = {
-         'info': Textarea(attrs={}),
+         'info': forms.Textarea(attrs={}),
+         'brick': BrickSelect()
          }
 
 class transfer(oper):
@@ -45,12 +107,13 @@ class transfer(oper):
     def get_absolute_url(self):
         return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
-class transferForm(ModelForm):
+class transferForm(forms.ModelForm):
     class Meta:
         model=transfer
         exclude=('post')
         widgets = {
-         'info': Textarea(attrs={}),
+         'info': forms.Textarea(attrs={}),
+         'brick': BrickSelect()
          }
 
 ## Накладная
@@ -108,10 +171,11 @@ class bill(doc):
 
 
 
-class billForm(ModelForm):
+class billForm(forms.ModelForm):
     class Meta:
         model=bill
         exclude=('draft')
         widgets = {
-         'info': Textarea(attrs={}),
+         'info': forms.Textarea(attrs={}),
+         'brick': BrickSelect()
          }
