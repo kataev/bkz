@@ -1,15 +1,9 @@
-<div class="${baseClass}" data-dojo-attach-point="containerNode">
+<div class="${baseClass}" dojoAttachPoint="containerNode">
     <div class="dijit dijitReset dijitInline dijitLeft dijitTextBox" role="presentation">
         <div class="dijitReset dijitInputField dijitInputContainer">
             <span dojoAttachPoint='labelNode'>${label}</span>
             <input type='hidden' dojoAttachPoint='inputNode' name='${name}' data-dojo-attach-point="textbox,focusNode" value=''/>
         </div>
     </div>
-    <br>
-
-    <div data-dojo-attach-point="selectNode,textbox,focusNode"
-         class="dijit dijitTextBoxFocused dijitReset dijitInline dijitLeft dijitTextBox" role="presentation"
-         style='height:200px;margin-top:5px;display:none;'>
-    </div>
-
+    <div data-dojo-attach-point="brickselect" class="brickselect"></div>
 </div>

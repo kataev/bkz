@@ -14,40 +14,52 @@ dojo.require('dijit.Menu');
 
 dojo.declare("whs.br", [dijit._Widget,dijit._Templated], {
     baseClass:'br',
-    title:'',
-    pk:0,
-    templateString:'<span class="${baseClass} ${class}">${title}</span>',
+//    title:'',
+//    t:'',
+    value:0,
+    templateString:'<span class="${baseClass} ${class}"></span>',
     _setnameAttr : function(val){
         this.name = val;
         this.domNode.innerHTML = val;
 
     },
+    _settAttr: function(val){
+        console.log('SET T ATTR');
+        this.t = val;
+    },
+    postMixinProperties:function(){
+//        this.title=this.srcNodeRef.innerHTML;
+
+        console.log(this,'create');
+    },
     postCreate:function(){
-        var pk = this.pk
-        pMenu = new dijit.Menu({
-            targetNodeIds: [this.domNode]
-        });
-        pMenu.addChild(new dijit.MenuItem({
-            label: "Показать накладные с этим кирпичем",
-            iconClass: "dijitEditorIcon dijitEditorIconCut",
-            onClick: function() {
-                window.location='/bills/?brick='+pk;
-            }
-        }));
-        pMenu.addChild(new dijit.MenuItem({
-            label: "Создать продажу с этим кирпичем",
-            iconClass: "dijitEditorIcon dijitEditorIconCut",
-            onClick: function() {
-                window.location='/form/sold/?brick='+pk;
-            }
-        }));
-        pMenu.addChild(new dijit.MenuItem({
-            label: "Создать перевод с этим кирпичем",
-            iconClass: "dijitEditorIcon dijitEditorIconCut",
-            onClick: function() {
-                window.location='/form/transfer/?brick='+pk;
-            }
-        }));
+        this.domNode.innerHTML=this.title;
+        var value = this.value
+        console.log(value);
+//        pMenu = new dijit.Menu({
+//            targetNodeIds: [this.domNode]
+//        });
+//        pMenu.addChild(new dijit.MenuItem({
+//            label: "Показать накладные с этим кирпичем",
+//            iconClass: "dijitEditorIcon dijitEditorIconCut",
+//            onClick: function() {
+//                window.location='/bills/?brick='+value;
+//            }
+//        }));
+//        pMenu.addChild(new dijit.MenuItem({
+//            label: "Создать продажу с этим кирпичем",
+//            iconClass: "dijitEditorIcon dijitEditorIconCut",
+//            onClick: function() {
+//                window.location='/form/sold/?brick='+value;
+//            }
+//        }));
+//        pMenu.addChild(new dijit.MenuItem({
+//            label: "Создать перевод с этим кирпичем",
+//            iconClass: "dijitEditorIcon dijitEditorIconCut",
+//            onClick: function() {
+//                window.location='/form/transfer/?brick='+value;
+//            }
+//        }));
     }
 //    _setPkAttr : function(val){
 //        console.log(val)
@@ -127,9 +139,9 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                                 total:dojo.attr(node, 'total'),
                                 css:dojo.attr(node, 'class')
                             });
-                    dojo.destroy(node);
+//                    dojo.destroy(node);
                 });
-                var content = dojo.byId('bricksform');
+                var content = dojo.create('div');
 
 //                this.brickform = new dijit.form.Form(null,content);
 
@@ -162,11 +174,12 @@ dojo.declare("whs.select.Brick", [dijit.form._FormValueWidget], {
                         var tr = dojo.create('tr', {'class':el['css']}, table);//
                         dojo.attr(tr, 'pk', el['id']);
                         for (a in el) {
-                            if (a == 'title' || a == 'total') {
+                            if (a == 'title') {
                                 var td = dojo.create('td', {innerHTML:el[a]}, tr);
-                                if (a == 'title') {
-                                    dojo.addClass(td, 'title');
+                                dojo.addClass(td, 'title');
                                 }
+                            if (a == 'total'){
+                                var td = dojo.create('td', {innerHTML:el[a]}, tr);
                             }
                         }
                     });

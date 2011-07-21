@@ -8,24 +8,43 @@ import dojango.forms as forms
 import pytils
 from django.utils.encoding import StrAndUnicode, force_unicode
 from itertools import chain
-
+from django.contrib.humanize.templatetags.humanize import intcomma
+from django.forms.util import flatatt
+from django.utils.safestring import mark_safe
 
 
 
 class BrickSelect(forms.Select):
     dojo_type = 'whs.select.Brick'
 
+    def render(self, name, value, attrs=None, choices=()):
+        if value is None: value = ''
+        final_attrs = self.build_attrs(attrs, name=name)
+        output = [u'<select%s>' % flatatt(final_attrs)]
+        options = self.render_options(choices, [value])
+        if options:
+            output.append(options)
+        output.append(u'<div class="brickselect">ololo</div>')
+        output.append(u'</select>')
+        return mark_safe(u'\n'.join(output))
+    
+
+
     def render_option(self,brick,selected_choices, option_value=None, option_label=None):
 #        print brick,selected_choices,option_label,option_value
 #        option_value = force_unicode(option_value)
         if brick is None:
-            return u'<option>------</option>'
+#            return u'<option>------</option>'
+            return u''
         else:
             selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
-            return u'<option class="%(class)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+            return u'<option dojoType="whs.br" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
                 'class':brick.show_css(),
-#                'cl':brick.brick_class,
-#                'color':brick.color,
+                'cl':brick.get_brick_class_display(),
+                'mark':brick.get_mark_display(),
+                'view':brick.get_view_display(),
+                'weight':brick.get_weight_display(),
+                'total':intcomma(brick.total),
                 'pk':brick.pk,
                 'selected_html':selected_html,
                 'title':brick
