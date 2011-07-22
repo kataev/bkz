@@ -15,7 +15,7 @@ from django.utils.safestring import mark_safe
 
 
 class BrickSelect(forms.Select):
-#    dojo_type = 'whs.select.Brick'
+    dojo_type = 'whs.select.Brick'
 
     def render(self, name, value, attrs=None, choices=()):
         if value is None: value = ''
@@ -24,7 +24,7 @@ class BrickSelect(forms.Select):
         options = self.render_options(choices, [value])
         if options:
             output.append(options)
-        output.append(u'<div class="brickselect">ololo</div>')
+#        output.append(u'<div class="brickselect">ololo</div>')
         output.append(u'</select>')
         return mark_safe(u'\n'.join(output))
     
