@@ -2,65 +2,65 @@
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 {% block content %}
     <script type="text/javascript">
-        dojo.registerModulePath("whs", "/static");
-        dojo.require('whs.select.Brick');
-        dojo.require('whs.br');
+//        dojo.registerModulePath("whs", "/static");
+        dojo.require('whs.select');
+        dojo.require('whs.brick');
 
-        dojo.addOnLoad(function() {
-            return 1;
-            spin = dijit.byId('id_tara');
-            amount = dijit.byId('id_amount')
-            poddon = dijit.byId('id_poddon');
-            console.log(spin, amount, poddon)
-            dojo.connect(spin, 'onChange', function() {
-                amount.set('value', spin.get('value') * poddon.get('value'));
-            });
-            dojo.connect(poddon, 'onChange', function() {
-                amount.set('value', spin.get('value') * poddon.get('value'));
-            });
-            form = dijit.byId('form');
-            dojo.connect(form, 'onSubmit', function(e) {
-                dojo.stopEvent(e);
-                var value = form.get('value')
-//                if ('doc_date' in value) {
-//                    value['doc_date'] = dojo.date.locale.format(value['doc_date'], {datePattern:'y-M-d',selector:'date'});
+//        dojo.addOnLoad(function() {
+//            return 1;
+//            spin = dijit.byId('id_tara');
+//            amount = dijit.byId('id_amount')
+//            poddon = dijit.byId('id_poddon');
+//            console.log(spin, amount, poddon)
+//            dojo.connect(spin, 'onChange', function() {
+//                amount.set('value', spin.get('value') * poddon.get('value'));
+//            });
+//            dojo.connect(poddon, 'onChange', function() {
+//                amount.set('value', spin.get('value') * poddon.get('value'));
+//            });
+//            form = dijit.byId('form');
+//            dojo.connect(form, 'onSubmit', function(e) {
+//                dojo.stopEvent(e);
+//                var value = form.get('value')
+////                if ('doc_date' in value) {
+////                    value['doc_date'] = dojo.date.locale.format(value['doc_date'], {datePattern:'y-M-d',selector:'date'});
+////                }
+//                console.log('form send data:', value);
+//                if (form.validate()) {
+//                    dojo.xhrPost({
+//                                postData:dojo.objectToQuery(value),
+//                                url:form.action,
+//                                handleAs:'json'
+//                            },
+//                            function(error) {
+//                            }).then(function(data) {
+//                        if (data.status) {
+//                            console.log('ok', data.id, data);
+//                            dojo.create('li', {innerHTML:'ok'}, 'log');
+//                        }
+//                        else {
+//                            console.log('fail', data);
+//                            dojo.create('li', {innerHTML:'fail'}, 'log');
+//                            for (var i in data.message) { // Цикл по словарю, берем dijit виджет
+//                                var input = dijit.byId('id_' + i)
+//                                input.state = 'Error';
+//                                input._setStateClass();// Код не мой, я просто разместил объяву
+//                                input.set('invalid', 'true');
+//                                input._maskValidSubsetError = true;
+//                                dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
+//                            }
+//                        }
+//                    }, function(e) {
+//                        console.log('fail', e);
+//                        dojo.create('li', {innerHTML:'fail 500'}, 'log');
+//
+//                    });
 //                }
-                console.log('form send data:', value);
-                if (form.validate()) {
-                    dojo.xhrPost({
-                                postData:dojo.objectToQuery(value),
-                                url:form.action,
-                                handleAs:'json'
-                            },
-                            function(error) {
-                            }).then(function(data) {
-                        if (data.status) {
-                            console.log('ok', data.id, data);
-                            dojo.create('li', {innerHTML:'ok'}, 'log');
-                        }
-                        else {
-                            console.log('fail', data);
-                            dojo.create('li', {innerHTML:'fail'}, 'log');
-                            for (var i in data.message) { // Цикл по словарю, берем dijit виджет
-                                var input = dijit.byId('id_' + i)
-                                input.state = 'Error';
-                                input._setStateClass();// Код не мой, я просто разместил объяву
-                                input.set('invalid', 'true');
-                                input._maskValidSubsetError = true;
-                                dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
-                            }
-                        }
-                    }, function(e) {
-                        console.log('fail', e);
-                        dojo.create('li', {innerHTML:'fail 500'}, 'log');
-
-                    });
-                }
-                else {
-                    return false;
-                }
-            });
-        });
+//                else {
+//                    return false;
+//                }
+//            });
+//        });
     </script>
     <style>
         @import url('/static/style.css');
@@ -116,28 +116,8 @@
         margin:0px;
     }
     </style>
-    {#    <script type="text/javascript" src="/static/select/Brick/Brick.js"></script>#}
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
-{#    {% if form.instance %}#}
-{#    <a href='{{ form.instance.bill_set.get.get_absolute_url }}'>{{ form.instance.bill_set.get }}</a>#}
-{#    {% endif %}#}
-        <ul>
-            {% for field in form %}
-                <li>
-                    {% if field.name not in 'poddon tara' %}
-                        <label> {{ field.label }} </label>
-                    {% endif %}
-                        {% if field.name not in 'poddon tara' %}
-                            {{ field }}
-                        {% endif %}
-                    {% if field.name == 'amount' %}
-                        <input id='id_tara' dojoType="dijit.form.NumberSpinner" style='width:60px;'
-                               value="{{ form.tara.value }}" smallDelta="1"
-                               constraints="{min:0,max:20000/288,places:0}" intermediateChanges="true" name="tara"/>
-                        {{ form.poddon }}
-                    {% endif %}
-                </li>
-            {% endfor %}
+        <ul>{{ form.as_ul }}
         </ul>
         <button dojoType="dijit.form.Button" type="submit">
             Схоронить

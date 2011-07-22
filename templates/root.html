@@ -1,8 +1,5 @@
 {% extends "dojango/base.html" %}
-
 {% block dojango_page_title %}Склад кирпича - Главная страница{% endblock %}
-
-{# add your own javascript/css stuff here #}
 {% block dojango_header_extra %}
     <script type="text/javascript">
         var dojoConfig = {
@@ -11,19 +8,9 @@
 //            'parseOnLoad':true
         };
         dojo.registerModulePath("whs", "/static");
-//        dojo.require('whs.select.Brick');
-//        dojo.require('whs.brick');
-        dojo.addOnLoad(function() {
-
-//            dojo.parser.parse();
-        });
-
     </script>
     <style>
-
         @import url('/static/style.css');
-        /*@import url('/static/default.css');*/
-
         /*body {*/
         /*background-image: url('http://dl.dropbox.com/u/8716795/background.png');*/
         /*background-repeat: no-repeat;*/

@@ -36,13 +36,16 @@ def main(request):
     bri=[]
     total = {'s':0,'tr_m':0,'tr_p':0,'t':0}
 
-    filter = {'doc_date__gte':datetime.date(2011,07,01)}
+    filter = {'doc_date__gte':datetime.date(2011,06,01)}
 
     for br in bricks.objects.all():
         er={'brick':br}
         s = sold.objects.filter(brick=br)
+#        print len(s)
         er.update(bill.objects.filter(solds__in=s,**filter).aggregate(s=Sum('solds__amount')))
+
         t = transfer.objects.filter(brick=br)
+        print len(t)
         er.update(bill.objects.filter(transfers__in=t,**filter).aggregate(tr_m=Sum('transfers__amount'),tr_p=Sum('solds__amount')))
         for e in er:
             if not e == 'brick' and not er[e]==None:
@@ -50,6 +53,7 @@ def main(request):
         total['t']+=br.total
 
         bri.append(er)
+    print bri[0]
 
     return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bri,'total':total},
                           context_instance=RequestContext(request))
@@ -168,7 +172,10 @@ def form(request,modelName,id=0):
     if request.method == 'GET':
 
         if int(id)==0:
-            f=form(request.GET)
+            if len(request.GET):
+                f=form(request.GET,auto_id=False)
+            else:
+                f=form(auto_id=False)
             method='POST'
             if modelName in ('bricks','transfers',):
                 title=u'Новый %s' % model._meta.verbose_name.lower() #Refactor
@@ -179,7 +186,7 @@ def form(request,modelName,id=0):
             title=u'Изменение %s № %s' % (model._meta.verbose_name_plural.lower(),id)
             try:
                 instance=model.objects.get(pk=id)
-                f=form(instance=instance)
+                f=form(instance=instance,auto_id=False)
             except model.DoesNotExist:
                 return HttpResponse(json({'status':'error','message':'DoesNotExist'}),mimetype="application/json;charset=utf-8")
 

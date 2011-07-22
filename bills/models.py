@@ -15,11 +15,12 @@ from django.utils.safestring import mark_safe
 
 
 class BrickSelect(forms.Select):
-    dojo_type = 'whs.select.Brick'
+    dojo_type = 'whs.select'
 
     def render(self, name, value, attrs=None, choices=()):
         if value is None: value = ''
         final_attrs = self.build_attrs(attrs, name=name)
+#        print final_attrs
         output = [u'<select%s>' % flatatt(final_attrs)]
         options = self.render_options(choices, [value])
         if options:
@@ -38,7 +39,7 @@ class BrickSelect(forms.Select):
             return u''
         else:
             selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
-            return u'<option dojoType="whs.br" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+            return u'<option dojoType="whs.brick_tr" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
                 'class':brick.show_css(),
                 'cl':brick.get_brick_class_display(),
                 'mark':brick.get_mark_display(),
@@ -108,7 +109,8 @@ class soldForm(forms.ModelForm):
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect()
+         'brick': BrickSelect(),
+         'tara': forms.NumberSpinnerInput(attrs={'constraints':{'min':1,'max':2000,'places':0}})
          }
 
 class transfer(oper):
