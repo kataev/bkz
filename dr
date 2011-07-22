@@ -1,9 +1,0 @@
-BEGIN;
-ALTER TABLE "bills_bill_solds" DROP CONSTRAINT "bill_id_refs_id_d67c17a5";
-ALTER TABLE "bills_bill_transfers" DROP CONSTRAINT "bill_id_refs_id_48e192c4";
-DROP TABLE "bills_bill";
-DROP TABLE "bills_bill_solds";
-DROP TABLE "bills_bill_transfers";
-DROP TABLE "bills_transfer";
-DROP TABLE "bills_sold";
-COMMIT;

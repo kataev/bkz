@@ -1,1 +1,0 @@
-[{"pk": 2, "model": "bills.bills", "fields": {"info": "test2", "number": 2, "draft": true, "doc_date": "2011-05-26", "transfers": [], "time_change": "2011-05-26 16:51:20", "solds": []}}, {"pk": 1, "model": "bills.bills", "fields": {"info": "test", "number": 1, "draft": true, "doc_date": "2011-05-26", "transfers": [], "time_change": "2011-05-26 17:33:41", "solds": []}}]
