@@ -2,122 +2,16 @@
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 {% block content %}
     <script type="text/javascript">
-//        dojo.registerModulePath("whs", "/static");
         dojo.require('whs.select');
         dojo.require('whs.brick');
-
-//        dojo.addOnLoad(function() {
-//            return 1;
-//            spin = dijit.byId('id_tara');
-//            amount = dijit.byId('id_amount')
-//            poddon = dijit.byId('id_poddon');
-//            console.log(spin, amount, poddon)
-//            dojo.connect(spin, 'onChange', function() {
-//                amount.set('value', spin.get('value') * poddon.get('value'));
-//            });
-//            dojo.connect(poddon, 'onChange', function() {
-//                amount.set('value', spin.get('value') * poddon.get('value'));
-//            });
-//            form = dijit.byId('form');
-//            dojo.connect(form, 'onSubmit', function(e) {
-//                dojo.stopEvent(e);
-//                var value = form.get('value')
-////                if ('doc_date' in value) {
-////                    value['doc_date'] = dojo.date.locale.format(value['doc_date'], {datePattern:'y-M-d',selector:'date'});
-////                }
-//                console.log('form send data:', value);
-//                if (form.validate()) {
-//                    dojo.xhrPost({
-//                                postData:dojo.objectToQuery(value),
-//                                url:form.action,
-//                                handleAs:'json'
-//                            },
-//                            function(error) {
-//                            }).then(function(data) {
-//                        if (data.status) {
-//                            console.log('ok', data.id, data);
-//                            dojo.create('li', {innerHTML:'ok'}, 'log');
-//                        }
-//                        else {
-//                            console.log('fail', data);
-//                            dojo.create('li', {innerHTML:'fail'}, 'log');
-//                            for (var i in data.message) { // Цикл по словарю, берем dijit виджет
-//                                var input = dijit.byId('id_' + i)
-//                                input.state = 'Error';
-//                                input._setStateClass();// Код не мой, я просто разместил объяву
-//                                input.set('invalid', 'true');
-//                                input._maskValidSubsetError = true;
-//                                dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
-//                            }
-//                        }
-//                    }, function(e) {
-//                        console.log('fail', e);
-//                        dojo.create('li', {innerHTML:'fail 500'}, 'log');
-//
-//                    });
-//                }
-//                else {
-//                    return false;
-//                }
-//            });
-//        });
     </script>
-    <style>
-        @import url('/static/style.css');
-
-        table tr {
-            cursor:pointer;
-        }
-        table tr:hover {
-            /*text-shadow: 0 2px #fff,0 4px #ccc;*/
-        }
-
-        ul {
-            list-style-type: none;
-        }
-
-        ul li {
-            padding-top: 5px;
-        }
-
-        ul li label {
-            width: 100px;
-            display: block;
-        }
-    ul.filter h3 {
-        font-size:13px;
-        margin-bottom:0px;
-        margin-top:0px !important;
-
-    }
-    ul.filter {
-        margin:0px;
-        padding-left:5px;
-    }
-
-    div#bricksform > div {
-        clear:both;
-    }
-
-    ul.filter li.selected {
-    /*color: #5b80b2 !important;*/
-    border-bottom:1px black solid;
-    border-left: 5px solid green;
-    padding-left: 5px;
-    margin-left: -5px;
-    }
-        
-    ul.filter li {
-        cursor:pointer;
-        list-style:none;
-        font-size:11px;
-        padding-top:5px;
-        padding:0px;
-        margin:0px;
-    }
-    </style>
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
-        <ul>{{ form.as_ul }}
+        <ul>
+            {% for f in form %}
+                <li>
+                    <label>{{ f.label }}</label>{{ f }}
+                </li>
+            {% endfor %}
         </ul>
         <button dojoType="dijit.form.Button" type="submit">
             Схоронить
