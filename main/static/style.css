@@ -10,17 +10,18 @@ css={
 
     }
 */
+
+
+.DialogMenu {
+    float:left;
+}
+
 .errorlist {
-    /*display:none;*/
+/*display:none;*/
 }
 
-#brickselect {
-    border-collapse: collapse;
-    border: 1px black solid;
-}
-
-#brickselect tr {
-    border-bottom: 1px black solid;
+.selected td {
+    border-bottom: 2px green dotted;
 }
 
 .facial {
@@ -29,10 +30,6 @@ css={
 
 .common {
 
-}
-
-#table tr.lux td.title:before {
-    content:url('/static/money_gold.png');
 }
 
 .cl_red {
@@ -63,59 +60,16 @@ css={
     background-color: gray;
 }
 
+li {
+    list-style-type:none;
+}
 
+li.tara,li.amount {
+    float:left;
+    padding-right:5px;
+}
 
-        table tr {
-            cursor:pointer;
-        }
-        table tr:hover {
-            /*text-shadow: 0 2px #fff,0 4px #ccc;*/
-        }
+li label:after {
+    clear:left;
 
-        ul {
-            list-style-type: none;
-        }
-
-        ul li {
-            padding-top: 5px;
-        }
-
-        ul li label {
-            width: 100px;
-            display: block;
-        }
-    ul.filter h3 {
-        font-size:13px;
-        margin-bottom:0px;
-        margin-top:0px !important;
-
-    }
-    ul.filter {
-        margin:0px;
-        padding-left:5px;
-    }
-
-    div#bricksform > div {
-        clear:both;
-    }
-
-    ul.filter li.selected {
-    /*color: #5b80b2 !important;*/
-    border-bottom:1px black solid;
-    border-left: 5px solid green;
-    padding-left: 5px;
-    margin-left: -5px;
-    }
-
-    ul.filter li {
-        cursor:pointer;
-        list-style:none;
-        font-size:11px;
-        padding-top:5px;
-        padding:0px;
-        margin:0px;
-    }
-
-.br {
-    font-style:italic;
 }
