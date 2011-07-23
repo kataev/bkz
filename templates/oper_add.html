@@ -4,12 +4,13 @@
     <script type="text/javascript">
         dojo.require('whs.select');
         dojo.require('whs.brick');
+        dojo.require('whs.Dialog');
     </script>
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
         <ul>
             {% for f in form %}
-                <li>
-                    <label>{{ f.label }}</label>{{ f }}
+                <li class='{{ f.name }}'>
+                    <label>{{ f.label }}</label><br>{{ f }}
                 </li>
             {% endfor %}
         </ul>

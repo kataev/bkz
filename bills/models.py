@@ -110,7 +110,7 @@ class soldForm(forms.ModelForm):
         widgets = {
          'info': forms.Textarea(attrs={}),
          'brick': BrickSelect(),
-         'tara': forms.NumberSpinnerInput(attrs={'constraints':{'min':1,'max':2000,'places':0}})
+         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
          }
 
 class transfer(oper):
