@@ -11,13 +11,35 @@ css={
     }
 */
 
-
 .DialogMenu {
-    float:left;
+    float: left;
 }
 
 .errorlist {
 /*display:none;*/
+}
+
+span.helptext {
+    display: none;
+}
+
+ul#menu {
+    overflow: hidden;
+    border-left: 1px solid #ccc;
+    padding: 0px;
+}
+
+ul#menu li {
+    float: left; /*margin-left: 20px;*/
+    list-style: none;
+    padding: 0 .8em;
+    border-right: 1px solid #ccc;
+}
+
+ul#menu li span {
+/*cle*/
+/*display:block;*/
+/*clear:left;*/
 }
 
 .selected td {
@@ -61,15 +83,15 @@ css={
 }
 
 li {
-    list-style-type:none;
+    list-style-type: none;
 }
 
-li.tara,li.amount {
-    float:left;
-    padding-right:5px;
+li.tara, li.amount {
+    float: left;
+    padding-right: 5px;
 }
 
 li label:after {
-    clear:left;
+    clear: left;
 
 }

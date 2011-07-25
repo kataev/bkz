@@ -2,19 +2,6 @@
 
 {% load humanize %}
 {% block content %}
-<style>
-    td, th {
-        padding-left:10px;
-        padding-right:5px;
-        text-align:right;
-        
-    }
-    tr td:first-child,tr th:first-child {
-        text-align:left;
-    }
-
-</style>
-{#<span dojoType='whs.br' pk=2 title='olololo'></span>#}
 <ul>
 {% for bill in bills %}<li><a href='{{ bill.name.get_absolute_url }}'>{{ bill.name }} на {{ bill.money }} руб</a></li>
 {% endfor %}

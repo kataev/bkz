@@ -1,9 +1,5 @@
-{% extends "root.html" %}
-{% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
-{% block content %}
-    <script type="text/javascript">
-    </script>
     <form action="{{ form.instance.get_absolute_url|default:'./' }}" dojoType="dijit.form.Form" method="POST">
+    <h2>{{ title }}</h2>
         <ul>
             {% for f in form %}
                 <li class='{{ f.name }}'>
@@ -15,6 +11,3 @@
             Схоронить
         </button>
     </form>
-    <ul id='log'>
-    </ul>
-{% endblock %}

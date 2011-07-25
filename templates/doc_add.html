@@ -2,70 +2,8 @@
 {% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
 {% block content %}
     <script type="text/javascript">
-//        dojo.registerModulePath("whs", "/static");
-//        dojo.require('whs.select.Brick');
-
-        dojo.addOnLoad(function() {
-            form = dijit.byId('form');
-            dojo.connect(form, 'onSubmit', function(e) {
-                dojo.stopEvent(e);
-                var value = form.get('value')
-                if ('doc_date' in value) {
-                    var v = dojo.date.locale.format(value['doc_date'], {datePattern:'y-MM-d',selector:'date'}).split('-');
-                    if (v[1].lenght <= 1) {
-                        v[1] = '0' + v[1]
-                    }
-                    value['doc_date'] = v[0] + '-' + v[1] + '-' + v[2];
-                }
-                console.log('form send data:', value);
-                if (form.validate()) {
-                    dojo.xhrPost({
-                                postData:dojo.objectToQuery(value),
-                                url:form.action,
-                                handleAs:'json'
-                            },
-                            function(error) {
-                            }).then(function(data) {
-                        if (data.status) {
-                            console.log('ok', data.id, data);
-                            dojo.create('li', {innerHTML:'ok'}, 'log');
-                        }
-                        else {
-                            console.log('fail', data);
-                            dojo.create('li', {innerHTML:'fail'}, 'log');
-                            for (var i in data.message) { // Цикл по словарю, берем dijit виджет
-                                var input = dijit.byId('id_' + i)
-                                input.state = 'Error';
-                                input._setStateClass();// Код не мой, я просто разместил объяву
-                                input.set('invalid', 'true');
-                                input._maskValidSubsetError = true;
-                                dijit.showTooltip(data.message[i], input.domNode, input.tooltipPosition); //Это уже мой код, тут показывается тултип
-                            }
-                        }
-                    });
-                }
-                else {
-                    return false;
-                }
-            });
-        });
+    dojo.require('whs.brickSelect');
     </script>
-    <style>
-        @import url('/static/style.css');
-
-        ul {
-            list-style-type: none;
-        }
-
-        ul li {
-            padding-top: 5px;
-        }
-
-        ul li label {
-            width: 100px;
-            display: block;
-        }
-    </style>
     <table>
         {% for log in history %}
             <tr>
@@ -75,10 +13,11 @@
         {% endfor %}
     </table>
     <form action="{{ url }}" dojoType="dijit.form.Form" method="POST" id='form'>
+    <h2>{{ title }}</h2>
         <ul>
             {% for field in form %}
                     <li>
-                        <label> {{ field.label }} </label>
+                        <label> {{ field.label }} </label><br>
                         {% if field.name == 'doc_date' %}
                             <input name="doc_date" required="true"
                                    value="{{ field.value.isoformat }}"

@@ -5,7 +5,7 @@ dojo.require('dijit._Templated');
 
 dojo.declare("whs.brick", [dijit._Widget, dijit._Templated], {
             baseClass: 'brick',selected:false,total:'',sold:'',tr_p:'',tr_m:'',n_m:'',
-            name: 'No name',cl:'',mark:0,value: 0,view:'',weight:'','class':'',
+            name: 'No name',cl:'',mark:0,value: 0,view:'',weight:'','class':'',//TODO: clear mark and other, do css class filter
             templateString: '<span class="${selected} ${baseClass} ${class}"></span>',
             _setNameAttr: function(val) {
                 this.name = this.srcNodeRef.innerHTML;
