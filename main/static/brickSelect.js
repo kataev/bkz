@@ -1,11 +1,8 @@
 dojo.provide("whs.brickSelect");
 
-
-//dojo.require('dijit.form._FormWidget');
 dojo.require('dijit._Widget');
 dojo.require('whs.brick');
 dojo.require('dijit._Templated');
-//dojo.require("dojo.store.Memory");
 dojo.require("whs.Dialog");
 
 dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {

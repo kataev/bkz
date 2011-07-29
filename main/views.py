@@ -183,7 +183,10 @@ def form(request,modelName,id=0):
                 title=u'Новая %s' % model._meta.verbose_name.lower()
         else:
             method='Put'
-            title=u'Изменение %s № %s' % (model._meta.verbose_name_plural.lower(),id)
+            if not modelName=='bill':
+                title=u'Изменение %s № %s' % (model._meta.verbose_name_plural.lower(),id)
+            else:
+                title=u'Изменение накладной № %s' % (id)
             try:
                 instance=model.objects.get(pk=id)
                 f=form(instance=instance,auto_id=False)
@@ -219,7 +222,11 @@ def form(request,modelName,id=0):
                 brick = brickForm()
             else:
                 brick = brickForm(instance=model.objects.get(pk=id).brick)
-            return render_to_response('oper_add.html',{'form':f,'title':title,'method':method,'history':history,'brickform':brick},
+            if request.is_ajax():
+                return render_to_response('oper_add_ajax.html',{'form':f,'title':title},
+                          context_instance=RequestContext(request))
+            else:
+                return render_to_response('oper_add.html',{'form':f,'title':title,'method':method,'history':history,'brickform':brick},
                           context_instance=RequestContext(request))
 
     if request.method == 'POST' and int(id)==0:

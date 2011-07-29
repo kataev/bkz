@@ -12,30 +12,21 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 
-
-
 class BrickSelect(forms.Select):
-    dojo_type = 'whs.select'
+    dojo_type = 'whs.brickSelect'
 
     def render(self, name, value, attrs=None, choices=()):
         if value is None: value = ''
         final_attrs = self.build_attrs(attrs, name=name)
-#        print final_attrs
         output = [u'<select%s>' % flatatt(final_attrs)]
         options = self.render_options(choices, [value])
         if options:
             output.append(options)
-#        output.append(u'<div class="brickselect">ololo</div>')
         output.append(u'</select>')
         return mark_safe(u'\n'.join(output))
-    
-
 
     def render_option(self,brick,selected_choices, option_value=None, option_label=None):
-#        print brick,selected_choices,option_label,option_value
-#        option_value = force_unicode(option_value)
         if brick is None:
-#            return u'<option>------</option>'
             return u''
         else:
             selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
@@ -53,10 +44,9 @@ class BrickSelect(forms.Select):
             }
 
     def render_options(self, choices, selected_choices):
-        # Normalize to strings.
         selected_choices = set([v for v in selected_choices])
         output = []
-        br =  bricks.objects.all().order_by('pk')
+        br =  self.choices.queryset
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
                 output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
@@ -76,16 +66,19 @@ class BrickSelect(forms.Select):
                 output.append(self.render_option(val,selected_choices))
         return u'\n'.join(output)
 
-class bills_filter_form(forms.Form):
-    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
-    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
-    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич',widget=BrickSelect())
-    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
-    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')
+class OperSelect(forms.SelectMultiple):
+    dojo_type = 'whs.operSelect'
+    def render_option(self,oper,selected_choices):
+        selected_html = (oper.pk in selected_choices) and u' selected="selected"' or ''
+        return oper.widget(selected_html=selected_html,as_tr=True)
 
-
-
-
+    def render_options(self, choices, selected_choices):
+        selected_choices = set([v for v in selected_choices])
+        output = []
+        queryset =  self.choices.queryset
+        for oper in queryset:
+            output.append(self.render_option(oper,selected_choices))
+        return u'\n'.join(output)
 
 class sold(oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
@@ -100,8 +93,10 @@ class sold(oper):
         return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
 
     def get_absolute_url(self):
-        return "/form/%s/%i/" % (self._meta.module_name,self.id)
-
+        if self.pk:
+            return "/form/%s/%i/" % (self._meta.module_name,self.id)
+        else:
+            return "/form/%s/" % (self._meta.module_name)
 
 class soldForm(forms.ModelForm):
     class Meta:
@@ -115,6 +110,14 @@ class soldForm(forms.ModelForm):
 
 class transfer(oper):
     sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
+
+    @property
+    def attr(self):
+        if self.sold:
+            return {'child':self.sold.pk}
+        else:
+            return {}
+
     class Meta():
             verbose_name = u"Перевод"
             verbose_name_plural = u"Переводы"
@@ -190,13 +193,20 @@ class bill(doc):
             self.draft=True
             return []
 
-
-
 class billForm(forms.ModelForm):
     class Meta:
         model=bill
         exclude=('draft')
         widgets = {
          'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect()
+         'solds': OperSelect(),
+         'transfers': OperSelect(),
          }
+
+
+class bills_filter_form(forms.Form):
+    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
+    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
+    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич',widget=BrickSelect())
+    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
+    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')

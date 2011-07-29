@@ -6,7 +6,7 @@ dojo.require('dijit._Templated');
 dojo.declare("whs.brick", [dijit._Widget, dijit._Templated], {
             baseClass: 'brick',selected:false,total:'',sold:'',tr_p:'',tr_m:'',n_m:'',
             name: 'No name',cl:'',mark:0,value: 0,view:'',weight:'','class':'',//TODO: clear mark and other, do css class filter
-            templateString: '<span class="${selected} ${baseClass} ${class}"></span>',
+            templateString: '<span class="${baseClass} ${class}"></span>',
             _setNameAttr: function(val) {
                 this.name = this.srcNodeRef.innerHTML;
                 this.domNode.innerHTML = this.name;
@@ -14,15 +14,7 @@ dojo.declare("whs.brick", [dijit._Widget, dijit._Templated], {
             _getNameAttr: function() {
                 return this.name;
             },
-            parseInt: function(val) {
-                var total_int = '';
-                var s = val.split(',');
-                var len = s.length;
-                for (var i = 0; i < len; i++) {
-                    total_int += s[i];
-                }
-                return parseInt(total_int);
-            },
+
             _getSelectedAtrr:function(value) {
                 console.log(value);
             },

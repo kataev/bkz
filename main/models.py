@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from whs.bricks.models import bricks
-#from whs.bills.models import BrickSelect
-#from whs.agents.models import agent
-#from dojango import forms
-#class BrickWidget(model.ForeignKey)
-
-
-
+#import dojango.forms as forms
 
 class oper(models.Model):
 
@@ -21,10 +15,32 @@ class oper(models.Model):
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
     post=models.BooleanField(u'Проведенно?',default=False)
     # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
-
+    attr={}
     class Meta:
         abstract = True
 
+    def widget(self,selected_html='',as_tr=False,attrs={}):
+        attrs={
+            'selected_html':selected_html,
+            'value':self.pk,
+            'name':self._meta.module_name,
+            'amount':self.amount,
+            'tara':self.tara,
+            'info':unicode(self.info),
+            'brick_css':self.brick.show_css(),
+            'brick':unicode(self.brick),
+            'brick_value':self.brick.pk
+        }
+        attrs.update(self.attr)
+        at = u''
+        for a in attrs:
+            
+            at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
+        if as_tr:
+            template = u'<option dojoType="whs.oper_tr" %s >%s</option>' % (at,unicode(self))
+        else:
+            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
+        return template
 
 class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))

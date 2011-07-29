@@ -2,7 +2,14 @@
     <label>Операции</label>
     <br>
     <div class=' ${baseClass}'>
-        <div data-dojo-attach-point="menuNode"><span class='addsold'>add sold</span></div>
+        <div data-dojo-attach-point="menuNode">
+            <span oper='sold'>add sold</span>
+            |
+            <span oper='transfer'>add transfer</span>
+        </div>
+        <div data-dojo-attach-point="inputNode" style='display:none;'>
+
+        </div>
         <table class='dijitTextBox'>
             <tbody data-dojo-attach-point="containerNode">
             </tbody>

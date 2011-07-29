@@ -11,8 +11,47 @@ css={
     }
 */
 
+body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+
+.oper .amount {
+    padding-left: 5px;
+}
+
+li.poddon {
+    width:480px;
+}
+
+.oper {
+    cursor:pointer;
+}
+
+.oper.sold:before {
+    content:'sold';
+}
+
+.oper tr.tranfer td.brick:before {
+    content:'transfer';
+}
+
+.operContainer {
+    width:341px;
+}
+
+.operContainer table {
+    border-collapse:collapse;
+    width:100%;
+}
+
+.oper:hover {
+    background-color:#adff2f;
+}
 .DialogMenu {
     float: left;
+    display: none;
+}
+
+.dijitDialogUnderlay _underlay {
+    background-color: green;
 }
 
 .errorlist {
@@ -36,10 +75,13 @@ ul#menu li {
     border-right: 1px solid #ccc;
 }
 
-ul#menu li span {
-/*cle*/
-/*display:block;*/
-/*clear:left;*/
+form ul {
+    list-style-type: none;
+    padding:2px;
+}
+
+form ul li {
+    padding-top: 5px;
 }
 
 .selected td {
