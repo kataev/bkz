@@ -6,7 +6,6 @@ from whs.bricks.models import bricks
 class oper(models.Model):
 
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
-
 #    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
     brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
@@ -34,7 +33,6 @@ class oper(models.Model):
         attrs.update(self.attr)
         at = u''
         for a in attrs:
-            
             at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
         if as_tr:
             template = u'<option dojoType="whs.oper_tr" %s >%s</option>' % (at,unicode(self))

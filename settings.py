@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import djcelery
+djcelery.setup_loader()
+
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -25,7 +28,8 @@ DATABASES = {
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS' : False,
 }
-
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
@@ -139,11 +143,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
+    
     'south',
     'dojango',
-    
-#    'indexer',
-#    'paging',
+    'djcelery',
+    'djkombu',
     'sentry',
     'sentry.client',
 

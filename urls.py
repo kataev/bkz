@@ -11,6 +11,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'whs.main.views.main', name='main'),
 
+    url(r'^bricks/$', 'whs.bricks.views.store', name='brick_store'),
 
     url(r'^post/(?P<modelName>\w+)/(?P<id>\d+)/$', 'whs.main.views.posting', name='posting'),
     url(r'^bills/$', 'whs.main.views.bills', name='bills'),

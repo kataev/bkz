@@ -2,32 +2,47 @@
 
 {% load humanize %}
 {% block content %}
+
+<style type="text/css">
+    @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
+    @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/claroGrid.css";
+</style>
+
 <ul>
 {% for bill in bills %}<li><a href='{{ bill.name.get_absolute_url }}'>{{ bill.name }} на {{ bill.money }} руб</a></li>
 {% endfor %}
 </ul>
-
-<table id='brickselect'>
+<span dojoType="dojo.data.ItemFileWriteStore" jsId="brick" url="/bricks/"></span>
+<table dojoType="dojox.grid.DataGrid" store="brick" style="width: 800px; height: 300px;">
 <thead>
-<tr>
-    <th>Brick</th><th>Sold</th><th>Tr m</th><th>Tr p</th><th>Total</th>
-</tr>
-    <thead>
-<tfoot>
-    <th style='text-align:right;'>Сумма:</th><th>{{ total.s|intcomma }}</th><th>{{ total.tr_m|intcomma }}</th><th>{{ total.tr_p|intcomma }}</th><th>{{ total.t|intcomma }}</th>
-</tfoot>
-<tbody>
-{% for brick in bricks %}
-    <tr class='{{ brick.brick.show_css }}'>
-        <td><span dojoType='whs.br' class="{{ brick.brick.show_css }}" title='{{ brick.brick }}' pk={{ brick.brick.pk }}>{{ brick.brick }}</span></td><td>{{ brick.s|default:'0'|intcomma }}</td><td>{{ brick.tr_m|default:'0'|intcomma }}</td><td>{{ brick.tr_p|default:'0'|intcomma }}</td><td>{{ brick.brick.total|default:'0'|intcomma }}</td>
+    <tr>
+      <th field="label" width="200px">Имя</th>
+      <th field="total" width="200px">Остаток</th>
     </tr>
-{% endfor %}
-</tbody>
+  </thead>
 
 </table>
-        <h3>Остатки кирпича по классам:</h3>
-<ul>
-{% for brick in brick_total %}<li>{{ brick.brick_class }}:{{ brick.total|intword }}</li>
-{% endfor %}
-</ul>
+{#<table id='brickselect'>#}
+{#<thead>#}
+{#<tr>#}
+{#    <th>Brick</th><th>Sold</th><th>Tr m</th><th>Tr p</th><th>Total</th>#}
+{#</tr>#}
+{#    <thead>#}
+{#<tfoot>#}
+{#    <th style='text-align:right;'>Сумма:</th><th>{{ total.s|intcomma }}</th><th>{{ total.tr_m|intcomma }}</th><th>{{ total.tr_p|intcomma }}</th><th>{{ total.t|intcomma }}</th>#}
+{#</tfoot>#}
+{#<tbody>#}
+{#{% for brick in bricks %}#}
+{#    <tr class='{{ brick.brick.show_css }}'>#}
+{#        <td><span dojoType='whs.br' class="{{ brick.brick.show_css }}" title='{{ brick.brick }}' pk={{ brick.brick.pk }}>{{ brick.brick }}</span></td><td>{{ brick.s|default:'0'|intcomma }}</td><td>{{ brick.tr_m|default:'0'|intcomma }}</td><td>{{ brick.tr_p|default:'0'|intcomma }}</td><td>{{ brick.brick.total|default:'0'|intcomma }}</td>#}
+{#    </tr>#}
+{#{% endfor %}#}
+{#</tbody>#}
+{##}
+{#</table>#}
+{#        <h3>Остатки кирпича по классам:</h3>#}
+{#<ul>#}
+{#{% for brick in brick_total %}<li>{{ brick.brick_class }}:{{ brick.total|intword }}</li>#}
+{#{% endfor %}#}
+{#</ul>#}
 {% endblock %}

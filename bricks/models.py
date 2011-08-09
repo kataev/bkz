@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from dojango.forms import ModelForm,RadioSelect,DropDownSelect
+from dojango.data.modelstore import *
 
 class bricks(models.Model):
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
@@ -127,19 +128,26 @@ class brickSelectForm(ModelForm):
             'defect': RadioSelect(),
         }
 
-#class BrickStore(Store):
-##    id = StoreField()
-#    brick_class    = StoreField()
-#    color     = StoreField(get_value=ObjectMethod('get_color_display'))
-#    mark     = StoreField(get_value=ObjectMethod('get_mark_display'))
-#    view     = StoreField( get_value=ObjectMethod('get_view_display') )
-#    weight     = StoreField( get_value=ObjectMethod('get_weight_display') )
-#    color_type     = StoreField(get_value=ObjectMethod('get_color_type_display'))
-#    refuse     = StoreField()
-#    features     = StoreField()
-#    defect     = StoreField()
-#    total     = StoreField()
-#
-#    class Meta(object):
-#        objects = bricks.objects.all()
-##        label = bricks._meta.verbose_name
+
+
+
+class history(models.Model):
+    brick = models.ForeignKey(bricks,verbose_name=u"Кирпич")
+    date = models.DateField(u'Дата',auto_now_add=True)
+    total = models.PositiveIntegerField(u"Остаток")
+
+    def __unicode__(self):
+        return u'%s от %s' % (self.brick,self.date)
+
+    class Meta:
+        verbose_name = u'История остатков кирпича'
+        verbose_name_plural = verbose_name
+        ordering = ('-date',)
+
+class BrickStore(Store):
+    label = StoreField(get_value=ObjectMethod('__unicode__'))
+    total = StoreField()
+
+    class Meta(object):
+        objects = bricks.objects.all()
+#        label = '__unicode__'

@@ -45,7 +45,7 @@ def main(request):
         er.update(bill.objects.filter(solds__in=s,**filter).aggregate(s=Sum('solds__amount')))
 
         t = transfer.objects.filter(brick=br)
-        print len(t)
+#        print len(t)
         er.update(bill.objects.filter(transfers__in=t,**filter).aggregate(tr_m=Sum('transfers__amount'),tr_p=Sum('solds__amount')))
         for e in er:
             if not e == 'brick' and not er[e]==None:
@@ -53,7 +53,11 @@ def main(request):
         total['t']+=br.total
 
         bri.append(er)
-    print bri[0]
+#    print bri[0]
+
+    dojo_collector.add_module("dojox.grid.DataGrid")
+    dojo_collector.add_module("dojo.data.ItemFileWriteStore")
+
 
     return render_to_response('main.html',{'brick_total':brick_sum,'bills':bills,'bricks':bri,'total':total},
                           context_instance=RequestContext(request))
