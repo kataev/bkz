@@ -1,0 +1,18 @@
+{% extends "main/main.html" %}
+{% block media %}
+    {{ form.media }}
+{% endblock %}
+{% block content %}
+    <form action='./' method='POST' dojoType='whs.Form'>
+        {% for field in form %}
+            <div class='field'>
+                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
+                    {% endif %}
+                </label>
+                {{ field }}
+            </div>
+        {% endfor %}
+    </form>
+{% endblock %}

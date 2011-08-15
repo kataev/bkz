@@ -68,15 +68,8 @@ class bricks(models.Model):
                 values['view']=self.euro_view[self.view]
             except :
                 pass
-#                print u'KE name error',self.pk
 
         return (template % values).strip().replace('  ',' ')
-#                         mark = self.get_mark_display(),
-#                         refuse = self.refuse,
-#                         defect = self.get_defect_display(),
-#                         features = self.features,
-#                         tip = self.get_color_type_display()
-#                         ).strip().replace('  ',' ')
 
     def get_absolute_url(self):
         return "/form/bricks/%i/" % self.id
@@ -104,32 +97,11 @@ class bricks(models.Model):
 
         for key in self.css.keys():
             try:
-#                print self.css[key]
                 prop = getattr(self,key)
                 css+=u'%s ' % self.css[key][prop]
             except KeyError,e:
                 pass
         return css.strip()
-
-class brickForm(ModelForm):
-    class Meta:
-        model=bricks
-
-class brickSelectForm(ModelForm):
-    class Meta:
-        model=bricks
-        exclude = ['total','name','features','color_type','refuse']
-        widgets = {
-            'color': RadioSelect(),
-            'brick_class': RadioSelect(),
-            'mark': RadioSelect(),
-            'view': RadioSelect(),
-            'weight': RadioSelect(),
-            'defect': RadioSelect(),
-        }
-
-
-
 
 class history(models.Model):
     brick = models.ForeignKey(bricks,verbose_name=u"Кирпич")
@@ -144,10 +116,3 @@ class history(models.Model):
         verbose_name_plural = verbose_name
         ordering = ('-date',)
 
-class BrickStore(Store):
-    label = StoreField(get_value=ObjectMethod('__unicode__'))
-    total = StoreField()
-
-    class Meta(object):
-        objects = bricks.objects.all()
-#        label = '__unicode__'

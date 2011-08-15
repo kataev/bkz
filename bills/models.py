@@ -1,84 +1,61 @@
 # -*- coding: utf-8 -*-
-from whs.main.models import doc,oper
-from whs.bricks.models import bricks
-from whs.agents.models import agent
 from django.db import models
 
-import dojango.forms as forms
+from whs.bricks.models import bricks
+from whs.agents.models import agent
+
 import pytils
-from django.utils.encoding import StrAndUnicode, force_unicode
-from itertools import chain
-from django.contrib.humanize.templatetags.humanize import intcomma
-from django.forms.util import flatatt
-from django.utils.safestring import mark_safe
 
-class BrickSelect(forms.Select):
-    dojo_type = 'whs.brickSelect'
+class oper(models.Model):
+    poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
+#    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
+    brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
+    amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
+    tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)
+    poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
+    post=models.BooleanField(u'Проведенно?',default=False)
+    # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
+    attr={}
+    class Meta:
+        abstract = True
 
-    def render(self, name, value, attrs=None, choices=()):
-        if value is None: value = ''
-        final_attrs = self.build_attrs(attrs, name=name)
-        output = [u'<select%s>' % flatatt(final_attrs)]
-        options = self.render_options(choices, [value])
-        if options:
-            output.append(options)
-        output.append(u'</select>')
-        return mark_safe(u'\n'.join(output))
-
-    def render_option(self,brick,selected_choices, option_value=None, option_label=None):
-        if brick is None:
-            return u''
+    def widget(self,selected_html='',as_tr=False,attrs={}):
+        attrs={
+            'selected_html':selected_html,
+            'value':self.pk,
+            'name':self._meta.module_name,
+            'amount':self.amount,
+            'tara':self.tara,
+            'info':unicode(self.info),
+            'brick_css':self.brick.show_css(),
+            'brick':unicode(self.brick),
+            'brick_value':self.brick.pk
+        }
+        attrs.update(self.attr)
+        at = u''
+        for a in attrs:
+            at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
+        if as_tr:
+            template = u'<option dojoType="whs.oper_tr" %s >%s</option>' % (at,unicode(self))
         else:
-            selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
-            return u'<option dojoType="whs.brick_tr" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
-                'class':brick.show_css(),
-                'cl':brick.get_brick_class_display(),
-                'mark':brick.get_mark_display(),
-                'view':brick.get_view_display(),
-                'weight':brick.get_weight_display(),
-                'total':intcomma(brick.total),
-                'pk':brick.pk,
-                'selected_html':selected_html,
-                'title':brick
+            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
+        return template
 
-            }
+class doc(models.Model):
+    draft_c=((False,u'Чистовик'),(True,u'Черновик'))
 
-    def render_options(self, choices, selected_choices):
-        selected_choices = set([v for v in selected_choices])
-        output = []
-        br =  self.choices.queryset
-        for option_value, option_label in chain(self.choices, choices):
-            if isinstance(option_label, (list, tuple)):
-                output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
-                for option in option_label:
-                    try:
-                        print option_value
-                        val = int(option_value)
-                        output.append(self.render_option(br.get(pk=val),selected_choices,*option))
-                    except ValueError:
-                        output.append(self.render_option(None,selected_choices,*option))
-                output.append(u'</optgroup>')
-            else:
-                try:
-                    val = br.get(pk=option_value)
-                except :
-                    val = None
-                output.append(self.render_option(val,selected_choices))
-        return u'\n'.join(output)
+    number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
+    doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
+#    time_change=models.DateTimeField(auto_now=True)
+    draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 
-class OperSelect(forms.SelectMultiple):
-    dojo_type = 'whs.operSelect'
-    def render_option(self,oper,selected_choices):
-        selected_html = (oper.pk in selected_choices) and u' selected="selected"' or ''
-        return oper.widget(selected_html=selected_html,as_tr=True)
+    class Meta:
+        abstract = True
+#        ordering = ['-doc_date']
 
-    def render_options(self, choices, selected_choices):
-        selected_choices = set([v for v in selected_choices])
-        output = []
-        queryset =  self.choices.queryset
-        for oper in queryset:
-            output.append(self.render_option(oper,selected_choices))
-        return u'\n'.join(output)
+
 
 class sold(oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
@@ -98,15 +75,6 @@ class sold(oper):
         else:
             return "/form/%s/" % (self._meta.module_name)
 
-class soldForm(forms.ModelForm):
-    class Meta:
-        model=sold
-        exclude=('post')
-        widgets = {
-         'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect(),
-         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
-         }
 
 class transfer(oper):
     sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
@@ -131,14 +99,6 @@ class transfer(oper):
     def get_absolute_url(self):
         return "/form/%s/%i/" % (self._meta.module_name,self.id)
 
-class transferForm(forms.ModelForm):
-    class Meta:
-        model=transfer
-        exclude=('post')
-        widgets = {
-         'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect()
-         }
 
 ## Накладная
 class bill(doc):
@@ -193,20 +153,3 @@ class bill(doc):
             self.draft=True
             return []
 
-class billForm(forms.ModelForm):
-    class Meta:
-        model=bill
-        exclude=('draft')
-        widgets = {
-         'info': forms.Textarea(attrs={}),
-         'solds': OperSelect(),
-         'transfers': OperSelect(),
-         }
-
-
-class bills_filter_form(forms.Form):
-    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
-    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
-    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич',widget=BrickSelect())
-    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
-    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')

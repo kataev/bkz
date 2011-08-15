@@ -25,18 +25,3 @@ class agent(models.Model):
 
     def __unicode__(self):
         return u'%s, %s' % (self.name,self.form)
-
-
-
-class agentForm(ModelForm):
-    class Meta:
-        model=agent
-        widgets = {
-            'bank': Textarea(attrs={}),
-            'address': Textarea(attrs={}),
-        }
-
-class agent_filter_form(ModelForm):
-    class Meta:
-        model=agent
-        field = ['name','form','type','address','inn']

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
-from whs.bricks.models import BrickStore
+from django.shortcuts import render_to_response
+from django.template import RequestContext, loader
+from dojango.util import dojo_collector
 
-def store(request):
-    return HttpResponse(BrickStore().to_json())
+def form(request,id):
+    id = int(id)
+    return render_to_response('bricks/brick.html',{'id':id})
