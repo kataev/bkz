@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from whs.bricks.models import bricks,history
+from whs.brick.models import Brick,History
 
 
 class bricksAdmin(admin.ModelAdmin):
@@ -8,12 +8,12 @@ class bricksAdmin(admin.ModelAdmin):
 #    ordering = ('brick_class','-weight','-view','color_type','defect','refuse','mark','features','color')
     list_filter = ('brick_class','weight','view','defect','refuse','mark')
 
-admin.site.register(bricks, bricksAdmin)
+admin.site.register(Brick, bricksAdmin)
 
 class admin_history(admin.ModelAdmin):
     list_display = ('brick','date','total')
 
     list_filter = ('date','brick__mark','brick__view','brick__weight','brick__defect')
 
-admin.site.register(history, admin_history)
+admin.site.register(History, admin_history)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from whs.bills.models import *
+from whs.bill.models import *
 
 import dojango.forms as forms
 from django.utils.encoding import StrAndUnicode, force_unicode
@@ -82,9 +82,9 @@ class Form(forms.ModelForm):
         css = {'all':('form.css',),}
 
 
-class soldForm(Form):
+class SoldForm(Form):
     class Meta:
-        model=sold
+        model=Sold
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
@@ -93,9 +93,9 @@ class soldForm(Form):
          }
 
 
-class transferForm(Form):
+class TransferForm(Form):
     class Meta:
-        model=transfer
+        model=Transfer
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
@@ -103,17 +103,19 @@ class transferForm(Form):
          }
 
 
-class billForm(Form):
+class BillForm(Form):
     def __init__(self, *args, **kwargs):
-        super(billForm, self).__init__(*args, **kwargs)
-#        if self.is_bound:
-#            self.fields['solds'].choices.queryset = self.instance.solds.all()
-#            self.fields['transfers'].choices.queryset = self.instance.transfers.all()
-#        else:
-#            self.fields['solds'].queryset = []
-#            self.fields['transfers'].queryset = []
+        super(BillForm, self).__init__(*args, **kwargs)
+        try:
+            if self.instance:
+                self.fields['solds'].choices.queryset = self.instance.solds.all()
+                self.fields['transfers'].choices.queryset = self.instance.transfers.all()
+        except self._meta.model.DoesNotExist:
+            self.fields['solds'].queryset = self.instance.solds.empty()
+            self.fields['transfers'].queryset = self.instance.transfers.empty()
+
     class Meta:
-        model=bill
+        model=Bill
         exclude=('draft')
         widgets = {
          'info': forms.Textarea(attrs={}),

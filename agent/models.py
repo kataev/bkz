@@ -2,7 +2,7 @@
 from django.db import models
 from dojango.forms import ModelForm, Textarea
 
-class agent(models.Model):
+class Agent(models.Model):
 
     type_c = ((0,u'Обычный покупатель'),(1,u'Строительная компания'))
 
@@ -16,7 +16,7 @@ class agent(models.Model):
     account=models.CharField(u"Счет",blank=True,max_length=200)
 
     def bills(self):
-        return u'/bills/?agent=%s' % self.id
+        return u'/bill/?agent=%s' % self.id
 
 
     class Meta:

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-from whs.bricks.models import bricks
-from whs.agents.models import agent
+from whs.brick.models import Brick
+from whs.agent.models import Agent
 
 import pytils
 
-class oper(models.Model):
+class Oper(models.Model):
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
 #    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
-    brick=models.ForeignKey(bricks,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
+    brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
     tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)
     poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
@@ -42,7 +42,7 @@ class oper(models.Model):
 #            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
         return template
 
-class doc(models.Model):
+class Doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
 
     number=models.PositiveIntegerField(unique_for_year='doc_date',verbose_name=u'№ документа',help_text=u'Число')
@@ -57,14 +57,14 @@ class doc(models.Model):
 
 
 
-class sold(oper):
+class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
 #    transfers = models.ManyToManyField(transfers,blank=True,null=True,help_text=u'Перевод для этой продажи')
 
     class Meta():
-            verbose_name = u"Отгрузка"
-            verbose_name_plural =  u"Отгрузки"
+            verbose_name = u"отгрузка"
+            verbose_name_plural =  u"отгрузки"
 
     def __unicode__(self):
         return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
@@ -76,8 +76,8 @@ class sold(oper):
             return "/form/%s/" % (self._meta.module_name)
 
 
-class transfer(oper):
-    sold = models.ForeignKey(sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
+class Transfer(Oper):
+    sold = models.ForeignKey(Sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
 
     @property
     def attr(self):
@@ -87,8 +87,8 @@ class transfer(oper):
             return {}
 
     class Meta():
-            verbose_name = u"Перевод"
-            verbose_name_plural = u"Переводы"
+            verbose_name = u"перевод"
+            verbose_name_plural = u"переводы"
 
     def __unicode__(self):
         if self.sold is None:
@@ -101,14 +101,14 @@ class transfer(oper):
 
 
 ## Накладная
-class bill(doc):
-    agent = models.ForeignKey(agent,verbose_name=u'КонтрАгент')
-    solds = models.ManyToManyField(sold,blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
-    transfers = models.ManyToManyField(transfer,blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
+class Bill(Doc):
+    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент')
+    solds = models.ManyToManyField(Sold,blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
+    transfers = models.ManyToManyField(Transfer,blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
     class Meta():
-            verbose_name = u"Накладная"
-            verbose_name_plural = u"Накладные"
+            verbose_name = u"накладная"
+            verbose_name_plural = u"накладные"
             ordering = ['-doc_date']
 
     def __unicode__(self):

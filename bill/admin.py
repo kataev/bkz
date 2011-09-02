@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from whs.bills.models import *
+from whs.bill.models import *
 
 class billAdmin(admin.ModelAdmin):
     list_display = ('__unicode__','doc_date')
@@ -14,6 +14,6 @@ class soldAdmin(admin.ModelAdmin):
 class transferAdmin(admin.ModelAdmin):
     list_display = ('__unicode__','brick','amount',)
 
-admin.site.register(sold, soldAdmin)
-admin.site.register(bill, billAdmin)
-admin.site.register(transfer, transferAdmin)
+admin.site.register(Sold, soldAdmin)
+admin.site.register(Bill, billAdmin)
+admin.site.register(Transfer, transferAdmin)

@@ -3,7 +3,7 @@ from django.db import models
 from dojango.forms import ModelForm,RadioSelect,DropDownSelect
 from dojango.data.modelstore import *
 
-class bricks(models.Model):
+class Brick(models.Model):
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
     view_c=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
@@ -72,15 +72,15 @@ class bricks(models.Model):
         return (template % values).strip().replace('  ',' ')
 
     def get_absolute_url(self):
-        return "/form/bricks/%i/" % self.id
+        return "/form/brick/%i/" % self.id
 
     def span(self):
         return u'<span class="'+self.show_css()+'">'+unicode(self)+'</span>'
 
     class Meta():
         ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
-        verbose_name = u"Кирпич"
-        verbose_name_plural = u'Кирпичи'
+        verbose_name = u"кирпич"
+        verbose_name_plural = u'кирпичи'
 
     css={
         'view':{u'Л':u'facial',u'Р':u'common'},
@@ -103,8 +103,8 @@ class bricks(models.Model):
                 pass
         return css.strip()
 
-class history(models.Model):
-    brick = models.ForeignKey(bricks,verbose_name=u"Кирпич")
+class History(models.Model):
+    brick = models.ForeignKey(Brick,verbose_name=u"Кирпич")
     date = models.DateField(u'Дата',auto_now_add=True)
     total = models.PositiveIntegerField(u"Остаток")
 

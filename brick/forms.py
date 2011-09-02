@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import dojango.forms as forms
 
-from whs.bricks.models import bricks,history
+from whs.brick.models import Brick,History
 
 class brickForm(ModelForm):
     class Meta:
-        model=bricks
+        model=Brick
 
 class brickSelectForm(ModelForm):
     class Meta:
-        model=bricks
+        model=Brick
         exclude = ['total','name','features','color_type','refuse']
         widgets = {
             'color': RadioSelect(),

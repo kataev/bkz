@@ -15,7 +15,7 @@ def form(request,form,id=None):
     if request.is_ajax():
         return HttpResponse(form)
     else:
-        return render_to_response("bills/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
+        return render_to_response("bill/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
 
 @require_http_methods(["POST",])
 def post(request,form,id=None):
@@ -29,7 +29,7 @@ def post(request,form,id=None):
     if request.is_ajax():
         response = HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors}))
     else:
-        response = render_to_response("bills/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
+        response = render_to_response("bill/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
     return response
 
         
