@@ -106,13 +106,13 @@ class TransferForm(Form):
 class BillForm(Form):
     def __init__(self, *args, **kwargs):
         super(BillForm, self).__init__(*args, **kwargs)
-        try:
-            if self.instance:
-                self.fields['solds'].choices.queryset = self.instance.solds.all()
-                self.fields['transfers'].choices.queryset = self.instance.transfers.all()
-        except self._meta.model.DoesNotExist:
-            self.fields['solds'].queryset = self.instance.solds.empty()
-            self.fields['transfers'].queryset = self.instance.transfers.empty()
+        print self.instance
+#        if self.instance:
+#            self.fields['solds'].choices.queryset = self.instance.solds.all()
+#            self.fields['transfers'].choices.queryset = self.instance.transfers.all()
+#        else:
+#            self.fields['solds'].queryset = sold.objects.empty()
+#            self.fields['transfers'].queryset = transfers.objects.empty()
 
     class Meta:
         model=Bill

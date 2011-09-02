@@ -55,8 +55,6 @@ class Doc(models.Model):
         abstract = True
 #        ordering = ['-doc_date']
 
-
-
 class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
@@ -77,7 +75,7 @@ class Sold(Oper):
 
 
 class Transfer(Oper):
-    sold = models.ForeignKey(Sold,blank=True,null=True,verbose_name=u'Отгрузка') #Куда
+    sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
 
     @property
     def attr(self):
@@ -102,9 +100,9 @@ class Transfer(Oper):
 
 ## Накладная
 class Bill(Doc):
-    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент')
-    solds = models.ManyToManyField(Sold,blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
-    transfers = models.ManyToManyField(Transfer,blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
+    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
+    solds = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
+    transfers = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
     class Meta():
             verbose_name = u"накладная"
@@ -112,44 +110,10 @@ class Bill(Doc):
             ordering = ['-doc_date']
 
     def __unicode__(self):
-        return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name[:50])
+        if self.pk:
+            return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name[:50])
+        else:
+            return u'Накладная'
 
     def get_absolute_url(self):
         return "/form/%s/%i/" % (self._meta.module_name,self.id)
-
-    def posting(self):
-        transfers = self.transfers.all()
-        solds = self.solds.all()
-
-        errors= []
-        for t in transfers: # Обрабатываем
-            t.brick.total +=t.amount
-            t.sold.brick.total -= t.amount
-        for s in solds:
-            s.brick.total -=s.amount
-
-        for t in transfers: # Проверяем
-            if t.brick.total < 0:
-                error = {'brick':t.brick,'amount':t.brick.total*-1,'error':u'Не хватает кирпича','oper':t}
-                errors.append(error)
-            if t.sold.brick.total < 0:
-                error = {'brick':t.sold.brick,'amount':t.sold.brick.total*-1,'error':u'Не хватает кирпича в принимащей строне',"oper":t}
-                errors.append(error)
-        for s in solds:
-            if s.brick.total < 0:
-                error = {'brick':s.brick,'amount':s.brick.total*-1,'error':u'Не хватает кирпича','oper':s}
-                errors.append(error)
-        if len(errors) > 0:
-            return errors
-        else:
-            for t in transfers:
-                t.brick.save()
-                t.sold.brick.save()
-                t.post=True
-
-            for s in solds:
-                s.brick.save()
-                s.post=True
-            self.draft=True
-            return []
-
