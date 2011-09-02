@@ -104,20 +104,21 @@ class transferForm(Form):
 
 
 class billForm(Form):
+    def __init__(self, *args, **kwargs):
+        super(billForm, self).__init__(*args, **kwargs)
+#        if self.is_bound:
+#            self.fields['solds'].choices.queryset = self.instance.solds.all()
+#            self.fields['transfers'].choices.queryset = self.instance.transfers.all()
+#        else:
+#            self.fields['solds'].queryset = []
+#            self.fields['transfers'].queryset = []
     class Meta:
         model=bill
         exclude=('draft')
         widgets = {
          'info': forms.Textarea(attrs={}),
-#         'solds': OperSelect(),
-#         'transfers': OperSelect(),
+         'agent' : forms.FilteringSelect(),
+         'solds': OperSelect(),
+         'transfers': OperSelect(),
          }
 
-
-
-class bills_filter_form(forms.Form):
-    date1 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Дата или начало периода')
-    date2 = forms.DateField(required=False,widget=forms.DateInput(attrs={'style':'width:90px;'}),help_text=u'Конец периода')
-    brick = forms.ModelChoiceField(required=False,queryset=bricks.objects.all(),help_text=u'Кирпич',widget=BrickSelect())
-    agent = forms.ModelChoiceField(required=False,queryset=agent.objects.all(),widget=forms.FilteringSelect(attrs={'style':'width:160px;'}),help_text=u'Контрагент')
-    number = forms.CharField(required=False,widget=forms.NumberSpinnerInput(attrs={'style':'width:80px;','constraints':{'min':1}}),help_text=u'Номер накладной')

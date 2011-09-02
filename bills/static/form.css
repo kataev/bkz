@@ -1,0 +1,14 @@
+label:after {
+    content: ':';
+}
+
+label sup {
+    text-decoration: underline;
+}
+form {
+    margin: 5px;
+}
+
+form>div {
+    padding-top: 5px;
+}

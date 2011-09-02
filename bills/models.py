@@ -24,11 +24,11 @@ class oper(models.Model):
         attrs={
             'selected_html':selected_html,
             'value':self.pk,
-            'name':self._meta.module_name,
+#            'name':self._meta.module_name,
             'amount':self.amount,
             'tara':self.tara,
             'info':unicode(self.info),
-            'brick_css':self.brick.show_css(),
+            'brick_css':self.brick.show_css(), 
             'brick':unicode(self.brick),
             'brick_value':self.brick.pk
         }
@@ -36,16 +36,16 @@ class oper(models.Model):
         at = u''
         for a in attrs:
             at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
-        if as_tr:
-            template = u'<option dojoType="whs.oper_tr" %s >%s</option>' % (at,unicode(self))
-        else:
-            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
+#        if as_tr:
+            template = u'<option %s >%s</option>' % (at,unicode(self))
+#        else:
+#            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
         return template
 
 class doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
 
-    number=models.PositiveIntegerField(unique=True,verbose_name=u'№ документа',help_text=u'Число')
+    number=models.PositiveIntegerField(unique_for_year='doc_date',verbose_name=u'№ документа',help_text=u'Число')
     doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
 #    time_change=models.DateTimeField(auto_now=True)
