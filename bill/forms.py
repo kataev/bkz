@@ -83,6 +83,8 @@ class Form(forms.ModelForm):
 
 
 class SoldForm(Form):
+    bill = forms.IntegerField(widget=forms.HiddenInput())
+
     class Meta:
         model=Sold
         exclude=('post')
@@ -104,16 +106,6 @@ class TransferForm(Form):
 
 
 class BillForm(Form):
-    def __init__(self, *args, **kwargs):
-        super(BillForm, self).__init__(*args, **kwargs)
-        print self.instance
-#        if self.instance:
-#            self.fields['solds'].choices.queryset = self.instance.solds.all()
-#            self.fields['transfers'].choices.queryset = self.instance.transfers.all()
-#        else:
-#            self.fields['solds'].queryset = sold.objects.empty()
-#            self.fields['transfers'].queryset = transfers.objects.empty()
-
     class Meta:
         model=Bill
         exclude=('draft')
@@ -121,6 +113,6 @@ class BillForm(Form):
          'info': forms.Textarea(attrs={}),
          'agent' : forms.FilteringSelect(),
          'solds': OperSelect(),
-         'transfers': OperSelect(),
+         'transfers': OperSelect()
          }
 
