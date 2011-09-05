@@ -14,7 +14,6 @@ dojo.declare("whs.brick", [dijit._Widget, dijit._Templated], {
             _getNameAttr: function() {
                 return this.name;
             },
-
             _getSelectedAtrr:function(value) {
                 console.log(value);
             },

@@ -19,18 +19,23 @@ class Oper(models.Model):
     attr={}
     class Meta:
         abstract = True
+        
+
+    def get_absolute_url(self):
+        return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 
     def widget(self,selected_html='',as_tr=False,attrs={}):
         attrs={
             'selected_html':selected_html,
             'value':self.pk,
-#            'name':self._meta.module_name,
+#            'model':self._meta.module_name,
             'amount':self.amount,
             'tara':self.tara,
             'info':unicode(self.info),
             'brick_css':self.brick.show_css(), 
             'brick':unicode(self.brick),
-            'brick_value':self.brick.pk
+            'brick_value':self.brick.pk,
+            'url':self.get_absolute_url()
         }
         attrs.update(self.attr)
         at = u''
@@ -67,13 +72,6 @@ class Sold(Oper):
     def __unicode__(self):
         return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
 
-    def get_absolute_url(self):
-        if self.pk:
-            return "/form/%s/%i/" % (self._meta.module_name,self.id)
-        else:
-            return "/form/%s/" % (self._meta.module_name)
-
-
 class Transfer(Oper):
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
 
@@ -94,9 +92,6 @@ class Transfer(Oper):
         else:
             return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
 
-    def get_absolute_url(self):
-        return "/form/%s/%i/" % (self._meta.module_name,self.id)
-
 
 ## Накладная
 class Bill(Doc):
@@ -116,4 +111,4 @@ class Bill(Doc):
             return u'Накладная'
 
     def get_absolute_url(self):
-        return "/form/%s/%i/" % (self._meta.module_name,self.id)
+        return "/%s/%i/" % (self._meta.module_name,self.id)

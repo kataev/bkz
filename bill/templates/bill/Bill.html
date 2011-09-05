@@ -4,7 +4,7 @@
     {{ form.media }}
 {% endblock %}
 {% block content %}
-    <form action='./post/' method='POST' dojoType='whs.Form'>
+    <form action='./post/' method='POST' dojoType='whs.Form.Bill'>
         {% for field in form %}
             <div class='field'>
                 <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>

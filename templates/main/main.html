@@ -9,7 +9,26 @@
 {% endblock %}
 {% block dojango_content %}
     {% block content %}
-        ROOT
+        <table>
+        {% for bill in bills %}
+            <tr>
+                <td>
+                    {{ bill }}
+                </td>
+                <td>
+                    {% for s in bill.solds.all %}
+                        <span>{{ s }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for s in bill.transfers.all %}
+                        <span>{{ s }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+
+        {% endfor %}
+        </table>
     {% endblock %}
 {% endblock %}
 

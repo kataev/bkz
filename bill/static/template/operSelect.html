@@ -1,12 +1,24 @@
-<div class='dijitTextArea'>
+<div class='dijitTextArea ${baseClass}'>
     <table style='width:300px;' class="dijit dijitReset dijitInlineTable dijitLeft dijitTextBox dijitNumberTextBox">
         <thead>
+        <tr>
+            <th colspan=5>
+                <span data-dojo-attach-point='menuNode' class='menu node'></span>
+            </th>
+        </tr>
         <tr>
             <th>#</th><th>Кирпич</th><th>Кол-во</th><th>Тара</th><th></th>
         </tr>
         </thead>
         <tbody data-dojo-attach-point='containerNode'></tbody>
         <tfoot>
+        <tr>
+            <th>Сумма:</th>
+            <th></th>
+            <th data-dojo-attach-point='amountNode'>0</th>
+            <th data-dojo-attach-point='taraNode'>0</th>
+            <th></th>
+        </tr>
         </tfoot>
     </table>
     <select multiple="multiple" style='display: none;' name='${name}' data-dojo-attach-point="inputNode">

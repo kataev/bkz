@@ -29,3 +29,11 @@
 .cl_ot {
     background-color: gray;
 }
+
+
+.brickSelect .dijitTextBox {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}

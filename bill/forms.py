@@ -83,7 +83,7 @@ class Form(forms.ModelForm):
 
 
 class SoldForm(Form):
-    bill = forms.IntegerField(widget=forms.HiddenInput())
+    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput())
     class Meta:
         model=Sold
         exclude=('post')
@@ -94,17 +94,26 @@ class SoldForm(Form):
          }
 
 class TransferForm(Form):
-    bill = forms.IntegerField(widget=forms.HiddenInput())
+    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput())
     class Meta:
         model=Transfer
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
          'brick': BrickSelect(),
-         'sold' : forms.HiddenInput()
+         'sold' : forms.HiddenInput(),
+         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
          }
 
 class BillForm(Form):
+    def __init__(self, *args, **kwargs):
+        super(BillForm, self).__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['solds'].queryset = self.instance.solds.all()
+            self.fields['transfers'].queryset = self.instance.transfers.all()
+        else:
+            del self.fields['solds']
+            del self.fields['transfers']
     class Meta:
         model=Bill
         exclude=('draft')
@@ -118,3 +127,6 @@ class BillForm(Form):
 class FinishTransfer(forms.Form):
     sold = forms.ModelChoiceField(queryset=Sold.objects.all())
     transfer = forms.ModelChoiceField(queryset=Transfer.objects.filter(sold__isnull=True))
+
+class Confirm(forms.Form):
+    confirm = forms.BooleanField(initial=False)
