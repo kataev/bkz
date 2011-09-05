@@ -154,11 +154,10 @@ INSTALLED_APPS = (
     'dojango',
     'djcelery',
     'djkombu',
-#    'sentry',
-#    'sentry.client',
-    'whs.bricks',
-    'whs.agents',
-    'whs.bills',
+
+    'whs.brick',
+    'whs.agent',
+    'whs.bill',
     'debug_toolbar'
 )
 

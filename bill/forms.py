@@ -2,6 +2,7 @@
 from whs.bill.models import *
 
 import dojango.forms as forms
+import django.forms as formsD
 from django.utils.encoding import StrAndUnicode, force_unicode
 from itertools import chain
 from django.forms.util import flatatt
@@ -82,7 +83,7 @@ class Form(forms.ModelForm):
         css = {'all':('form.css',),}
 
 
-class SoldForm(Form):
+class SoldForm(formsD.ModelForm):
     bill = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
