@@ -84,7 +84,6 @@ class Form(forms.ModelForm):
 
 class SoldForm(Form):
     bill = forms.IntegerField(widget=forms.HiddenInput())
-
     class Meta:
         model=Sold
         exclude=('post')
@@ -93,7 +92,6 @@ class SoldForm(Form):
          'brick': BrickSelect(),
          'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
          }
-
 
 class TransferForm(Form):
     bill = forms.IntegerField(widget=forms.HiddenInput())
@@ -106,7 +104,6 @@ class TransferForm(Form):
          'sold' : forms.HiddenInput()
          }
 
-
 class BillForm(Form):
     class Meta:
         model=Bill
@@ -118,6 +115,6 @@ class BillForm(Form):
          'transfers': OperSelect()
          }
 
-class Finish_transfer(forms.Form):
+class FinishTransfer(forms.Form):
     sold = forms.ModelChoiceField(queryset=Sold.objects.all())
     transfer = forms.ModelChoiceField(queryset=Transfer.objects.filter(sold__isnull=True))

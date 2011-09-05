@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from whs.bill.models import Bill
 
 @require_http_methods(["GET",])
-def Bill_form(request,form,id=None):
+def bill_form_get(request,form,id=None):
     if id:
         form = form(instance=form._meta.model.objects.get(pk=id))
     else:
@@ -16,7 +16,7 @@ def Bill_form(request,form,id=None):
     else:
         return render_to_response("bill/Bill.html", {'form':form} , context_instance=RequestContext(request))
 
-def Bill_post(request,form,id=None):
+def bill_form_post(request,form,id=None):
     if id:
         form = form(request.POST,instance=form._meta.model.objects.get(pk=id))
     else:
@@ -29,7 +29,7 @@ def Bill_post(request,form,id=None):
         response = render_to_response("bill/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
     return response
 
-def Operation_form_get(request,form,id=None):
+def opers_form_get(request,form,id=None):
     if id:
         form = form(instance=form._meta.model.objects.get(pk=id))
     else:
@@ -37,10 +37,10 @@ def Operation_form_get(request,form,id=None):
     if request.is_ajax():
         return HttpResponse(form)
     else:
-        return render_to_response("bill/"+form._meta.model.__name__+".html", {'form':form} , context_instance=RequestContext(request))
+        return render_to_response("bill/"+form._meta.model.__name__+".html", {'form':form}, context_instance=RequestContext(request))
 
 @require_http_methods(["POST",])
-def Operations_post(request,form,id=None):
+def opers_form_post(request,form,id=None):
     print request.POST
     if id:
         form = form(request.POST,instance=form._meta.model.objects.get(pk=id))
@@ -64,7 +64,6 @@ def finish_transfer(request,form):
     form = form(request.POST)
     print form.is_valid()
     if form.is_valid():
-        print form.cleaned_data
         form.cleaned_data['transfer'].sold = form.cleaned_data['sold']
         form.cleaned_data['transfer'].save()
     return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors}))
