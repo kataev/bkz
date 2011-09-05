@@ -2,7 +2,6 @@
 from whs.bill.models import *
 
 import dojango.forms as forms
-import django.forms as formsD
 from django.utils.encoding import StrAndUnicode, force_unicode
 from itertools import chain
 from django.forms.util import flatatt
@@ -83,7 +82,7 @@ class Form(forms.ModelForm):
         css = {'all':('form.css',),}
 
 
-class SoldForm(formsD.ModelForm):
+class SoldForm(Form):
     bill = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
@@ -97,12 +96,14 @@ class SoldForm(formsD.ModelForm):
 
 
 class TransferForm(Form):
+    bill = forms.IntegerField(widget=forms.HiddenInput())
     class Meta:
         model=Transfer
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect()
+         'brick': BrickSelect(),
+         'sold' : forms.HiddenInput()
          }
 
 
@@ -117,3 +118,6 @@ class BillForm(Form):
          'transfers': OperSelect()
          }
 
+class Finish_transfer(forms.Form):
+    sold = forms.ModelChoiceField(queryset=Sold.objects.all())
+    transfer = forms.ModelChoiceField(queryset=Transfer.objects.filter(sold__isnull=True))
