@@ -14,7 +14,7 @@ def bill_form_get(request,form,id=None):
     if request.is_ajax():
         return HttpResponse(form)
     else:
-        return render(request,"bill/Bill.html", {'form':form})
+        return render(request, "Bill.html", {'form':form})
 
 @require_http_methods(["POST",])
 def bill_form_post(request,form,id=None):

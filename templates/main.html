@@ -1,0 +1,28 @@
+{% extends "dojango/base.html" %}
+
+
+
+{% block dojango_page_title %} Склад кирпича - Главная страница{% endblock %}
+{% block dojango_header_extra %}
+    <script type="text/javascript" src="{{ STATIC_URL }}modernizr-2.0.6.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}../../static/plugins.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}style.css" type="text/css"/>
+    {% block media %}
+
+    {% endblock %}
+{% endblock %}
+{% block dojango_content %}
+    {% block content %}
+<table>
+<tbody>
+<tr><td>1</td></tr>
+</tbody>
+<tbody>
+<tr><td>2</td></tr>
+</tbody>
+</table>
+    {% endblock %}
+{% endblock %}
+
+

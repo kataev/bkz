@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block media %}
+    {{ form.media }}
+{% endblock %}
+{% block content %}
+    <form action='./post/' method='POST' dojoType='whs.Form.Bill'>
+        {% for field in form %}
+            <div class='field'>
+                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup
+                        id='{{ field.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
+                {% endif %}
+                </label>
+                {% if field.name not in 'solds transfers' %}
+                    {{ field }}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class='field'>
+            <label for='{{ form.sold.id_for_label }}'>{{ form.sold.label }}{% if form.sold.help_text %}<sup
+                    id='{{ form.sold.id_for_label }}_sup'>?</sup>
+                <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                      data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">{{ form.sold.help_text }}</span>
+            {% endif %}
+            </label>
+            {{ form.solds }}
+        </div>
+        <button dojoType='dijit.form.Button' type=submit>Save</button>
+    </form>
+{% endblock %}
