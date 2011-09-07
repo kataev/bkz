@@ -72,7 +72,7 @@ class Brick(models.Model):
         return (template % values).strip().replace('  ',' ')
 
     def get_absolute_url(self):
-        return "/form/brick/%i/" % self.id
+        return "/brick/%i/" % self.id
 
     def span(self):
         return u'<span class="'+self.show_css()+'">'+unicode(self)+'</span>'
