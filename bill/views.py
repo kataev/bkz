@@ -28,7 +28,7 @@ def bill_form_post(request,form,id=None):
     if request.is_ajax():
         response = HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors,'id':id}))
     else:
-        response = render(request,"bill/"+form._meta.model.__name__+".html", {'form':form})
+        response = render(request,form._meta.model.__name__+".html", {'form':form})
     return response
 
 @require_http_methods(["GET",])
@@ -40,7 +40,7 @@ def opers_form_get(request,form,id=None):
     if request.is_ajax():
         return HttpResponse(form)
     else:
-        return render(request,"bill/"+form._meta.model.__name__+".html", {'form':form})
+        return render(request,form._meta.model.__name__+".html", {'form':form})
 
 @require_http_methods(["POST",])
 def opers_form_post(request,form,id=None):
@@ -54,12 +54,12 @@ def opers_form_post(request,form,id=None):
         if form.is_valid():
             form.save()
             bill = form.cleaned_data['bill']
-            getattr(bill,form._meta.model.__name__.lower()+'s').add(form.instance)
+            getattr(bill,form._meta.model.__name__.lower()).add(form.instance)
             bill.save()
     if request.is_ajax():
         response = HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors,'id':form.instance.pk}))
     else:
-        response = render(request,"bill/"+form._meta.model.__name__+".html", {'form':form})
+        response = render(request,form._meta.model.__name__+".html", {'form':form})
     return response
 
 @require_http_methods(["POST",])

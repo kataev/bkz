@@ -3,29 +3,58 @@
     {{ form.media }}
 {% endblock %}
 {% block content %}
-    <form action='./post/' method='POST' dojoType='whs.Form.Bill'>
-        {% for field in form %}
-            <div class='field'>
-                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup
-                        id='{{ field.id_for_label }}_sup'>?</sup>
-                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
-                {% endif %}
-                </label>
-                {% if field.name not in 'solds transfers' %}
-                    {{ field }}
-                {% endif %}
-            </div>
-        {% endfor %}
+<form action='./post/' method='POST' dojoType='whs.Form.Bill'>
+    {% if form.instance.pk %}
+        Просмотр и редактирование накладной
+    {% else %}
+        Введите данные для создания новой накладной
+    {% endif %}
+    <div class='field'>
+        <label for='{{ form.number.id_for_label }}'>{{ form.number.label }}{% if form.number.help_text %}<sup
+                id='{{ form.number.id_for_label }}_sup'>?</sup>
+            <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                  data-dojo-props="connectId:'{{ form.number.id_for_label }}_sup'">{{ form.number.help_text }}</span>
+        {% endif %}
+        </label>
+        {{ form.number }}
+    </div>
+    <div class='field'>
+        <label for='{{ form.agent.id_for_label }}'>{{ form.agent.label }}{% if form.agent.help_text %}<sup
+                id='{{ form.agent.id_for_label }}_sup'>?</sup>
+            <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                  data-dojo-props="connectId:'{{ form.agent.id_for_label }}_sup'">{{ form.agent.help_text }}</span>
+        {% endif %}
+        </label>
+        {{ form.agent }}
+    </div>
+    <div class='field'>
+        <label for='{{ form.date.id_for_label }}'>{{ form.date.label }}{% if form.date.help_text %}<sup
+                id='{{ form.date.id_for_label }}_sup'>?</sup>
+            <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                  data-dojo-props="connectId:'{{ form.date.id_for_label }}_sup'">{{ form.date.help_text }}</span>
+        {% endif %}
+        </label>
+        {{ form.date }}
+    </div>
+    <div class='field'>
+        <label for='{{ form.info.id_for_label }}'>{{ form.info.label }}{% if form.info.help_text %}<sup
+                id='{{ form.info.id_for_label }}_sup'>?</sup>
+            <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                  data-dojo-props="connectId:'{{ form.info.id_for_label }}_sup'">{{ form.info.help_text }}</span>
+        {% endif %}
+        </label>
+        {{ form.info }}
+    </div>
+    {% if 'sold' in form.fields %}
         <div class='field'>
-            <label for='{{ form.sold.id_for_label }}'>{{ form.sold.label }}{% if form.sold.help_text %}<sup
-                    id='{{ form.sold.id_for_label }}_sup'>?</sup>
-                <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                      data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">{{ form.sold.help_text }}</span>
-            {% endif %}
-            </label>
-            {{ form.solds }}
-        </div>
-        <button dojoType='dijit.form.Button' type=submit>Save</button>
-    </form>
+        <span>Операции:</span>
+    <table style='width: 400px; background-color: #ffffff; border:solid black 1px;'>
+        <thead></thead>
+        {{ form.sold }}
+        {{ form.transfer }}
+    </table>
+    </div>
+    {% endif %}
+    <button dojoType='dijit.form.Button' type=submit>Save</button>
+</form>
 {% endblock %}

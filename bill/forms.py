@@ -64,6 +64,17 @@ class BrickSelect(forms.Select):
 
 class OperSelect(forms.SelectMultiple):
     dojo_type = 'whs.operSelect'
+
+    def render(self, name, value, attrs=None, choices=()):
+        if value is None: value = []
+        final_attrs = self.build_attrs(attrs, name=name)
+        output = [u'<tbody%s>' % flatatt(final_attrs)]
+        options = self.render_options(choices, value)
+        if options:
+            output.append(options)
+        output.append('</tbody>')
+        return mark_safe(u'\n'.join(output))
+
     def render_option(self,oper,selected_choices):
         selected_html = (oper.pk in selected_choices) and u' selected="selected"' or ''
         return oper.widget(selected_html=selected_html,as_tr=True)
@@ -109,19 +120,19 @@ class BillForm(Form):
     def __init__(self, *args, **kwargs):
         super(BillForm, self).__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields['solds'].queryset = self.instance.solds.all()
-            self.fields['transfers'].queryset = self.instance.transfers.all()
+            self.fields['sold'].queryset = self.instance.sold.all()
+            self.fields['transfer'].queryset = self.instance.transfer.all()
         else:
-            del self.fields['solds']
-            del self.fields['transfers']
+            del self.fields['sold']
+            del self.fields['transfer']
     class Meta:
         model=Bill
         exclude=('draft')
         widgets = {
          'info': forms.Textarea(attrs={}),
          'agent' : forms.FilteringSelect(),
-         'solds': OperSelect(),
-         'transfers': OperSelect()
+         'sold': OperSelect(),
+         'transfer': OperSelect()
          }
 
 class FinishTransfer(forms.Form):

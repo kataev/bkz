@@ -562,8 +562,20 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 }
 
 html {
-    background-image: url(img/29-a.png), url(img/37-a.png), url(img/53-a.png);
+    /*background-image: url(img/29-a.png), url(img/37-a.png), url(img/53-a.png);*/
     padding: 0;
     margin: 0;
     height: 100%;
+}
+
+.oper {
+    margin: 1px;
+}
+
+.oper.sold {
+    background-color: #adff2f;
+}
+
+.oper.transfer {
+    background-color: #9acd32;
 }

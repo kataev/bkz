@@ -5,10 +5,10 @@ from whs.brick.models import Brick
 from whs.agent.models import Agent
 
 import pytils
+import datetime
 
 class Oper(models.Model):
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
-#    post_c=((False,u'Не проведенно'),(True,u'Проведенно'))
     brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
     tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)
@@ -19,51 +19,46 @@ class Oper(models.Model):
     attr={}
     class Meta:
         abstract = True
-        
 
     def get_absolute_url(self):
         return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 
     def widget(self,selected_html='',as_tr=False,attrs={}):
         attrs={
-            'selected_html':selected_html,
+#            'selected_html':selected_html,
             'value':self.pk,
-#            'model':self._meta.module_name,
+            'name':self._meta.module_name.lower(),
             'amount':self.amount,
             'tara':self.tara,
-            'info':unicode(self.info),
+            'info':self.info,
             'brick_css':self.brick.show_css(), 
-            'brick':unicode(self.brick),
+            'brick':self.brick,
             'brick_value':self.brick.pk,
-            'url':self.get_absolute_url()
+            'title':self
         }
         attrs.update(self.attr)
         at = u''
         for a in attrs:
             at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
 #        if as_tr:
-            template = u'<option %s >%s</option>' % (at,unicode(self))
+        template = u'<tr %s dojoType="whs.oper.tr" ></tr>' % at
 #        else:
 #            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
         return template
 
 class Doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
-
-    number=models.PositiveIntegerField(unique_for_year='doc_date',verbose_name=u'№ документа',help_text=u'Число')
-    doc_date=models.DateField(u'Дата',help_text=u'Дата документа')
+    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
+    date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
-#    time_change=models.DateTimeField(auto_now=True)
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 
     class Meta:
         abstract = True
-#        ordering = ['-doc_date']
 
 class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
-#    transfers = models.ManyToManyField(transfers,blank=True,null=True,help_text=u'Перевод для этой продажи')
 
     class Meta():
             verbose_name = u"отгрузка"
@@ -74,13 +69,6 @@ class Sold(Oper):
 
 class Transfer(Oper):
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
-
-    @property
-    def attr(self):
-        if self.sold:
-            return {'child':self.sold.pk}
-        else:
-            return {}
 
     class Meta():
             verbose_name = u"перевод"
@@ -95,18 +83,21 @@ class Transfer(Oper):
 
 ## Накладная
 class Bill(Doc):
+    '''
+    Bill doc
+    '''
     agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
-    solds = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
-    transfers = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
+    sold = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
+    transfer = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
     class Meta():
             verbose_name = u"накладная"
             verbose_name_plural = u"накладные"
-            ordering = ['-doc_date']
+            ordering = ['-date']
 
     def __unicode__(self):
         if self.pk:
-            return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc_date),self.agent.name[:50])
+            return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date),self.agent.name[:50])
         else:
             return u'Накладная'
 

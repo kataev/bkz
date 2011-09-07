@@ -8,7 +8,7 @@ dojo.require('dijit._Templated');
 //dojo.require('dijit.Dialog')
 
 dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
-    url:'',selected:false,value:0,
+    name:'',selected:false,value:0,
     title:'',amount:0,tara:0,i:'',
     brick_css:'',brick:'',brick_value:0,
     baseClass: 'oper',
@@ -33,8 +33,8 @@ dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
 });
 
 
-dojo.provide('whs.oper_tr');
+dojo.provide('whs.oper.tr');
 
-dojo.declare('whs.oper_tr', whs.oper, {
+dojo.declare('whs.oper.tr', whs.oper, {
     templateString: dojo.cache('whs', 'template/oper_tr.html')
 });

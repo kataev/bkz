@@ -2,6 +2,11 @@ label:after {
     content: ':';
 }
 
+label {
+    width:100px;
+    display: block;
+}
+
 label sup {
     text-decoration: underline;
 }

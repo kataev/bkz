@@ -5,4 +5,4 @@ from dojango.util import dojo_collector
 
 def form(request,id):
     id = int(id)
-    return render_to_response('bricks/brick.html',{'id':id})
+    return render_to_response('brick.html',{'id':id})
