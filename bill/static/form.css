@@ -3,11 +3,13 @@ label:after {
 }
 
 label {
-    width:100px;
+    width:200px;
     display: block;
+    padding-bottom: 1px;
 }
 
 label sup {
+    padding-left: 1px;
     text-decoration: underline;
 }
 form {
@@ -17,3 +19,22 @@ form {
 form>div {
     padding-top: 5px;
 }
+
+.field>img {
+    float:left;
+    padding-right: 2px;
+}
+
+.oper img {
+    width:16px;
+    height: 16px;
+    border: none;
+
+}
+
+.oper td.view {
+    width:36px;
+}
+
+img[alt='delete'] { background-image: url('/static/img/16x16/delete.png'); }
+img[alt='edit'] { background-image: url('/static/img/16x16/pencil_go.png'); }

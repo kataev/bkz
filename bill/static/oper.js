@@ -18,11 +18,11 @@ dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
         this.info = this.srcNodeRef.innerHTML;
     },
     postCreate:function() {
-        var url = this.url;
+        var url = '/' + this.name + '/' + this.value + '/' + 'delete/';
         widget = this;
         dojo.connect(this.deleteNode, 'onclick', function(evt) {
             if (confirm('Удалить операцию?')) {
-                dojo.xhrPost({url:url + 'delete/',content:{confirm:true},handleAs:'json'}).then(function(data) {
+                dojo.xhrPost({url:url,content:{confirm:true},handleAs:'json'}).then(function(data) {
                     if (data.success) {
                         widget.destroy()
                     }

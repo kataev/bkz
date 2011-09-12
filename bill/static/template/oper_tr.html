@@ -5,12 +5,8 @@
     <td class='tara'>${tara}</td>
     <td class='info'>${i}</td>
     <td class='view'>
-        <a href='#'>
-            <img alt='edit'>
-        </a>
-        <span data-dojo-attach-point="deleteNode">
-            <img alt='del'>
-            </span>
+        <img data-dojo-attach-point="editNode" alt='edit' title='Изменить'>
+        <img data-dojo-attach-point="deleteNode" alt='delete' title='Удолить'>
     </td>
     <td><option data-dojo-attach-point="inputNode" value='${value}'></option></td>
 </tr>

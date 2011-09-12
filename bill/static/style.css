@@ -576,6 +576,10 @@ html {
     background-color: #adff2f;
 }
 
+tr.oper.sold:before {
+    
+}
+
 .oper.transfer {
     background-color: #9acd32;
 }
