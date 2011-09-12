@@ -7,11 +7,12 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
+    url(r'^test$', 'whs.views.test_brick', name='test_brick'),
 
     (r'^dojango/', include('dojango.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    (r'^sentry/', include('sentry.web.urls')),
+#    (r'^sentry/', include('sentry.web.urls')),
 
     (r'^', include('whs.bill.urls')),
 )

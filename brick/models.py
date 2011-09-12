@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from dojango.forms import ModelForm,RadioSelect,DropDownSelect
-from dojango.data.modelstore import *
 
 class Brick(models.Model):
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
@@ -102,6 +100,9 @@ class Brick(models.Model):
             except KeyError,e:
                 pass
         return css.strip()
+    
+    class Admin:
+        pass
 
 class History(models.Model):
     brick = models.ForeignKey(Brick,verbose_name=u"Кирпич")
@@ -116,3 +117,8 @@ class History(models.Model):
         verbose_name_plural = verbose_name
         ordering = ('-date',)
 
+class OldBrick(Brick):
+    old_id = models.IntegerField('old id')
+
+    class Admin:
+        pass
