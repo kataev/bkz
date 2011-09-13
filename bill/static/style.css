@@ -530,6 +530,9 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     background: Salmon;
 }
 
+tr.cl_red td:first-child:before,span.cl_red:before {content: url('/static/img/16x16/brick/red_brick_icon.gif');}
+tr.cl_ye td:first-child:before,span.cl_ye:before {content: url('/static/img/16x16/brick/yellow_brick_icon.gif');}
+
 .cl_ye {
     background: PeachPuff;
 }

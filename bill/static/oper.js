@@ -18,11 +18,19 @@ dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
         this.info = this.srcNodeRef.innerHTML;
     },
     postCreate:function() {
-        var url = '/' + this.name + '/' + this.value + '/' + 'delete/';
+        var url = '/' + this.name + '/' + this.value + '/';
         widget = this;
+        var name = this.name;
+
+        dojo.connect(this.editNode, 'onclick', function(evt) {
+            if (confirm('Прейти к изменению операции?')) {
+                window.location = url+'?bill='+document.location.href.split('bill')[1].split('/')[1];
+            }
+        });
+        
         dojo.connect(this.deleteNode, 'onclick', function(evt) {
             if (confirm('Удалить операцию?')) {
-                dojo.xhrPost({url:url,content:{confirm:true},handleAs:'json'}).then(function(data) {
+                dojo.xhrPost({url:url + 'delete/',content:{confirm:true},handleAs:'json'}).then(function(data) {
                     if (data.success) {
                         widget.destroy()
                     }

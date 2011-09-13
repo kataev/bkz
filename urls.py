@@ -15,5 +15,6 @@ urlpatterns = patterns('',
 #    (r'^sentry/', include('sentry.web.urls')),
 
     (r'^', include('whs.bill.urls')),
+    (r'^', include('whs.brick.urls')),
 )
 urlpatterns += staticfiles_urlpatterns()

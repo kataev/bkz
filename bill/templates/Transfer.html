@@ -4,19 +4,41 @@
 {% endblock %}
 {% block content %}
     <form action='./post/' method='POST' dojoType='whs.Form.Oper'>
-        {% for field in form.visible_fields %}
-            <div>
-                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>
-                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
-                    {% endif %}
-                </label>
-                {{ field }}
-            </div>
-        {% endfor %}
+        <div class='field'>
+            <img src='/static/img/16x16/brick.png' width="16" height="16" alt="{{ form.brick.label }}">
+            <label for='{{ form.brick.id_for_label }}'>{{ form.brick.label }}{% if form.brick.help_text %}<sup
+                    id='{{ form.brick.id_for_label }}_sup'>?</sup>
+                <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                      data-dojo-props="connectId:'{{ form.brick.id_for_label }}_sup'">{{ form.brick.help_text }}</span>
+            {% endif %}
+            </label>
+            {{ form.brick }}
+        </div>
+        <div class='field'>
+            <img src='/static/img/16x16/soil_layers.png' width="16" height="16" alt="{{ form.brick.label }}">
+            <label for='{{ form.amount.id_for_label }}'>{{ form.amount.label }}{% if form.amount.help_text %}<sup
+                    id='{{ form.amount.id_for_label }}_sup'>?</sup>
+                <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                      data-dojo-props="connectId:'{{ form.amount.id_for_label }}_sup'">{{ form.amount.help_text }}</span>
+            {% endif %}
+            </label>
+            {{ form.amount }}
+            {{ form.tara }}
+            {{ form.poddon }}
+        </div>
+        <div class='field'>
+            <img src='/static/img/16x16/note.png' width="16" height="16" alt="{{ form.info.label }}">
+            <label for='{{ form.info.id_for_label }}'>{{ form.info.label }}{% if form.info.help_text %}<sup
+                    id='{{ form.info.id_for_label }}_sup'>?</sup>
+                <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                      data-dojo-props="connectId:'{{ form.info.id_for_label }}_sup'">{{ form.info.help_text }}</span>
+            {% endif %}
+            </label>
+            {{ form.info }}
+        </div>
         {% for field in form.hidden_fields %}
             {{ field }}
         {% endfor %}
-    <button dojoType='dijit.form.Button' type=submit>Save</button>
+    <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
     </form>
 {% endblock %}

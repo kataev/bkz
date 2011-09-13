@@ -44,7 +44,7 @@ def opers_form_get(request,form,id=None):
 
 @require_http_methods(["POST",])
 def opers_form_post(request,form,id=None):
-    print request.POST
+#    print request.POST
     if id:
         form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
         if form.is_valid():

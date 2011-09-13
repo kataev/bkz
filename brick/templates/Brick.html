@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block media %}
+    {{ form.media }}
+{% endblock %}
+{% block content %}
+    <form action='./post/' method='POST' dojoType='whs.Form'>
+        {% for field in form.visible_fields %}
+            <div>
+                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
+                    {% endif %}
+                </label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+    <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
+    </form>
+{% endblock %}

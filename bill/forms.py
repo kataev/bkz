@@ -94,18 +94,20 @@ class Form(forms.ModelForm):
 
 
 class SoldForm(Form):
-    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput())
+    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput(),required=False)
     class Meta:
         model=Sold
         exclude=('post')
         widgets = {
          'info': forms.Textarea(attrs={}),
          'brick': BrickSelect(),
-         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
+         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}}),
+         'price': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':0,'max':200}}),
+         'delivery': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':0,'max':200}})
          }
 
 class TransferForm(Form):
-    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput())
+    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput(),)
     class Meta:
         model=Transfer
         exclude=('post')

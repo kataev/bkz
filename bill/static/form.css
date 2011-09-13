@@ -35,6 +35,3 @@ form>div {
 .oper td.view {
     width:36px;
 }
-
-img[alt='delete'] { background-image: url('/static/img/16x16/delete.png'); }
-img[alt='edit'] { background-image: url('/static/img/16x16/pencil_go.png'); }
