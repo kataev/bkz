@@ -40,7 +40,7 @@ class Brick(models.Model):
     color_type=models.CharField(u"Тип цвета",max_length=6,choices=type_c,blank=True)
     defect=models.CharField(u"Брак в %",max_length=60,choices=defect_c,blank=True)
     refuse=models.CharField(u"Особенности",max_length=10,choices=refuse_c,blank=True)
-    features=models.CharField(u"Редкие особености",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
+    features=models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
     name=models.CharField(u"Имя",max_length=160,default='')
     total=models.PositiveIntegerField(u"Текуший остаток",default=0)
     

@@ -1,70 +1,23 @@
-{% extends "main/root.html" %}
-{% block dojango_page_title %}Склад кирпича - {{ title }}{% endblock %}
+
+{% extends "main.html" %}
+{% block media %}
+    {{ form.media }}
+{% endblock %}
 {% block content %}
-    <style>
-        #bill_filter ul {
-            padding-left: 0px;
-        }
-
-        #bill_filter ul li {
-            float: left;
-            list-style-type: none;
-        }
-    </style>
-    <script type="text/javascript">
-        dojo.addOnLoad(function() {
-            dijit.byId('f').onSubmit = function(e) {
-                var val = this.get('value');
-                console.log(this)
-                for (a in val) {
-                    if (!val[a]) {
-                        console.log(a);
-                        dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
-                    }
-                }
-            }
-        });
-    </script>
-    <div id='agent_filter'>
-        <form dojoType='dijit.form.Form' id='f' method='GET' action="../../templates">
-            <ul>
-{#                <li>{% include 'Brick.html' %}</li>#}
-                <li>{{ form.name }}</li>
-                <li>{{ form.form }}</li>
-                <li>{{ form.type }}</li>
-                <li>{{ form.address }}</li>
-                <li>{{ form.inn }}</li>
-                <li>
-                    <button dojoType="dijit.form.Button" type="submit">Submit</button>
-                </li>
-                <li>
-                    <button dojoType="dijit.form.Button" onclick="window.location='./'">Reset</button>
-                </li>
-            </ul>
-        </form>
-    </div>
-    <div style='clear:left;'>
-        <ol>
-            {% for agent in agents.object_list %}
-                <li>{{ agent }}</li>
-
-            {% endfor %}
-        </ol>
-        <div class="pagination">
-            <span class="step-links">
-                {% if agents.has_previous %}
-                    <a href='{{ url.prev }}'>Предыдущая</a>
-{#                    <span class='prev'>Предыдущая</span>#}
-                {% endif %}
-
-                <span class="current">
-            Страница {{ agents.number }}
-        </span>
-                {% if agents.has_next %}
-{#                    <span class="next">Следующая</span>#}
-                    <a href='{{ url.next }}'>Следующая</a>
-                {% endif %}
-            </span>
-        </div>
-    </div>
+    <form action='./post/' method='POST' dojoType='whs.Form'>
+        {% for field in form.visible_fields %}
+            <div>
+                <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ field.id_for_label }}_sup'">{{ field.help_text }}</span>
+                    {% endif %}
+                </label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+    <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
+    </form>
 {% endblock %}

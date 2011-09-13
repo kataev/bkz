@@ -1,9 +1,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from django.template import RequestContext
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from whs.bill.models import Bill
 
 @require_http_methods(["GET",])
 def bill_form_get(request,form,id=None):

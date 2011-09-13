@@ -10,16 +10,34 @@
     {% endblock %}
 {% endblock %}
 {% block dojango_content %}
-    {% block content %}
-<table>
-<tbody>
-<tr><td>1</td></tr>
-</tbody>
-<tbody>
-<tr><td>2</td></tr>
-</tbody>
-</table>
-    {% endblock %}
+    <div dojoType="dijit.layout.BorderContainer" style='height: 100%;'>
+        <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='top'>
+            Березниковский кирпичный завод | Склад кирпича
+        </div>
+        <div dojoType="dijit.layout.BorderContainer" style='background-color: #d0e9fc;width:8%;overflow: hidden;' region='left'
+             splitter="false">
+        <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='center'>
+            <ul style='margin: 0px; padding: 0px; list-style: none;'>
+                {% include "menu.html" %}
+            </ul>
+        </div>
+        </div>
+
+        <div class="demoLayout" style="width: 91%" data-dojo-type="dijit.layout.BorderContainer"
+             data-dojo-props="region: 'right', design: 'headline'">
+        <div dojoType="dijit.layout.ContentPane" region='center'>
+            {% block content %}
+                Накладные
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region='top'>
+                Что что еще
+
+            {% endblock %}
+        </div>
+        </div>
+
+    </div>
+
 {% endblock %}
 
 

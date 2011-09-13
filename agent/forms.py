@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 import dojango.forms as forms
-
 from whs.agent.models import Agent
 
-class AgentForm(ModelForm):
+class AgentForm(forms.ModelForm):
     class Meta:
         model=Agent
         widgets = {
-            'bank': Textarea(attrs={}),
-            'address': Textarea(attrs={}),
+            'bank': forms.Textarea(attrs={}),
+            'address': forms.Textarea(attrs={}),
         }
+    class Media:
+        js = ('form.js',)
+        css = {'all':('form.css',),}
 
-class AgentFilterForm(ModelForm):
-    class Meta:
-        model=Agent
-        field = ['name','form','type','address','inn']

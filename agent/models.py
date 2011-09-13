@@ -18,7 +18,6 @@ class Agent(models.Model):
     def bills(self):
         return u'/bill/?agent=%s' % self.id
 
-
     class Meta:
         verbose_name=u'КонтрАгент'
         verbose_name_plural=u'КонтрАгенты'
