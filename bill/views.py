@@ -76,3 +76,4 @@ def delete(request,form,model,id):
     if form.is_valid() and form.cleaned_data['confirm']:
         get_object_or_404(model,pk=id).delete()
     return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors}))
+

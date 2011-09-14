@@ -151,7 +151,9 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.agent',
     'whs.bill',
+    'whs.man',
 	'dojango',
+    'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging

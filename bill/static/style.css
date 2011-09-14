@@ -604,3 +604,17 @@ html, body {
 	width: 550px;
 	height: 550px;
 }
+
+.bills_table.bills caption {
+    font-size: 125%;
+    color:green;
+}
+
+.bills_table.bills {
+    margin-top: 20px;
+}
+
+.bills_table td {
+    padding-right: 2px;
+    cursor: pointer;
+}

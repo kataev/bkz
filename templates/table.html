@@ -1,0 +1,16 @@
+<table style='text-align: center;'>
+<tr>
+    <th>name</th>
+    <th>total</th>
+    <th>sold</th>
+    <th>tra</th>
+</tr>
+    {% for b in bricks %}
+        <tr pk='{{ b.pk }}' class='{{ b.show_css }}'>
+            <td>{{ b }}</td>
+            <td>{{ b.total }}</td>
+            <td>{{ b.data.sold }}</td>
+            <td>{{ b.data.t_from }}</td>
+        </tr>
+    {% endfor %}
+</table>

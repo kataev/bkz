@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from dojango.forms import ModelForm, Textarea
+from django.contrib import admin
 
 class Agent(models.Model):
 
@@ -18,9 +18,19 @@ class Agent(models.Model):
     def bills(self):
         return u'/bill/?agent=%s' % self.id
 
+    def cool_name(self):
+        name = self.name.split(' ')
+        if len(name) == 3 and self.form != u'ООО':
+            return u'%s %1s.%1s' % (name[0],name[1][:1],name[2][:1])
+        else:
+            return self.name
+
+
     class Meta:
         verbose_name=u'КонтрАгент'
         verbose_name_plural=u'КонтрАгенты'
 
     def __unicode__(self):
         return u'%s, %s' % (self.name,self.form)
+
+admin.site.register(Agent)

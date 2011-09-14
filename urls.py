@@ -7,6 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
+    url(r'^bills/$', 'whs.views.bills',name='bills'),
 
     (r'^dojango/', include('dojango.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

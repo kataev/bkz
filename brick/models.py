@@ -2,6 +2,8 @@
 from django.db import models
 
 class Brick(models.Model):
+    data = {}
+#    objects = models.Manager()
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
     view_c=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
@@ -43,7 +45,7 @@ class Brick(models.Model):
     features=models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
     name=models.CharField(u"Имя",max_length=160,default='')
     total=models.PositiveIntegerField(u"Текуший остаток",default=0)
-    
+
     def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
 #        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
         values = self.__dict__
@@ -104,6 +106,7 @@ class Brick(models.Model):
     class Admin:
         pass
 
+
 class History(models.Model):
     brick = models.ForeignKey(Brick,verbose_name=u"Кирпич")
     date = models.DateField(u'Дата',auto_now_add=True)
@@ -122,3 +125,5 @@ class OldBrick(Brick):
 
     class Admin:
         pass
+
+

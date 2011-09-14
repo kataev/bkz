@@ -3,6 +3,19 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
+from whs.bill.models import Bill
+from whs.brick.models import Brick
+from whs.brick.manager import BrickManager
+from datetime import date
+from django.db import models
+
+class Table(Brick):
+    table = BrickManager()
+    objects = models.Manager()
+
+    class Meta:
+        proxy = True
+
 
 @require_http_methods(["GET",])
 def form_get(request,form,id=None):
@@ -32,5 +45,10 @@ def form_post(request,form,id=None):
 
 
 def main(request):
-    return render(request, 'main.html')
+    return render(request, 'main.html',{'bills':Bill.objects.all()[:5],'bricks':Table.table.date(date__lte=date.today()).all()})
+
+
+
+def bills(request):
+    return render(request, 'bills.html', {'bills':Bill.objects.all()[:20],})
 

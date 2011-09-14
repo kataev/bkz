@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-
+from django.db.models import Sum
+from django.contrib import admin
 from whs.brick.models import Brick
 from whs.agent.models import Agent
-
 import pytils
 import datetime
+
+
+class Table(models.Manager):
+    def date(self, *args, **kwargs):
+        bills = Bill.objects.filter(kwargs).select_related()
+        len(bills)
+        queryset = self.get_query_set()
+        for b in queryset:
+            b.data['sold']=objects.filter(sold__brick=b).aggregate(sold=Sum('sold__amount'))['sold'] or 0
+            b.data['t_from']=objects.filter(transfer__brick=b).aggregate(t_from=Sum('transfer__amount'))['t_from'] or 0
+
+        return queryset
+
+
 
 class Oper(models.Model):
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
@@ -48,7 +62,6 @@ class Oper(models.Model):
 
 class Doc(models.Model):
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
-    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
     date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
@@ -86,6 +99,7 @@ class Bill(Doc):
     '''
     Bill doc
     '''
+    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
     agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
     sold = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
     transfer = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
@@ -93,13 +107,24 @@ class Bill(Doc):
     class Meta():
             verbose_name = u"накладная"
             verbose_name_plural = u"накладные"
-            ordering = ['-date']
+            ordering = ['-date','-number']
+
+    def money(self):
+        return sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
+        
+    def str_date(self):
+        return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
 
     def __unicode__(self):
         if self.pk:
-            return u'Накладная № %d от %s %s' % (self.number,pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date),self.agent.name[:50])
+            return u'Накладная № %d от %s %s' % (self.number,self.str_date(),self.agent.name[:50])
         else:
             return u'Накладная'
 
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name,self.id)
+
+
+admin.site.register(Bill)
+admin.site.register(Sold)
+admin.site.register(Transfer)
