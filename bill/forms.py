@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from whs.bill.models import *
 
-import dojango.forms as forms
-from django.utils.encoding import StrAndUnicode, force_unicode
+from dojango import forms
+from django.utils.encoding import force_unicode
 from itertools import chain
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
@@ -25,7 +25,7 @@ class BrickSelect(forms.Select):
         if brick is None:
             return u''
         else:
-            selected_html = (brick.pk in selected_choices) and u' selected="selected"' or ''
+            selected_html = ((brick.pk in selected_choices) or (str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
             return u'<option dojoType="whs.brick_tr" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
                 'class':brick.show_css(),
                 'cl':brick.get_brick_class_display(),
@@ -43,12 +43,12 @@ class BrickSelect(forms.Select):
         selected_choices = set([v for v in selected_choices])
         output = []
         br =  self.choices.queryset
+        print 'asdlkjhsad;alksjd;lAKDJ',choices,self.choices
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
                 output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
                 for option in option_label:
                     try:
-                        print option_value
                         val = int(option_value)
                         output.append(self.render_option(br.get(pk=val),selected_choices,*option))
                     except ValueError:
@@ -143,3 +143,10 @@ class FinishTransfer(forms.Form):
 
 class Confirm(forms.Form):
     confirm = forms.BooleanField(initial=False)
+
+
+class Bills(forms.Form):
+    date__lte=forms.DateField(required=False)
+    date__gte=forms.DateField(required=False)
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False)
+    brick = forms.ModelChoiceField(queryset=Brick.objects.all(),widget=BrickSelect,required=False)

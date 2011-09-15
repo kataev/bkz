@@ -21,6 +21,23 @@
             border: 1px black solid;
         }
     </style>
+    <script type="text/javascript">
+    dojo.require('dijit.form.Form');
+        dojo.addOnLoad(function() {
+            dijit.byId('f').onSubmit = function(e) {
+//        dojo.stopEvent(e);
+                var val = this.get('value');
+                console.log(this)
+                for (a in val) {
+                    if (!val[a]) {
+                        console.log(a);
+                        dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
+                    }
+                }
+            }
+        });
+    </script>
+    }
 {% endblock %}
 {% block content %}
     <table style='display: none;'>
@@ -45,4 +62,12 @@
             {#        {% ifchanged b.date %}{% endifchanged %}#}
         {% endfor %}
         </table>
+    </div>
+    <div dojoType="dijit.layout.ContentPane" region='top'>
+        <form method="GET" dojoType='dijit.form.Form' id='f' action="./">
+            {{ form.date__lte }}
+            {{ form.date__gte }}
+            {{ form.brick }}
+            <button dojoType='dijit.form.Button' type=submit>Показать</button>
+        </form>
 {% endblock %}
