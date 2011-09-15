@@ -6,7 +6,9 @@
             clear: left;
             border: 1px black solid;
         }
-
+        #id_date__lte,#id_date__gte {
+            width:20px;
+        }
         div.date {
             /*position: relative;*/
             left: 2px;
@@ -24,7 +26,10 @@
     <script type="text/javascript">
     dojo.require('dijit.form.Form');
         dojo.addOnLoad(function() {
-            dijit.byId('f').onSubmit = function(e) {
+            dijit.byId('id_date__lte').onChange=function(){dijit.byId('id_date__gte').constraints.min = arguments[0];}
+            dijit.byId('id_date__gte').onChange=function(){dijit.byId('id_date__lte').constraints.max = arguments[0];}
+
+            dijit.byId('form').onSubmit = function(e) {
 //        dojo.stopEvent(e);
                 var val = this.get('value');
                 console.log(this)
@@ -37,7 +42,6 @@
             }
         });
     </script>
-    }
 {% endblock %}
 {% block content %}
     <table style='display: none;'>
@@ -51,23 +55,31 @@
                 <td>{{ b.money }}</td>
             </tr>
             {% for s in b.sold.all %}
-                <tr pk='{{ s.pk }}'>
+                <tr class='oper sold' pk='{{ s.pk }}'>
                     <td></td>
                     <td>{{ s.brick }}</td>
                     <td>{{ s.amount }}</td>
                     <td>{{ s.price }}</td>
                     <td>{{ s.delivery }}</td>
                 </tr>
+                {% for t in s.bill_transfer_related.all %}
+                    <tr class='oper transfer' pk='{{ t.pk }}'>
+                    <td></td>
+                    <td>{{ s.brick }}</td>
+                    <td>{{ s.amount }}</td>
+                </tr>
+                    {% endfor %}
             {% endfor %}
             {#        {% ifchanged b.date %}{% endifchanged %}#}
         {% endfor %}
         </table>
     </div>
     <div dojoType="dijit.layout.ContentPane" region='top'>
-        <form method="GET" dojoType='dijit.form.Form' id='f' action="./">
+        <form method="GET" dojoType='dijit.form.Form' id='form' action="./">
+            {{ form.brick }}
             {{ form.date__lte }}
             {{ form.date__gte }}
-            {{ form.brick }}
+            {{ form.agent }}
             <button dojoType='dijit.form.Button' type=submit>Показать</button>
         </form>
 {% endblock %}

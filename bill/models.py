@@ -7,20 +7,6 @@ from whs.agent.models import Agent
 import pytils
 import datetime
 
-
-class Table(models.Manager):
-    def date(self, *args, **kwargs):
-        bills = Bill.objects.filter(kwargs).select_related()
-        len(bills)
-        queryset = self.get_query_set()
-        for b in queryset:
-            b.data['sold']=objects.filter(sold__brick=b).aggregate(sold=Sum('sold__amount'))['sold'] or 0
-            b.data['t_from']=objects.filter(transfer__brick=b).aggregate(t_from=Sum('transfer__amount'))['t_from'] or 0
-
-        return queryset
-
-
-
 class Oper(models.Model):
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
     brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
@@ -78,7 +64,10 @@ class Sold(Oper):
             verbose_name_plural =  u"отгрузки"
 
     def __unicode__(self):
-        return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
+        if self.pk:
+            return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
+        else:
+            return u'Новая отгрузка'
 
 class Transfer(Oper):
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
@@ -88,11 +77,13 @@ class Transfer(Oper):
             verbose_name_plural = u"переводы"
 
     def __unicode__(self):
-        if self.sold is None:
-            return u'Незаконченный перевод № %d из %s, %d шт' % (self.pk,self.brick,self.amount)
+        if self.pk:
+            if self.sold is None:
+                return u'Незаконченный перевод № %d из %s, %d шт' % (self.pk,self.brick,self.amount)
+            else:
+                return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
         else:
-            return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
-
+            return u'Новый перевод'
 
 ## Накладная
 class Bill(Doc):
@@ -119,7 +110,7 @@ class Bill(Doc):
         if self.pk:
             return u'Накладная № %d от %s %s' % (self.number,self.str_date(),self.agent.name[:50])
         else:
-            return u'Накладная'
+            return u'Новая накладная'
 
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name,self.id)

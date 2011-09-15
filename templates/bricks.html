@@ -1,0 +1,88 @@
+{% extends 'main.html' %}
+{% block title %}Остатки кирпича{% endblock %}
+{% block media %}
+    <script type="text/javascript">
+        dojo.require("dojox.grid.DataGrid");
+//        dojo.require("dijit.layout.AccordionContainer");
+        dojo.require("dojo.data.ItemFileReadStore");
+        dojo.require("dijit.form.CheckBox");
+
+        dojo.addOnLoad(function() {
+            var table = dijit.byId('Brick')
+            dijit.byId('Brick').onStyleRow = function(row) {
+                var item = table.getItem(row.index)
+                if (item) {
+                    row.customClasses += BrickStore.getValue(item, 'css', null);
+                }
+//            console.log(row.customClasses)
+            }
+        });
+
+    </script>
+    <style type="text/css">
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
+
+        #mark ul, #view ul, #weight ul, #type ul, #class ul {
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+        }
+
+        #mark {width:200px;}
+        #class {width:300px;}
+
+        #mark ul li:first-child, #view ul li:first-child,
+        #weight ul li:first-child, #class ul li:first-child,
+        #weight ul li:last-child, #class ul li:last-child
+        { display: none; }
+        #mark li,#class li {
+            float: left;
+            /*padding-top: 2px;*/
+        }
+        #class li {width:95px;}
+        #mark li {width:50px;}
+        #type {height:58px; padding: 0px 4px 0px 4px;width:56px;}
+    </style>
+{% endblock %}
+{% block pane %}
+    <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStore" url="./store/"></span>
+    <table dojoType="dojox.grid.DataGrid" store='BrickStore' region='center' id='Brick'
+           selectionMode='single'
+            >
+{% endblock %}
+{% block content %}
+    <thead>
+    <tr>
+        <th field="name" width="350px">Кирпич</th>
+        <th field="begin" width="60px">Начало</th>
+        {#      <th field="fieldName" width="200px">Приход</th>#}
+        <th field="t_to" width="60px">Акт</th>
+        <th field="t_from" width="60px">Акт</th>
+        <th field="sold" width="60px">Раcход</th>
+        <th field="total" width="60px">Остаток</th>
+    </tr>
+    </thead>
+    </table>
+
+    <div dojoType="dijit.layout.BorderContainer" region='top' style='width: 100%;height: 60px;'>
+        <div dojoType="dijit.layout.ContentPane" region='left' id='mark' title='{{ form.mark.label }}'>
+                {{ form.mark }}
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region='left' id='class'>
+            {{ form.brick_class }}
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region='left' id='weight'>
+            {{ form.weight }}
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region='left' id='view'>
+            {{ form.view }}
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region='left' id='type'>
+            <ul>
+                <li><label for="id_color_type_2"><input value="1" type="checkbox" name="color_type" dojoType="dijit.form.CheckBox" id="id_color_type_2" /> 1 тип</label></li>
+<li><label for="id_color_type_3"><input value="2" type="checkbox" name="color_type" dojoType="dijit.form.CheckBox" id="id_color_type_3" /> 2 тип</label></li>
+<li><label for="id_color_type_4"><input value="3" type="checkbox" name="color_type" dojoType="dijit.form.CheckBox" id="id_color_type_4" /> 3 тип</label></li> 
+            </ul>
+        </div>
+{% endblock %}

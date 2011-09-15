@@ -2,7 +2,10 @@
 from django.db import models
 
 class Brick(models.Model):
-    data = {}
+
+#    @property
+#    def data(self):
+#        return {'sold':-101}
 #    objects = models.Manager()
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
@@ -120,10 +123,19 @@ class History(models.Model):
         verbose_name_plural = verbose_name
         ordering = ('-date',)
 
-class OldBrick(Brick):
-    old_id = models.IntegerField('old id')
+class BrickTable(Brick):
+    '''
+    Абстракная модель, наследованая от кирпича. Не содержит данных,
+    Необходима для представления, чтобы на нее навешивать данные
+    посчитанные при обработке запроса.
+    '''
+    begin=models.PositiveIntegerField(u"Начало месяца",default=0)
+    t_from=models.PositiveIntegerField(u"Перевод из",default=0)
+    t_to=models.PositiveIntegerField(u"Перевод в",default=0)
+    sold=models.PositiveIntegerField(u"Отгрузка",default=0)
+
+    class Meta:
+        abstract = True
 
     class Admin:
         pass
-
-

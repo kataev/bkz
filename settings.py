@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-#import djcelery
 import os
 
-#djcelery.setup_loader()
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
@@ -24,19 +22,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-DOJANGO_DATAGRID_ACCESS = (
-  'bills.sold',
-  'bills.transfer'
-)
-
-
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS' : False,
-}
-#CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 

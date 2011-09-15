@@ -526,34 +526,34 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 
 }
 
-.cl_red {
-    background: Salmon;
+.cl_red, .cl_red td {
+    background: Salmon !important;
 }
 
 tr.cl_red td:first-child:before,span.cl_red:before {content: url('/static/img/16x16/brick/red_brick_icon.gif');}
 tr.cl_ye td:first-child:before,span.cl_ye:before {content: url('/static/img/16x16/brick/yellow_brick_icon.gif');}
 
-.cl_ye {
+.cl_ye,.cl_ye td {
     background: PeachPuff;
 }
 
-.cl_br {
+.cl_br, .cl_br td {
     background: Tan;
 }
 
-.cl_li {
+.cl_li, .cl_li td {
     background: Lightseagreen;
 }
 
-.cl_wh {
+.cl_wh, .cl_wh td {
     background-color: Snow;
 }
 
-.cl_eu {
+.cl_eu, .cl_eu td {
     background-color: Cyan
 }
 
-.cl_ot {
+.cl_ot, .cl_ot td {
     background-color: gray;
 }
 

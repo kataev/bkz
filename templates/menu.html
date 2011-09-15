@@ -1,4 +1,10 @@
-<li><a href="/">Главная</a></li>
-<li><a href="/bill/">Новая накладная</a></li>
-<li><a href="/agent/">Новый контрагент</a></li>
-<li><a href="/brick/">Новый кирпич</a></li>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='/'"><span>Главная</span></div>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='/bricks/'"><span>Остатки</span></div>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='/bills/'"><span>Накладные</span></div>
+<div dojoType="dijit.PopupMenuBarItem">
+        <span><span style='color:red;'>Добавить</span></span>
+    <div dojoType="dijit.Menu" id="editMenu">
+        <div dojoType="dijit.MenuItem" onclick="window.location='/bill/'">Накладную</div>
+        <div dojoType="dijit.MenuItem" onclick="window.location='/brick/'">Кирпич</div>
+    </div>
+</div>

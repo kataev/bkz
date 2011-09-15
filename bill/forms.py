@@ -146,7 +146,7 @@ class Confirm(forms.Form):
 
 
 class Bills(forms.Form):
-    date__lte=forms.DateField(required=False)
-    date__gte=forms.DateField(required=False)
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False)
+    date__lte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Начало периода'}))
+    date__gte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Конец периода'}))
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False,widget=forms.FilteringSelect())
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(),widget=BrickSelect,required=False)

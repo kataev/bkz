@@ -3,9 +3,10 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from django.db.models import Q
+from django.db.models import Q,Sum
 from whs.bill.models import Bill
 from whs.brick.models import Brick
+from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
 
@@ -36,13 +37,12 @@ def form_post(request,form,id=None):
     return response
 
 def main(request):
-    return render(request, 'main.html',{'bills':Bill.objects.all()[:5],'bricks':Brick.objects.all()})
+    return render(request, 'main.html',{'bills':Bill.objects.all()[:5]})
 
 def bills(request):
     f = Bills(request.GET)
     query = Bill.objects.all()
     if f.is_valid():
-        print f.cleaned_data
         for a in f.cleaned_data:
             if f.cleaned_data[a]:
                 if a == 'brick':
@@ -50,9 +50,22 @@ def bills(request):
                     query = query.filter(Q(sold__brick=b) or Q(transfer__brick=b))
                 else:
                     query = query.filter(**{a:f.cleaned_data[a]})
-
-
-#    Bill.objects.filter(date__lte=d).filter(Q(sold__brick=b) or Q(transfer__brick=b))
-#    Bill.objects.filter(date__lte=d).filter(Q(sold__brick=b) or Q(transfer__brick=b))
     return render(request, 'bills.html', {'bills':query,'form':f})
 
+def bricks(request):
+    return render(request, 'bricks.html',{'bricks':Brick.objects.all(),'form':BrickFilterForm()})
+
+def brick_store(request):
+    from whs.brick.stores import BrickStore
+    store = BrickStore()
+    bills = Bill.objects.filter(date__month=date.today().month)
+    for b in store.Meta.objects:
+        b.begin = ''
+        b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s']
+        b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s']
+        b.t_to = ''
+#    bricks[0].sold = v
+#    for b in bricks:
+#        print b.sold
+#    store.Meta.objects = bricks
+    return HttpResponse(store.to_json(), mimetype='application/json')

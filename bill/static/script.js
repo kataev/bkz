@@ -4,6 +4,10 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 
+dojo.require("dijit.MenuBar");
+dojo.require("dijit.MenuItem");
+dojo.require("dijit.PopupMenuBarItem");
+
 var dojoConfig = {
             isDebug: true,
             locale: 'Ru-ru'

@@ -1,5 +1,5 @@
 {% extends "dojango/base.html" %}
-{% block dojango_page_title %} Склад кирпича - Главная страница{% endblock %}
+{% block dojango_page_title %} Склад кирпича - {% block title %}Главная страница{% endblock %}{% endblock %}
 {% block dojango_header_extra %}
     <script type="text/javascript" src="{{ STATIC_URL }}modernizr-2.0.6.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}../../static/plugins.js"></script>
@@ -11,51 +11,44 @@
 {% endblock %}
 {% block dojango_content %}
     <div dojoType="dijit.layout.BorderContainer" style='height: 100%;'>
-        <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='top'>
-            Березниковский кирпичный завод | Склад кирпича
-        </div>
-        <div dojoType="dijit.layout.BorderContainer" style='background-color: #d0e9fc;width:12%;overflow: hidden;'
-             region='left'
-             splitter="false">
-            <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='center'>
-                <ul style='margin: 0px; padding: 0px; list-style: none;'>
-                    {% include "menu.html" %}
-                </ul>
-            </div>
+        <div dojoType="dijit.MenuBar" region='top'>
+            {#        <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='top'>#}
+            {#            Березниковский кирпичный завод | Склад кирпича#}
+            {% include "menu.html" %}
         </div>
 
-        <div style="width: 86.6%" data-dojo-type="dijit.layout.BorderContainer"
-             data-dojo-props="region: 'right', design: 'headline'">
-            <div dojoType="dijit.layout.ContentPane" region='center' style='overflow-y: scroll;'>
-                {% block content %}
-                    {% include "table.html" %}
+        <div data-dojo-type="dijit.layout.BorderContainer"
+             data-dojo-props="region: 'center', design: 'headline'">
+            {% block pane %}
+                <div dojoType="dijit.layout.ContentPane" region='center' style='overflow-y: scroll;'>
+            {% endblock %}
+            {% block content %}
+                x3
+                </div>
+                <div dojoType="dijit.layout.BorderContainer" region='top' style="height:100px;">
+                    <div dojoType="dijit.layout.ContentPane" region='left'>
+                        <table class='bills_table'>
+                            <caption style='position: absolute; right: 1px; bottom: 0px;'><a href='/bills/'>еще</a>
+                            </caption>
+                            {% for b in bills %}
+                                <tr pk='{{ b.pk }}'>
+                                    <td>{{ b.number }}</td>
+                                    <td>{{ b.date }}</td>
+                                    <td>{{ b.agent.cool_name|truncatewords:2 }}</td>
+                                    <td>{{ b.money }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
-                    <div dojoType="dijit.layout.BorderContainer" region='top' style="height:100px;">
-                        <div dojoType="dijit.layout.ContentPane" region='left'>
-                            <table class='bills_table'>
-                                <caption style='position: absolute; right: 1px; bottom: 0px;'><a href='/bills/'>еще</a>
-                                </caption>
-                                {% for b in bills %}
-                                    <tr pk='{{ b.pk }}'>
-                                        <td>{{ b.number }}</td>
-                                        <td>{{ b.date }}</td>
-                                        <td>{{ b.agent.cool_name|truncatewords:2 }}</td>
-                                        <td>{{ b.money }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        <div dojoType="dijit.layout.ContentPane" region='center'>2</div>
-                        {#                <div dojoType="dijit.layout.ContentPane" region='right' style='height: 6%;'>3</div>#}
-                    </div>
-                    {#                <div dojoType="dijit.layout.ContentPane" region='bottom' style='height: 100px;'>#}
+                    <div dojoType="dijit.layout.ContentPane" region='center'>2</div>
+                    {#                <div dojoType="dijit.layout.ContentPane" region='right' style='height: 6%;'>3</div>#}
+                </div>
+                {#                <div dojoType="dijit.layout.ContentPane" region='bottom' style='height: 100px;'>#}
 
-                {% endblock %}
+            {% endblock %}
             {#        </div>#}
         </div>
-
     </div>
-
 {% endblock %}
 
 

@@ -8,6 +8,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
     url(r'^bills/$', 'whs.views.bills',name='bills'),
+    url(r'^bricks/$', 'whs.views.bricks',name='bricks'),
+    url(r'^bricks/store/$', 'whs.views.brick_store',name='brick_store'),
 
     (r'^dojango/', include('dojango.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
