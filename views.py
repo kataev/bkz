@@ -60,12 +60,8 @@ def brick_store(request):
     store = BrickStore()
     bills = Bill.objects.filter(date__month=date.today().month)
     for b in store.Meta.objects:
-        b.begin = ''
-        b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s']
-        b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s']
-        b.t_to = ''
-#    bricks[0].sold = v
-#    for b in bricks:
-#        print b.sold
-#    store.Meta.objects = bricks
+        b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s'] or 0
+        b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
+        b.t_to = 0
+        b.begin = b.total + b.sold + b.t_from - b.t_to
     return HttpResponse(store.to_json(), mimetype='application/json')

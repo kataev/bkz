@@ -27,10 +27,13 @@ class Agent(models.Model):
 
 
     class Meta:
-        verbose_name=u'КонтрАгент'
-        verbose_name_plural=u'КонтрАгенты'
+        verbose_name=u'Контрагент'
+        verbose_name_plural=u'Контрагенты'
 
     def __unicode__(self):
-        return u'%s, %s' % (self.name,self.form)
+        if self.pk:
+            return u'%s, %s' % (self.name,self.form)
+        else:
+            return u'Новый контрагент'
 
 admin.site.register(Agent)

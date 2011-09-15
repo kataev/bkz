@@ -2,6 +2,7 @@
 {% block media %}
     {{ form.media }}
 {% endblock %}
+{% block title %}{{ form.instance }}{% endblock %}
 {% block content %}
     <form action='./post/' method='POST' dojoType='whs.Form'>
         {% for field in form.visible_fields %}

@@ -51,6 +51,10 @@ class Brick(models.Model):
 
     def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
 #        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
+
+        if not self.pk:
+            return u'Новый кирпич'
+
         values = self.__dict__
         values['weight']=self.get_weight_display()
         values['mark']= self.get_mark_display()
