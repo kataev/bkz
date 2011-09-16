@@ -1,11 +1,13 @@
-<div dojoType="dijit.MenuBarItem" onclick="window.location='/'"><span>Главная</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='/bricks/'"><span>Остатки</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='/bills/'"><span>Накладные</span></div>
+<div dojoType="dijit.MenuBarItem"><span style="color:#a52a2a;">Березниковский кирпичный завод</span></div>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url main %}'"><span>Главная</span></div>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url bricks %}'"><span>Остатки</span></div>
+<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url bills %}'"><span>Накладные</span></div>
 <div dojoType="dijit.PopupMenuBarItem">
-        <span><span style='color:red;'>Добавить</span></span>
+    <span><span style='color:red;'>Добавить</span></span>
     <div dojoType="dijit.Menu" id="editMenu">
-        <div dojoType="dijit.MenuItem" onclick="window.location='/bill/'">Накладную</div>
+{#        <div dojoType="dijit.MenuItem" onclick="window.location='{% url bill:get None %}'">Накладную</div>#}
         <div dojoType="dijit.MenuItem" onclick="window.location='/brick/'">Кирпич</div>
         <div dojoType="dijit.MenuItem" onclick="window.location='/agent/'">КонтрАгента</div>
     </div>
 </div>
+<div dojoType="dijit.MenuBarItem"><span><a href='#'>{{ request.path }}</a></span></div>

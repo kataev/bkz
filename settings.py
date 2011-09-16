@@ -132,11 +132,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    
+
     'whs.brick',
     'whs.agent',
     'whs.bill',
-    'whs.man',
+
 	'dojango',
     'django_extensions',
 )

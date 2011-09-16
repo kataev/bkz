@@ -5,16 +5,13 @@
     <script type="text/javascript" src="{{ STATIC_URL }}../../static/plugins.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}style.css" type="text/css"/>
+    <link rel="icon" type="image/png" href="/static/img/16x16/soil_layers.png" />
     {% block media %}{% endblock %}
 {% endblock %}
 {% block dojango_content %}
     <div dojoType="dijit.layout.BorderContainer" style='height: 100%;'>
-        <div dojoType="dijit.MenuBar" region='top'>
-            {#        <div dojoType="dijit.layout.ContentPane" style='background-color: #d0e9fc;' region='top'>#}
-            {#            Березниковский кирпичный завод | Склад кирпича#}
-            {% include "menu.html" %}
+        <div dojoType="dijit.MenuBar" region='top'>{% include "menu.html" %}
         </div>
-
         <div data-dojo-type="dijit.layout.BorderContainer"
              data-dojo-props="region: 'center', design: 'headline'">
             {% block pane %}

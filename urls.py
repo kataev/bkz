@@ -11,13 +11,14 @@ urlpatterns = patterns('',
     url(r'^bricks/$', 'whs.views.bricks',name='bricks'),
     url(r'^bricks/store/$', 'whs.views.brick_store',name='brick_store'),
 
-    (r'^dojango/', include('dojango.urls')),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-#    (r'^sentry/', include('sentry.web.urls')),
-
     (r'^', include('whs.bill.urls')),
     (r'^', include('whs.brick.urls')),
     (r'^', include('whs.agent.urls')),
+
+
+    (r'^dojango/', include('dojango.urls')),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+
 )
 urlpatterns += staticfiles_urlpatterns()

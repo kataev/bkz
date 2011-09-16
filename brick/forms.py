@@ -14,17 +14,19 @@ class BrickForm(forms.ModelForm):
         js = ('form.js',)
         css = {'all':('form.css',),}
 
+class CheckboxBrickSelect(forms.CheckboxSelectMultiple):
+    dojo_type = 'whs.Checkbox'
 
 class BrickFilterForm(forms.ModelForm):
     class Meta:
         model=Brick
         fields = ('mark','brick_class','view','weight','color_type')
         widgets = {
-         'mark': forms.CheckboxSelectMultiple(),
-         'brick_class': forms.CheckboxSelectMultiple(),
-         'view': forms.CheckboxSelectMultiple(),
-         'weight': forms.CheckboxSelectMultiple(),
-         'color_type': forms.CheckboxSelectMultiple(),
+         'mark': CheckboxBrickSelect(),
+         'brick_class': CheckboxBrickSelect(),
+         'view': CheckboxBrickSelect(),
+         'weight': CheckboxBrickSelect(),
+         'color_type': CheckboxBrickSelect(),
          }
 #    class Media:
 #        js = ('form.js',)

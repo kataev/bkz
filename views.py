@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q,Sum
 from whs.bill.models import Bill
-from whs.brick.models import Brick
+from whs.brick.models import Brick,BrickTable
 from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
@@ -53,12 +53,13 @@ def bills(request):
     return render(request, 'bills.html', {'bills':query,'form':f})
 
 def bricks(request):
-    return render(request, 'bricks.html',{'bricks':Brick.objects.all(),'form':BrickFilterForm()})
+    return render(request, 'bricks.html',{'form':BrickFilterForm()})
 
 def brick_store(request):
     from whs.brick.stores import BrickStore
     store = BrickStore()
     bills = Bill.objects.filter(date__month=date.today().month)
+#    store.Meta.objects = BrickTable.objects.filter(mark__in=[100,125])
     for b in store.Meta.objects:
         b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s'] or 0
         b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
