@@ -9,7 +9,10 @@ class BrickStore(Store):
 
     mark = StoreField()
     view = StoreField()
-
+    brick_class = StoreField()
+    weight = StoreField()
+    color_type = StoreField()
+    
     begin = StoreField()
     t_from = StoreField()
     t_to = StoreField()

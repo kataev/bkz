@@ -63,6 +63,6 @@ def brick_store(request):
     for b in store.Meta.objects:
         b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s'] or 0
         b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
-        b.t_to = 0
+        b.t_to = bills.filter(sold__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
         b.begin = b.total + b.sold + b.t_from - b.t_to
     return HttpResponse(store.to_json(), mimetype='application/json')
