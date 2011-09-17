@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from whs.bill.models import *
+from whs.brick.models import Brick
 
 from dojango import forms
 from django.utils.encoding import force_unicode
@@ -57,7 +58,7 @@ class BrickSelect(forms.Select):
             else:
                 try:
                     val = br.get(pk=option_value)
-                except br.DoesNotExist:
+                except :
                     val = None
                 output.append(self.render_option(val,selected_choices))
         return u'\n'.join(output)

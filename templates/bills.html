@@ -2,13 +2,18 @@
 {% block title %}Накладные{% endblock %}
 {% block media %}
     <style>
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
+
         article {
             clear: left;
             border: 1px black solid;
         }
-        #id_date__lte,#id_date__gte {
-            width:20px;
+
+        #id_date__lte, #id_date__gte {
+            width: 20px;
         }
+
         div.date {
             /*position: relative;*/
             left: 2px;
@@ -24,10 +29,19 @@
         }
     </style>
     <script type="text/javascript">
-    dojo.require('dijit.form.Form');
+        dojo.require('dijit.form.Form');
+        dojo.require("dojox.grid.TreeGrid");
+        dojo.require("dojo.data.ItemFileReadStore");
+        dojo.require("dijit.tree.ForestStoreModel");
+        dojo.require("dijit.Tree");
+
         dojo.addOnLoad(function() {
-            dijit.byId('id_date__lte').onChange=function(){dijit.byId('id_date__gte').constraints.min = arguments[0];};
-            dijit.byId('id_date__gte').onChange=function(){dijit.byId('id_date__lte').constraints.max = arguments[0];};
+            dijit.byId('id_date__lte').onChange = function() {
+                dijit.byId('id_date__gte').constraints.min = arguments[0];
+            };
+            dijit.byId('id_date__gte').onChange = function() {
+                dijit.byId('id_date__lte').constraints.max = arguments[0];
+            };
 
             dijit.byId('form').onSubmit = function(e) {
                 var val = this.get('value');
@@ -37,40 +51,22 @@
                         dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
                     }
                 }
-            }
+            };
+
+
         });
+        function theRealMayHaveChildren (item){
+            console.log(item,item.label)
+            return (item.childen &&  item.childen.length > 0);
+            };
     </script>
 {% endblock %}
 {% block content %}
-    <table style='display: none;'>
-        {% for b in bills %}
-            {% ifchanged b.date %}</table>
-                <table class='bills_table bills'>
-                <caption>{{ b.str_date }}</caption>{% endifchanged %}
-            <tr pk='{{ b.pk }}'>
-                <td>{{ b.number }}</td>
-                <td>{{ b.agent.cool_name|truncatewords:2 }}</td>
-                <td>{{ b.money }}</td>
-            </tr>
-            {% for s in b.sold.all %}
-                <tr class='oper sold' pk='{{ s.pk }}'>
-                    <td></td>
-                    <td>{{ s.brick }}</td>
-                    <td>{{ s.amount }}</td>
-                    <td>{{ s.price }}</td>
-                    <td>{{ s.delivery }}</td>
-                </tr>
-                {% for t in s.bill_transfer_related.all %}
-                    <tr class='oper transfer' pk='{{ t.pk }}'>
-                    <td></td>
-                    <td>{{ s.brick }}</td>
-                    <td>{{ s.amount }}</td>
-                </tr>
-                    {% endfor %}
-            {% endfor %}
-            {#        {% ifchanged b.date %}{% endifchanged %}#}
-        {% endfor %}
-        </table>
+<div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
+<div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{agent:'*'}"></div>
+<div dojoType="dijit.Tree" id="BillTree" model="BillModel" openOnClick="true" showRoot='false'></div>
+
+
     </div>
     <div dojoType="dijit.layout.ContentPane" region='top'>
         <form method="GET" dojoType='dijit.form.Form' id='form' action="./">

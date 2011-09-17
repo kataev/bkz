@@ -4,8 +4,8 @@ from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q,Sum
-from whs.bill.models import Bill
-from whs.brick.models import Brick,BrickTable
+from whs.bill.models import Bill,Sold,Transfer
+from whs.brick.models import BrickTable
 from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
@@ -51,6 +51,29 @@ def bills(request):
                 else:
                     query = query.filter(**{a:f.cleaned_data[a]})
     return render(request, 'bills.html', {'bills':query,'form':f})
+
+
+def bill_store(request):
+    from whs.bill.stores import BillSoldStore
+    store = BillSoldStore()
+    f = Bills(request.GET)
+    query = Bill.objects.all()
+    if f.is_valid():
+        for a in f.cleaned_data:
+            if f.cleaned_data[a]:
+                if a == 'brick':
+                    b = f.cleaned_data[a]
+                    query = query.filter(Q(sold__brick=b) or Q(transfer__brick=b))
+                else:
+                    query = query.filter(**{a:f.cleaned_data[a]})
+    print query.values_list('sold')
+    store.Meta.stores[0].Meta.objects=query
+    store.Meta.stores[1].Meta.objects=Sold.objects.filter(pk__in=query.values_list('sold'))
+    store.Meta.stores[2].Meta.objects=Transfer.objects.filter(pk__in=query.values_list('transfer'))
+
+    return HttpResponse(store.to_json(), mimetype='application/json')
+
+
 
 def bricks(request):
     return render(request, 'bricks.html',{'form':BrickFilterForm()})

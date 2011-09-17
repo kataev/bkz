@@ -69,6 +69,14 @@ class Sold(Oper):
         else:
             return u'Новая отгрузка'
 
+    def get_transfer(self):
+        t = self.bill_transfer_related.all()
+        if len(t):
+            return t
+        else:
+            return False
+
+
 class Transfer(Oper):
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
 
@@ -102,7 +110,13 @@ class Bill(Doc):
 
     def money(self):
         return sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
-        
+
+    def get_childen_dict(self):
+        return [{'_reference':1},{'_reference':2},{'_reference':3}]
+
+    def agent_unicode(self):
+        return unicode(self.agent)
+
     def str_date(self):
         return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
 
