@@ -26,14 +26,12 @@
     <script type="text/javascript">
     dojo.require('dijit.form.Form');
         dojo.addOnLoad(function() {
-//            dijit.byId('id_date__lte').onChange=function(){dijit.byId('id_date__gte').constraints.min = arguments[0];}
-//            dijit.byId('id_date__gte').onChange=function(){dijit.byId('id_date__lte').constraints.max = arguments[0];}
+            dijit.byId('id_date__lte').onChange=function(){dijit.byId('id_date__gte').constraints.min = arguments[0];};
+            dijit.byId('id_date__gte').onChange=function(){dijit.byId('id_date__lte').constraints.max = arguments[0];};
 
             dijit.byId('form').onSubmit = function(e) {
-//        dojo.stopEvent(e);
                 var val = this.get('value');
-                console.log(this)
-                for (a in val) {
+                for (var a in val) {
                     if (!val[a]) {
                         console.log(a);
                         dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');

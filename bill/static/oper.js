@@ -1,11 +1,9 @@
 dojo.provide('whs.oper');
 
-//dojo.require('dijit.form.MultiSelect')
-dojo.require('whs.brick')
+dojo.require('whs.brick');
 
 dojo.require('dijit._Widget');
 dojo.require('dijit._Templated');
-//dojo.require('dijit.Dialog')
 
 dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
     name:'',selected:false,value:0,
@@ -19,7 +17,7 @@ dojo.declare('whs.oper', [dijit._Widget, dijit._Templated], {
     },
     postCreate:function() {
         var url = '/' + this.name + '/' + this.value + '/';
-        widget = this;
+        var widget = this;
         var name = this.name;
 
         dojo.connect(this.editNode, 'onclick', function(evt) {

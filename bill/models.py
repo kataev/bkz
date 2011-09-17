@@ -87,9 +87,9 @@ class Transfer(Oper):
 
 ## Накладная
 class Bill(Doc):
-    '''
+    """
     Bill doc
-    '''
+    """
     number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
     agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
     sold = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')

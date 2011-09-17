@@ -9,13 +9,14 @@ dojo.declare("whs.CheckBox", dijit.form.CheckBox,{
         if (!table.fil[this.name]){table.fil[this.name]={};}
         table.fil[this.name][this.value]=e;
         var query={};
-        for (name in table.fil) {
+        for (var name in table.fil) {
             var v = '';
-            for (val in table.fil[name]) {
-                if (table.fil[name][val]){
-                    if (val==9000){val='Брак'}
-                    if (name=='weight'){if (val==1){val='Одинарный'};if (val==1.4){val='Утолщенный'}}
-                    v+=val+'|'
+            for (var value in table.fil[name]) {
+                if (table.fil[name][value]){
+                    if (value==9000){value='Брак'}
+                    if (name=='weight'){if (value==1){value='Одинарный'};
+                        if (value==1.4){value='Утолщенный'}}
+                    v+=value+'|';
                     if (name=='total'){v='[^0] '}
                 }
             }
@@ -26,4 +27,4 @@ dojo.declare("whs.CheckBox", dijit.form.CheckBox,{
 //        console.log(this,e,'change',table.fil);
     }
     
-})
+});

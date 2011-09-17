@@ -57,7 +57,7 @@ class BrickSelect(forms.Select):
             else:
                 try:
                     val = br.get(pk=option_value)
-                except :
+                except br.DoesNotExist:
                     val = None
                 output.append(self.render_option(val,selected_choices))
         return u'\n'.join(output)
@@ -146,12 +146,15 @@ class Confirm(forms.Form):
 
 
 class Bills(forms.Form):
+
     date__lte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Начало периода'}))
     date__gte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Конец периода'}))
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False,widget=forms.FilteringSelect())
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(),widget=BrickSelect,required=False)
 
     def __init__(self, *args, **kwargs):
+        """
+        Изменение пустой ичейки для подсказки.
+        """
         super(Bills, self).__init__(*args, **kwargs)
-        self.fields['brick'].empty_label = u'Кирпич'
         self.fields['agent'].empty_label = u'Выберите контрагента'

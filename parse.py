@@ -5,7 +5,7 @@ from whs.brick.models import Brick,OldBrick
 
 def FetchOneAssoc(cursor) :
     data = cursor.fetchall()
-    if data == None :
+    if not data:
         return None
     desc = cursor.description
 
@@ -54,7 +54,7 @@ def total_update():
             class_c = {u'Красный':0,u'Желтый':1,u'Коричневый':2,u'Светлый':3,u'Белый':4,u'КЕ':5,u'Прочее':6}
             color = {u'Красный':u'Кр',u'Желтый':u'Же',u'Коричневый':u'Ко',u'Светлый':u'Св','Белый':u'Бе',u'\u0411\u0435\u043b\u044b\u0439':u'Бе',u'Белый':u'Бе',u'КЕ':u'Кр',u'Прочее':u'Кр'}
 #            print r
-            if r['mark']==0:
+            if not r['mark']:
                 mark=9000
             else:
                 mark=r['mark']

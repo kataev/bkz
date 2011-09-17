@@ -9,9 +9,9 @@
         dojo.require("dijit.form.Form");
 
         dojo.addOnLoad(function() {
-            var table = dijit.byId('Brick')
+            var table = dijit.byId('Brick');
             dijit.byId('Brick').onStyleRow = function(row) {
-                var item = table.getItem(row.index)
+                var item = table.getItem(row.index);
                 if (item) {
                     row.customClasses += BrickStore.getValue(item, 'css', null);
                 }

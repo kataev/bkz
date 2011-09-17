@@ -41,7 +41,7 @@ dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {
             },
             startup:function() {
                 var dialog = this.dialog;
-                var setLabel = dojo.hitch(this, '_setLabelAttr')
+                var setLabel = dojo.hitch(this, '_setLabelAttr');
                 dojo.query('tr', this.containerNode).connect('onclick', function(e) {
                     setLabel();
                     dialog.hide();

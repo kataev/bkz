@@ -59,7 +59,7 @@ class Brick(models.Model):
         values['weight']=self.get_weight_display()
         values['mark']= self.get_mark_display()
 #        values['color_type']= self.get_color_type_display()
-        template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s";
+        template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s"
 
         if self.weight == u'Двойной':
             template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
@@ -73,7 +73,7 @@ class Brick(models.Model):
             template = u'КЕ %(view)s %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s'
             try:
                 values['view']=self.euro_view[self.view]
-            except :
+            except KeyError:
                 pass
 
         return (template % values).strip().replace('  ',' ')
@@ -106,7 +106,7 @@ class Brick(models.Model):
             try:
                 prop = getattr(self,key)
                 css+=u'%s ' % self.css[key][prop]
-            except KeyError,e:
+            except KeyError:
                 pass
         return css.strip()
     
@@ -128,11 +128,11 @@ class History(models.Model):
         ordering = ('-date',)
 
 class BrickTable(Brick):
-    '''
+    """
     Абстракная модель, наследованая от кирпича. Не содержит данных,
     Необходима для представления, чтобы на нее навешивать данные
     посчитанные при обработке запроса.
-    '''
+    """
     begin=models.PositiveIntegerField(u"Начало месяца",default=0)
     t_from=models.PositiveIntegerField(u"Перевод из",default=0)
     t_to=models.PositiveIntegerField(u"Перевод в",default=0)
