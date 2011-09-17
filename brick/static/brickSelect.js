@@ -9,9 +9,7 @@ dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {
             name:'',
             baseClass: 'brickSelect',
             templateString: dojo.cache('whs', 'template/brickSelect.html'),
-            widgetsInTemplate:true,
-            label:'Щелкните для выбора кирпича',
-            value:0,
+            widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:0,
             postCreate:function() {
                 this.dialog = dijit.byId(this.id+'_dialog');
                 var dialog = this.dialog;
@@ -20,15 +18,13 @@ dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {
                 });
             },
             _setLabelAttr:function(val) {
-                labelNode = this.labelNode;
-                setValue = dojo.hitch(this, '_setValueAttr');
-                dojo.query('[selected]', this.conteinerNode).forEach(function(node) {
+                var c = this.containerNode;
+                var labelNode = this.labelNode;
+                var setValue = dojo.hitch(this, '_setValueAttr');
+                dojo.query('[selected]',c).forEach(function(node) {
                 var q = dojo.query('.nameNode', node);
-                            if (q[0]) {
-                                    labelNode.innerHTML = q[0].innerHTML;
-                            } else {
-                                    labelNode.innerHTML = node.innerHTML;
-                            }//TODO: передалть, чтобы отображался виджет whs.brick
+                    if (q[0]) labelNode.innerHTML = q[0].innerHTML;
+                    else labelNode.innerHTML = node.innerHTML;//TODO: передалть, чтобы отображался виджет whs.brick
                     setValue(dojo.attr(node, 'value'));
                 });
             },

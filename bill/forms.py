@@ -150,3 +150,8 @@ class Bills(forms.Form):
     date__gte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Конец периода'}))
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False,widget=forms.FilteringSelect())
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(),widget=BrickSelect,required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(Bills, self).__init__(*args, **kwargs)
+        self.fields['brick'].empty_label = u'Кирпич'
+        self.fields['agent'].empty_label = u'Выберите контрагента'
