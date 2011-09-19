@@ -1,80 +1,86 @@
 {% extends "main.html" %}
 {% block media %}
     {{ form.media }}
+    <script type="text/javascript" src="{{ STATIC_URL }}bills.js"></script>
+    <style>
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
+    </style>
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
+{% block pane %}
+    <div dojoType="dijit.layout.BorderContainer" region='center'>
+{% endblock %}
 {% block content %}
-    <form action='./post/' method='POST' dojoType='whs.Form.Bill'>
-        {% if form.instance.pk %}
-            Просмотр и редактирование накладной
-        {% else %}
-            Введите данные для создания новой накладной
-        {% endif %}
-        <div class='field'>
-            <img src='/static/img/16x16/text_list_numbers.png' width="16" height="16" alt="{{ form.number.label }}">
-            <label for='{{ form.number.id_for_label }}'>{{ form.number.label }}{% if form.number.help_text %}<sup
-                    id='{{ form.number.id_for_label }}_sup'>?</sup>
-                <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                      data-dojo-props="connectId:'{{ form.number.id_for_label }}_sup'">{{ form.number.help_text }}</span>
+    <div dojoType="dijit.MenuBar" region='top' layoutPriority='1'>
+        <div dojoType="dijit.MenuBarItem"><span>Сохранить</span></div>
+        <div dojoType="dijit.MenuBarItem"><span>Вернутся</span></div>
+        <div dojoType="dijit.MenuBarItem"><span>Добавить отгрузку</span></div>
+        <div dojoType="dijit.MenuBarItem"><span>Добавить перевод</span></div>
+    </div>
+    <div dojoType="dijit.layout.ContentPane" region='center'>
+        <form action='./post/' method='POST' dojoType='whs.Form.Bill' id='form'>
+            {% if form.instance.pk %}
+                Просмотр и редактирование накладной
+            {% else %}
+                Введите данные для создания новой накладной
             {% endif %}
-            </label>
-            {{ form.number }}
-        </div>
-        <div class='field'>
-            <img src='/static/img/16x16/account_balances.png' width="16" height="16" alt="{{ form.agent.label }}">
-
-            <label for='{{ form.agent.id_for_label }}'>{{ form.agent.label }}{% if form.agent.help_text %}<sup
-                    id='{{ form.agent.id_for_label }}_sup'>?</sup>
-                <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                      data-dojo-props="connectId:'{{ form.agent.id_for_label }}_sup'">{{ form.agent.help_text }}</span>
-            {% endif %}
-            </label>
-            {{ form.agent }}
-        </div>
-        <div class='field'>
-            <img src='/static/img/16x16/calendar.png' width="16" height="16" alt="{{ form.date.label }}">
-            <label for='{{ form.date.id_for_label }}'>{{ form.date.label }}{% if form.date.help_text %}<sup
-                    id='{{ form.date.id_for_label }}_sup'>?</sup>
-                <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                      data-dojo-props="connectId:'{{ form.date.id_for_label }}_sup'">{{ form.date.help_text }}</span>
-            {% endif %}
-            </label>
-            {{ form.date }}
-        </div>
-        <div class='field'>
-            <img src='/static/img/16x16/note.png' width="16" height="16" alt="{{ form.info.label }}">
-            <label for='{{ form.info.id_for_label }}'>{{ form.info.label }}{% if form.info.help_text %}<sup
-                    id='{{ form.info.id_for_label }}_sup'>?</sup>
-                <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                      data-dojo-props="connectId:'{{ form.info.id_for_label }}_sup'">{{ form.info.help_text }}</span>
-            {% endif %}
-            </label>
-            {{ form.info }}
-        </div>
-        {% if 'sold' in form.fields %}
             <div class='field'>
-                <img src='/static/img/16x16/application_side_boxes.png' width="16" height="16" alt="Операции">
-                <label><span>Операции</span></label>
-                <table style='width: 400px; background-color: #ffffff; border:solid black 1px;'>
-                    <caption style="padding: 1px;">
-                        <a href="/sold/?bill={{ form.number.value }}">Добавить продажу</a>
-                        <a href="/transfer/?bill={{ form.number.value }}">Добавить перевод</a>
-
-                    </caption>
-                    <thead></thead>
-                    {{ form.sold }}
-                    {{ form.transfer }}
-                    <tfoot>
-                    </tfoot>
-                </table>
+                <img src='/static/img/16x16/text_list_numbers.png' width="16" height="16" alt="{{ form.number.label }}">
+                <label for='{{ form.number.id_for_label }}'>{{ form.number.label }}{% if form.number.help_text %}<sup
+                        id='{{ form.number.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.number.id_for_label }}_sup'">{{ form.number.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.number }}
             </div>
-        {% else %}
             <div class='field'>
-                <img src='/static/img/16x16/application_side_boxes.png' width="16" height="16" alt="Операции">
-                <label><span>Операции</span></label>
-                Сохраните накланую перед тем как добавлять операции.
+                <img src='/static/img/16x16/account_balances.png' width="16" height="16" alt="{{ form.agent.label }}">
+
+                <label for='{{ form.agent.id_for_label }}'>{{ form.agent.label }}{% if form.agent.help_text %}<sup
+                        id='{{ form.agent.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.agent.id_for_label }}_sup'">{{ form.agent.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.agent }}
             </div>
-        {% endif %}
-        <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
-    </form>
+            <div class='field'>
+                <img src='/static/img/16x16/calendar.png' width="16" height="16" alt="{{ form.date.label }}">
+                <label for='{{ form.date.id_for_label }}'>{{ form.date.label }}{% if form.date.help_text %}<sup
+                        id='{{ form.date.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.date.id_for_label }}_sup'">{{ form.date.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.date }}
+            </div>
+            <div class='field'>
+                <img src='/static/img/16x16/note.png' width="16" height="16" alt="{{ form.info.label }}">
+                <label for='{{ form.info.id_for_label }}'>{{ form.info.label }}{% if form.info.help_text %}<sup
+                        id='{{ form.info.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.info.id_for_label }}_sup'">{{ form.info.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.info }}
+            </div>
+            <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
+            {% include "error.html" %}
+        </form>
+    </div>
+    <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
+    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{id:'bill.sold*'}"></div>
+    <table dojoType="dojox.grid.TreeGrid" region='right' style='width:550px;' treeModel='BillModel' id="BillTree"
+           store='BillStore'>
+        <thead>
+        <tr>
+            <th field='brick' width='auto'>Кирпич</th>
+            <th field='amount'>Кол-во</th>
+            <th field='price' formatter="Formatter">Цена</th>
+            <th field='delivery' formatter="Formatter">Трансп</th>
+        </tr>
+        </thead>
+    </table>
 {% endblock %}

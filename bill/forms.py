@@ -22,45 +22,47 @@ class BrickSelect(forms.Select):
         output.append(u'</select>')
         return mark_safe(u'\n'.join(output))
 
-    def render_option(self,brick,selected_choices, option_value=None, option_label=None):
+    def render_option(self, brick, selected_choices, option_value=None, option_label=None):
         if brick is None:
             return u''
         else:
-            selected_html = ((brick.pk in selected_choices) or (str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
+            selected_html = ((brick.pk in selected_choices) or (
+            str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
             return u'<option dojoType="whs.brick_tr" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
-                'class':brick.show_css(),
-                'cl':brick.get_brick_class_display(),
-                'mark':brick.get_mark_display(),
-                'view':brick.get_view_display(),
-                'weight':brick.get_weight_display(),
-                'total':intcomma(brick.total),
-                'pk':brick.pk,
-                'selected_html':selected_html,
-                'title':brick
+                'class': brick.show_css(),
+                'cl': brick.get_brick_class_display(),
+                'mark': brick.get_mark_display(),
+                'view': brick.get_view_display(),
+                'weight': brick.get_weight_display(),
+                'total': intcomma(brick.total),
+                'pk': brick.pk,
+                'selected_html': selected_html,
+                'title': brick
 
             }
 
     def render_options(self, choices, selected_choices):
         selected_choices = set([v for v in selected_choices])
         output = []
-        br =  self.choices.queryset
+        br = self.choices.queryset
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
                 output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
                 for option in option_label:
                     try:
                         val = int(option_value)
-                        output.append(self.render_option(br.get(pk=val),selected_choices,*option))
+                        output.append(self.render_option(br.get(pk=val), selected_choices, *option))
                     except ValueError:
-                        output.append(self.render_option(None,selected_choices,*option))
+                        output.append(self.render_option(None, selected_choices, *option))
                 output.append(u'</optgroup>')
             else:
                 try:
                     val = br.get(pk=option_value)
-                except :
+                except:
                     val = None
-                output.append(self.render_option(val,selected_choices))
+                output.append(self.render_option(val, selected_choices))
         return u'\n'.join(output)
+
 
 class OperSelect(forms.SelectMultiple):
     dojo_type = 'whs.operSelect'
@@ -75,82 +77,72 @@ class OperSelect(forms.SelectMultiple):
         output.append('</tbody>')
         return mark_safe(u'\n'.join(output))
 
-    def render_option(self,oper,selected_choices):
+    def render_option(self, oper, selected_choices):
         selected_html = (oper.pk in selected_choices) and u' selected="selected"' or ''
-        return oper.widget(selected_html=selected_html,as_tr=True)
+        return oper.widget(selected_html=selected_html, as_tr=True)
 
     def render_options(self, choices, selected_choices):
         selected_choices = set([v for v in selected_choices])
         output = []
-        queryset =  self.choices.queryset
+        queryset = self.choices.queryset
         for oper in queryset:
-            output.append(self.render_option(oper,selected_choices))
+            output.append(self.render_option(oper, selected_choices))
         return u'\n'.join(output)
+
 
 class Form(forms.ModelForm):
     class Media:
         js = ('form.js',)
-        css = {'all':('form.css',),}
+        css = {'all': ('form.css',), }
 
 
 class SoldForm(Form):
-    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput(),required=False)
     class Meta:
-        model=Sold
-        exclude=('post')
+        model = Sold
+        exclude = ('post')
         widgets = {
-         'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect(),
-         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}}),
-         'price': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':0,'max':200}}),
-         'delivery': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':0,'max':200}})
-         }
+            'doc': forms.HiddenInput(),
+            'info': forms.Textarea(attrs={}),
+            'brick': BrickSelect(),
+            'tara': forms.NumberSpinnerInput(
+                attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}}),
+            'price': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}}),
+            'delivery': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}})
+        }
+
 
 class TransferForm(Form):
-    bill = forms.ModelChoiceField(queryset=Bill.objects.all(),widget=forms.HiddenInput(),)
     class Meta:
-        model=Transfer
-        exclude=('post')
+        model = Transfer
         widgets = {
-         'info': forms.Textarea(attrs={}),
-         'brick': BrickSelect(),
-         'sold' : forms.HiddenInput(),
-         'tara': forms.NumberSpinnerInput(attrs={'style':'width:90px;','constraints':{'min':1,'max':2000,'places':0}})
-         }
+            'doc': forms.HiddenInput(),
+            'info': forms.Textarea(attrs={}),
+            'brick': BrickSelect(),
+            'sold': forms.HiddenInput(),
+            'tara': forms.NumberSpinnerInput(
+                attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
+        }
+
 
 class BillForm(Form):
-    def __init__(self, *args, **kwargs):
-        super(BillForm, self).__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['sold'].queryset = self.instance.sold.all()
-            self.fields['transfer'].queryset = self.instance.transfer.all()
-        else:
-            del self.fields['sold']
-            del self.fields['transfer']
     class Meta:
-        model=Bill
-        exclude=('draft','money')
+        model = Bill
+        exclude = ('money')
         widgets = {
-         'info': forms.Textarea(attrs={}),
-         'agent' : forms.FilteringSelect(),
-         'sold': OperSelect(),
-         'transfer': OperSelect()
-         }
+            'info': forms.Textarea(attrs={}),
+            'agent': forms.FilteringSelect(),
+            }
 
-class FinishTransfer(forms.Form):
-    sold = forms.ModelChoiceField(queryset=Sold.objects.all())
-    transfer = forms.ModelChoiceField(queryset=Transfer.objects.filter(sold__isnull=True))
 
 class Confirm(forms.Form):
     confirm = forms.BooleanField(initial=False)
 
 
 class Bills(forms.Form):
-
-    date__lte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Начало периода'}))
-    date__gte=forms.DateField(required=False,widget=forms.DateInput(attrs={'placeholder':u'Конец периода'}))
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(),required=False,widget=forms.FilteringSelect())
-    brick = forms.ModelChoiceField(queryset=Brick.objects.all(),widget=BrickSelect,required=False)
+    date__lte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Начало периода'}))
+    date__gte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Конец периода'}))
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False, widget=forms.FilteringSelect())
+    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), widget=BrickSelect, required=False)
 
     def __init__(self, *args, **kwargs):
         """

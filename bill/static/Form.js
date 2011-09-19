@@ -23,7 +23,6 @@ dojo.declare('whs.Form', dijit.form.Form, {
                     else { // Если сервер ответсит об неудаче ( серверая валидация неудалась )
                         console.log(data, 'server validation fail');
                         dojo.forEach(getChildren(), function(widget) { // перебираем виджеты формы
-//                            console.log(widget);
                             if (data.errors[widget.name]) { // Если имя виджета в сообщениях об ошибке
                                 if (widget._refreshState) { // Если виджет сам обновляет сообщение об ошибке
                                     widget.state = 'Error';     // Вывести сообщение об ошибке
@@ -36,10 +35,15 @@ dojo.declare('whs.Form', dijit.form.Form, {
                                     connectId:[widget.domNode],
                                     position:widget.tooltipPosition});
                             }
+                            delete data.errors[widget.name];
+                        });
+                        dojo.forEach(data.errors, function(name) {
+                            dojo.create('div',{innerHTML:data.errors[name]},'error_msg');
                         });
                     }
                 }, function(error) { // Deferred error, onError callback
                     console.log('Server or connect error', error);
+                    dojo.create('div',{innerHTML:'Что то пошло не так.'},'error_msg')
                 });
         } else {
             console.log(this, event, this.get('state'), 'not valid widgets')
@@ -55,9 +59,7 @@ dojo.provide('whs.Form.Bill');
 
 dojo.declare('whs.Form.Bill', whs.Form, {
     onSuccess:function(id) {
-        if (document.location.href.split('bill')[1] == '/') {
             document.location = '/bill/' + id + '/';
-        }
     }
 });
 
@@ -65,6 +67,6 @@ dojo.provide('whs.Form.Oper');
 
 dojo.declare('whs.Form.Oper', whs.Form, {
     onSuccess:function(id) {
-        document.location = '/bill/' + dojo.queryToObject(document.location.href.split('?')[1]).bill + '/';
+        document.location = '/bill/'+this.get('value')['doc']+'/';
     }
 });

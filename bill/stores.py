@@ -16,11 +16,13 @@ class SoldStore(Store):
     brick = StoreField('brick.__unicode__')
     amount = StoreField()
     price = StoreField()
-    children = ReferenceField(get_value=ObjectMethod('get_transfer'))
+    delivery = StoreField()
+    children = ReferenceField(get_value=ObjectMethod('bill_transfer_related.all'))
     css = StoreField('brick.show_css')
     info = StoreField()
 
     class Meta(object):
+        stores = (TransferStore,)
         objects  = Sold.objects.all()
 
 class BillStore(Store):
@@ -37,4 +39,4 @@ class BillStore(Store):
 class BillSoldStore(Store):
 
     class Meta(object):
-        stores = (BillStore,SoldStore,TransferStore)
+        stores = (BillStore,SoldStore)

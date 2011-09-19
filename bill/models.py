@@ -16,7 +16,7 @@ class Oper(models.Model):
     tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)
     poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
-    post=models.BooleanField(u'Проведенно?',default=False)
+
     class Meta:
         abstract = True
 
@@ -51,10 +51,43 @@ class Doc(models.Model):
     class Meta:
         abstract = True
 
+## Накладная
+class Bill(Doc):
+    """
+    Bill doc
+    """
+    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
+    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
+    money=models.PositiveIntegerField(verbose_name=u'Сумма',default=0)
+
+    class Meta():
+            verbose_name = u"накладная"
+            verbose_name_plural = u"накладные"
+            ordering = ['-date','-number']
+
+    def set_money(self):
+        self.money = sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
+        self.save()
+
+    def agent_unicode(self):
+        return unicode(self.agent)
+
+    def str_date(self):
+        return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
+
+    def __unicode__(self):
+        if self.pk:
+            return u'Накладная № %d от %s %s' % (self.number,self.str_date(),self.agent.name[:50])
+        else:
+            return u'Новая накладная'
+
+    def get_absolute_url(self):
+        return "/%s/%i/" % (self._meta.module_name,self.id)
+
 class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
-
+    doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
     class Meta():
             verbose_name = u"отгрузка"
             verbose_name_plural =  u"отгрузки"
@@ -72,9 +105,9 @@ class Sold(Oper):
         else:
             return False
 
-
 class Transfer(Oper):
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
+    doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
 
     class Meta():
             verbose_name = u"перевод"
@@ -88,46 +121,6 @@ class Transfer(Oper):
                 return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
         else:
             return u'Новый перевод'
-
-## Накладная
-class Bill(Doc):
-    """
-    Bill doc
-    """
-    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
-    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
-    sold = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
-    transfer = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
-
-    money=models.PositiveIntegerField(verbose_name=u'Сумма',default=0)
-
-    class Meta():
-            verbose_name = u"накладная"
-            verbose_name_plural = u"накладные"
-            ordering = ['-date','-number']
-
-    def set_money(self):
-        self.money = sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
-        self.save()
-
-    def get_childen_dict(self):
-        return [{'_reference':1},{'_reference':2},{'_reference':3}]
-
-    def agent_unicode(self):
-        return unicode(self.agent)
-
-    def str_date(self):
-        return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-
-    def __unicode__(self):
-        if self.pk:
-            return u'Накладная № %d от %s %s' % (self.number,self.str_date(),self.agent.name[:50])
-        else:
-            return u'Новая накладная'
-
-    def get_absolute_url(self):
-        return "/%s/%i/" % (self._meta.module_name,self.id)
-
 
 admin.site.register(Bill)
 admin.site.register(Sold)

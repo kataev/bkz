@@ -40,6 +40,7 @@
         {% for field in form.hidden_fields %}
             {{ field }}
         {% endfor %}
-    <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
+    <button dojoType='dijit.form.Button' type=submit>Сохранить и вернутся к накладной</button>
+    {% include "error.html" %}
     </form>
 {% endblock %}

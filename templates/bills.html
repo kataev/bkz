@@ -35,46 +35,22 @@
         }
     </style>
     <script type="text/javascript">
-        dojo.require('dijit.form.Form');
-        dojo.require("dojox.grid.TreeGrid");
-        dojo.require("dojo.data.ItemFileReadStore");
-        dojo.require("dijit.tree.ForestStoreModel");
-        dojo.require("dijit.Tree");
-
-        dojo.addOnLoad(function() {
-            dijit.byId('id_date__lte').onChange = function() {
-                dijit.byId('id_date__gte').constraints.min = arguments[0];
-            };
-            dijit.byId('id_date__gte').onChange = function() {
-                dijit.byId('id_date__lte').constraints.max = arguments[0];
-            };
-
-            dijit.byId('form').onSubmit = function(e) {
-                dojo.stopEvent(e);
-                var val = this.get('value');
-                var query = {};
-                for (var a in val) {
-                    if (val[a]) query[a] = val[a];
-                }
-                BillStore.url = 'store/?' + dojo.objectToQuery(query);
-                BillStore.close();
-            };
-            BillModel.mayHaveChildren = function(item) {
-                if (item.children) return item.children.length;
-            };
-            dijit.byId('BillTree').onStyleRow = function(row) {
-                if (row.index.length > 1) {
-                    var item = dijit.byId('BillTree').getItem(row.index);
-                    row.customClasses += BillStore.getValue(item, 'css', null);
-                }
+        dijit.byId('id_date__lte').onChange = function() {
+            dijit.byId('id_date__gte').constraints.min = arguments[0];
+        };
+        dijit.byId('id_date__gte').onChange = function() {
+            dijit.byId('id_date__lte').constraints.max = arguments[0];
+        };
+        dijit.byId('form').onSubmit = function(e) {
+            dojo.stopEvent(e);
+            var val = this.get('value');
+            var query = {};
+            for (var a in val) {
+                if (val[a]) query[a] = val[a];
             }
-
-        });
-        function Formatter(value, rowIdx, cell, sing, plur) {
-//        console.log(this,'value',value,'rowIdx',rowIdx,'cell',cell,sing,plur);
-            if (value) return value;
-            else return '';
-        }
+            BillStore.url = 'store/?' + dojo.objectToQuery(query);
+            BillStore.close();
+        };
     </script>
 {% endblock %}
 {% block pane %}
@@ -86,7 +62,6 @@
 
     <thead>
     <tr>
-        {#            <th field="id">#</th>#}
         <th field="number" formatter="Formatter">#</th>
         <th field="date" width="120px" formatter="Formatter">Дата</th>
         <th field="agent" width="200px" formatter="Formatter">Контрагент</th>
@@ -94,8 +69,8 @@
         <th field="amount" formatter="Formatter" aggregate="sum" itemAggregates="amount">Кол-во</th>
         <th field="price" formatter="Formatter">Цена</th>
         <th field="info" width='auto'></th>
-                    <th field="amount">Кол-во</th>
-                    <th field="brick">Кирпич</th>
+        <th field="amount">Кол-во</th>
+        <th field="brick">Кирпич</th>
     </tr>
     </thead>
     </table>
