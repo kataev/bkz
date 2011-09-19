@@ -27,11 +27,16 @@
         .table {
             border: 1px black solid;
         }
+    .transfer {
+        background-image: url('/static/img/16x16/arrow.png');
+        width: 16px;
+        height: 16px;
+    }
     </style>
     <script type="text/javascript">
         dojo.require('dijit.form.Form');
         dojo.require("dojox.grid.TreeGrid");
-        dojo.require("dojo.data.ItemFileReadStore");
+        dojo.require("dojo.data.ItemFileWriteStore");
         dojo.require("dijit.tree.ForestStoreModel");
         dojo.require("dijit.Tree");
 
@@ -44,27 +49,32 @@
             };
 
             dijit.byId('form').onSubmit = function(e) {
+                dojo.stopEvent(e);
                 var val = this.get('value');
+                var query = {};
                 for (var a in val) {
-                    if (!val[a]) {
-                        console.log(a);
-                        dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
-                    }
+                    if (val[a]) query[a] = val[a];
                 }
+                BillStore.url = 'store/?' + dojo.objectToQuery(query);
+                BillStore.close();
             };
 
-
+            BillModel.mayHaveChildren = function(item) {
+                if (item.children) return item.children.length;
+            };
+            dijit.byId('BillTree').getIconClass = function(item,opened){
+                if (item.id){
+                if (item.id[0].split('__')[0].split('.')[1]=='transfer') {return 'transfer'}
+                }
+                return "dijitLeaf"
+            };
         });
-        function theRealMayHaveChildren (item){
-            console.log(item,item.label)
-            return (item.childen &&  item.childen.length > 0);
-            };
     </script>
 {% endblock %}
 {% block content %}
-<div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
-<div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{agent:'*'}"></div>
-<div dojoType="dijit.Tree" id="BillTree" model="BillModel" openOnClick="true" showRoot='false'></div>
+    <div dojoType="dojo.data.ItemFileWriteStore" jsId="BillStore" url="store/"></div>
+    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{agent:'*'}"></div>
+    <div dojoType="dijit.Tree" id="BillTree" model="BillModel" openOnClick="true" showRoot='false'></div>
 
 
     </div>

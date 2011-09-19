@@ -66,7 +66,6 @@ def bill_store(request):
                     query = query.filter(Q(sold__brick=b) or Q(transfer__brick=b))
                 else:
                     query = query.filter(**{a:f.cleaned_data[a]})
-    print query.values_list('sold')
     store.Meta.stores[0].Meta.objects=query
     store.Meta.stores[1].Meta.objects=Sold.objects.filter(pk__in=query.values_list('sold'))
     store.Meta.stores[2].Meta.objects=Transfer.objects.filter(pk__in=query.values_list('transfer'))
