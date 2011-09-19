@@ -6,6 +6,8 @@ from whs.brick.models import Brick
 from whs.agent.models import Agent
 import pytils
 import datetime
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Oper(models.Model):
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
@@ -15,8 +17,6 @@ class Oper(models.Model):
     poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
     post=models.BooleanField(u'Проведенно?',default=False)
-    # DRAFT ДЛЯ ПРОСТОТЫ!!!! ПОДУМАТЬ!!!
-    attr={}
     class Meta:
         abstract = True
 
@@ -36,14 +36,10 @@ class Oper(models.Model):
             'brick_value':self.brick.pk,
             'title':self
         }
-        attrs.update(self.attr)
         at = u''
         for a in attrs:
             at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
-#        if as_tr:
         template = u'<tr %s dojoType="whs.oper.tr" ></tr>' % at
-#        else:
-#            template = u'<div dojoType="whs.oper" %s>%s</div>' % (at,unicode(self))
         return template
 
 class Doc(models.Model):
@@ -103,13 +99,16 @@ class Bill(Doc):
     sold = models.ManyToManyField(Sold,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Отгрузки',verbose_name=u'Отгрузки')
     transfer = models.ManyToManyField(Transfer,related_name="%(app_label)s_%(class)s_related",blank=True,null=True,help_text=u'Переводы',verbose_name=u'Переводы')
 
+    money=models.PositiveIntegerField(verbose_name=u'Сумма',default=0)
+
     class Meta():
             verbose_name = u"накладная"
             verbose_name_plural = u"накладные"
             ordering = ['-date','-number']
 
-    def money(self):
-        return sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
+    def set_money(self):
+        self.money = sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
+        self.save()
 
     def get_childen_dict(self):
         return [{'_reference':1},{'_reference':2},{'_reference':3}]

@@ -44,7 +44,6 @@ class BrickSelect(forms.Select):
         selected_choices = set([v for v in selected_choices])
         output = []
         br =  self.choices.queryset
-        print 'asdlkjhsad;alksjd;lAKDJ',choices,self.choices
         for option_value, option_label in chain(self.choices, choices):
             if isinstance(option_label, (list, tuple)):
                 output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
@@ -130,7 +129,7 @@ class BillForm(Form):
             del self.fields['transfer']
     class Meta:
         model=Bill
-        exclude=('draft')
+        exclude=('draft','money')
         widgets = {
          'info': forms.Textarea(attrs={}),
          'agent' : forms.FilteringSelect(),

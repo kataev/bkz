@@ -27,16 +27,17 @@
         .table {
             border: 1px black solid;
         }
-    .transfer {
-        background-image: url('/static/img/16x16/arrow.png');
-        width: 16px;
-        height: 16px;
-    }
+
+        .transfer {
+            background-image: url('/static/img/16x16/arrow.png');
+            width: 16px;
+            height: 16px;
+        }
     </style>
     <script type="text/javascript">
         dojo.require('dijit.form.Form');
         dojo.require("dojox.grid.TreeGrid");
-        dojo.require("dojo.data.ItemFileWriteStore");
+        dojo.require("dojo.data.ItemFileReadStore");
         dojo.require("dijit.tree.ForestStoreModel");
         dojo.require("dijit.Tree");
 
@@ -58,25 +59,46 @@
                 BillStore.url = 'store/?' + dojo.objectToQuery(query);
                 BillStore.close();
             };
-
             BillModel.mayHaveChildren = function(item) {
                 if (item.children) return item.children.length;
             };
-            dijit.byId('BillTree').getIconClass = function(item,opened){
-                if (item.id){
-                if (item.id[0].split('__')[0].split('.')[1]=='transfer') {return 'transfer'}
+            dijit.byId('BillTree').onStyleRow = function(row) {
+                if (row.index.length > 1) {
+                    var item = dijit.byId('BillTree').getItem(row.index);
+                    row.customClasses += BillStore.getValue(item, 'css', null);
                 }
-                return "dijitLeaf"
-            };
+            }
+
         });
+        function Formatter(value, rowIdx, cell, sing, plur) {
+//        console.log(this,'value',value,'rowIdx',rowIdx,'cell',cell,sing,plur);
+            if (value) return value;
+            else return '';
+        }
     </script>
 {% endblock %}
+{% block pane %}
+    <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
+    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{number:'*'}"></div>
+    <table dojoType="dojox.grid.TreeGrid" region='center' treeModel='BillModel' id="BillTree" store='BillStore'>
+{% endblock %}
 {% block content %}
-    <div dojoType="dojo.data.ItemFileWriteStore" jsId="BillStore" url="store/"></div>
-    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{agent:'*'}"></div>
-    <div dojoType="dijit.Tree" id="BillTree" model="BillModel" openOnClick="true" showRoot='false'></div>
 
-
+    <thead>
+    <tr>
+        {#            <th field="id">#</th>#}
+        <th field="number" formatter="Formatter">#</th>
+        <th field="date" width="120px" formatter="Formatter">Дата</th>
+        <th field="agent" width="200px" formatter="Formatter">Контрагент</th>
+        <th field="brick" formatter="Formatter" width="250px">Кирпич</th>
+        <th field="amount" formatter="Formatter" aggregate="sum" itemAggregates="amount">Кол-во</th>
+        <th field="price" formatter="Formatter">Цена</th>
+        <th field="info" width='auto'></th>
+                    <th field="amount">Кол-во</th>
+                    <th field="brick">Кирпич</th>
+    </tr>
+    </thead>
+    </table>
     </div>
     <div dojoType="dijit.layout.ContentPane" region='top'>
         <form method="GET" dojoType='dijit.form.Form' id='form' action="./">
