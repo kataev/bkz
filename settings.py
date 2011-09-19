@@ -23,7 +23,9 @@ DATABASES = {
     }
 }
 
-DOJANGO_DOJO_PROFILE = "google_uncompressed"
+#DOJANGO_DOJO_PROFILE = "google_uncompressed"
+
+DOJANGO_DOJO_PROFILE = "local"
 
 DOJANGO_DOJO_VERSION = '1.6.0'
 

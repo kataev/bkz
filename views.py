@@ -63,12 +63,12 @@ def bill_store(request):
             if f.cleaned_data[a]:
                 if a == 'brick':
                     b = f.cleaned_data[a]
-                    query = query.filter(Q(sold__brick=b) or Q(transfer__brick=b))
+                    query = query.filter(Q(bill_sold_related__brick=b) or Q(bill_transfer_related__brick=b))
                 else:
                     query = query.filter(**{a:f.cleaned_data[a]})
     store.Meta.stores[0].Meta.objects=query
-    store.Meta.stores[1].Meta.objects=Sold.objects.filter(pk__in=query.values_list('sold'))
-    store.Meta.stores[2].Meta.objects=Transfer.objects.filter(pk__in=query.values_list('transfer'))
+#    store.Meta.stores[1].Meta.objects=Sold.objects.filter(pk__in=query.values_list('pk'))
+#    store.Meta.stores[1].Meta.stores[0].Meta.objects=Transfer.objects.filter(pk__in=query.values_list('pk'))
 
     return HttpResponse(store.to_json(), mimetype='application/json')
 
@@ -80,11 +80,16 @@ def bricks(request):
 def brick_store(request):
     from whs.brick.stores import BrickStore
     store = BrickStore()
-    bills = Bill.objects.filter(date__month=date.today().month)
+    bills = Bill.objects.filter(date__month=date.today().month).values_list('pk')
 #    store.Meta.objects = BrickTable.objects.filter(mark__in=[100,125])
+    solds = Sold.objects.filter(doc__in=bills)
+    trans = Transfer.objects.filter(doc__in=bills)
+    print len(solds),len(trans)
     for b in store.Meta.objects:
-        b.sold = bills.filter(sold__brick=b).aggregate(s=Sum('sold__amount'))['s'] or 0
-        b.t_from = bills.filter(transfer__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
-        b.t_to = bills.filter(sold__brick=b).aggregate(s=Sum('transfer__amount'))['s'] or 0
+        b.sold = solds.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
+        b.t_from = trans.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
+        b.t_to = trans.filter(sold__brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.begin = b.total + b.sold + b.t_from - b.t_to
+        if not b.t_from == 0:
+            print b
     return HttpResponse(store.to_json(), mimetype='application/json')

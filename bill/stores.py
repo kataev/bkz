@@ -29,8 +29,9 @@ class BillStore(Store):
     date = StoreField( get_value=ObjectMethod('str_date') )
     agent = StoreField( get_value=ObjectMethod('agent_unicode') )
     number = StoreField()
-    children = ReferenceField(model_field='sold')
+    children = ReferenceField('bill_sold_related')
     info = StoreField()
+    money = StoreField()
 
     class Meta(object):
         objects  = Bill.objects.filter(date__month=date.today().month)
@@ -39,4 +40,4 @@ class BillStore(Store):
 class BillSoldStore(Store):
 
     class Meta(object):
-        stores = (BillStore,SoldStore)
+        stores = (BillStore,)

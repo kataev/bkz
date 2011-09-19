@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 {% block title %}Накладные{% endblock %}
 {% block media %}
+    <script type="text/javascript" src="{{ STATIC_URL }}bills.js"></script>
     <style>
         @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
         @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
@@ -35,6 +36,7 @@
         }
     </style>
     <script type="text/javascript">
+    dojo.addOnLoad(function(){
         dijit.byId('id_date__lte').onChange = function() {
             dijit.byId('id_date__gte').constraints.min = arguments[0];
         };
@@ -51,6 +53,7 @@
             BillStore.url = 'store/?' + dojo.objectToQuery(query);
             BillStore.close();
         };
+       });
     </script>
 {% endblock %}
 {% block pane %}
@@ -65,12 +68,9 @@
         <th field="number" formatter="Formatter">#</th>
         <th field="date" width="120px" formatter="Formatter">Дата</th>
         <th field="agent" width="200px" formatter="Formatter">Контрагент</th>
-        <th field="brick" formatter="Formatter" width="250px">Кирпич</th>
-        <th field="amount" formatter="Formatter" aggregate="sum" itemAggregates="amount">Кол-во</th>
-        <th field="price" formatter="Formatter">Цена</th>
-        <th field="info" width='auto'></th>
-        <th field="amount">Кол-во</th>
-        <th field="brick">Кирпич</th>
+        <th field="money">Деньги</th>
+        <th field="info" width='auto'>Информация</th>
+
     </tr>
     </thead>
     </table>

@@ -13,18 +13,13 @@
 {% endblock %}
 {% block content %}
     <div dojoType="dijit.MenuBar" region='top' layoutPriority='1'>
-        <div dojoType="dijit.MenuBarItem"><span>Сохранить</span></div>
+        <div dojoType="dijit.MenuBarItem"><span style='border:1px green solid;'>Сохранить</span></div>
         <div dojoType="dijit.MenuBarItem"><span>Вернутся</span></div>
         <div dojoType="dijit.MenuBarItem"><span>Добавить отгрузку</span></div>
         <div dojoType="dijit.MenuBarItem"><span>Добавить перевод</span></div>
     </div>
     <div dojoType="dijit.layout.ContentPane" region='center'>
         <form action='./post/' method='POST' dojoType='whs.Form.Bill' id='form'>
-            {% if form.instance.pk %}
-                Просмотр и редактирование накладной
-            {% else %}
-                Введите данные для создания новой накладной
-            {% endif %}
             <div class='field'>
                 <img src='/static/img/16x16/text_list_numbers.png' width="16" height="16" alt="{{ form.number.label }}">
                 <label for='{{ form.number.id_for_label }}'>{{ form.number.label }}{% if form.number.help_text %}<sup
