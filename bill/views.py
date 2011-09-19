@@ -13,6 +13,8 @@ def bill_form_get(request,form,id=None):
         transfer = bill.bill_transfer_related.all()
     else:
         form = form()
+        sold = None
+        transfer = None
     if request.is_ajax():
         return HttpResponse(form)
     else:
@@ -58,4 +60,3 @@ def delete(request,form,model,id):
     if form.is_valid() and form.cleaned_data['confirm']:
         get_object_or_404(model,pk=id).delete()
     return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors}))
-

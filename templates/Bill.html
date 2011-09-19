@@ -14,9 +14,10 @@
 {% block content %}
     <div dojoType="dijit.MenuBar" region='top' layoutPriority='1'>
         <div dojoType="dijit.MenuBarItem"><span style='border:1px green solid;'>Сохранить</span></div>
-        <div dojoType="dijit.MenuBarItem"><span>Вернутся</span></div>
-        <div dojoType="dijit.MenuBarItem"><span>Добавить отгрузку</span></div>
-        <div dojoType="dijit.MenuBarItem"><span>Добавить перевод</span></div>
+        {% if form.instance.pk %}
+        <div dojoType="dijit.MenuBarItem" onclick="window.location='/sold/?doc={{ form.instance.pk }}'"><span>Добавить отгрузку</span></div>
+        <div dojoType="dijit.MenuBarItem" onclick="window.location='/transfer/?doc={{ form.instance.pk }}'"><span>Добавить перевод</span></div>
+        {% endif %}
     </div>
     <div dojoType="dijit.layout.ContentPane" region='center'>
         <form action='./post/' method='POST' dojoType='whs.Form.Bill' id='form'>
@@ -65,6 +66,7 @@
             {% include "error.html" %}
         </form>
     </div>
+    {% if form.instance.pk %}
     <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
     <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{id:'bill.sold*'}"></div>
     <table dojoType="dojox.grid.TreeGrid" region='right' style='width:550px;' treeModel='BillModel' id="BillTree"
@@ -78,4 +80,9 @@
         </tr>
         </thead>
     </table>
+    {% else %}
+        <div dojoType="dijit.layout.ContentPane" region='right' style='width:550px;'>
+            <div style='text-align: center;'>Сохраните документ перед тем как добавлять операции</div>
+        </div>
+    {% endif %}
 {% endblock %}

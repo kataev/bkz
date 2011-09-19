@@ -66,7 +66,7 @@ class Bill(Doc):
             ordering = ['-date','-number']
 
     def set_money(self):
-        self.money = sum(map(lambda x: x['amount']*x['price'], self.sold.values('amount','price')))
+        self.money = sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
         self.save()
 
     def agent_unicode(self):

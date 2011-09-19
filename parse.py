@@ -69,8 +69,6 @@ def total_update():
                     refuse=u'Ф'
                 if w==u'Полосы':
                     refuse=u'П'
-#            print r['mas']
-#            print r['id'],r
             old_id=r['id']
             try:
                 brick_class=class_c[r['color']]
