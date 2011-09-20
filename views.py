@@ -3,12 +3,13 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from django.db.models import Q,Sum
+from django.db.models import Q,Sum,F
 from whs.bill.models import Bill,Sold,Transfer
 from whs.brick.models import BrickTable
 from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
+from whs.bill.stores import BillStore
 
 @require_http_methods(["GET",])
 def main(request):
@@ -55,38 +56,31 @@ def bills(request):
     Предствление для таблицы с накладными, формой для фильтрации.
     """
     f = Bills(request.GET)
-    query = Bill.objects.all()
-    if f.is_valid():
-        for a in f.cleaned_data:
-            if f.cleaned_data[a]:
-                if a == 'brick':
-                    b = f.cleaned_data[a]
-                    query = query.filter(Q(sold__brick=b) or Q(transfer__brick=b))
-                else:
-                    query = query.filter(**{a:f.cleaned_data[a]})
-    return render(request, 'bills.html', {'bills':query,'form':f})
+    return render(request, 'bills.html',{'form':f,'path':request.GET.urlencode()})
 
 @require_http_methods(["GET",])
 def bill_store(request):
     """
     Представление для dojo store накладных.
     """
-    from whs.bill.stores import BillSoldStore
-    store = BillSoldStore()
+    store = BillStore()
     f = Bills(request.GET)
     query = Bill.objects.all()
     if f.is_valid():
-        for a in f.cleaned_data:
-            if f.cleaned_data[a]:
-                if a == 'brick':
-                    b = f.cleaned_data[a]
-                    query = query.filter(Q(bill_sold_related__brick=b) or Q(bill_transfer_related__brick=b))
-                else:
-                    query = query.filter(**{a:f.cleaned_data[a]})
-    store.Meta.stores[0].Meta.objects=query
-#    store.Meta.stores[1].Meta.objects=Sold.objects.filter(pk__in=query.values_list('pk'))
-#    store.Meta.stores[1].Meta.stores[0].Meta.objects=Transfer.objects.filter(pk__in=query.values_list('pk'))
+        print f.cleaned_data
+        brick = f.cleaned_data.pop('brick')
+        for key,value in f.cleaned_data.items():
+            if value:
+                query = query.filter(**{key:value})
+                print key,values,query
 
+        if brick:
+#            sold = Sold.objects.filter(brick=brick,doc=query).values('pk')
+            print query
+            query = query.filter(bill_sold_related__brick=brick).annotate()
+        print query
+        
+    store.Meta.objects=query[:30]
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 @require_http_methods(["GET",])
@@ -95,6 +89,11 @@ def bricks(request):
     Представление для отображение шаблона сводной таблицы
     """
     return render(request, 'bricks.html',{'form':BrickFilterForm()})
+
+@require_http_methods(["GET",])
+def agents(request):
+    return render(request, 'agents.html')
+
 
 @require_http_methods(["GET",])
 def brick_store(request):

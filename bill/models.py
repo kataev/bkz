@@ -118,3 +118,7 @@ class Transfer(Oper):
 admin.site.register(Bill)
 admin.site.register(Sold)
 admin.site.register(Transfer)
+
+@receiver(post_save,sender=Sold)
+def money(*args,**kwargs):
+    kwargs['instance'].doc.set_money()

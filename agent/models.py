@@ -18,6 +18,7 @@ class Agent(models.Model):
     class Meta:
         verbose_name=u'Контрагент'
         verbose_name_plural=u'Контрагенты'
+        ordering = ('name', )
 
     def __unicode__(self):
         if self.pk:
@@ -25,7 +26,7 @@ class Agent(models.Model):
             if len(name) == 3 and self.form != u'ООО':
                 return u'%s %1s.%1s' % (name[0],name[1][:1],name[2][:1])
             else:
-                return self.name
+                return '%s, %s' % (self.name,self.form)
         else:
             return u'Новый контрагент'
 

@@ -34,12 +34,8 @@ class BrickSelect(forms.Select):
         else:
             selected_html = ((brick.pk in selected_choices) or (
             str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
-            return u'<option dojoType="whs.brick_tr" class="%(class)s" cl="%(cl)s" mark="%(mark)s" view="%(view)s" weight="%(weight)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+            return u'<option dojoType="whs.brick_tr" class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
                 'class': brick.show_css(),
-                'cl': brick.get_brick_class_display(),
-                'mark': brick.get_mark_display(),
-                'view': brick.get_view_display(),
-                'weight': brick.get_weight_display(),
                 'total': intcomma(brick.total),
                 'pk': brick.pk,
                 'selected_html': selected_html,

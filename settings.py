@@ -23,6 +23,11 @@ DATABASES = {
     }
 }
 
+DOJANGO_DATAGRID_ACCESS = (
+    'agent.Agent',
+#    'bill.Bill',
+)
+
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
 #DOJANGO_DOJO_PROFILE = "local"

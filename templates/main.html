@@ -1,4 +1,5 @@
 {% extends "dojango/base.html" %}
+
 {% block dojango_page_title %}{% block title %}Главная{% endblock %} - Склад кирпича{% endblock %}
 {% block dojango_header_extra %}
     <script type="text/javascript" src="{{ STATIC_URL }}modernizr-2.0.6.min.js"></script>
@@ -35,7 +36,11 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div dojoType="dijit.layout.ContentPane" region='center'>2</div>
+                    <div dojoType="dijit.layout.ContentPane" region='center'>
+
+
+
+                    </div>
                     {#                <div dojoType="dijit.layout.ContentPane" region='right' style='height: 6%;'>3</div>#}
                 </div>
                 {#                <div dojoType="dijit.layout.ContentPane" region='bottom' style='height: 100px;'>#}

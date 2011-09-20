@@ -24,8 +24,9 @@ dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {
                 dojo.query('[selected]',c).forEach(function(node) {
                 var q = dojo.query('.nameNode', node);
                     if (q[0]) labelNode.innerHTML = q[0].innerHTML;
-                    else labelNode.innerHTML = node.innerHTML;//TODO: передалть, чтобы отображался виджет whs.brick
+                    else labelNode.innerHTML = node.innerHTML;
                     setValue(dojo.attr(node, 'value'));
+                    dojo.attr(labelNode,'class','dijitTextBox '+dojo.attr(node,'class'));
                 });
             },
             _setValueAttr:function(val) {

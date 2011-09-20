@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^bills/store/$', 'whs.views.bill_store',name='bill_store'),
     url(r'^bricks/$', 'whs.views.bricks',name='bricks'),
     url(r'^bricks/store/$', 'whs.views.brick_store',name='brick_store'),
+    url(r'^agents/$', 'whs.views.agents',name='agents'),
 
     (r'^', include('whs.bill.urls')),
     (r'^', include('whs.brick.urls')),
@@ -20,6 +21,7 @@ urlpatterns = patterns('',
     (r'^dojango/', include('dojango.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-
+    url(r'^datagrid-list/(?P<app_name>.+)/(?P<model_name>.+)/$', 'dojango.views.datagrid_list', name="dojango-datagrid-list"),
 )
+
 urlpatterns += staticfiles_urlpatterns()

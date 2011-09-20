@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+{% block media %}
+    <script type="text/javascript">
+    dojo.require('dojox.data.QueryReadStore')
+    dojo.require('dojox.grid.DataGrid')
+    </script>
+    <style type="text/css">
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
+        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
+    </style>
+{% endblock %}
+{% block pane %}
+    <div dojoType="dijit.layout.BorderContainer" region='center'>
+{% endblock %}
+{% block content %}
+    <span dojoType="dojox.data.QueryReadStore" jsId="Store" url="/datagrid-list/agent/Agent/"></span>
+    <div dojoType="dijit.layout.ContentPane" region='top'></div>
+    <table dojoType="dojox.grid.DataGrid" store='Store' region='center'>
+        <thead>
+        <tr>
+            <th field='name' width='auto'>Имя</th>
+            <th field='form' width=60px'>Форма</th>
+            <th field='phone' width="200px">Телефон</th>
+            <th field='bank' width="auto">Банк</th>
+        </tr>
+        </thead>
+        </table>
+
+
+{% endblock %}

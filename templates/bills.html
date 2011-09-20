@@ -14,21 +14,29 @@
             };
             dijit.byId('form').onSubmit = function(e) {
                 dojo.stopEvent(e);
+                query={}
                 var val = this.get('value');
-                var query = {};
                 for (var a in val) {
-                    if (val[a]) query[a] = val[a];
+                    if (!val[a]) dojo.query('[name=' + a + ']', this.containerNode).attr('disabled', 'disabled');
+                    else {
+                        console.log(val[a])
+                        if (a=='date__lte' || a=='date__gte') query[a]=dojo.date.stamp.toISOString(val[a]).split('T')[0]
+                        else query[a]=val[a]
+                    }
                 }
-                BillStore.url = 'store/?' + dojo.objectToQuery(query);
+                console.log(query);
+                BillStore.url = './store/?'+dojo.objectToQuery(query);
                 BillStore.close();
+                dijit.byId('BillTree').render();
             };
         });
     </script>
 {% endblock %}
 {% block pane %}
-    <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
-    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{number:'*'}"></div>
-    <table dojoType="dojox.grid.TreeGrid" region='center' treeModel='BillModel' id="BillTree" store='BillStore'>
+    <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore"
+         clearOnClose='true' url="store/?{{ path }}"></div>
+{#    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{number:'*'}"></div>#}
+    <table dojoType="dojox.grid.DataGrid" region='center' id="BillTree" store='BillStore'>
 {% endblock %}
 {% block content %}
 
@@ -37,7 +45,7 @@
         <th field="number" formatter="Formatter">#</th>
         <th field="date" width="120px" formatter="Formatter">Дата</th>
         <th field="agent" width="200px" formatter="Formatter">Контрагент</th>
-        <th field="money">Деньги</th>
+        <th field="money" aggregate='sum'>Деньги</th>
         <th field="info" width='auto'>Информация</th>
 
     </tr>
@@ -47,8 +55,8 @@
     <div dojoType="dijit.layout.ContentPane" region='top'>
         <form method="GET" dojoType='dijit.form.Form' id='form' action="./">
             {{ form.brick }}
-            {{ form.date__lte }}
             {{ form.date__gte }}
+            {{ form.date__lte }}
             {{ form.agent }}
             <button dojoType='dijit.form.Button' type=submit>Показать</button>
         </form>
