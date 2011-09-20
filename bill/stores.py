@@ -26,8 +26,8 @@ class SoldStore(Store):
         objects  = Sold.objects.all()
 
 class BillStore(Store):
-    date = StoreField( get_value=ObjectMethod('str_date') )
-    agent = StoreField( get_value=ObjectMethod('agent_unicode') )
+    date = StoreField( get_value=ObjectMethod('date_ru') )
+    agent = StoreField('agent.__unicode__')
     number = StoreField()
     children = ReferenceField('bill_sold_related')
     info = StoreField()

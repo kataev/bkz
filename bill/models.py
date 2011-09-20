@@ -10,6 +10,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Oper(models.Model):
+    """
+    Абстрактный класс для всех операций
+    """
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
     brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
@@ -23,26 +26,10 @@ class Oper(models.Model):
     def get_absolute_url(self):
         return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 
-    def widget(self,selected_html='',as_tr=False,attrs={}):
-        attrs={
-#            'selected_html':selected_html,
-            'value':self.pk,
-            'name':self._meta.module_name.lower(),
-            'amount':self.amount,
-            'tara':self.tara,
-            'info':self.info,
-            'brick_css':self.brick.show_css(), 
-            'brick':self.brick,
-            'brick_value':self.brick.pk,
-            'title':self
-        }
-        at = u''
-        for a in attrs:
-            at += u'%s="%s" ' %(unicode(a),unicode(attrs[a]))
-        template = u'<tr %s dojoType="whs.oper.tr" ></tr>' % at
-        return template
-
 class Doc(models.Model):
+    """
+    Абстрактный класс для документов.
+    """
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
     date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
@@ -54,7 +41,8 @@ class Doc(models.Model):
 ## Накладная
 class Bill(Doc):
     """
-    Bill doc
+    Накладная, документ который используется при отгрузке кирпича покупателю
+    Основа продажи, на него ссылаются операции продажи - Sold && Transfer.
     """
     number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
     agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
@@ -66,18 +54,19 @@ class Bill(Doc):
             ordering = ['-date','-number']
 
     def set_money(self):
+        """
+        Метод для обновления информации о кол-ве денег. Вызывается через сигнал после сохранение SOLD
+        """
         self.money = sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
         self.save()
 
-    def agent_unicode(self):
-        return unicode(self.agent)
-
-    def str_date(self):
+    def date_ru(self):
         return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
 
     def __unicode__(self):
         if self.pk:
-            return u'Накладная № %d от %s %s' % (self.number,self.str_date(),self.agent.name[:50])
+            date = self.date_ru()
+            return u'Накладная № %d от %s %s' % (self.number,date,unicode(self.agent)[:50])
         else:
             return u'Новая накладная'
 
@@ -85,6 +74,10 @@ class Bill(Doc):
         return "/%s/%i/" % (self._meta.module_name,self.id)
 
 class Sold(Oper):
+    """
+    Класс для операций отгруки, является аналогом строки в накладной.
+    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной.
+    """
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
@@ -98,14 +91,14 @@ class Sold(Oper):
         else:
             return u'Новая отгрузка'
 
-    def get_transfer(self):
-        t = self.bill_transfer_related.all()
-        if len(t):
-            return t
-        else:
-            return False
-
 class Transfer(Oper):
+    """
+    Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
+    по цене другой, аналог скидки.
+    Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
+    точка перевода содержится по связи sold.
+    Привязанн к накладной, т.к является операцией продажи.
+    """
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
     doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
 

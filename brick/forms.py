@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import dojango.forms as forms
 
-from whs.brick.models import Brick,History
+from whs.brick.models import Brick
 
 class BrickForm(forms.ModelForm):
     class Meta:

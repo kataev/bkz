@@ -11,7 +11,17 @@ from whs.bill.forms import Bills
 from datetime import date
 
 @require_http_methods(["GET",])
+def main(request):
+    """
+    Главная страница
+    """
+    return render(request, 'main.html',{'bills':Bill.objects.all()[:5]})
+
+@require_http_methods(["GET",])
 def form_get(request,form,id=None):
+    """
+    Вывод формы
+    """
     if id:
         form = form(instance=get_object_or_404(form._meta.model,pk=id))
     else:
@@ -23,6 +33,9 @@ def form_get(request,form,id=None):
 
 @require_http_methods(["POST",])
 def form_post(request,form,id=None):
+    """
+    Универсальное представление для обработки пост данных формы
+    """
     if id:
         form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
     else:
@@ -36,10 +49,11 @@ def form_post(request,form,id=None):
         response = render(request, form._meta.model.__name__+".html", {'form':form})
     return response
 
-def main(request):
-    return render(request, 'main.html',{'bills':Bill.objects.all()[:5]})
-
+@require_http_methods(["GET",])
 def bills(request):
+    """
+    Предствление для таблицы с накладными, формой для фильтрации.
+    """
     f = Bills(request.GET)
     query = Bill.objects.all()
     if f.is_valid():
@@ -52,8 +66,11 @@ def bills(request):
                     query = query.filter(**{a:f.cleaned_data[a]})
     return render(request, 'bills.html', {'bills':query,'form':f})
 
-
+@require_http_methods(["GET",])
 def bill_store(request):
+    """
+    Представление для dojo store накладных.
+    """
     from whs.bill.stores import BillSoldStore
     store = BillSoldStore()
     f = Bills(request.GET)
@@ -72,12 +89,18 @@ def bill_store(request):
 
     return HttpResponse(store.to_json(), mimetype='application/json')
 
-
-
+@require_http_methods(["GET",])
 def bricks(request):
+    """
+    Представление для отображение шаблона сводной таблицы
+    """
     return render(request, 'bricks.html',{'form':BrickFilterForm()})
 
+@require_http_methods(["GET",])
 def brick_store(request):
+    """
+    Представление для dojo store сводной таблицы кирпича.
+    """
     from whs.brick.stores import BrickStore
     store = BrickStore()
     bills = Bill.objects.filter(date__month=date.today().month).values_list('pk')
@@ -90,6 +113,4 @@ def brick_store(request):
         b.t_from = trans.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.t_to = trans.filter(sold__brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.begin = b.total + b.sold + b.t_from - b.t_to
-        if not b.t_from == 0:
-            print b
     return HttpResponse(store.to_json(), mimetype='application/json')

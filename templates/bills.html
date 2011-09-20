@@ -1,59 +1,28 @@
 {% extends 'main.html' %}
 {% block title %}Накладные{% endblock %}
 {% block media %}
-    <script type="text/javascript" src="{{ STATIC_URL }}bills.js"></script>
-    <style>
-        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
-        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
-
-        article {
-            clear: left;
-            border: 1px black solid;
-        }
-
-        #id_date__lte, #id_date__gte {
-            width: 20px;
-        }
-
-        div.date {
-            /*position: relative;*/
-            left: 2px;
-            top: 2px;
-            width: 50px;
-            float: left;
-            border: 2px red solid;
-            text-align: center;
-        }
-
-        .table {
-            border: 1px black solid;
-        }
-
-        .transfer {
-            background-image: url('/static/img/16x16/arrow.png');
-            width: 16px;
-            height: 16px;
-        }
-    </style>
+    {{ form.media }}
+    <link rel='stylesheet' href="{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css" type="text/css">
+    <link rel='stylesheet' href="{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css" type="text/css">
     <script type="text/javascript">
-    dojo.addOnLoad(function(){
-        dijit.byId('id_date__lte').onChange = function() {
-            dijit.byId('id_date__gte').constraints.min = arguments[0];
-        };
-        dijit.byId('id_date__gte').onChange = function() {
-            dijit.byId('id_date__lte').constraints.max = arguments[0];
-        };
-        dijit.byId('form').onSubmit = function(e) {
-            dojo.stopEvent(e);
-            var val = this.get('value');
-            var query = {};
-            for (var a in val) {
-                if (val[a]) query[a] = val[a];
-            }
-            BillStore.url = 'store/?' + dojo.objectToQuery(query);
-            BillStore.close();
-        };
-       });
+        dojo.addOnLoad(function() {
+            dijit.byId('id_date__lte').onChange = function() {
+                dijit.byId('id_date__gte').constraints.min = arguments[0];
+            };
+            dijit.byId('id_date__gte').onChange = function() {
+                dijit.byId('id_date__lte').constraints.max = arguments[0];
+            };
+            dijit.byId('form').onSubmit = function(e) {
+                dojo.stopEvent(e);
+                var val = this.get('value');
+                var query = {};
+                for (var a in val) {
+                    if (val[a]) query[a] = val[a];
+                }
+                BillStore.url = 'store/?' + dojo.objectToQuery(query);
+                BillStore.close();
+            };
+        });
     </script>
 {% endblock %}
 {% block pane %}

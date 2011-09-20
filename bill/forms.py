@@ -13,6 +13,9 @@ class BrickSelect(forms.Select):
     dojo_type = 'whs.brickSelect'
 
     def render(self, name, value, attrs=None, choices=()):
+        """
+        Переопределние метода для вывода нужного тега.
+        """
         if value is None: value = ''
         final_attrs = self.build_attrs(attrs, name=name)
         output = [u'<select%s>' % flatatt(final_attrs)]
@@ -23,6 +26,9 @@ class BrickSelect(forms.Select):
         return mark_safe(u'\n'.join(output))
 
     def render_option(self, brick, selected_choices, option_value=None, option_label=None):
+        """
+        Переопределние метода для вывода элемента тега с нужными тегами.
+        """
         if brick is None:
             return u''
         else:
@@ -63,40 +69,7 @@ class BrickSelect(forms.Select):
                 output.append(self.render_option(val, selected_choices))
         return u'\n'.join(output)
 
-
-class OperSelect(forms.SelectMultiple):
-    dojo_type = 'whs.operSelect'
-
-    def render(self, name, value, attrs=None, choices=()):
-        if value is None: value = []
-        final_attrs = self.build_attrs(attrs, name=name)
-        output = [u'<tbody%s>' % flatatt(final_attrs)]
-        options = self.render_options(choices, value)
-        if options:
-            output.append(options)
-        output.append('</tbody>')
-        return mark_safe(u'\n'.join(output))
-
-    def render_option(self, oper, selected_choices):
-        selected_html = (oper.pk in selected_choices) and u' selected="selected"' or ''
-        return oper.widget(selected_html=selected_html, as_tr=True)
-
-    def render_options(self, choices, selected_choices):
-        selected_choices = set([v for v in selected_choices])
-        output = []
-        queryset = self.choices.queryset
-        for oper in queryset:
-            output.append(self.render_option(oper, selected_choices))
-        return u'\n'.join(output)
-
-
-class Form(forms.ModelForm):
-    class Media:
-        js = ('form.js',)
-        css = {'all': ('form.css',), }
-
-
-class SoldForm(Form):
+class SoldForm(forms.ModelForm):
     class Meta:
         model = Sold
         exclude = ('post')
@@ -109,9 +82,12 @@ class SoldForm(Form):
             'price': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}}),
             'delivery': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}})
         }
+    class Media:
+        js = ('form.js',)
+        css = {'all': ('form.css',), }
 
 
-class TransferForm(Form):
+class TransferForm(forms.ModelForm):
     class Meta:
         model = Transfer
         widgets = {
@@ -122,9 +98,12 @@ class TransferForm(Form):
             'tara': forms.NumberSpinnerInput(
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
         }
+    class Media:
+        js = ('form.js',)
+        css = {'all': ('form.css',), }
 
 
-class BillForm(Form):
+class BillForm(forms.ModelForm):
     class Meta:
         model = Bill
         exclude = ('money')
@@ -132,6 +111,9 @@ class BillForm(Form):
             'info': forms.Textarea(attrs={}),
             'agent': forms.FilteringSelect(),
             }
+    class Media:
+        js = ('form.js','bills.js')
+        css = {'all': ('form.css',), }
 
 
 class Confirm(forms.Form):
@@ -150,3 +132,6 @@ class Bills(forms.Form):
         """
         super(Bills, self).__init__(*args, **kwargs)
         self.fields['agent'].empty_label = u'Выберите контрагента'
+    class Media:
+        js = ('bills.js',)
+        css = {'all': ('bills.css',), }

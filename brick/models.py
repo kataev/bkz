@@ -2,11 +2,11 @@
 from django.db import models
 
 class Brick(models.Model):
+    """
+    Класс для кирпича, основа приложения, выделен в отдельный блок.
+    Содержит информацию о характеристиках кирпича и текушем остатке
 
-#    @property
-#    def data(self):
-#        return {'sold':-101}
-#    objects = models.Manager()
+    """
     euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
     
     view_c=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
@@ -81,9 +81,6 @@ class Brick(models.Model):
     def get_absolute_url(self):
         return "/brick/%i/" % self.id
 
-    def span(self):
-        return u'<span class="'+self.show_css()+'">'+unicode(self)+'</span>'
-
     class Meta():
         ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
         verbose_name = u"кирпич"
@@ -100,8 +97,10 @@ class Brick(models.Model):
     }
 
     def show_css(self):
+        """
+        Метод для отображения стилей кирпича.
+        """
         css= u''
-
         for key in self.css.keys():
             try:
                 prop = getattr(self,key)
@@ -112,20 +111,6 @@ class Brick(models.Model):
     
     class Admin:
         pass
-
-
-class History(models.Model):
-    brick = models.ForeignKey(Brick,verbose_name=u"Кирпич")
-    date = models.DateField(u'Дата',auto_now_add=True)
-    total = models.PositiveIntegerField(u"Остаток")
-
-    def __unicode__(self):
-        return u'%s от %s' % (self.brick,self.date)
-
-    class Meta:
-        verbose_name = u'История остатков кирпича'
-        verbose_name_plural = verbose_name
-        ordering = ('-date',)
 
 class BrickTable(Brick):
     """
