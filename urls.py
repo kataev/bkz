@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^bills/$', 'whs.views.bills',name='bills'),
     url(r'^bills/store/$', 'whs.views.bill_store',name='bill_store'),
     url(r'^bricks/$', 'whs.views.bricks',name='bricks'),
-    url(r'^bricks/store/$', 'whs.views.brick_store',name='brick_store'),
+    url(r'^bricks/store/$', 'whs.views.bricks_store',name='bricks_store'),
     url(r'^agents/$', 'whs.views.agents',name='agents'),
 
     (r'^', include('whs.bill.urls')),

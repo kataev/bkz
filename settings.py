@@ -28,6 +28,8 @@ DOJANGO_DATAGRID_ACCESS = (
 #    'bill.Bill',
 )
 
+INTERNAL_IPS = ('127.0.0.1',)
+
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
 #DOJANGO_DOJO_PROFILE = "local"
@@ -120,7 +122,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'dojango.middleware.DojoCollector',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'whs.urls'
@@ -143,7 +145,7 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.agent',
     'whs.bill',
-
+    'debug_toolbar',
 	'dojango',
     'django_extensions',
 )

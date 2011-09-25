@@ -17,6 +17,17 @@
                 }
 //            console.log(row.customClasses)
             }
+            dijit.byId('Brick').onRowClick = function(e) {
+                var item = table.getItem(e.rowIndex);
+                brick_name.innerHTML = item.label;
+                dojo.attr(brick_name,'class','dijitContentPane dijitBorderContainer-child dijitBorderContainer-dijitContentPane dijitBorderContainerPane dijitAlignTop '+item.css);
+                var mes = whs.id_to_dict(item.id);
+                console.log(mes)
+                brick_info.url = whs.id_to_url(item.id)+'store/';
+                brick_info.close();
+                dijit.byId('Brick_info').render();
+
+            }
         });
 
     </script>
@@ -25,7 +36,7 @@
         @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
 
         #mark ul, #view ul, #weight ul,
-        #type ul, #class ul,#other ul {
+        #type ul, #class ul, #other ul {
             margin: 0px;
             padding: 0px;
             list-style: none;
@@ -35,11 +46,13 @@
             width: 200px;
         }
 
-        #class {width: 300px;}
+        #class {
+            width: 300px;
+        }
 
         #mark ul li:first-child, #view ul li:first-child,
         #weight ul li:first-child, #class ul li:first-child,
-        #weight ul li:last-child, #class ul li:last-child {
+        #weight ul li:last-child {
             display: none;
         }
 
@@ -61,19 +74,35 @@
             padding: 0px 4px 0px 4px;
             width: 56px;
         }
+
+    #brick_name {
+        text-align: center;
+        /*height: 10px;*/
+    }
     </style>
 {% endblock %}
 {% block pane %}
+    <div dojoType="dijit.layout.BorderContainer" region='center' >
+    <div dojoType="dijit.layout.ContentPane" region='top' id='brick_name'>Выделете кирпич для получения информации по нему</div>
+    <div dojoType="dijit.layout.ContentPane" region='bottom' ></div>
+    <span dojoType="dojo.data.ItemFileReadStore" jsId="brick_info" clearOnClose='true'></span>
+    <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' style='height:400px' id='Brick_info' selectionMode='single'>
+        <thead>
+    <tr>
+        <th field="date" width="auto">Дата</th>
+        <th field="delta" width="auto">Изменение</th>
+    </tr>
+    </thead>
+        </table>
+    </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStore" url="./store/"></span>
-    <table dojoType="dojox.grid.DataGrid" store='BrickStore' region='center' id='Brick'
-           selectionMode='single'
-{#           rowsPerPage=10#}
-            >
+    <table dojoType="dojox.grid.DataGrid" store='BrickStore' region='left' style='width:600px' id='Brick'
+           selectionMode='single'>
 {% endblock %}
 {% block content %}
     <thead>
     <tr>
-        <th field="label" width="350px">Кирпич</th>
+        <th field="label" width="auto">Кирпич</th>
         <th field="begin" width="60px">Начало</th>
         {#      <th field="fieldName" width="200px">Приход</th>#}
         <th field="t_to" width="60px">Акт в</th>
@@ -89,16 +118,37 @@
             {{ form.mark }}
         </div>
         <div dojoType="dijit.layout.ContentPane" region='left' id='class'>
-                        <ul>
-<li><label class='' for="id_brick_class_0"><input type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_0" /> ---------</label></li>
-<li><label class='cl_red' for="id_brick_class_1"><input value="0" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_1" /> Красный</label></li>
-<li><label class='cl_ye' for="id_brick_class_2"><input value="1" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_2" /> Желтый</label></li>
-<li><label class='cl_br' for="id_brick_class_3"><input value="2" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_3" /> Коричневый</label></li>
-<li><label class='cl_li' for="id_brick_class_4"><input value="3" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_4" /> Светлый</label></li>
-<li><label class='cl_wh' for="id_brick_class_5"><input value="4" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_5" /> Белый</label></li>
-<li><label class='cl_eu' for="id_brick_class_6"><input value="5" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_6" /> Евро</label></li>
-<li><label class='cl_ot' for="id_brick_class_7"><input value="6" type="checkbox" name="brick_class" dojoType="whs.CheckBox" id="id_brick_class_7" /> Прочее</label></li>
-</ul>
+            <ul>
+                <li><label class='' for="id_brick_class_0"><input type="checkbox" name="brick_class"
+                                                                  dojoType="whs.CheckBox" id="id_brick_class_0"/>
+                    ---------</label></li>
+                <li><label class='cl_red' for="id_brick_class_1"><input value="0" type="checkbox" name="brick_class"
+                                                                        dojoType="whs.CheckBox" id="id_brick_class_1"/>
+                    Красный</label></li>
+                <li><label class='cl_ye' for="id_brick_class_2"><input value="1" type="checkbox" name="brick_class"
+                                                                       dojoType="whs.CheckBox" id="id_brick_class_2"/>
+                    Желтый</label></li>
+                <li><label class='cl_br' for="id_brick_class_3"><input value="2" type="checkbox" name="brick_class"
+                                                                       dojoType="whs.CheckBox" id="id_brick_class_3"/>
+                    Коричневый</label></li>
+                <li><label class='cl_li' for="id_brick_class_4"><input value="3" type="checkbox" name="brick_class"
+                                                                       dojoType="whs.CheckBox" id="id_brick_class_4"/>
+                    Светлый</label></li>
+                <li><label class='cl_wh' for="id_brick_class_5"><input value="4" type="checkbox" name="brick_class"
+                                                                       dojoType="whs.CheckBox" id="id_brick_class_5"/>
+                    Белый</label></li>
+                <li style='width:51px;'><label class='cl_eu' for="id_brick_class_6"><input value="5" type="checkbox"
+                                                                                           name="brick_class"
+                                                                                           dojoType="whs.CheckBox"
+                                                                                           id="id_brick_class_6"/> Евро</label>
+                </li>
+                <li style='width:51px; padding-left: 6px;'><label class='cl_ot' for="id_brick_class_7"><input value="6"
+                                                                                                              type="checkbox"
+                                                                                                              name="brick_class"
+                                                                                                              dojoType="whs.CheckBox"
+                                                                                                              id="id_brick_class_7"/>
+                    Пр</label></li>
+            </ul>
         </div>
         <div dojoType="dijit.layout.ContentPane" region='left' id='weight'>
             {{ form.weight }}
@@ -119,7 +169,7 @@
                     тип</label></li>
             </ul>
         </div>
-    <div dojoType="dijit.layout.ContentPane" region='center' id='other'>
+        <div dojoType="dijit.layout.ContentPane" region='center' id='other'>
             <ul>
                 <li><label for="id_other_total">
                     <input value="0" type="checkbox"

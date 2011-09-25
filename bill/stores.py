@@ -35,3 +35,8 @@ class BillStore(Store):
 
     class Meta(object):
         objects  = Bill.objects.filter(date__month=date.today().month)
+
+
+class BrickStore(Store):
+    date = StoreField('doc.date_ru')
+    amount = StoreField()

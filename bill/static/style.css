@@ -534,27 +534,27 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 /*tr.cl_ye td:first-child:before,span.cl_ye:before {content: url('/static/img/16x16/brick/yellow_brick_icon.gif');}*/
 
 .cl_ye,.cl_ye td {
-    background: PeachPuff;
+    background: PeachPuff !important;
 }
 
 .cl_br, .cl_br td {
-    background: Tan;
+    background: Tan !important;
 }
 
 .cl_li, .cl_li td {
-    background: Lightseagreen;
+    background: Lightseagreen !important;
 }
 
 .cl_wh, .cl_wh td {
-    background-color: Snow;
+    background-color: Snow  !important;
 }
 
 .cl_eu, .cl_eu td {
-    background-color: Cyan
+    background-color: #169cca  !important;
 }
 
 .cl_ot, .cl_ot td {
-    background-color: gray;
+    background-color: gray  !important;
 }
 
 .brickSelect .dijitTextBox {

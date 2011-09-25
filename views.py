@@ -5,11 +5,11 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q,Sum,F
 from whs.bill.models import Bill,Sold,Transfer
-from whs.brick.models import BrickTable
+from whs.brick.models import Brick
 from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
-from whs.bill.stores import BillStore
+from whs.bill.stores import BillStore,BrickStore
 
 @require_http_methods(["GET",])
 def main(request):
@@ -96,7 +96,7 @@ def agents(request):
 
 
 @require_http_methods(["GET",])
-def brick_store(request):
+def bricks_store(request):
     """
     Представление для dojo store сводной таблицы кирпича.
     """
@@ -112,4 +112,11 @@ def brick_store(request):
         b.t_from = trans.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.t_to = trans.filter(sold__brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.begin = b.total + b.sold + b.t_from - b.t_to
+    return HttpResponse(store.to_json(), mimetype='application/json')
+
+
+def brick_store(request,id=None):
+    brick = get_object_or_404(Brick,pk=id)
+    store = BrickStore()
+    store.Meta.objects = Sold.objects.filter(brick=brick)
     return HttpResponse(store.to_json(), mimetype='application/json')
