@@ -565,20 +565,13 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 }
 
 
-.oper {
-    margin: 1px;
+
+.sold, .sold td {
+    background-color: #adff2f !important;
 }
 
-.oper.sold {
-    background-color: #adff2f;
-}
-
-tr.oper.sold:before {
-    
-}
-
-.oper.transfer {
-    background-color: #9acd32;
+.transfer, .transfer td {
+    background-color: #9acd32 !important;
 }
 
 /* Any demo specific styling needed for this tutorial only */

@@ -115,8 +115,11 @@ def bricks_store(request):
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 
-def brick_store(request,id=None):
+def brick_store(request,id):
     brick = get_object_or_404(Brick,pk=id)
     store = BrickStore()
-    store.Meta.objects = Sold.objects.filter(brick=brick)
+    query = []
+    query.extend(Sold.objects.all()) #TODO: Сделать фильтр, через гет параметры на подобие накладных.
+    query.extend(Transfer.objects.all())
+    store.Meta.objects = query
     return HttpResponse(store.to_json(), mimetype='application/json')

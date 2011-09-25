@@ -10,6 +10,14 @@
 
         dojo.addOnLoad(function() {
             var table = dijit.byId('Brick');
+            dijit.byId('Brick_info').onStyleRow = function(row) {
+                var item = dijit.byId('Brick_info').getItem(row.index);
+                if (item) {
+                    row.customClasses += ' ' + whs.id_to_dict(brick_info.getValue(item, 'id', null)).name;
+                }
+
+            };
+
             dijit.byId('Brick').onStyleRow = function(row) {
                 var item = table.getItem(row.index);
                 if (item) {
@@ -21,8 +29,6 @@
                 var item = table.getItem(e.rowIndex);
                 brick_name.innerHTML = item.label;
                 dojo.attr(brick_name,'class','dijitContentPane dijitBorderContainer-child dijitBorderContainer-dijitContentPane dijitBorderContainerPane dijitAlignTop '+item.css);
-                var mes = whs.id_to_dict(item.id);
-                console.log(mes)
                 brick_info.url = whs.id_to_url(item.id)+'store/';
                 brick_info.close();
                 dijit.byId('Brick_info').render();
@@ -77,20 +83,24 @@
 
     #brick_name {
         text-align: center;
+        overflow: hidden;
         /*height: 10px;*/
     }
     </style>
 {% endblock %}
 {% block pane %}
-    <div dojoType="dijit.layout.BorderContainer" region='center' >
-    <div dojoType="dijit.layout.ContentPane" region='top' id='brick_name'>Выделете кирпич для получения информации по нему</div>
-    <div dojoType="dijit.layout.ContentPane" region='bottom' ></div>
+    <div dojoType="dijit.layout.BorderContainer" region='center'>
+    <div dojoType="dijit.layout.BorderContainer" region='top' style='height:32px;'>
+    <div dojoType="dijit.layout.ContentPane" region='center' id='brick_name'>Выделете кирпич для получения информации по нему</div>
+    <div dojoType="dijit.layout.ContentPane" region='right'>Фильтр</div>
+        </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="brick_info" clearOnClose='true'></span>
     <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' style='height:400px' id='Brick_info' selectionMode='single'>
         <thead>
     <tr>
-        <th field="date" width="auto">Дата</th>
-        <th field="delta" width="auto">Изменение</th>
+        <th field="label" width="auto">Операция</th>
+        <th field="date" width="160px">Дата</th>
+        <th field="amount" width="76px">Кол-во</th>
     </tr>
     </thead>
         </table>
