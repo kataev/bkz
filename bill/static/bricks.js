@@ -31,7 +31,10 @@ dojo.addOnLoad(function() {
         });
         BrickStore.fetch({query:dijit.byId('Brick').query,onItem:function(item) {
             dojo.forEach(['begin','t_to','t_from','sold','total'], function(i) {
-                testdata.items[0][i][0] += parseInt(item[i]);
+                var ye = 1;
+                if (dijit.byId('id_ye_total').get('value') && item.weight == 'Утолщенный') ye = 1.4;
+                if (dijit.byId('id_ye_total').get('value') && item.weight == 'Двойной') ye = 2;
+                testdata.items[0][i][0] += parseInt(item[i]*ye)
             });
         }});
         dijit.byId('BricksTotal').render();

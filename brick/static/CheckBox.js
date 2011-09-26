@@ -9,31 +9,20 @@ dojo.declare("whs.CheckBox", dijit.form.CheckBox, {
             table.fil = {};
             table.query = {};
         }
-        if (!table.fil[this.name]) {
-            table.fil[this.name] = {};
-        }
+        if (!table.fil[this.name]) {table.fil[this.name] = {}}
         table.fil[this.name][this.value] = e;
         var query = {};
         for (var name in table.fil) {
             var v = '';
             for (var value in table.fil[name]) {
                 if (table.fil[name][value]) {
-                    if (value == 9000) {
-                        value = 'Брак'
-                    }
+                    if (value == 9000) value = 'Брак';
                     if (name == 'weight') {
-                        if (value == 1) {
-                            value = 'Одинарный'
-                        }
-                        ;
-                        if (value == 1.4) {
-                            value = 'Утолщенный'
-                        }
+                        if (value == 1) value = 'Одинарный';
+                        if (value == 1.4) value = 'Утолщенный';
                     }
                     v += value + '|';
-                    if (name == 'total') {
-                        v = '[^0] '
-                    }
+                    if (name == 'total') v = '[^0] ';
                 }
             }
             query[name] = new RegExp(v.slice(0, -1));
@@ -45,7 +34,6 @@ dojo.declare("whs.CheckBox", dijit.form.CheckBox, {
         if (scroller.windowHeight >= scroller.averageRowHeight * scroller.rowCount)
             BrickTotalLayout[0].width = '265px';
         else BrickTotalLayout[0].width = '280px';
-//        whs.total();
         tableTotal.render();
     }
 
