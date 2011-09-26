@@ -76,8 +76,14 @@
             <th field='amount'>Кол-во</th>
             <th field='price' formatter="Formatter">Цена</th>
             <th field='delivery' formatter="Formatter">Трансп</th>
+
         </tr>
         </thead>
+        <tbody>
+        <tr>
+            <th field="childAttr" aggregate="sum" itemAggregates="amount">
+        </tr>
+        </tbody>
     </table>
     {% else %}
         <div dojoType="dijit.layout.ContentPane" region='right' style='width:550px;'>

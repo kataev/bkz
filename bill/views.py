@@ -28,6 +28,7 @@ def bill_store(request,form,id):
     bill = get_object_or_404(form._meta.model,pk=id)
     store = SoldStore()
     store.Meta.objects = bill.bill_sold_related.all()
+#    store.Meta.objects = bill.bill_transfer_related.all()
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 @require_http_methods(["GET",])

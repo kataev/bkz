@@ -25,6 +25,6 @@ class BrickFilterForm(forms.ModelForm):
          'weight': CheckBoxBrickSelect(),
          'color_type': CheckBoxBrickSelect(),
          }
-#    class Media:
-#        js = ('form.js',)
-#        css = {'all':('form.css',),}
+    class Media:
+        js = ('bricks.js',)
+        css = {'all':('bricks.css',),}

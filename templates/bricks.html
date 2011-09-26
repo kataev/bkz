@@ -1,92 +1,9 @@
 {% extends 'main.html' %}
 {% block title %}Остатки кирпича{% endblock %}
 {% block media %}
-    <script type="text/javascript">
-        dojo.registerModulePath("whs", "/static");
-        dojo.require("dojox.grid.DataGrid");
-        dojo.require("dojo.data.ItemFileReadStore");
-        dojo.require("whs.CheckBox");
-        dojo.require("dijit.form.Form");
-
-        dojo.addOnLoad(function() {
-            var table = dijit.byId('Brick');
-            dijit.byId('Brick_info').onStyleRow = function(row) {
-                var item = dijit.byId('Brick_info').getItem(row.index);
-                if (item) {
-                    row.customClasses += ' ' + whs.id_to_dict(brick_info.getValue(item, 'id', null)).name;
-                }
-
-            };
-
-            dijit.byId('Brick').onStyleRow = function(row) {
-                var item = table.getItem(row.index);
-                if (item) {
-                    row.customClasses += BrickStore.getValue(item, 'css', null);
-                }
-//            console.log(row.customClasses)
-            }
-            dijit.byId('Brick').onRowClick = function(e) {
-                var item = table.getItem(e.rowIndex);
-                brick_name.innerHTML = item.label;
-                dojo.attr(brick_name,'class','dijitContentPane dijitBorderContainer-child dijitBorderContainer-dijitContentPane dijitBorderContainerPane dijitAlignTop '+item.css);
-                brick_info.url = whs.id_to_url(item.id)+'store/';
-                brick_info.close();
-                dijit.byId('Brick_info').render();
-
-            }
-        });
-
-    </script>
-    <style type="text/css">
-        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css";
-        @import "{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css";
-
-        #mark ul, #view ul, #weight ul,
-        #type ul, #class ul, #other ul {
-            margin: 0px;
-            padding: 0px;
-            list-style: none;
-        }
-
-        #mark {
-            width: 200px;
-        }
-
-        #class {
-            width: 300px;
-        }
-
-        #mark ul li:first-child, #view ul li:first-child,
-        #weight ul li:first-child, #class ul li:first-child,
-        #weight ul li:last-child {
-            display: none;
-        }
-
-        #mark li, #class li {
-            float: left;
-            /*padding-top: 2px;*/
-        }
-
-        #class li {
-            width: 95px;
-        }
-
-        #mark li {
-            width: 50px;
-        }
-
-        #type {
-            height: 58px;
-            padding: 0px 4px 0px 4px;
-            width: 56px;
-        }
-
-    #brick_name {
-        text-align: center;
-        overflow: hidden;
-        /*height: 10px;*/
-    }
-    </style>
+    {{ form.media }}
+    <link rel='stylesheet' href="{{ DOJANGO.DOJOX_URL }}/grid/resources/Grid.css" type="text/css">
+    <link rel='stylesheet' href="{{ DOJANGO.DOJOX_URL }}/grid/resources/{{ DOJANGO.THEME }}Grid.css" type="text/css">
 {% endblock %}
 {% block pane %}
     <div dojoType="dijit.layout.BorderContainer" region='center'>
@@ -106,23 +23,28 @@
         </table>
     </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStore" url="./store/"></span>
-    <table dojoType="dojox.grid.DataGrid" store='BrickStore' region='left' style='width:600px' id='Brick'
-           selectionMode='single'>
+    <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStoreTotal" data='testdata'></span>
+    <div dojoType="dijit.layout.BorderContainer" region='left' style='width:600px'>
+    <table dojoType="dojox.grid.DataGrid" store='BrickStoreTotal' id='BricksTotal'
+           region='bottom' style='height: 48px;' structure='BrickTotalLayout'>
+    </table>
+    <table dojoType="dojox.grid.DataGrid" store='BrickStore'
+           region='center' id='Brick' selectionMode='single'>
 {% endblock %}
 {% block content %}
     <thead>
     <tr>
-        <th field="label" width="auto">Кирпич</th>
+        <th field="label" width="280px">Кирпич</th>
         <th field="begin" width="60px">Начало</th>
         {#      <th field="fieldName" width="200px">Приход</th>#}
         <th field="t_to" width="60px">Акт в</th>
         <th field="t_from" width="60px">Акт из</th>
         <th field="sold" width="60px">Раcход</th>
-        <th field="total" width="60px">Остаток</th>
+        <th field="total" width="auto">Остаток</th>
     </tr>
     </thead>
     </table>
-
+    </div>
     <div dojoType="dijit.layout.BorderContainer" region='top' style='width: 100%;height: 60px;'>
         <div dojoType="dijit.layout.ContentPane" region='left' id='mark' title='{{ form.mark.label }}'>
             {{ form.mark }}

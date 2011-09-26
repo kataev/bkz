@@ -28,8 +28,6 @@ DOJANGO_DATAGRID_ACCESS = (
 #    'bill.Bill',
 )
 
-INTERNAL_IPS = ('127.0.0.1',)
-
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
 #DOJANGO_DOJO_PROFILE = "local"
@@ -145,6 +143,7 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.agent',
     'whs.bill',
+    
 #    'debug_toolbar',
 	'dojango',
     'django_extensions',

@@ -1,0 +1,47 @@
+#mark ul, #view ul, #weight ul,
+#type ul, #class ul, #other ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+#mark {
+    width: 200px;
+}
+
+#class {
+    width: 300px;
+}
+
+#mark ul li:first-child, #view ul li:first-child,
+#weight ul li:first-child, #class ul li:first-child,
+#weight ul li:last-child {
+    display: none;
+}
+
+#mark li, #class li {
+    float: left;
+    /*padding-top: 2px;*/
+}
+
+#class li {
+    width: 95px;
+}
+
+#mark li {
+    width: 50px;
+}
+
+#type {
+    height: 58px;
+    padding: 0px 4px 0px 4px;
+    width: 56px;
+}
+
+#brick_name {
+    text-align: center;
+    overflow: hidden;
+    /*height: 10px;*/
+}
+
+/*#BricksTotal .dojoxGrid-header, #BricksTotal .dojoxGridMasterHeader { display:none !important; }*/
