@@ -10,6 +10,7 @@ from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
 from whs.bill.stores import BillStore,BrickStore
+from whs.brick.stores import BricksStore
 
 @require_http_methods(["GET",])
 def main(request):
@@ -100,15 +101,14 @@ def bricks_store(request):
     """
     Представление для dojo store сводной таблицы кирпича.
     """
-    from whs.brick.stores import BrickStore
-    store = BrickStore()
+
+    store = BricksStore()
     bills = Bill.objects.filter(date__month=date.today().month).values_list('pk')
-#    store.Meta.objects = BrickTable.objects.filter(mark__in=[100,125])
     solds = Sold.objects.filter(doc__in=bills)
     trans = Transfer.objects.filter(doc__in=bills)
-    print len(solds),len(trans)
     for b in store.Meta.objects:
         b.sold = solds.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
+        b.plus = 0
         b.t_from = trans.filter(brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.t_to = trans.filter(sold__brick=b).aggregate(s=Sum('amount')).values()[0] or 0
         b.begin = b.total + b.sold + b.t_from - b.t_to
@@ -118,8 +118,7 @@ def bricks_store(request):
 def brick_store(request,id):
     brick = get_object_or_404(Brick,pk=id)
     store = BrickStore()
-    query = []
-    query.extend(Sold.objects.filter(brick=brick)) #TODO: Сделать фильтр, через гет параметры на подобие накладных.
-    query.extend(Transfer.objects.filter(brick=brick))
-    store.Meta.objects = query
+    store.Meta.objects= []
+    store.Meta.objects.extend(Sold.objects.filter(brick=brick))
+    store.Meta.objects.extend(Transfer.objects.filter(brick=brick))
     return HttpResponse(store.to_json(), mimetype='application/json')

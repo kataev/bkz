@@ -11,8 +11,8 @@
     <div dojoType="dijit.layout.ContentPane" region='center' id='brick_name'>Выделете кирпич для получения информации по нему</div>
     <div dojoType="dijit.layout.ContentPane" region='right'>Фильтр</div>
         </div>
-    <span dojoType="dojo.data.ItemFileReadStore" jsId="brick_info" clearOnClose='true'></span>
-    <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' style='height:400px' id='Brick_info' selectionMode='single'>
+    <span dojoType="dojo.data.ItemFileReadStore" jsId="brick_info" clearOnClose='true' url='/brick/1/store/'></span>
+    <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' style='height:350px' id='Brick_info' selectionMode='single'>
         <thead>
     <tr>
         <th field="label" width="auto">Операция</th>
@@ -24,25 +24,14 @@
     </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStore" url="./store/"></span>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStoreTotal" data='testdata'></span>
-    <div dojoType="dijit.layout.BorderContainer" region='left' style='width:600px'>
+    <div dojoType="dijit.layout.BorderContainer" region='left' style='width:650px'>
     <table dojoType="dojox.grid.DataGrid" store='BrickStoreTotal' id='BricksTotal'
-           region='bottom' style='height: 48px;' structure='BrickTotalLayout'>
+           region='bottom' style='height: 48px;' structure='BrickLayout'>
     </table>
-    <table dojoType="dojox.grid.DataGrid" store='BrickStore'
+    <table dojoType="dojox.grid.DataGrid" store='BrickStore' structure='BrickLayout'
            region='center' id='Brick' selectionMode='single'>
 {% endblock %}
 {% block content %}
-    <thead>
-    <tr>
-        <th field="label" width="280px">Кирпич</th>
-        <th field="begin" width="60px">Начало</th>
-        {#      <th field="fieldName" width="200px">Приход</th>#}
-        <th field="t_to" width="60px">Акт в</th>
-        <th field="t_from" width="60px">Акт из</th>
-        <th field="sold" width="60px">Раcход</th>
-        <th field="total" width="auto">Остаток</th>
-    </tr>
-    </thead>
     </table>
     </div>
     <div dojoType="dijit.layout.BorderContainer" region='top' style='width: 100%;height: 60px;'>
@@ -109,8 +98,8 @@
                            id="id_other_total"/>Не пустые</label></li>
                 <li><label for="id_ye_total">
                     <input value="0" type="checkbox"
-                           name="ye" dojoType="whs.CheckBox"
-                           id="id_ye_total"/>Считать сумму в УЕ</label></li>
+                           name="ye" dojoType="dijit.form.CheckBox"
+                           id="id_ye_total"/>Считать итого в УЕ</label></li>
             </ul>
         </div>
 

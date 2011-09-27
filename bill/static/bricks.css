@@ -44,4 +44,9 @@
     /*height: 10px;*/
 }
 
+#BricksTotal td.label {
+    text-align: right !important;
+    padding-right: 10px;
+}
+
 /*#BricksTotal .dojoxGrid-header, #BricksTotal .dojoxGridMasterHeader { display:none !important; }*/

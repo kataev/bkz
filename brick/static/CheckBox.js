@@ -32,8 +32,8 @@ dojo.declare("whs.CheckBox", dijit.form.CheckBox, {
         var tableTotal = dijit.byId('BricksTotal');
         var scroller = table.scroller;
         if (scroller.windowHeight >= scroller.averageRowHeight * scroller.rowCount)
-            BrickTotalLayout[0].width = '265px';
-        else BrickTotalLayout[0].width = '280px';
+            BrickLayout[0].width = '265px';
+        else BrickLayout[0].width = '280px';
         tableTotal.render();
     }
 

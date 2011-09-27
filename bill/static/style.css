@@ -522,39 +522,40 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     }
 }
 
+.facial .label {
+    font-style: italic;
+}
+
 .common {
 
 }
 
-.cl_red, .cl_red td {
-    background: Salmon !important;
+.cl_red, .cl_red td, span.brick.cl_red {
+    background: #f77a6c;
 }
 
-/*tr.cl_red td:first-child:before,span.cl_red:before {content: url('/static/img/16x16/brick/red_brick_icon.gif');}*/
-/*tr.cl_ye td:first-child:before,span.cl_ye:before {content: url('/static/img/16x16/brick/yellow_brick_icon.gif');}*/
-
-.cl_ye,.cl_ye td {
-    background: PeachPuff !important;
+.cl_ye, .cl_ye td, span.brick.cl_ye {
+    background: #f6d87c;
 }
 
-.cl_br, .cl_br td {
-    background: Tan !important;
+.cl_br, .cl_br td, span.brick.cl_br {
+    background: #d48b6b;
 }
 
-.cl_li, .cl_li td {
-    background: Lightseagreen !important;
+.cl_li, .cl_li td, span.brick.cl_li {
+    background: #38d187;
 }
 
-.cl_wh, .cl_wh td {
-    background-color: Snow  !important;
+.cl_wh, .cl_wh td, span.brick.cl_wh {
+    background-color: #fffafa;
 }
 
-.cl_eu, .cl_eu td {
-    background-color: #169cca  !important;
+.cl_eu, .cl_eu td, span.brick.cl_eu {
+    background-color: #4fc3eb;
 }
 
-.cl_ot, .cl_ot td {
-    background-color: gray  !important;
+.cl_ot, .cl_ot td, span.brick.cl_ot {
+    background-color: #a9a4a4;
 }
 
 .brickSelect .dijitTextBox {
@@ -564,17 +565,27 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     padding-bottom: 1px;
 }
 
-
-
-.sold, .sold td {
-    background-color: #adff2f !important;
+td.sold, td.t_from, td.t_to, td.total, td.begin, td.label, td.plus {
+    padding-left: 5px !important;
+    border-right: 1px black solid !important;
 }
 
-.transfer, .transfer td {
-    background-color: #9acd32 !important;
+div.plus td, td.plus {
+    background-color: #aab8fd;
 }
 
-/* Any demo specific styling needed for this tutorial only */
+div.sold td, td.sold {
+    background-color: #ff852f;
+}
+
+div.t_from, td.t_from {
+    background-color: #9acd32;
+}
+
+div.t_to, td.t_to {
+    background-color: #cdc932;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -582,25 +593,9 @@ html, body {
     padding: 0;
 }
 
-#appLayout {
-    height: 100%;
-}
-#leftCol {
-    width: 14em;
-}
-
-.claro .demoLayout .edgePanel {
-    background-color: #d0e9fc;
-}
-
-#viewsChart {
-	width: 550px;
-	height: 550px;
-}
-
 .bills_table.bills caption {
     font-size: 125%;
-    color:green;
+    color: green;
 }
 
 .bills_table.bills {

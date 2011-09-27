@@ -3,7 +3,7 @@ from dojango.data.modelstore import *
 from whs.brick.models import BrickTable
 from whs.bill.models import Bill
 
-class BrickStore(Store):
+class BricksStore(Store):
     css = StoreField( get_value=ObjectMethod('show_css') )
 
     mark = StoreField()
@@ -13,6 +13,7 @@ class BrickStore(Store):
     color_type = StoreField()
     
     begin = StoreField()
+    plus = StoreField()
     t_from = StoreField()
     t_to = StoreField()
     sold = StoreField()
