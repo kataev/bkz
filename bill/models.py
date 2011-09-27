@@ -20,6 +20,9 @@ class Oper(models.Model):
     poddon=models.PositiveIntegerField(u"Тип поддона",choices=poddon_c,default=1)
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
 
+    def get_id(self):
+        return u'%s.%s__%d' % (self._meta.app_label,self._meta.module_name,self.pk)
+
     class Meta:
         abstract = True
 
@@ -122,3 +125,11 @@ admin.site.register(Transfer)
 @receiver(post_save,sender=Sold)
 def money(*args,**kwargs):
     kwargs['instance'].doc.set_money()
+
+@receiver(post_save,sender=Sold)
+def brick_total_actualizer(instance, created, *args,**kwargs):
+    model = instance
+    if created:
+        brick = Brick.objects.get(pk=model.brick.pk)
+        brick.total-=model.amount
+        brick.save()

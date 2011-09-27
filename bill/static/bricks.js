@@ -2,6 +2,7 @@ dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("whs.CheckBox");
 dojo.require("dijit.form.Form");
+dojo.require("dojo.date.locale");
 
 var BrickLayout = [
     { field:'label', width:'270px',name:'Кирпич',cellClasses:'label'},
@@ -12,6 +13,12 @@ var BrickLayout = [
     { field:'sold', width:'60px',name:'Расход',cellClasses:'sold'},
     { field:'total', width:'auto',name:'Остаток',cellClasses:'total'}
 ]
+
+var BrickInfoLayout = BrickLayout.slice(1,-1);
+BrickInfoLayout[0]={ field:'date', width:'auto',name:'Дата',cellClasses:'date',
+    formatter:function(date){
+        return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
+    }}
 
 var testdata = {items: [
     {
@@ -66,13 +73,17 @@ dojo.addOnLoad(function() {
     }
 
     dijit.byId('Brick_info').onStyleRow = function(row) {
+//        console.log(row)
         var item = dijit.byId('Brick_info').getItem(row.index);
         if (item) {
-            var name = whs.id_to_dict(brick_info.getValue(item, 'id', null)).name
+            var node = dojo.query('.date',row.node)[0];
+            var name = whs.id_to_dict(brick_info.getValue(item, 'id', null)).name;
             if (name == 'sold')
-            row.customClasses += ' sold';
-            if (name =='transfer')
-            row.customClasses += ' t_to';
+            dojo.addClass(node,'sold');
+            if (name =='transfer' && brick_info.getValue(item, 't_to', null))
+            dojo.addClass(node,'t_to');
+            if (name =='transfer' && brick_info.getValue(item, 't_from', null))
+            dojo.addClass(node,'t_from');
         }
     };
 

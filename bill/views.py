@@ -53,6 +53,7 @@ def form_post(request,form,id=None):
     if id:
         form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
         if form.is_valid():
+            print form.instance.brick.__dict__
             form.save()
     else:
         form = form(request.POST)

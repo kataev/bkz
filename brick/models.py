@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib import admin
 
 class Brick(models.Model):
     """
@@ -129,3 +130,6 @@ class BrickTable(Brick):
 
     class Admin:
         pass
+
+
+admin.site.register(Brick)

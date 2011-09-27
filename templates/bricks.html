@@ -12,14 +12,8 @@
     <div dojoType="dijit.layout.ContentPane" region='right'>Фильтр</div>
         </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="brick_info" clearOnClose='true' url='/brick/1/store/'></span>
-    <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' style='height:350px' id='Brick_info' selectionMode='single'>
-        <thead>
-    <tr>
-        <th field="label" width="auto">Операция</th>
-        <th field="date" width="160px">Дата</th>
-        <th field="amount" width="76px">Кол-во</th>
-    </tr>
-    </thead>
+    <table dojoType="dojox.grid.DataGrid" store='brick_info' region='center' structure='BrickInfoLayout'
+           style='height:350px' id='Brick_info' selectionMode='single'>
         </table>
     </div>
     <span dojoType="dojo.data.ItemFileReadStore" jsId="BrickStore" url="./store/"></span>

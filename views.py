@@ -68,16 +68,11 @@ def bill_store(request):
     f = Bills(request.GET)
     query = Bill.objects.all()
     if f.is_valid():
-        print f.cleaned_data
         brick = f.cleaned_data.pop('brick')
         for key,value in f.cleaned_data.items():
             if value:
                 query = query.filter(**{key:value})
-                print key,values,query
-
         if brick:
-#            sold = Sold.objects.filter(brick=brick,doc=query).values('pk')
-            print query
             query = query.filter(bill_sold_related__brick=brick).annotate()
         print query
         
@@ -101,7 +96,6 @@ def bricks_store(request):
     """
     Представление для dojo store сводной таблицы кирпича.
     """
-
     store = BricksStore()
     bills = Bill.objects.filter(date__month=date.today().month).values_list('pk')
     solds = Sold.objects.filter(doc__in=bills)
@@ -116,9 +110,15 @@ def bricks_store(request):
 
 
 def brick_store(request,id):
+    """
+    Операции за месяц с определённым кирпичем.
+    """
     brick = get_object_or_404(Brick,pk=id)
-    store = BrickStore()
-    store.Meta.objects= []
-    store.Meta.objects.extend(Sold.objects.filter(brick=brick))
-    store.Meta.objects.extend(Transfer.objects.filter(brick=brick))
-    return HttpResponse(store.to_json(), mimetype='application/json')
+    store = {'label':'label','identifier':'id','items':[]}
+    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick))
+    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick))
+    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick))
+    store['items'].extend(sold)
+    store['items'].extend(t_to)
+    store['items'].extend(t_from)
+    return HttpResponse(simplejson.dumps(store), mimetype='application/json')

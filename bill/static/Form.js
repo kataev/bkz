@@ -59,7 +59,9 @@ dojo.provide('whs.Form.Bill');
 
 dojo.declare('whs.Form.Bill', whs.Form, {
     onSuccess:function(id) {
-            document.location = '/bill/' + id + '/';
+        var brick = document.location.href.split('sold=')[1];
+        if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
+        else document.location = '/bill/' + id + '/';
     }
 });
 
