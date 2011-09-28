@@ -27,7 +27,7 @@
                 console.log(query);
                 BillStore.url = './store/?'+dojo.objectToQuery(query);
                 BillStore.close();
-                dijit.byId('BillTree').render();
+                dijit.byId('BillsTable').render();
             };
         });
     </script>
@@ -35,15 +35,14 @@
 {% block pane %}
     <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore"
          clearOnClose='true' url="store/?{{ path }}"></div>
-{#    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{number:'*'}"></div>#}
-    <table dojoType="dojox.grid.DataGrid" region='center' id="BillTree" store='BillStore'>
+    <table dojoType="dojox.grid.DataGrid" region='center' id="BillsTable" store='BillStore'>
 {% endblock %}
 {% block content %}
 
     <thead>
     <tr>
         <th field="number" formatter="Formatter">#</th>
-        <th field="date" width="120px" formatter="Formatter">Дата</th>
+        <th field="date" width="120px" formatter="date_formatter">Дата</th>
         <th field="agent" width="200px" formatter="Formatter">Контрагент</th>
         <th field="money" aggregate='sum'>Деньги</th>
         <th field="info" width='auto'>Информация</th>

@@ -104,3 +104,23 @@ dojo.addOnLoad(function() {
     }
 });
 
+dojo.addOnLoad(function(){
+    dijit.byId('Brick').onCellContextMenu = function(e){
+        var item = e.grid.getItem(e.rowIndex);
+        var id = whs.id_to_dict(item.id[0]).id
+        if (item){
+            var menu = new dijit.Menu({targetNodeIds: [e.cellNode]});
+            menu.addChild(new dijit.MenuItem({
+                label:'Продать этот кирпич',
+                onClick: function(event){window.location = '/bill/?sold='+id}
+            }));
+            menu.addChild(new dijit.MenuItem({
+                label:'Показать накладные с этим кирпичем',
+                onClick: function(event){window.location = '/bills/?brick='+id}
+            }));
+            menu.startup();
+            menu._openMyself(e);
+            dojo.connect(menu,'onClose',function(){menu.uninitialize()})
+        }
+    };
+});

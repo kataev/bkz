@@ -67,8 +67,7 @@
     </div>
     {% if form.instance.pk %}
     <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
-    <div dojoType="dijit.tree.ForestStoreModel" jsId="BillModel" store="BillStore" query="{id:'bill.sold*'}"></div>
-    <table dojoType="dojox.grid.TreeGrid" region='right' style='width:550px;' treeModel='BillModel' id="BillTree"
+    <table dojoType="dojox.grid.DataGrid" region='right' style='width:550px;' store='BillStore' id="BillsTable"
            store='BillStore'>
         <thead>
         <tr>
