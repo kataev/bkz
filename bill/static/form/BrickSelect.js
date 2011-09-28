@@ -1,13 +1,18 @@
-dojo.provide("whs.brickSelect");
+dojo.provide("whs.BrickSelect");
 
 dojo.require('dijit._Widget');
 dojo.require('whs.brick');
 dojo.require('dijit._Templated');
-dojo.require("whs.Dialog");
+dojo.require('dijit.Dialog');
 
-dojo.declare("whs.brickSelect", [dijit._Widget,dijit._Templated], {
+dojo.provide('whs.Dialog');
+dojo.declare('whs.Dialog',dijit.Dialog,{
+    templateString: dojo.cache('whs', 'template/Dialog.html')
+        });
+
+dojo.declare("whs.BrickSelect", [dijit._Widget,dijit._Templated], {
             name:'',
-            baseClass: 'brickSelect',
+            baseClass: 'BrickSelect',
             templateString: dojo.cache('whs', 'template/brickSelect.html'),
             widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:0,
             postCreate:function() {

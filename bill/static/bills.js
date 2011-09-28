@@ -1,11 +1,15 @@
-dojo.require('dijit.form.Form');
+dojo.require('whs.form.Form');
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dijit.Menu");
-dojo.require("dijit.MenuItem");
 dojo.require("dojo.date.locale");
 
-function date_formatter(date){
+dojo.require("whs.brickSelect");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit.form.FilteringSelect");
+
+
+dojo.provide('whs.grid.date_formatter');
+whs.date_formatter = function (date){
     return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
 }
 

@@ -1,3 +1,5 @@
+dojo.provide('whs.core');
+
 dojo.registerModulePath("whs", "/static");
 
 dojo.require("dijit.layout.BorderContainer");
@@ -11,7 +13,7 @@ dojo.require("dijit.PopupMenuBarItem");
 var dojoConfig = {
             isDebug: true,
             locale: 'Ru-ru'
-//            'parseOnLoad':true
+            ,'parseOnLoad':true
         };
 
 dojo.addOnLoad(function(){

@@ -1,8 +1,14 @@
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("whs.CheckBox");
-dojo.require("dijit.form.Form");
+dojo.require("whs.form.Form");
 dojo.require("dojo.date.locale");
+
+dojo.require("whs.CheckBox");
+
+dojo.provide('whs.grid.date_formatter');
+whs.date_formatter = function (date){
+    return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
+}
 
 var BrickLayout = [
     { field:'label', width:'270px',name:'Кирпич',cellClasses:'label'},
@@ -15,10 +21,9 @@ var BrickLayout = [
 ]
 
 var BrickInfoLayout = BrickLayout.slice(1,-1);
-BrickInfoLayout[0]={ field:'date', width:'auto',name:'Дата',cellClasses:'date',
-    formatter:function(date){
-        return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
-    }}
+BrickInfoLayout[0]={ field:'date',
+    width:'auto',name:'Дата',
+    cellClasses:'date',formatter:whs.date_formatter}
 
 var testdata = {items: [
     {
