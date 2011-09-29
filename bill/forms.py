@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.humanize.templatetags.humanize import intcomma
 
 class BrickSelect(forms.Select):
-    dojo_type = 'whs.brickSelect'
+    dojo_type = 'whs.form.brickSelect'
 
     def render(self, name, value, attrs=None, choices=()):
         """
@@ -34,13 +34,12 @@ class BrickSelect(forms.Select):
         else:
             selected_html = ((brick.pk in selected_choices) or (
             str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
-            return u'<option dojoType="whs.brick_tr" class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+            return u'<option class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(itle)s</option>' % {
                 'class': brick.show_css(),
                 'total': intcomma(brick.total),
                 'pk': brick.pk,
                 'selected_html': selected_html,
                 'title': brick
-
             }
 
     def render_options(self, choices, selected_choices):
@@ -79,8 +78,8 @@ class SoldForm(forms.ModelForm):
             'delivery': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}})
         }
     class Media:
-        js = ('form.js',)
-        css = {'all': ('form.css',), }
+        js = ('js/form/Form.js',)
+        css = {'all': ('/css/form.css',), }
 
 
 class TransferForm(forms.ModelForm):
@@ -95,8 +94,8 @@ class TransferForm(forms.ModelForm):
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
         }
     class Media:
-        js = ('form.js',)
-        css = {'all': ('form.css',), }
+        js = ('js/form/Form.js',)
+        css = {'all': ('/css/form.css',), }
 
 
 class BillForm(forms.ModelForm):
@@ -108,8 +107,8 @@ class BillForm(forms.ModelForm):
             'agent': forms.FilteringSelect(),
             }
     class Media:
-        js = ('form.js','bills.js')
-        css = {'all': ('form.css',), }
+        js = ('js/form/Form.js','/js/bills.js')
+        css = {'all': ('/css/form.css',), }
 
 
 class Confirm(forms.Form):
@@ -129,5 +128,5 @@ class Bills(forms.Form):
         super(Bills, self).__init__(*args, **kwargs)
         self.fields['agent'].empty_label = u'Выберите контрагента'
     class Media:
-        js = ('bills.js',)
-        css = {'all': ('bills.css',), }
+        js = ('/js/bills.js',)
+        css = {'all': ('/css/bills.css',), }

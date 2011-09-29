@@ -10,6 +10,6 @@ class AgentForm(forms.ModelForm):
             'address': forms.Textarea(attrs={}),
         }
     class Media:
-        js = ('form.js',)
-        css = {'all':('form.css',),}
+        js = ('js/form/Form.js',)
+        css = {'all':('/css//css/form.css',),}
 

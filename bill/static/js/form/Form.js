@@ -3,6 +3,12 @@ dojo.provide('whs.Form');
 dojo.require('dijit.form.Form');
 dojo.require('dijit.Tooltip');
 
+
+dojo.require("dijit.form.Select");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.ValidationTextBox");
+
+
 dojo.declare('whs.Form', dijit.form.Form, {
     onSuccess:function(id) {
 
