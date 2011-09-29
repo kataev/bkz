@@ -78,8 +78,8 @@ class SoldForm(forms.ModelForm):
             'delivery': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}})
         }
     class Media:
-        js = ('js/form/Form.js',)
-        css = {'all': ('/css/form.css',), }
+        js = ('js/form/Form.js','js/form/Sorm.js')
+        css = {'all': ('css/form.css',), }
 
 
 class TransferForm(forms.ModelForm):
@@ -94,8 +94,8 @@ class TransferForm(forms.ModelForm):
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
         }
     class Media:
-        js = ('js/form/Form.js',)
-        css = {'all': ('/css/form.css',), }
+        js = ('js/form/Form.js','js/form/Sorm.js')
+        css = {'all': ('css/form.css',), }
 
 
 class BillForm(forms.ModelForm):
@@ -107,8 +107,8 @@ class BillForm(forms.ModelForm):
             'agent': forms.FilteringSelect(),
             }
     class Media:
-        js = ('js/form/Form.js','/js/bills.js')
-        css = {'all': ('/css/form.css',), }
+        js = ('js/form/Form.js','js/bills.js')
+        css = {'all': ('css/form.css',), }
 
 
 class Confirm(forms.Form):
@@ -129,4 +129,4 @@ class Bills(forms.Form):
         self.fields['agent'].empty_label = u'Выберите контрагента'
     class Media:
         js = ('/js/bills.js',)
-        css = {'all': ('/css/bills.css',), }
+        css = {'all': ('css/bills.css',), }

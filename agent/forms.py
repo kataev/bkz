@@ -11,5 +11,5 @@ class AgentForm(forms.ModelForm):
         }
     class Media:
         js = ('js/form/Form.js',)
-        css = {'all':('/css//css/form.css',),}
+        css = {'all':('css/form.css',),}
 

@@ -9,7 +9,7 @@ class BrickForm(forms.ModelForm):
         exclude = ('total',)
     class Media:
         js = ('js/form/Form.js',)
-        css = {'all':('/css/form.css',),}
+        css = {'all':('css/form.css',),}
 
 class CheckBoxBrickSelect(forms.CheckboxSelectMultiple):
     dojo_type = 'whs.CheckBox'
