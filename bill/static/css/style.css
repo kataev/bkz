@@ -530,31 +530,31 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 
 }
 
-.cl_red, .cl_red td, span.brick.cl_red {
+.cl_red, .cl_red td, span.BrickSelect.cl_red {
     background: #f77a6c;
 }
 
-.cl_ye, .cl_ye td, span.brick.cl_ye {
+.cl_ye, .cl_ye td, span.BrickSelect.cl_ye {
     background: #f6d87c;
 }
 
-.cl_br, .cl_br td, span.brick.cl_br {
+.cl_br, .cl_br td, span.BrickSelect.cl_br {
     background: #d48b6b;
 }
 
-.cl_li, .cl_li td, span.brick.cl_li {
+.cl_li, .cl_li td, span.BrickSelect.cl_li {
     background: #38d187;
 }
 
-.cl_wh, .cl_wh td, span.brick.cl_wh {
+.cl_wh, .cl_wh td, span.BrickSelect.cl_wh {
     background-color: #fffafa;
 }
 
-.cl_eu, .cl_eu td, span.brick.cl_eu {
+.cl_eu, .cl_eu td, span.BrickSelect.cl_eu {
     background-color: #4fc3eb;
 }
 
-.cl_ot, .cl_ot td, span.brick.cl_ot {
+.cl_ot, .cl_ot td, span.BrickSelect.cl_ot {
     background-color: #a9a4a4;
 }
 

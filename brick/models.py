@@ -32,7 +32,7 @@ class Brick(models.Model):
             (175,u'175'),
             (200,u'200'),
             (250,u'250'),
-            (9000,u'Брак'))
+            (9000,u'брак'))
     
     type_c=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
     defect_c=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
@@ -50,12 +50,17 @@ class Brick(models.Model):
     name=models.CharField(u"Имя",max_length=160,default='')
     total=models.PositiveIntegerField(u"Текуший остаток",default=0)
 
-    def __unicode__(self): # Хитро выебаный код для вывода имени когда вызываем строку
-#        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
+    css=models.CharField(u"Css",max_length=360,default=u'')
+    label=models.CharField(u"ИмяЯ",max_length=660,default='')
 
+    def __unicode__(self):
         if not self.pk:
             return u'Новый кирпич'
+        else:
+            return self.label
 
+    def make_label(self): # Хитро код для вывода имени когда вызываем строку
+#        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
         values = self.__dict__
         values['weight']=self.get_weight_display()
         values['mark']= self.get_mark_display()
@@ -87,7 +92,7 @@ class Brick(models.Model):
         verbose_name = u"кирпич"
         verbose_name_plural = u'кирпичи'
 
-    css={
+    css_dict={
         'view':{u'Л':u'facial',u'Р':u'common'},
         'weight':{u'1':u'single',u'1.4':u'thickened',u'2':u'double'},
         'color':{u'Кр':u'c_red',u'Же':u'c_ye',u'Ко':u'c_br',u'Св':u'c_li',u'Бе':u'wh'},
@@ -97,17 +102,15 @@ class Brick(models.Model):
         'defect':{u'':u'lux',u'<20':u'p_20',u'>20':u'm_20'},
     }
 
-    def show_css(self):
+    def make_css(self):
         """
         Метод для отображения стилей кирпича.
         """
         css= u''
-        for key in self.css.keys():
-            try:
-                prop = getattr(self,key)
-                css+=u'%s ' % self.css[key][prop]
-            except KeyError:
-                pass
+        for field,dict in self.css_dict.iteritems():
+            val = getattr(self,field,None)
+            css+= '%s ' % dict.get(val,'NOTFOUND'+field)
+
         return css.strip()
     
     class Admin:

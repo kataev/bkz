@@ -10,7 +10,7 @@ from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 from datetime import date
 from whs.bill.stores import BillStore,BrickStore
-from whs.brick.stores import BricksStore
+from whs.brick.stores import BricksStore,BrickSelectStore
 
 @require_http_methods(["GET",])
 def main(request):
@@ -122,3 +122,8 @@ def brick_store(request,id):
     store['items'].extend(t_to)
     store['items'].extend(t_from)
     return HttpResponse(simplejson.dumps(store), mimetype='application/json')
+
+
+def brick_select(request):
+    store = BrickSelectStore()
+    return HttpResponse(store.to_json(), mimetype='application/json')
