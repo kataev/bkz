@@ -3,7 +3,7 @@ dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("whs.form.Form");
 dojo.require("dojo.date.locale");
 
-dojo.require("whs.CheckBox");
+dojo.require("whs.form.CheckBox");
 
 dojo.provide('whs.grid.date_formatter');
 whs.date_formatter = function (date){

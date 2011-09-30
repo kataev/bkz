@@ -3,7 +3,7 @@ dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileReadStore");
 dojo.require("dojo.date.locale");
 
-dojo.require("whs.brickSelect");
+dojo.require("whs.form.BrickSelect");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.FilteringSelect");
 

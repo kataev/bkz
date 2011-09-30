@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.humanize.templatetags.humanize import intcomma
 
 class BrickSelect(forms.Select):
-    dojo_type = 'whs.form.brickSelect'
+    dojo_type = 'whs.form.BrickSelect'
 
     def render(self, name, value, attrs=None, choices=()):
         """
@@ -34,7 +34,7 @@ class BrickSelect(forms.Select):
         else:
             selected_html = ((brick.pk in selected_choices) or (
             str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
-            return u'<option class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(itle)s</option>' % {
+            return u'<option class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
                 'class': brick.show_css(),
                 'total': intcomma(brick.total),
                 'pk': brick.pk,
@@ -78,7 +78,7 @@ class SoldForm(forms.ModelForm):
             'delivery': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}})
         }
     class Media:
-        js = ('js/form/Form.js','js/form/Sorm.js')
+        js = ('js/form.js','js/form/Sold.js')
         css = {'all': ('css/form.css',), }
 
 
@@ -94,7 +94,7 @@ class TransferForm(forms.ModelForm):
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
         }
     class Media:
-        js = ('js/form/Form.js','js/form/Sorm.js')
+        js = ('js/form.js','js/form/Sold.js')
         css = {'all': ('css/form.css',), }
 
 
@@ -107,7 +107,7 @@ class BillForm(forms.ModelForm):
             'agent': forms.FilteringSelect(),
             }
     class Media:
-        js = ('js/form/Form.js','js/bills.js')
+        js = ('js/form.js','js/bills.js')
         css = {'all': ('css/form.css',), }
 
 
@@ -128,5 +128,5 @@ class Bills(forms.Form):
         super(Bills, self).__init__(*args, **kwargs)
         self.fields['agent'].empty_label = u'Выберите контрагента'
     class Media:
-        js = ('/js/bills.js',)
+        js = ('js/bills.js',)
         css = {'all': ('css/bills.css',), }

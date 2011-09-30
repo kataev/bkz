@@ -1,6 +1,6 @@
 dojo.provide('whs.core');
 
-dojo.registerModulePath("whs", "/static");
+dojo.registerModulePath("whs", "/static/js");
 
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");

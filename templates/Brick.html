@@ -4,7 +4,7 @@
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block content %}
-    <form action='./post/' method='POST' dojoType='whs.Form'>
+    <form action='./post/' method='POST' dojoType='whs.form.Form'>
         {% for field in form.visible_fields %}
             <div>
                 <label for='{{ field.id_for_label }}'>{{ field.label }}{% if field.help_text %}<sup id='{{ field.id_for_label }}_sup'>?</sup>

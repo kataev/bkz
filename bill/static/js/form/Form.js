@@ -1,15 +1,10 @@
-dojo.provide('whs.Form');
+dojo.provide('whs.form.Form');
 
 dojo.require('dijit.form.Form');
 dojo.require('dijit.Tooltip');
 
 
-dojo.require("dijit.form.Select");
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.ValidationTextBox");
-
-
-dojo.declare('whs.Form', dijit.form.Form, {
+dojo.declare('whs.form.Form', dijit.form.Form, {
     onSuccess:function(id) {
 
     },
@@ -61,9 +56,9 @@ dojo.declare('whs.Form', dijit.form.Form, {
 });
 
 
-dojo.provide('whs.Form.Bill');
+dojo.provide('whs.form.Form.Bill');
 
-dojo.declare('whs.Form.Bill', whs.Form, {
+dojo.declare('whs.form.Form.Bill', whs.form.Form, {
     onSuccess:function(id) {
         var brick = document.location.href.split('sold=')[1];
         if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
@@ -71,9 +66,9 @@ dojo.declare('whs.Form.Bill', whs.Form, {
     }
 });
 
-dojo.provide('whs.Form.Oper');
+dojo.provide('whs.form.Form.Oper');
 
-dojo.declare('whs.Form.Oper', whs.Form, {
+dojo.declare('whs.form.Form.Oper', whs.form.Form, {
     onSuccess:function(id) {
         document.location = '/bill/'+this.get('value')['doc']+'/';
     }

@@ -8,11 +8,11 @@ class BrickForm(forms.ModelForm):
         model=Brick
         exclude = ('total',)
     class Media:
-        js = ('js/form/Form.js',)
+        js = ('js/form.js',)
         css = {'all':('css/form.css',),}
 
 class CheckBoxBrickSelect(forms.CheckboxSelectMultiple):
-    dojo_type = 'whs.CheckBox'
+    dojo_type = 'whs.form.CheckBox'
 
 class BrickFilterForm(forms.ModelForm):
     class Meta:
@@ -26,5 +26,5 @@ class BrickFilterForm(forms.ModelForm):
          'color_type': CheckBoxBrickSelect(),
          }
     class Media:
-        js = ('bricks.js',)
-        css = {'all':('bricks.css',),}
+        js = ('js/bricks.js',)
+        css = {'all':('css/bricks.css',),}

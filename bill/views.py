@@ -4,6 +4,17 @@ from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from stores import SoldStore
+from models import Bill
+
+@require_http_methods(["GET",])
+def bill_get(request, year=None, number=None):
+    """
+    ЧПУ для накладной
+    """
+    if len(year) == 2: year = '20'+year
+    bill = get_object_or_404(Bill,date__year=year,number=number)
+    return redirect('/bill/%d/' % bill.id)
+
 
 @require_http_methods(["GET",])
 def bill_form_get(request,form,id=None):

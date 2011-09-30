@@ -4,7 +4,7 @@
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block content %}
-    <form action='./post/' method='POST' dojoType='whs.Form.Oper'>
+    <form action='./post/' method='POST' dojoType='whs.form.Form.Oper'>
         <div class='field'>
             <img src='/static/img/16x16/brick.png' width="16" height="16" alt="{{ form.brick.label }}">
             <label for='{{ form.brick.id_for_label }}'>{{ form.brick.label }}{% if form.brick.help_text %}<sup

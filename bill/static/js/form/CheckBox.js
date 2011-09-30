@@ -1,8 +1,8 @@
-dojo.provide("whs.CheckBox");
+dojo.provide("whs.form.CheckBox");
 
 dojo.require('dijit.form.CheckBox');
 
-dojo.declare("whs.CheckBox", dijit.form.CheckBox, {
+dojo.declare("whs.form.CheckBox", dijit.form.CheckBox, {
     onChange:function(e, dojo) {
         var table = dijit.byId('Brick');
         if (!table.fil) {

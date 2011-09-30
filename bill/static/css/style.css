@@ -558,7 +558,7 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     background-color: #a9a4a4;
 }
 
-.brickSelect .dijitTextBox {
+.BrickSelect .dijitTextBox {
     padding-left: 2px;
     padding-right: 2px;
     padding-top: 1px;

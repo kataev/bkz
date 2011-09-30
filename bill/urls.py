@@ -2,7 +2,9 @@ from django.conf.urls.defaults import *
 from whs.bill.forms import *
 
 urlpatterns = patterns('whs.bill.views',
-    url(r'^bill/(?P<id>\d*)/?$', 'bill_form_get',{'form':BillForm},name='bill_get'),
+    url(r'^bill/(?P<year>\d{2,4})/(?P<number>\d*)/$','bill_get',name='bill_get'),
+
+    url(r'^bill/(?P<id>\d*)/?$', 'bill_form_get',{'form':BillForm},name='bill_form_get'),
     url(r'^bill/(?P<id>\d+)/store/$', 'bill_store',{'form':BillForm},name='bill_store'),
     url(r'^bill/?(?P<id>\d*)/post/$', 'form_post',{'form':BillForm},name='bill_post'),
 
