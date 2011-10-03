@@ -24,7 +24,7 @@ DATABASES = {
         'NAME': 'disp',                      # Or path to database file if using sqlite3.
         'USER': 'disp',                      # Not used with sqlite3.
         'PASSWORD': 'disp',                  # Not used with sqlite3.
-        'HOST': '192.168.1.3',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'server',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -145,12 +145,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    'whs.old',
+#    'whs.old',
     'whs.brick',
     'whs.agent',
     'whs.bill',
-    
-#    'debug_toolbar',
+
+    'debug_toolbar',
 	'dojango',
     'django_extensions',
 )

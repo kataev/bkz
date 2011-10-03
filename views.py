@@ -74,7 +74,7 @@ def bill_store(request):
                 query = query.filter(**{key:value})
         if brick:
             query = query.filter(bill_sold_related__brick=brick).annotate()
-        print query
+#        print query
         
     store.Meta.objects=query[:30]
     return HttpResponse(store.to_json(), mimetype='application/json')

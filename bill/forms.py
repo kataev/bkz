@@ -3,11 +3,8 @@ from whs.bill.models import *
 from whs.brick.models import Brick
 
 from dojango import forms
-from django.utils.encoding import force_unicode
-from itertools import chain
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
-from django.contrib.humanize.templatetags.humanize import intcomma
 
 class BrickSelect(forms.Select):
     dojo_type = 'whs.form.BrickSelect'

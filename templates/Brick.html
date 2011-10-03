@@ -4,6 +4,7 @@
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block content %}
+    <h2 class='{{ form.instance.css }}'>{{ form.instance }}</h2>
     <form action='./post/' method='POST' dojoType='whs.form.Form'>
         {% for field in form.visible_fields %}
             <div>

@@ -6,7 +6,7 @@ from datetime import date
 class TransferStore(Store):
     brick = StoreField('brick.__unicode__')
     amount = StoreField('amount')
-    css = StoreField('brick.show_css')
+    css = StoreField('brick.css')
     info = StoreField()
 
     class Meta(object):
@@ -18,7 +18,7 @@ class SoldStore(Store):
     price = StoreField()
     delivery = StoreField()
     children = ReferenceField(get_value=ObjectMethod('bill_transfer_related.all'))
-    css = StoreField('brick.show_css')
+    css = StoreField('brick.css')
     info = StoreField()
 
     class Meta(object):

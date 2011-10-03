@@ -6,7 +6,7 @@ from whs.brick.models import Brick
 class BrickForm(forms.ModelForm):
     class Meta:
         model=Brick
-        exclude = ('total',)
+        exclude = ('total','css','label')
     class Media:
         js = ('js/form.js',)
         css = {'all':('css/form.css',),}

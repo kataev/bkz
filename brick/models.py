@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.contrib import admin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Brick(models.Model):
     """
@@ -63,7 +64,7 @@ class Brick(models.Model):
 #        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
         values = self.__dict__
         values['weight']=self.get_weight_display()
-        values['mark']= self.get_mark_display()
+        values['mark']= unicode(self.get_mark_display())
 #        values['color_type']= self.get_color_type_display()
         template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s"
 
@@ -95,7 +96,7 @@ class Brick(models.Model):
     css_dict={
         'view':{u'Л':u'facial',u'Р':u'common'},
         'weight':{u'1':u'single',u'1.4':u'thickened',u'2':u'double'},
-        'color':{u'Кр':u'c_red',u'Же':u'c_ye',u'Ко':u'c_br',u'Св':u'c_li',u'Бе':u'wh'},
+#        'color':{u'Кр':u'c_red',u'Же':u'c_ye',u'Ко':u'c_br',u'Св':u'c_li',u'Бе':u'wh'},
         'brick_class':{0:u'cl_red',1:u'cl_ye',2:u'cl_br',3:u'cl_li',4:u'cl_wh',5:u'cl_eu',6:u'cl_ot'},
         'mark':{100:u'm100',125:u'm125',150:u'm150',175:u'm175',200:u'm200',250:u'm250',9000:u'm9000'},
         'color_type':{'':u'type0','1':u"type1",'2':u'type2','3':u'type3'},
@@ -110,11 +111,7 @@ class Brick(models.Model):
         for field,dict in self.css_dict.iteritems():
             val = getattr(self,field,None)
             css+= '%s ' % dict.get(val,'NOTFOUND'+field)
-
         return css.strip()
-    
-    class Admin:
-        pass
 
 class BrickTable(Brick):
     """
@@ -131,8 +128,5 @@ class BrickTable(Brick):
     class Meta:
         abstract = True
 
-    class Admin:
-        pass
-
-
-admin.site.register(Brick)
+class OldBrick(Brick):
+    old_id= models.IntegerField('old id')

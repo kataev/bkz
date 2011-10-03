@@ -26,7 +26,7 @@ class Agent(models.Model):
             if len(name) == 3 and self.form != u'ООО':
                 return u'%s %1s.%1s' % (name[0],name[1][:1],name[2][:1])
             else:
-                return '%s, %s' % (self.name,self.form)
+                return '%s, %s' % (self.name[:30],self.form)
         else:
             return u'Новый контрагент'
 

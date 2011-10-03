@@ -123,6 +123,13 @@ dojo.addOnLoad(function(){
                 label:'Показать накладные с этим кирпичем',
                 onClick: function(event){window.location = '/bills/?brick='+id}
             }));
+            menu.addChild(new dijit.MenuItem({
+                label:'Изменить кирпич',
+                onClick: function(event){window.location = '/brick/'+id+'/'}
+            }));
+            menu.addChild(new dijit.MenuItem({
+                label:'Номер кирпича: '+id
+            }));
             menu.startup();
             menu._openMyself(e);
             dojo.connect(menu,'onClose',function(){menu.uninitialize()})
