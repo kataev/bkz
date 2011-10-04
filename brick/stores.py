@@ -5,6 +5,7 @@ from whs.brick.models import BrickTable,Brick
 class BrickSelectStore(Store):
     css = StoreField()
     total = StoreField()
+    label = StoreField()
 
     class Meta(object):
         objects  = Brick.objects.all()

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import dojango.forms as forms
-
 from whs.brick.models import Brick
 
 class BrickForm(forms.ModelForm):
@@ -14,7 +13,23 @@ class BrickForm(forms.ModelForm):
 class CheckBoxBrickSelect(forms.CheckboxSelectMultiple):
     dojo_type = 'whs.form.CheckBox'
 
+
+
+#class BrickFilterForm(forms.Form):
+    
+
 class BrickFilterForm(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super(BrickFilterForm,self).__init__(*args,**kwargs)
+        for k,w in self.fields.iteritems():
+            q = w.choices
+            choice = []
+            for item in q:
+                if not item[0] == '': choice.append([Brick.css_dict[k][item[0]],item[1][:7]])
+            w.choices = choice
+
+
+
     class Meta:
         model=Brick
         fields = ('mark','brick_class','view','weight','color_type')

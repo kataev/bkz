@@ -13,19 +13,15 @@
     width: 300px;
 }
 
-#mark ul li:first-child, #view ul li:first-child,
-#weight ul li:first-child, #class ul li:first-child,
-#weight ul li:last-child {
-    display: none;
-}
+/*#mark ul li:first-child, #view ul li:first-child,*/
+/*#weight ul li:first-child, #class ul li:first-child,*/
+/*#weight ul li:last-child {*/
+    /*display: none;*/
+/*}*/
 
 #mark li, #class li {
     float: left;
     /*padding-top: 2px;*/
-}
-
-#class li {
-    width: 95px;
 }
 
 #mark li {
@@ -43,6 +39,9 @@
     overflow: hidden;
     /*height: 10px;*/
 }
+
+#class {text-align: center;}
+.class li {margin: 5px;}
 
 #BricksTotal td.label {
     text-align: right !important;

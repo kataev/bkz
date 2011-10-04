@@ -11,23 +11,17 @@ dojo.declare("whs.form.CheckBox", dijit.form.CheckBox, {
         }
         if (!table.fil[this.name]) {table.fil[this.name] = {}}
         table.fil[this.name][this.value] = e;
-        var query = {};
-        for (var name in table.fil) {
+        var query = {}; var css = '';
+        order = ['weight','mark','brick_class','view'];
+        for (var i in order) {
+            var name = order[i];
+            if (name in table.fil){
             var v = '';
-            for (var value in table.fil[name]) {
-                if (table.fil[name][value]) {
-                    if (value == 9000) value = 'Брак';
-                    if (name == 'weight') {
-                        if (value == 1) value = 'Одинарный';
-                        if (value == 1.4) value = 'Утолщенный';
-                    }
-                    v += value + '|';
-                    if (name == 'total') v = '[^0] ';
-                }
-            }
-            query[name] = new RegExp(v.slice(0, -1));
+            for (var value in table.fil[name]) {if (table.fil[name][value]) v+=value+'|';}
+            if (v) css+='('+v.slice(0,-1)+').*';
+            query.css = new RegExp(css);
             v = undefined;
-        }
+        }}
         table.setQuery(query);
         var tableTotal = dijit.byId('BricksTotal');
         var scroller = table.scroller;

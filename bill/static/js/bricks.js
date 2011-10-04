@@ -102,7 +102,6 @@ dojo.addOnLoad(function() {
     dijit.byId('Brick').onRowClick = function(e) {
         var item = table.getItem(e.rowIndex);
         brick_name.innerHTML = item.label;
-        dojo.attr(brick_name, 'class', 'dijitContentPane dijitBorderContainer-child dijitBorderContainer-dijitContentPane dijitBorderContainerPane dijitAlignTop ' + item.css);
         brick_info.url = whs.id_to_url(item.id) + 'store/';
         brick_info.close();
         dijit.byId('Brick_info').render();

@@ -19,7 +19,7 @@ class Brick(models.Model):
                    (u'Св',u'Светлый'),
                    (u'Бе',u'Белый'))
 
-    class_c=((0,u'Красный'),
+    brick_class_c=((0,u'Красный'),
                    (1,u'Желтый'),
                    (2,u'Коричневый'),
                    (3,u'Светлый'),
@@ -35,16 +35,16 @@ class Brick(models.Model):
             (250,u'250'),
             (9000,u'брак'))
     
-    type_c=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
+    color_type_c=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
     defect_c=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
     refuse_c=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'),(u'П',u'Полосы'))
            
-    brick_class=models.IntegerField(u"Класс кирпича",max_length=60, choices=class_c)
+    brick_class=models.IntegerField(u"Класс кирпича",max_length=60, choices=brick_class_c)
     color=models.CharField(u"Цвет",max_length=60, choices=color_c)
     mark=models.PositiveIntegerField(u"Марка",choices=mark_c)
     weight=models.CharField(u"Ширина",max_length=60, choices=weight_c)
     view=models.CharField(u"Вид",max_length=60, choices=view_c)
-    color_type=models.CharField(u"Тип цвета",max_length=6,choices=type_c,blank=True)
+    color_type=models.CharField(u"Тип цвета",max_length=6,choices=color_type_c,blank=True)
     defect=models.CharField(u"Брак в %",max_length=60,choices=defect_c,blank=True)
     refuse=models.CharField(u"Особенности",max_length=10,choices=refuse_c,blank=True)
     features=models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
@@ -93,15 +93,12 @@ class Brick(models.Model):
         verbose_name = u"кирпич"
         verbose_name_plural = u'кирпичи'
 
-    css_dict={
-        'view':{u'Л':u'facial',u'Р':u'common'},
-        'weight':{u'1':u'single',u'1.4':u'thickened',u'2':u'double'},
-#        'color':{u'Кр':u'c_red',u'Же':u'c_ye',u'Ко':u'c_br',u'Св':u'c_li',u'Бе':u'wh'},
-        'brick_class':{0:u'cl_red',1:u'cl_ye',2:u'cl_br',3:u'cl_li',4:u'cl_wh',5:u'cl_eu',6:u'cl_ot'},
-        'mark':{100:u'm100',125:u'm125',150:u'm150',175:u'm175',200:u'm200',250:u'm250',9000:u'm9000'},
-        'color_type':{'':u'type0','1':u"type1",'2':u'type2','3':u'type3'},
-        'defect':{u'':u'lux',u'<20':u'p_20',u'>20':u'm_20'},
-    }
+    css_dict= dict(
+        brick_class={0: u'cl_red', 1: u'cl_ye', 2: u'cl_br', 3: u'cl_li', 4: u'cl_wh', 5: u'cl_eu', 6: u'cl_ot'},
+        mark={100: u'm100', 125: u'm125', 150: u'm150', 175: u'm175', 200: u'm200', 250: u'm250', 9000: u'm9000'},
+        weight={u'1': u'single', u'1.4': u'thickened', u'2': u'double'}, view={u'Л': u'facial', u'Р': u'common',u'УЛ': u'facial', u'': u'common'},
+        color_type={'': u'type0', '1': u"type1", '2': u'type2', '3': u'type3'},
+        defect={u'': u'lux', u'<20': u'p_20', u'>20': u'm_20'})
 
     def make_css(self):
         """
@@ -112,6 +109,18 @@ class Brick(models.Model):
             val = getattr(self,field,None)
             css+= '%s ' % dict.get(val,'NOTFOUND'+field)
         return css.strip()
+    def make_filter(self):
+        a = {}
+        for w in self.css_dict:
+            e = {}
+            for q in getattr(self,w+'_c'):
+                key = self.css_dict[w][q[0]]
+                e[key] = q[1]
+            a[w]=e
+        return a
+
+
+
 
 class BrickTable(Brick):
     """
