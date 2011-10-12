@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404,redirect,Http404
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
@@ -8,7 +8,8 @@ from whs.bill.models import Bill,Sold,Transfer
 from whs.brick.models import Brick,BrickTable
 from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
-from datetime import date
+import datetime
+import calendar
 from whs.bill.stores import BillStore,BrickStore
 from whs.brick.stores import BricksStore,BrickSelectStore
 
@@ -95,10 +96,21 @@ def bricks_store(request):
     """
     Представление для dojo store сводной таблицы кирпича.
     """
+    d = request.GET.get('date')
+    if d:
+        try:
+            d = datetime.datetime.strptime(d,"%Y-%m-%d").date()
+        except ValueError,e:
+            raise Http404
+    else:
+        d = datetime.date.today()
+
+    date=(d.replace(day=1),d.replace(day=calendar.monthrange(d.year,d.month)[1]))
+
     store = BricksStore()
-    sold = Sold.objects.filter(doc__date__month=date.today().month,doc__date__year=date.today().year).values('brick').annotate(s=Sum('amount'))
-    t_from = Transfer.objects.filter(doc__date__month=date.today().month,doc__date__year=date.today().year).values('brick').annotate(s=Sum('amount'))
-    t_to = Transfer.objects.filter(doc__date__month=date.today().month,doc__date__year=date.today().year).values('sold__brick').annotate(s=Sum('amount'))
+    sold = Sold.objects.filter(doc__date__range=date).values('brick').annotate(s=Sum('amount'))
+    t_from = Transfer.objects.filter(doc__date__range=date).values('brick').annotate(s=Sum('amount'))
+    t_to = Transfer.objects.filter(doc__date__range=date).values('sold__brick').annotate(s=Sum('amount'))
     sold = dict(map(lambda x: [x['brick'],x['s']],sold))
     t_from = dict(map(lambda x: [x['brick'],x['s']],t_from))
     t_to = dict(map(lambda x: [x['sold__brick'],x['s']],t_to))
@@ -111,16 +123,26 @@ def bricks_store(request):
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 
-def brick_store(request,id):
+def brick_store(request,id=None):
     """
     Операции за месяц с определённым кирпичем.
     """
-    len = 30
+    d = request.GET.get('date')
+    if d:
+        try:
+            d = datetime.datetime.strptime(d,"%Y-%m-%d").date()
+        except ValueError,e:
+            raise Http404
+    else:
+        d = datetime.date.today()
+
+    date=(d.replace(day=1),d.replace(day=calendar.monthrange(d.year,d.month)[1]))
+
     brick = get_object_or_404(Brick,pk=id)
     store = {'label':'label','identifier':'id','items':[]}
-    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick)[:30])
-    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick)[:30])
-    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick)[:30])
+    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick,doc__date__range=date))
+    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick,doc__date__range=date))
+    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick,doc__date__range=date))
     store['items'].extend(sold)
     store['items'].extend(t_to)
     store['items'].extend(t_from)
