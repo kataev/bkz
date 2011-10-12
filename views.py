@@ -16,16 +16,12 @@ from whs.brick.stores import BricksStore,BrickSelectStore
 
 @require_http_methods(["GET",])
 def main(request):
-    """
-    Главная страница
-    """
+    """ Главная страница """
     return render(request, 'main.html',{'bills':Bill.objects.all()[:5]})
 
 @require_http_methods(["GET",])
 def form_get(request,form,id=None):
-    """
-    Вывод формы
-    """
+    """ Вывод формы """
     if id:
         form = form(instance=get_object_or_404(form._meta.model,pk=id))
     else:
@@ -37,9 +33,7 @@ def form_get(request,form,id=None):
 
 @require_http_methods(["POST",])
 def form_post(request,form,id=None):
-    """
-    Универсальное представление для обработки пост данных формы
-    """
+    """ Универсальное представление для обработки пост данных формы """
     if id:
         form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
     else:
@@ -63,9 +57,7 @@ def bills(request):
 
 @require_http_methods(["GET",])
 def bill_store(request):
-    """
-    Представление для dojo store накладных.
-    """
+    """ Представление для dojo store накладных. """
     store = BillStore()
     f = Bills(request.GET)
     query = Bill.objects.all()
@@ -82,21 +74,16 @@ def bill_store(request):
 
 @require_http_methods(["GET",])
 def bricks(request):
-    """
-    Представление для отображение шаблона сводной таблицы
-    """
+    """Представление для отображение шаблона сводной таблицы"""
     return render(request, 'bricks.html',{'form':BrickFilterForm()})
 
 @require_http_methods(["GET",])
 def agents(request):
     return render(request, 'agents.html')
 
-
 @require_http_methods(["GET",])
 def bricks_store(request):
-    """
-    Представление для dojo store сводной таблицы кирпича.
-    """
+    """Представление для dojo store сводной таблицы кирпича."""
     d = datetime.date.today()
     date=(d.replace(day=1),d.replace(day=calendar.monthrange(d.year,d.month)[1]))
     
@@ -121,9 +108,7 @@ def bricks_store(request):
 
 @require_http_methods(["GET",])
 def bricks_archive(request):
-    """
-    Представление для dojo store сводной таблицы кирпича в любой день прошлого.
-    """
+    """Представление для dojo store сводной таблицы кирпича в любой день прошлого. """
     try:
         d = datetime.datetime.strptime(request.GET.get('date'),"%Y-%m-%d").date()
     except ValueError,e:
@@ -154,34 +139,6 @@ def bricks_archive(request):
         b.t_to = t_to.get(b.pk,0)
         b.begin = b.total + b.sold + b.t_from - b.t_to
     return HttpResponse(store.to_json(), mimetype='application/json')
-
-
-def brick_store(request,id=None):
-    """
-    Операции за месяц с определённым кирпичем.
-    """
-    d = request.GET.get('date')
-    if d:
-        try:
-            d = datetime.datetime.strptime(d,"%Y-%m-%d").date()
-        except ValueError,e:
-            raise Http404
-    else:
-        d = datetime.date.today()
-
-    date=(d.replace(day=1),d.replace(day=calendar.monthrange(d.year,d.month)[1]))
-
-    brick = get_object_or_404(Brick,pk=id)
-    store = {'label':'label','identifier':'id','items':[]}
-    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick,doc__date__range=date))
-    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick,doc__date__range=date))
-    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick,doc__date__range=date))
-    store['items'].extend(sold)
-    store['items'].extend(t_to)
-    store['items'].extend(t_from)
-    store['items'] = sorted(store['items'],key=lambda x: x['date'])
-    return HttpResponse(simplejson.dumps(store), mimetype='application/json')
-
 
 def brick_select(request):
     store = BrickSelectStore()
