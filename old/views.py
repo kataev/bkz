@@ -4,6 +4,8 @@ from whs.brick.models import OldBrick
 from whs.old.models import Tovar,Jurnal,Sclad
 from whs.agent.models import Agent
 from whs.bill.models import *
+from whs.manufacture.models import *
+from django.db.models import Sum,Max
 import re
 from django.http import HttpResponse
 import datetime
@@ -85,8 +87,8 @@ def fetch_total(request):
         try: b.total = Sclad.objects.using('old').get(pk=b.old_id).total
         except Sclad.DoesNotExist:
             if not Jurnal.objects.using('old').filter(tov=b.old_id).count():
-                delete+=' deleted %d' % b.pk
-                b.delete()
+                delete+=' try to delete %d' % b.pk
+#                b.delete()
         b.save()
     return HttpResponse('FINISH %s' %delete)
 
@@ -122,16 +124,41 @@ def fetch_oper(request):
     Достать продажи из старой базы и положить в новую.
     """
     i = 99990
-    for j in Jurnal.objects.using('old').filter(minus__gt=0).order_by('id'):
+    le = Jurnal.objects.using('old').filter(minus__gt=0).count()
+    ji = 0
+    proc = 0
+
+    for j in Jurnal.objects.using('old').filter(minus__gt=0,
+            date__gte=Bill.objects.all().aggregate(m=Max('date'))['m']).order_by('id'):
         try:nakl = int(j.nakl)
         except ValueError:
                 nakl = i
                 i+=1
-        try: bill = Bill.objects.get(number=nakl,date=j.date)
-        except Bill.DoesNotExist:
-            bill = Bill(number=nakl,date=j.date,agent=Agent.objects.get(pk=j.agent),info=j.prim)
-            bill.save()
-        s = Sold(brick=OldBrick.objects.get(old_id=j.tov),
-                 amount=j.minus,doc=bill,price=j.price,delivery=j.trans)
-        s.save()
+        agent,cre=Agent.objects.get_or_create(pk=j.agent,defaults=dict(name=Aold.objects.using('old').get(id=j.agent).name,id=j.agent))
+
+        doc, cre = Bill.objects.get_or_create(number=nakl,agent=agent,date=j.date,defaults=dict(info=j.prim))
+        if cre: doc.save()
+        s,cre = Sold.objects.get_or_create(brick=OldBrick.objects.get(old_id=j.tov),
+                 amount=j.minus,doc=doc,price=j.price,delivery=j.trans)
+        if cre: s.save()
+        ji+=1
+        if proc < int(ji/le):
+            proc = (ji/le)
+            print proc
+
+    return HttpResponse('FINISH')
+
+def fetch_add(request):
+    """
+    Достать приход из старой базы и положить в новую.
+    """
+    i = 99990
+    for j in Jurnal.objects.using('old').filter(plus__gt=0).order_by('id'):
+        try: doc = Man.objects.get(date=j.date)
+        except Man.DoesNotExist:
+            doc = Man(date=j.date,info=j.prim)
+            doc.save()
+        a = Add(brick=OldBrick.objects.get(old_id=j.tov),
+                 amount=j.plus,doc=doc)
+        a.save()
     return HttpResponse('FINISH')

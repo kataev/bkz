@@ -129,7 +129,7 @@ class BrickTable(Brick):
     посчитанные при обработке запроса.
     """
     begin=models.PositiveIntegerField(u"Начало месяца",default=0)
-    plus=models.PositiveIntegerField(u"Приход",default=0)
+    add=models.PositiveIntegerField(u"Приход",default=0)
     t_from=models.PositiveIntegerField(u"Перевод из",default=0)
     t_to=models.PositiveIntegerField(u"Перевод в",default=0)
     sold=models.PositiveIntegerField(u"Отгрузка",default=0)

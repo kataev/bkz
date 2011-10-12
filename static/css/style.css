@@ -565,12 +565,12 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     padding-bottom: 1px;
 }
 
-td.sold, td.t_from, td.t_to, td.total, td.begin, td.label, td.plus {
+td.sold, td.t_from, td.t_to, td.total, td.begin, td.label, td.add {
     padding-left: 5px !important;
     border-right: 1px black solid !important;
 }
 
-div.plus td, td.plus {
+div.add td, td.add {
     background-color: #aab8fd;
 }
 

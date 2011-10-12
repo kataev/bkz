@@ -13,7 +13,7 @@ whs.date_formatter = function (date){
 var BrickLayout = [
     { field:'label', width:'270px',name:'Кирпич',cellClasses:'label'},
     { field:'begin', width:'60px', name:'Начало',cellClasses:'begin'},
-    { field:'plus', width:'60px', name:'Приход',cellClasses:'plus'},
+    { field:'add', width:'60px', name:'Приход',cellClasses:'add'},
     { field:'t_to', width:'60px',name:'Акт в',cellClasses:'t_to'},
     { field:'t_from', width:'60px',name:'Акт из',cellClasses:'t_from'},
     { field:'sold', width:'60px',name:'Расход',cellClasses:'sold'},
@@ -29,7 +29,7 @@ var testdata = {items: [
     {
         label: 'Итого:',
         begin: 0,
-        plus: 0,
+        add: 0,
         t_to: 0,
         t_from: 0,
         sold:0,
@@ -46,7 +46,7 @@ dojo.addOnLoad(function() {
         var count=0
         BrickStore.fetch({query:dijit.byId('Brick').query,onItem:function(item) {
             count++;
-            dojo.forEach(['begin','t_to','t_from','sold','total','plus'], function(i) {
+            dojo.forEach(['begin','t_to','t_from','sold','total','add'], function(i) {
                 var ye = 1;
                 testdata.items[0][i][0] += parseInt(item[i]*ye)
             });
@@ -62,7 +62,7 @@ dojo.addOnLoad(function() {
         var count = 0
         BrickStore.fetch({query:dijit.byId('Brick').query,onItem:function(item) {
             count++;
-            dojo.forEach(['begin','t_to','t_from','sold','total','plus'], function(i) {
+            dojo.forEach(['begin','t_to','t_from','sold','total','add'], function(i) {
                 var ye = 1;
                 if (dijit.byId('id_ye_total').get('value') && item.weight == 'Утолщенный') ye = 1.4;
                 if (dijit.byId('id_ye_total').get('value') && item.weight == 'Двойной') ye = 2; //TODO: Переделать

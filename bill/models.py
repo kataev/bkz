@@ -14,6 +14,7 @@ class Oper(models.Model):
     Абстрактный класс для всех операций
     """
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
+
     brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
     amount=models.PositiveIntegerField(u"Кол-во кирпича",help_text=u'Кол-во кирпича для операции')
     tara=models.PositiveIntegerField(u"Кол-во поддонов",default=0)

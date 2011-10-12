@@ -13,7 +13,7 @@ class BrickSelectStore(Store):
 
 class BricksStore(BrickSelectStore):
     begin = StoreField()
-    plus = StoreField()
+    add = StoreField()
     t_from = StoreField()
     t_to = StoreField()
     sold = StoreField()
