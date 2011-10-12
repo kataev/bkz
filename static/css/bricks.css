@@ -40,9 +40,11 @@
     /*height: 10px;*/
 }
 
+#weight ul li:last-child {display: none;}
+
 #class {text-align: center;}
 .class li {margin: 5px;}
-
+span.cl_eu,span.cl_wh,span.cl_ot {line-height: 2;}
 #BricksTotal td.label {
     text-align: right !important;
     padding-right: 10px;

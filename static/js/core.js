@@ -10,6 +10,9 @@ dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.PopupMenuBarItem");
 
+
+dojo.require("whs.main.MenuItem");
+
 var dojoConfig = {
             isDebug: true,
             locale: 'Ru-ru'
@@ -21,6 +24,9 @@ dojo.addOnLoad(function(){
         window.location = '/bill/' + dojo.attr(this,'pk') + '/';
     });
 });
+
+
+
 
 dojo.provide('whs.id_to_url');
 
@@ -38,3 +44,8 @@ whs.id_to_dict = function(s) {
     var id = s.split('.')[1].split('__')[1];
     return {name:name,id:id};
 };
+
+dojo.provide('whs.grid.date_formatter');
+whs.date_formatter = function (date){
+    return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
+}

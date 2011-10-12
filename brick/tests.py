@@ -12,7 +12,6 @@ class BrickTestCase(unittest.TestCase):
 
     def testUnique(self):
         self.bricks = map(lambda x:unicode(x),Brick.objects.all().order_by('id'))
-        print len(self.bricks)
         for b in self.bricks:
             self.assertEqual(self.bricks.count(b),1)
 

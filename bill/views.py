@@ -39,7 +39,6 @@ def bill_store(request,form,id):
     bill = get_object_or_404(form._meta.model,pk=id)
     store = SoldStore()
     store.Meta.objects = bill.bill_sold_related.all()
-#    store.Meta.objects = bill.bill_transfer_related.all()
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 @require_http_methods(["GET",])
@@ -64,7 +63,6 @@ def form_post(request,form,id=None):
     if id:
         form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
         if form.is_valid():
-            print form.instance.brick.__dict__
             form.save()
     else:
         form = form(request.POST)

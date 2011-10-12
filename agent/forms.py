@@ -6,8 +6,9 @@ class AgentForm(forms.ModelForm):
     class Meta:
         model=Agent
         widgets = {
-            'bank': forms.Textarea(attrs={}),
-            'address': forms.Textarea(attrs={}),
+            'name': forms.Textarea(),
+            'bank': forms.Textarea(),
+            'address': forms.Textarea(),
         }
     class Media:
         js = ('js/form.js',)

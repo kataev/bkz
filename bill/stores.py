@@ -22,7 +22,7 @@ class SoldStore(Store):
     info = StoreField()
 
     class Meta(object):
-        stores = (TransferStore,)
+#        stores = (TransferStore,)
         objects  = Sold.objects.all()
 
 class BillStore(Store):
@@ -30,7 +30,7 @@ class BillStore(Store):
     agent = StoreField('agent.__unicode__')
     agent_id = StoreField('agent.pk')
     number = StoreField()
-#    children = ReferenceField('bill_sold_related')
+    css = StoreField('css')
     info = StoreField()
     money = StoreField()
 

@@ -8,11 +8,6 @@ dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.FilteringSelect");
 
 
-dojo.provide('whs.grid.date_formatter');
-whs.date_formatter = function (date){
-    return dojo.date.locale.format(new Date(date),{selector:'date',datePattern:'MMM d, yyyy'});
-}
-
 dojo.addOnLoad(function() {
     dijit.byId('BillsTable').onStyleRow = function(row) {
         var item = this.getItem(row.index);

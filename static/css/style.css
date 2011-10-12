@@ -606,3 +606,11 @@ html, body {
     padding-right: 2px;
     cursor: pointer;
 }
+
+#menu span,#menu a {color:#a52a2a;}
+
+
+#menu a {text-decoration: none;}
+#menu a:hover {border-bottom: dotted #ffebcd 1px;}
+
+.cl_red.cl_ye > * {background: none;}

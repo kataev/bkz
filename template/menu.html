@@ -1,14 +1,15 @@
-<div dojoType="dijit.MenuBarItem"><span style="color:#a52a2a;">Березниковский кирпичный завод</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url main %}'"><span>Главная</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url bricks %}'"><span>Остатки</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url bills %}'"><span>Накладные</span></div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='{% url agents %}'"><span>Агенты</span></div>
+<div dojoType="whs.main.MenuBarItem"><a href="{% url main %}" id='logo'>
+    <img src="/static/img/logo.png" height="16px" title='Главная'>
+    Березниковский кирпичный завод</a></div>
+<div dojoType="whs.main.MenuBarItem"><a href="{% url bricks %}">Остатки</a></div>
+<div dojoType="whs.main.MenuBarItem"><a href="{% url bills %}">Накладные</a></div>
+<div dojoType="whs.main.MenuBarItem"><a href="{% url agents %}">Агенты</a></div>
 <div dojoType="dijit.PopupMenuBarItem">
     <span><span style='color:red;'>Добавить</span></span>
     <div dojoType="dijit.Menu" id="editMenu">
-        <div dojoType="dijit.MenuItem" onclick="window.location='/bill/'">Накладную</div>
-        <div dojoType="dijit.MenuItem" onclick="window.location='/brick/'">Кирпич</div>
-        <div dojoType="dijit.MenuItem" onclick="window.location='/agent/'">КонтрАгента</div>
+        <div dojoType="whs.main.MenuItem"><a href='/bill/'>Накладную</a></div>
+        <div dojoType="whs.main.MenuItem"><a href='/brick/'>Кирпич</a></div>
+        <div dojoType="whs.main.MenuItem"><a href='/agent/'>КонтрАгента</a></div>
     </div>
 </div>
-<div dojoType="dijit.MenuBarItem" onclick="window.location='/admin/'"><span>Администратор</span></div>
+<div dojoType="whs.main.MenuBarItem"><a href="/admin/">Администратор</a></div>

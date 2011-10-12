@@ -43,7 +43,6 @@ def fetch_brick(request):
         mark =  re.search('100|125|150|175|200 |250',prim)
         if mark: mark = int(mark.group())
         else: mark = 9000
-#        print prim
         cl = re.search(u'КЕ',prim,re.U)
         if cl:
             cl = 5
@@ -85,7 +84,6 @@ def fetch_total(request):
     for b in OldBrick.objects.all():
         try: b.total = Sclad.objects.using('old').get(pk=b.old_id).total
         except Sclad.DoesNotExist:
-            print b.pk,b.old_id
             if not Jurnal.objects.using('old').filter(tov=b.old_id).count():
                 delete+=' deleted %d' % b.pk
                 b.delete()
@@ -112,7 +110,6 @@ def fetch_transfer(request):
                                     amount__gte=j.pakt,brick=OldBrick.objects.get(old_id=j.tov))
             if s:
                 a[j.akt] = s[0]
-    print 'finish sold',a
     for j in Jurnal.objects.using('old').filter(makt__gt=0):
         if a.get(j.akt):
             t = Transfer(brick=OldBrick.objects.get(old_id=j.tov),
@@ -130,7 +127,6 @@ def fetch_oper(request):
         except ValueError:
                 nakl = i
                 i+=1
-                print j.nakl,j.pk
         try: bill = Bill.objects.get(number=nakl,date=j.date)
         except Bill.DoesNotExist:
             bill = Bill(number=nakl,date=j.date,agent=Agent.objects.get(pk=j.agent),info=j.prim)

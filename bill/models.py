@@ -35,7 +35,7 @@ class Doc(models.Model):
     """
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
     date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
-    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация(напр водитель)')
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 
     class Meta:
@@ -47,14 +47,27 @@ class Bill(Doc):
     Накладная, документ который используется при отгрузке кирпича покупателю
     Основа продажи, на него ссылаются операции продажи - Sold && Transfer.
     """
-    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число')
-    agent = models.ForeignKey(Agent,verbose_name=u'КонтрАгент',related_name="%(app_label)s_%(class)s_related")
+    number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число уникальное в этом году')
+    agent = models.ForeignKey(Agent,verbose_name=u'Покупатель',related_name="%(app_label)s_%(class)s_related",
+                              help_text=u"""Поле для выбора покупателя. Если продается через Cерверную керамику то \
+                              следует выбирать "Cерверную керамику" во втором поле а в первом указать настоящего покупателя""")
     money=models.PositiveIntegerField(verbose_name=u'Сумма',default=0)
+    proxy = models.ForeignKey(Agent,verbose_name=u'Прокси',related_name="proxy_%(app_label)s_%(class)s_related",
+                              limit_choices_to = {'pk__in':(1,)}, # Серверная керамика
+                              null=True,blank=True)
 
     class Meta():
             verbose_name = u"накладная"
             verbose_name_plural = u"накладные"
             ordering = ['-date','-number']
+
+    def css(self):
+        css = u''
+        for s in self.bill_sold_related.all():
+            css+= '%s ' % s.brick.css
+        return css.strip()
+
+
 
     def set_money(self):
         """

@@ -74,8 +74,7 @@ def bill_store(request):
                 query = query.filter(**{key:value})
         if brick:
             query = query.filter(bill_sold_related__brick=brick).annotate()
-#        print query
-        
+
     store.Meta.objects=query[:30]
     return HttpResponse(store.to_json(), mimetype='application/json')
 
@@ -116,14 +115,16 @@ def brick_store(request,id):
     """
     Операции за месяц с определённым кирпичем.
     """
+    len = 30
     brick = get_object_or_404(Brick,pk=id)
     store = {'label':'label','identifier':'id','items':[]}
-    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick))
-    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick))
-    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick))
+    sold = map(lambda x: {'sold':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Sold.objects.filter(brick=brick)[:30])
+    t_from = map(lambda x: {'t_from':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(brick=brick)[:30])
+    t_to = map(lambda x: {'t_to':x.amount,'date':x.doc.date.isoformat(),'id':x.get_id()},Transfer.objects.filter(sold__brick=brick)[:30])
     store['items'].extend(sold)
     store['items'].extend(t_to)
     store['items'].extend(t_from)
+    store['items'] = sorted(store['items'],key=lambda x: x['date'])
     return HttpResponse(simplejson.dumps(store), mimetype='application/json')
 
 

@@ -48,34 +48,30 @@ dojo.addOnLoad(function() {
             count++;
             dojo.forEach(['begin','t_to','t_from','sold','total','plus'], function(i) {
                 var ye = 1;
-                if (dijit.byId('id_ye_total').get('value') && item.weight == 'Утолщенный') ye = 1.4;
-                if (dijit.byId('id_ye_total').get('value') && item.weight == 'Двойной') ye = 2;
                 testdata.items[0][i][0] += parseInt(item[i]*ye)
             });
             testdata.items[0]['label'][0] = count + ' наименований Итого:';
         }});
         dijit.byId('BricksTotal').render();
-//        console.log(testdata.items[0])
     });
 
-    dijit.byId('id_ye_total').onChange=function(e) {
+    dijit.byId('id_ye_total').onChange = function(e) {
         dojo.forEach(['begin','t_to','t_from','sold','total'], function(i) {
             testdata.items[0][i][0] = 0;
         });
-        var count=0
+        var count = 0
         BrickStore.fetch({query:dijit.byId('Brick').query,onItem:function(item) {
             count++;
             dojo.forEach(['begin','t_to','t_from','sold','total','plus'], function(i) {
                 var ye = 1;
                 if (dijit.byId('id_ye_total').get('value') && item.weight == 'Утолщенный') ye = 1.4;
                 if (dijit.byId('id_ye_total').get('value') && item.weight == 'Двойной') ye = 2; //TODO: Переделать
-                testdata.items[0][i][0] += parseInt(item[i]*ye);
+                testdata.items[0][i][0] += parseInt(item[i] * ye);
             });
             testdata.items[0]['label'][0] = count + ' кирпичей Итого:';
         }});
         dijit.byId('BricksTotal').render();
-
-    }
+    };
 
     dijit.byId('Brick_info').onStyleRow = function(row) {
 //        console.log(row)
