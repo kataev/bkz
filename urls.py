@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     (r'^', include('whs.bill.urls')),
     (r'^', include('whs.brick.urls')),
     (r'^', include('whs.agent.urls')),
+    (r'^', include('whs.manufacture.urls')),
     (r'^', include('whs.old.urls')),
 
 
