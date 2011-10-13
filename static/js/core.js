@@ -28,6 +28,14 @@ dojo.addOnLoad(function(){
 
 
 
+dojo.provide('whs.prefix');
+whs.prefix = {'mark':'m','class':'cl_'}
+
+dojo.provide('whs.css_order');
+
+whs.css_order = ['weight','mark','brick_class','view'];
+
+
 dojo.provide('whs.id_to_url');
 
 whs.id_to_url = function(s) {

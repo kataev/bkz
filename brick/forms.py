@@ -13,11 +13,6 @@ class BrickForm(forms.ModelForm):
 class CheckBoxBrickSelect(forms.CheckboxSelectMultiple):
     dojo_type = 'whs.form.CheckBox'
 
-
-
-#class BrickFilterForm(forms.Form):
-    
-
 class BrickFilterForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super(BrickFilterForm,self).__init__(*args,**kwargs)
@@ -27,8 +22,6 @@ class BrickFilterForm(forms.ModelForm):
             for item in q:
                 if not item[0] == '': choice.append([Brick.css_dict[k][item[0]],item[1][:7]])
             w.choices = choice
-
-
 
     class Meta:
         model=Brick

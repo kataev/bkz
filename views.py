@@ -89,6 +89,8 @@ def bricks(request):
 
 @require_http_methods(["GET",])
 def agents(request):
+    query = request.path
+    print query
     return render(request, 'agents.html')
 
 
@@ -111,7 +113,6 @@ def bricks_store(request):
     t_from = dict(map(lambda x: [x['brick'],x['s']],t_from))
     t_to = dict(map(lambda x: [x['sold__brick'],x['s']],t_to))
     for b in store.Meta.objects:
-        print b.total
         b.sold = sold.get(b.pk,0)
         b.add = add.get(b.pk,0)
         b.t_from = t_from.get(b.pk,0)
