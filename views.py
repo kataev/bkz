@@ -13,6 +13,7 @@ import datetime
 import calendar
 from whs.bill.stores import BillStore,BrickStore
 from whs.brick.stores import BricksStore,BrickSelectStore
+from random import Random
 
 @require_http_methods(["GET",])
 def main(request):
@@ -27,9 +28,10 @@ def form_get(request,form,id=None):
     Вывод формы
     """
     if id:
-        form = form(instance=get_object_or_404(form._meta.model,pk=id))
+        form = form(instance=get_object_or_404(form._meta.model,pk=id),auto_id="id_%s_%%s" % id)
     else:
-        form = form()
+        id = Random().randint(0,100000)
+        form = form(auto_id="id_%s_%%s" % id)
     if request.is_ajax():
         return HttpResponse(form)
     else:

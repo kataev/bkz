@@ -11,5 +11,6 @@ class ManForm(forms.ModelForm):
         js = ('js/form.js',)
         css = {'all':('css/form.css',),}
 
-
-  
+class AddForm(forms.ModelForm):
+    class Meta:
+        model=Add

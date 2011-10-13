@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-
+#from dojango.conf import settings
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
@@ -35,6 +35,8 @@ DOJANGO_DATAGRID_ACCESS = (
 )
 
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
+
+DOJANGO_BASE_MEDIA_ROOT = '/home/bteam/dojango-media'
 
 #DOJANGO_DOJO_PROFILE = "local"
 
@@ -99,6 +101,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'static/'),
+    '/home/bteam/dojo-release-1.6.0/',
 
 )
 
@@ -153,7 +156,7 @@ INSTALLED_APPS = (
     'whs.manufacture',
 
 #    'south',
-    'debug_toolbar',
+#    'debug_toolbar',
 	'dojango',
     'django_extensions',
 )
