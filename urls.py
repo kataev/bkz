@@ -14,11 +14,11 @@ urlpatterns = patterns('',
     url(r'^bricks/archive/$', 'whs.views.bricks_archive',name='bricks_store'),
     url(r'^agents/$', 'whs.views.agents',name='agents'),
 
-    (r'^', include('whs.bill.urls')),
-    (r'^', include('whs.brick.urls')),
-    (r'^', include('whs.agent.urls')),
-    (r'^', include('whs.manufacture.urls')),
-    (r'^', include('whs.old.urls')),
+    (r'^', include('whs.bill.urls',namespace='bill')),
+    (r'^', include('whs.brick.urls',namespace='brick')),
+    (r'^', include('whs.agent.urls',namespace='agent')),
+    (r'^', include('whs.manufacture.urls',namespace='man')),
+    (r'^', include('whs.old.urls',namespace='old')),
 
 
     (r'^dojango/', include('dojango.urls')),

@@ -36,7 +36,7 @@ DOJANGO_DATAGRID_ACCESS = (
 
 DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
-DOJANGO_BASE_MEDIA_ROOT = '/home/bteam/dojango-media'
+#DOJANGO_BASE_MEDIA_ROOT = '/home/bteam/dojango-media'
 
 #DOJANGO_DOJO_PROFILE = "local"
 
