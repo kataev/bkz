@@ -12,6 +12,7 @@ dojo.require("dijit.PopupMenuBarItem");
 
 
 dojo.require("whs.main.MenuItem");
+dojo.require("whs.main.Open");
 
 var dojoConfig = {
             isDebug: true,

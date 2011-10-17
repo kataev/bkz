@@ -43,6 +43,10 @@ class Doc(models.Model):
         abstract = True
 
 ## Накладная
+def function(x, y):
+    return x
+
+
 class Bill(Doc):
     """
     Накладная, документ который используется при отгрузке кирпича покупателю
@@ -68,7 +72,8 @@ class Bill(Doc):
             css+= '%s ' % s.brick.css
         return css.strip()
 
-
+    def solds(self):
+        return map(lambda x: (x.brick.label,x.brick.pk,x.brick.css,x.amount),self.bill_sold_related.all())
 
     def set_money(self):
         """

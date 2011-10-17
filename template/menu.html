@@ -5,11 +5,18 @@
 <div dojoType="whs.main.MenuBarItem"><a href="{% url bills %}">Накладные</a></div>
 <div dojoType="whs.main.MenuBarItem"><a href="{% url agents %}">Агенты</a></div>
 <div dojoType="dijit.PopupMenuBarItem">
+    <span><span>Открыть</span></span>
+    <div dojoType="dijit.Menu">
+        <div id='OpenBill' dojoType="whs.main.MenuItem">Накладную</div>
+        <div id='OpenAgent' dojoType="whs.main.MenuItem">КонтрАгента</div>
+    </div>
+</div>
+<div dojoType="dijit.PopupMenuBarItem">
     <span><span style='color:red;'>Добавить</span></span>
     <div dojoType="dijit.Menu" id="editMenu">
-        <div dojoType="whs.main.MenuItem"><a href='/bill/'>Накладную</a></div>
-        <div dojoType="whs.main.MenuItem"><a href='/brick/'>Кирпич</a></div>
-        <div dojoType="whs.main.MenuItem"><a href='/agent/'>КонтрАгента</a></div>
+        <div dojoType="whs.main.MenuItem"><a href='{% url bill:bill_form_get "" %}'>Накладную</a></div>
+        <div dojoType="whs.main.MenuItem"><a href='{% url brick:brick_get "" %}'>Кирпич</a></div>
+        <div dojoType="whs.main.MenuItem"><a href='{% url agent:agent_get "" %}'>КонтрАгента</a></div>
     </div>
 </div>
 <div dojoType="whs.main.MenuBarItem"><a href="/admin/">Администратор</a></div>

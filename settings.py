@@ -40,6 +40,8 @@ DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
 #DOJANGO_DOJO_PROFILE = "local"
 
+APPEND_SLASH = True
+
 DOJANGO_DOJO_VERSION = '1.6.0'
 
 DOJANGO_DOJO_DEBUG = True
@@ -124,7 +126,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-#    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

@@ -30,9 +30,10 @@ class BillStore(Store):
     agent = StoreField('agent.__unicode__')
     agent_id = StoreField('agent.pk')
     number = StoreField()
-    css = StoreField('css')
+#    css = StoreField('css')
     info = StoreField()
     money = StoreField()
+    solds = StoreField()
 
     class Meta(object):
         objects  = Bill.objects.filter(date__month=date.today().month)
