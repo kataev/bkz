@@ -17,16 +17,12 @@ from random import Random
 
 @require_http_methods(["GET",])
 def main(request):
-    """
-    Главная страница
-    """
-    return render(request, 'main.html',{'bills':Bill.objects.all()[:5]})
+    """ Главная страница """
+    return render(request, 'Index.html',{'bills':Bill.objects.all()[:5]})
 
 @require_http_methods(["GET",])
 def form_get(request,form,id=None):
-    """
-    Вывод формы
-    """
+    """ Вывод формы """
     if id:
         form = form(instance=get_object_or_404(form._meta.model,pk=id),auto_id="id_%s_%%s" % id)
     else:
@@ -61,7 +57,7 @@ def bills(request):
     Предствление для таблицы с накладными, формой для фильтрации.
     """
     f = Bills(request.GET)
-    return render(request, 'bills.html',{'form':f,'path':request.GET.urlencode()})
+    return render(request, 'bills.html',{'form':f,'path':request.GET.urlencode(),'title':'bills'})
 
 @require_http_methods(["GET",])
 def bill_store(request):

@@ -1,4 +1,4 @@
-{% extends "main.html" %}
+{% extends "Index.html" %}
 {% block media %}
     {{ form.media }}
     <style>
@@ -61,32 +61,27 @@
                 </label>
                 {{ form.info }}
             </div>
+            <div class='field'>
+                <label for='{{ form.sold.id_for_label }}'>{{ form.sold.label }}{% if form.sold.help_text %}<sup
+                        id='{{ form.sold.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">{{ form.sold.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.sold }}
+            </div>
+            <div class='field'>
+                <label for='{{ form.transfer.id_for_label }}'>{{ form.sold.label }}{% if form.transfer.help_text %}<sup
+                        id='{{ form.transfer.id_for_label }}_sup'>?</sup>
+                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
+                          data-dojo-props="connectId:'{{ form.transfer.id_for_label }}_sup'">{{ form.transfer.help_text }}</span>
+                {% endif %}
+                </label>
+                {{ form.transfer }}
+            </div>
             <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
             {% include "error.html" %}
         </form>
     </div>
-    {% if form.instance.pk %}
-    <div dojoType="dojo.data.ItemFileReadStore" jsId="BillStore" url="store/"></div>
-    <table dojoType="dojox.grid.DataGrid" region='right' style='width:550px;' store='BillStore' id="BillsTable"
-           store='BillStore'>
-        <thead>
-        <tr>
-            <th field='brick' width='auto'>Кирпич</th>
-            <th field='amount'>Кол-во</th>
-            <th field='price' formatter="Formatter">Цена</th>
-            <th field='delivery' formatter="Formatter">Трансп</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th field="childAttr" aggregate="sum" itemAggregates="amount">
-        </tr>
-        </tbody>
-    </table>
-    {% else %}
-        <div dojoType="dijit.layout.ContentPane" region='right' style='width:550px;'>
-            <div style='text-align: center;'>Сохраните документ перед тем как добавлять операции</div>
-        </div>
-    {% endif %}
+    
 {% endblock %}

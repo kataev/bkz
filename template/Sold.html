@@ -1,9 +1,11 @@
-{% extends "main.html" %}
+{% extends "Index.html" %}
 {% block media %}
     {{ form.media }}
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
-{% block content %}
+{% block dojango_content %}
+    <div dojoType="dijit.layout.BorderContainer" style='height: 100%;'>
+    <div dojoType="dijit.layout.ContentPane" region='center'>
     <form action='./post/' method='POST' dojoType='whs.form.Form.Oper'>
         <div class='field'>
             <img src='/static/img/16x16/brick.png' width="16" height="16" alt="{{ form.brick.label }}">
@@ -54,4 +56,6 @@
     <button dojoType='dijit.form.Button' type=submit>Сохранить и вернутся к накладной</button>
     {% include "error.html" %}
     </form>
+    </div>
+    </div>
 {% endblock %}

@@ -6,6 +6,10 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 
+INTERNAL_IPS = ('127.0.0.1',
+#                '192.168.1.2'
+    )
+
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
 )
@@ -132,7 +136,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'dojango.middleware.DojoCollector',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'whs.urls'
@@ -151,14 +155,14 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-#    'whs.old',
+    'whs.old',
     'whs.brick',
     'whs.agent',
     'whs.bill',
     'whs.manufacture',
 
 #    'south',
-#    'debug_toolbar',
+    'debug_toolbar',
 	'dojango',
     'django_extensions',
 )

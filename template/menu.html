@@ -1,17 +1,17 @@
-<div dojoType="whs.main.MenuBarItem"><a href="{% url main %}" id='logo'>
+<div dojoType="whs.main.MenuBarItem" id='main'><a href="{% url main %}" id='logo'>
     <img src="/static/img/logo.png" height="16px" title='Главная'>
     Березниковский кирпичный завод</a></div>
-<div dojoType="whs.main.MenuBarItem"><a href="{% url bricks %}">Остатки</a></div>
-<div dojoType="whs.main.MenuBarItem"><a href="{% url bills %}">Накладные</a></div>
-<div dojoType="whs.main.MenuBarItem"><a href="{% url agents %}">Агенты</a></div>
-<div dojoType="dijit.PopupMenuBarItem">
+<div dojoType="whs.main.MenuBarItem" id='bricks'><a href="{% url bricks %}">Остатки</a></div>
+<div dojoType="whs.main.MenuBarItem" id='bills'><a href="{% url bills %}">Накладные</a></div>
+<div dojoType="whs.main.MenuBarItem" id='agents'><a href="{% url agents %}">Агенты</a></div>
+<div dojoType="dijit.PopupMenuBarItem" id='Open'>
     <span><span>Открыть</span></span>
     <div dojoType="dijit.Menu">
         <div id='OpenBill' dojoType="whs.main.MenuItem">Накладную</div>
         <div id='OpenAgent' dojoType="whs.main.MenuItem">КонтрАгента</div>
     </div>
 </div>
-<div dojoType="dijit.PopupMenuBarItem">
+<div dojoType="dijit.PopupMenuBarItem" id='Edit'>
     <span><span style='color:red;'>Добавить</span></span>
     <div dojoType="dijit.Menu" id="editMenu">
         <div dojoType="whs.main.MenuItem"><a href='{% url bill:bill_form_get "" %}'>Накладную</a></div>

@@ -20,11 +20,11 @@ var dojoConfig = {
             ,'parseOnLoad':true
         };
 
-dojo.addOnLoad(function(){
-    dojo.query('.bills_table tr').connect('onclick',function(evt){
-        window.location = '/bill/' + dojo.attr(this,'pk') + '/';
-    });
-});
+//dojo.addOnLoad(function(){
+//    dojo.query('.bills_table tr').connect('onclick',function(evt){
+//        window.location = '/bill/' + dojo.attr(this,'pk') + '/';
+//    });
+//});
 
 
 

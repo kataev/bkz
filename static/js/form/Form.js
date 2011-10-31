@@ -5,7 +5,7 @@ dojo.require('dijit.Tooltip');
 
 
 dojo.declare('whs.form.Form', dijit.form.Form, {
-    onSuccess:function(id) {
+    onSuccess:function(data) {
 
     },
     onSubmit : function(event) { //Переопределяем метод болванку для сабмита
@@ -19,7 +19,7 @@ dojo.declare('whs.form.Form', dijit.form.Form, {
             }).then(function(data) { // Deferred success OnSucces callback
                     if (data.success) { // Если сервер ответил об удаче, то показать юзеру положительный ответ
                         console.log(data, 'all good');
-                        onSuccess(data.id);
+                        onSuccess(data);
                     }
                     else { // Если сервер ответсит об неудаче ( серверая валидация неудалась )
                         console.log(data, 'server validation fail');
@@ -59,17 +59,35 @@ dojo.declare('whs.form.Form', dijit.form.Form, {
 dojo.provide('whs.form.Form.Bill');
 
 dojo.declare('whs.form.Form.Bill', whs.form.Form, {
-    onSuccess:function(id) {
+    onSuccess:function(data) {
+        var id = whs.id_to_dict(data.id).id;
         var brick = document.location.href.split('sold=')[1];
         if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
-        else document.location = '/bill/' + id + '/';
+        else {
+            if (!window.location.pathname.split('/')[2])
+            document.location = '/bill/' + id + '/';}
     }
 });
 
 dojo.provide('whs.form.Form.Oper');
 
 dojo.declare('whs.form.Form.Oper', whs.form.Form, {
-    onSuccess:function(id) {
-        document.location = '/bill/'+this.get('value')['doc']+'/';
+    onSuccess:function(data) {
+        console.log(data)
+        var id = data.id;
+        var name = window.location.pathname.split('/')[1]
+        if (window.opener){
+            var widget = window.opener['FKSelect'+name];
+            var item = this.get('value');
+            d = {'brick':item.brick.label,'css':item.brick.css,
+                amount:item.amount,price:item.price}
+            d.id = data.id
+            widget.store.newItem(d)
+            window.close()
+
+        }else{
+            document.location = '/bill/'+this.get('value')['doc']+'/';
+        }
+
     }
 });

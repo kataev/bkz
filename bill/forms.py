@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from brick.forms import BrickSelect
 from whs.bill.models import *
 from whs.brick.models import Brick
 
@@ -6,17 +7,13 @@ from dojango import forms
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 
-class BrickSelect(forms.Select):
-    dojo_type = 'whs.form.BrickSelect'
+class FKSelect(forms.SelectMultiple):
+#    pass
+    dojo_type = 'whs.form.FKSelect'
 
     def render(self, name, value, attrs=None, choices=()):
-        """
-        Переопределние метода для вывода нужного тега.
-        """
+        """ Переопределние метода для вывода нужного тега. """
         if value is None: value = ''
-#        if value:
-#            attrs['class']= Brick.objects.get(pk=value).css
-#            attrs['label']= Brick.objects.get(pk=value).label
         final_attrs = self.build_attrs(attrs, name=name,value=value)
         output = [u'<input%s/>' % flatatt(final_attrs)]
         return mark_safe(u'\n'.join(output))
@@ -57,15 +54,18 @@ class TransferForm(forms.ModelForm):
 
 
 class BillForm(forms.ModelForm):
+    sold = forms.ModelMultipleChoiceField(queryset=Sold.objects.all(),widget=FKSelect,required=False)
+    transfer = forms.ModelMultipleChoiceField(queryset=Transfer.objects.all(),widget=FKSelect,required=False)
+
     class Meta:
         model = Bill
         exclude = ('money')
         widgets = {
-            'info': forms.Textarea(attrs={}),
+            'info': forms.Textarea(),
             'agent': forms.FilteringSelect(),
             }
     class Media:
-        js = ('js/form.js','js/bills.js')
+        js = ('js/form.js',)
         css = {'all': ('css/form.css',), }
 
 

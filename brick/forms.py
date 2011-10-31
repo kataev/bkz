@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.forms.util import flatatt
+from django.utils.safestring import mark_safe
 import dojango.forms as forms
 from whs.brick.models import Brick
 
@@ -36,3 +38,14 @@ class BrickFilterForm(forms.ModelForm):
     class Media:
         js = ('js/bricks.js',)
         css = {'all':('css/bricks.css',),}
+
+class BrickSelect(forms.Select):
+    dojo_type = 'whs.form.BrickSelect'
+
+    def render(self, name, value, attrs=None, choices=()):
+        """ Переопределние метода для вывода нужного тега. """
+        if value is None: value = ''
+        final_attrs = self.build_attrs(attrs, name=name,value=value)
+        output = [u'<input%s/>' % flatatt(final_attrs)]
+#        output = [u'<input/>']
+        return mark_safe(u'\n'.join(output))

@@ -43,10 +43,6 @@ class Doc(models.Model):
         abstract = True
 
 ## Накладная
-def function(x, y):
-    return x
-
-
 class Bill(Doc):
     """
     Накладная, документ который используется при отгрузке кирпича покупателю
@@ -102,7 +98,7 @@ class Sold(Oper):
     """
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
-    doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
+    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
     class Meta():
             verbose_name = u"отгрузка"
             verbose_name_plural =  u"отгрузки"
@@ -122,7 +118,7 @@ class Transfer(Oper):
     Привязанн к накладной, т.к является операцией продажи.
     """
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
-    doc = models.ForeignKey(Bill,blank=False,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
+    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
 
     class Meta():
             verbose_name = u"перевод"
@@ -137,14 +133,14 @@ class Transfer(Oper):
         else:
             return u'Новый перевод'
 
-@receiver(post_save,sender=Sold)
-def money(*args,**kwargs):
-    kwargs['instance'].doc.set_money()
-
-@receiver(post_save,sender=Sold)
-def brick_total_actualizer(instance, created, *args,**kwargs):
-    model = instance
-    if created:
-        brick = Brick.objects.get(pk=model.brick.pk)
-        brick.total-=model.amount
-        brick.save()
+#@receiver(post_save,sender=Sold)
+#def money(*args,**kwargs):
+#    kwargs['instance'].doc.set_money()
+#
+#@receiver(post_save,sender=Sold)
+#def brick_total_actualizer(instance, created, *args,**kwargs):
+#    model = instance
+#    if created:
+#        brick = Brick.objects.get(pk=model.brick.pk)
+#        brick.total-=model.amount
+#        brick.save()

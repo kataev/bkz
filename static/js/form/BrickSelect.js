@@ -15,7 +15,7 @@ dojo.declare("whs.form.BrickSelect", [dijit._Widget,dijit._Templated], {
             name:'',
             baseClass: 'BrickSelect',
             templateString: dojo.cache('whs', 'template/BrickSelect.html'),
-            widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:0,
+            widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:0,css:'',
             postCreate:function() {
                 var setLabel = dojo.hitch(this, '_setLabelAttr');
                 var setLabelClass = dojo.hitch(this, '_setLabelClassAttr');
@@ -49,16 +49,17 @@ dojo.declare("whs.form.BrickSelect", [dijit._Widget,dijit._Templated], {
                 });
             },
             _setLabelAttr:function(val) {
+                this.label = val;
                 this.labelNode.innerHTML=val;
             },
             _setLabelClassAttr:function(val) {
+                this.css = val;
                 dojo.attr(this.labelNode,'class','dijitTextBox BrickSelect '+val);
             },
             _setValueAttr:function(val) {
                 this.value = val;
                 dojo.attr(this.inputNode,'value',val);
-            }
-//            _getValueAttr:function() {
-//                return this.value;
-//            }
+            },_getValueAttr:function(){
+        return {css:this.css,value:this.value,label:this.label}
+    }
         });
