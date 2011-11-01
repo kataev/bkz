@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from dojango.data.modelstore import *
-from whs.bill.models import Bill,Sold,Transfer
+from whs.bill.models import *
 from datetime import date
 
 class TransferStore(Store):
@@ -8,7 +8,7 @@ class TransferStore(Store):
     amount = StoreField('amount')
     css = StoreField('brick.css')
     info = StoreField()
-
+    parent = ReferenceField('sold')
     class Meta(object):
         objects  = Transfer.objects.all()
 
@@ -17,15 +17,19 @@ class SoldStore(Store):
     amount = StoreField()
     price = StoreField()
     delivery = StoreField()
-    children = ReferenceField(get_value=ObjectMethod('bill_transfer_related.all'))
+
     css = StoreField('brick.css')
     info = StoreField()
 
     class Meta(object):
-#        stores = (TransferStore,)
         objects  = Sold.objects.all()
 
 class BillStore(Store):
+    class Meta:
+        stores = (SoldStore,TransferStore)
+
+
+class BillsStore(Store):
     date = StoreField('date.isoformat')
     agent = StoreField('agent.__unicode__')
     agent_id = StoreField('agent.pk')

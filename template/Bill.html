@@ -70,15 +70,15 @@
                 </label>
                 {{ form.sold }}
             </div>
-            <div class='field'>
-                <label for='{{ form.transfer.id_for_label }}'>{{ form.sold.label }}{% if form.transfer.help_text %}<sup
-                        id='{{ form.transfer.id_for_label }}_sup'>?</sup>
-                    <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                          data-dojo-props="connectId:'{{ form.transfer.id_for_label }}_sup'">{{ form.transfer.help_text }}</span>
-                {% endif %}
-                </label>
-                {{ form.transfer }}
-            </div>
+{#            <div class='field'>#}
+{#                <label for='{{ form.transfer.id_for_label }}'>{{ form.sold.label }}{% if form.transfer.help_text %}<sup#}
+{#                        id='{{ form.transfer.id_for_label }}_sup'>?</sup>#}
+{#                    <span data-dojo-type="dijit.Tooltip" style='display:none;'#}
+{#                          data-dojo-props="connectId:'{{ form.transfer.id_for_label }}_sup'">{{ form.transfer.help_text }}</span>#}
+{#                {% endif %}#}
+{#                </label>#}
+{#                {{ form.transfer }}#}
+{#            </div>#}
             <button dojoType='dijit.form.Button' type=submit>Сохранить</button>
             {% include "error.html" %}
         </form>

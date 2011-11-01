@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-from stores import SoldStore,TransferStore
+from stores import *
 from models import Bill
 from random import Random
 
@@ -33,16 +33,13 @@ def bill_form_get(request,form,id=None):
         return render(request, "Bill.html", {'form':form})
 
 @require_http_methods(["GET",])
-def bill_store(request,name,form,id):
+def bill_store(request,form,id):
     """ Представление для вывода dojo store операций накладной в виде дерева """
     if id:
         bill = get_object_or_404(form._meta.model,pk=id)
-        if name == 'sold':
-            store = SoldStore()
-            store.Meta.objects = bill.bill_sold_related.all()
-        else:
-            store = TransferStore()
-            store.Meta.objects = bill.bill_transfer_related.all()
+        store = BillStore()
+        for s in store.Meta.stores:
+            s.Meta.objects= s.Meta.objects.filter(doc=bill)
     else:
         store = SoldStore()
         store.Meta.objects = []
@@ -64,6 +61,7 @@ def opers_form_get(request,form,id=None):
 @require_http_methods(["POST",])
 def form_post(request,form,id=None):
     """ Представление для обработки POST данных формы """
+
     if id: form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
     else: form = form(request.POST)
     if form.is_valid():
@@ -72,6 +70,7 @@ def form_post(request,form,id=None):
             if form.cleaned_data['sold']: form.cleaned_data['sold'].update(doc=model)
             if form.cleaned_data['transfer']: form.cleaned_data['transfer'].update(doc=model)
         id = '%s.%s__%d' % (form._meta.model._meta.app_label,form._meta.model._meta.module_name,model.pk or 0)
+    print request.POST,form.errors
     return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors,
                                           'id': id}))
 

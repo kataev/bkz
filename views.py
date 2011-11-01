@@ -11,7 +11,7 @@ from whs.brick.forms import BrickFilterForm
 from whs.bill.forms import Bills
 import datetime
 import calendar
-from whs.bill.stores import BillStore,BrickStore
+from whs.bill.stores import BillsStore,BrickStore
 from whs.brick.stores import BricksStore,BrickSelectStore
 from random import Random
 
@@ -64,7 +64,7 @@ def bill_store(request):
     """
     Представление для dojo store накладных.
     """
-    store = BillStore()
+    store = BillsStore()
     f = Bills(request.GET)
     query = Bill.objects.all()
     if f.is_valid():

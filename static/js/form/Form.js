@@ -61,11 +61,11 @@ dojo.provide('whs.form.Form.Bill');
 dojo.declare('whs.form.Form.Bill', whs.form.Form, {
     onSuccess:function(data) {
         var id = whs.id_to_dict(data.id).id;
-        var brick = document.location.href.split('sold=')[1];
-        if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
-        else {
-            if (!window.location.pathname.split('/')[2])
-            document.location = '/bill/' + id + '/';}
+//        var brick = document.location.href.split('sold=')[1];
+//        if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
+//        else {
+//            if (!window.location.pathname.split('/')[2])
+//            document.location = '/bill/' + id + '/';}
     }
 });
 
