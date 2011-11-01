@@ -35,14 +35,15 @@ def bill_form_get(request,form,id=None):
 @require_http_methods(["GET",])
 def bill_store(request,form,id):
     """ Представление для вывода dojo store операций накладной в виде дерева """
+    print id
     if id:
         bill = get_object_or_404(form._meta.model,pk=id)
         store = BillStore()
         for s in store.Meta.stores:
-            s.Meta.objects= s.Meta.objects.filter(doc=bill)
+            s.Meta.objects= s.Meta.objects.model.objects.filter(doc=bill)
     else:
-        store = SoldStore()
-        store.Meta.objects = []
+        store = BillStore()
+        store.Meta.objects = store.Meta.objects.empty()
 
     return HttpResponse(store.to_json(), mimetype='application/json')
 

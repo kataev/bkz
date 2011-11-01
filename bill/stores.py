@@ -5,8 +5,10 @@ from datetime import date
 
 class TransferStore(Store):
     brick = StoreField('brick.__unicode__')
-    amount = StoreField('amount')
+    brick_id = StoreField('brick.pk')
     css = StoreField('brick.css')
+
+    amount = StoreField('amount')
     info = StoreField()
     parent = ReferenceField('sold')
     class Meta(object):
@@ -14,11 +16,12 @@ class TransferStore(Store):
 
 class SoldStore(Store):
     brick = StoreField('brick.__unicode__')
+    brick_id = StoreField('brick.pk')
+    css = StoreField('brick.css')
+
     amount = StoreField()
     price = StoreField()
     delivery = StoreField()
-
-    css = StoreField('brick.css')
     info = StoreField()
 
     class Meta(object):

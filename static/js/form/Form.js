@@ -3,6 +3,8 @@ dojo.provide('whs.form.Form');
 dojo.require('dijit.form.Form');
 dojo.require('dijit.Tooltip');
 
+dojo.require('dojo.hash');
+
 
 dojo.declare('whs.form.Form', dijit.form.Form, {
     onSuccess:function(data) {
@@ -60,7 +62,7 @@ dojo.provide('whs.form.Form.Bill');
 
 dojo.declare('whs.form.Form.Bill', whs.form.Form, {
     onSuccess:function(data) {
-        var id = whs.id_to_dict(data.id).id;
+        dojo.hash(data.id);
 //        var brick = document.location.href.split('sold=')[1];
 //        if (brick) document.location = '/sold/?doc=' + id + '&brick='+brick;
 //        else {
@@ -73,15 +75,12 @@ dojo.provide('whs.form.Form.Oper');
 
 dojo.declare('whs.form.Form.Oper', whs.form.Form, {
     onSuccess:function(data) {
-        console.log(data)
-        var id = data.id;
         var name = window.location.pathname.split('/')[1]
-        if (window.opener){
-            var widget = window.opener['FKSelect'+name];
+        if (window.opener && dojo.hash()){
+            var widget = window.opener.dijit.byId(dojo.hash());
             var item = this.get('value');
-            d = {'brick':item.brick.label,'css':item.brick.css,
-                amount:item.amount,price:item.price}
-            d.id = data.id
+            var d = {'brick':item.brick.label,'css':item.brick.css,id:data.id,
+                brick_id:item.brick.value,amount:item.amount,price:item.price}
             widget.store.newItem(d)
             window.close()
 

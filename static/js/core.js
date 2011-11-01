@@ -26,7 +26,14 @@ var dojoConfig = {
 //    });
 //});
 
+dojo.provide('whs.names');
+whs.names = {bill:['sold','transfer']}
+dojo.provide('whs.upper');
+whs.upper = function(s){return s[0].toLocaleUpperCase().concat(s.slice(1))}
 
+
+dojo.provide('whs.locale');
+whs.locale = {bill:'накладная',sold:'продажа',transfer:'перевод'}
 
 
 dojo.provide('whs.prefix');

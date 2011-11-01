@@ -35,3 +35,9 @@ form>div {
 .oper td.view {
     width:36px;
 }
+.FKSelect table {width:300px;}
+.FKSelect caption a {margin: 5px 0 0 5px;}
+.FKSelect caption:before {content:'Добавить'}
+.FKSelect tbody tr[name=transfer]{
+    margin-bottom: 4px;
+}
