@@ -31,7 +31,7 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
             var n = whs.id_to_dict(i).name; var d = whs.id_to_dict(i).id;
             var parent = dojo.query('[name=' + n + ']' + '[oper_id=' + d + ']',this.bodyNode)[0];
             if (parent) dojo.place(tr, parent, 'after');
-        }
+        }   
         if (!this[name + 'input']) this[name + 'input'] = dojo.create('select', {name:name, multiselect:'multiselect'
                                                                                     ,class:'hidden'}, this.domNode);
         dojo.create('option', {value:id,selected:'selected'}, this[name + 'input']);
