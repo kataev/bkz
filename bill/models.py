@@ -118,7 +118,7 @@ class Transfer(Oper):
     Привязанн к накладной, т.к является операцией продажи.
     """
     sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
-    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=False,verbose_name=u'Накладная')
+    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
 
     class Meta():
             verbose_name = u"перевод"

@@ -75,13 +75,9 @@ dojo.provide('whs.form.Form.Oper');
 
 dojo.declare('whs.form.Form.Oper', whs.form.Form, {
     onSuccess:function(data) {
-        var name = window.location.pathname.split('/')[1]
-        if (window.opener && dojo.hash()){
-            var widget = window.opener.dijit.byId(dojo.hash());
-            var item = this.get('value');
-            var d = {'brick':item.brick.label,'css':item.brick.css,id:data.id,
-                brick_id:item.brick.value,amount:item.amount,price:item.price}
-            widget.store.newItem(d)
+//        var name = window.location.pathname.split('/')[1]
+        if (window.opener){
+            window.opener.dojo.publish('whs/FKSelect',[{value:this.get('value'),id:data.id}]);
             window.close()
 
         }else{
