@@ -8,7 +8,8 @@ class TransferStore(Store):
     brick_id = StoreField('brick.pk')
     css = StoreField('brick.css')
 
-    amount = StoreField('amount')
+    amount = StoreField()
+    tara = StoreField()
     info = StoreField()
     parent = ReferenceField('sold')
     class Meta(object):
@@ -20,6 +21,7 @@ class SoldStore(Store):
     css = StoreField('brick.css')
 
     amount = StoreField()
+    tara = StoreField()
     price = StoreField()
     delivery = StoreField()
     info = StoreField()

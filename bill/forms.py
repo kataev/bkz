@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from brick.forms import BrickSelect
+from brick.forms import BrickSelect,BrickSelectStack
 from whs.bill.models import *
 from whs.brick.models import Brick
 
@@ -26,7 +26,7 @@ class SoldForm(forms.ModelForm):
         widgets = {
             'doc': forms.HiddenInput(),
             'info': forms.Textarea(attrs={}),
-            'brick': BrickSelect(),
+            'brick': BrickSelectStack(),
             'tara': forms.NumberSpinnerInput(
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}}),
             'price': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}}),

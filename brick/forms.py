@@ -49,3 +49,7 @@ class BrickSelect(forms.Select):
         output = [u'<input%s/>' % flatatt(final_attrs)]
 #        output = [u'<input/>']
         return mark_safe(u'\n'.join(output))
+
+
+class BrickSelectStack(BrickSelect):
+    dojo_type = 'whs.form.BrickSelect.StackConteiner'

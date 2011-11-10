@@ -136,7 +136,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'dojango.middleware.DojoCollector',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'whs.urls'
@@ -162,7 +162,7 @@ INSTALLED_APPS = (
     'whs.manufacture',
 
 #    'south',
-    'debug_toolbar',
+#    'debug_toolbar',
 	'dojango',
     'django_extensions',
 )

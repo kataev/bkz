@@ -62,11 +62,9 @@
                 {{ form.info }}
             </div>
             <div class='field'>
-                <label for='{{ form.sold.id_for_label }}'>{{ form.sold.label }}{% if form.sold.help_text %}<sup
-                        id='{{ form.sold.id_for_label }}_sup'>?</sup>
+                <label for='{{ form.sold.id_for_label }}'>Операции<sup id='{{ form.sold.id_for_label }}_sup'>?</sup>
                     <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                          data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">{{ form.sold.help_text }}</span>
-                {% endif %}
+                          data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">Добавьте или измените операции</span>
                 </label>
                 {{ form.sold }}
             </div>

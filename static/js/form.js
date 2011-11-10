@@ -10,3 +10,4 @@ dojo.require("whs.form.Form");
 dojo.require("dijit.form.Select");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.ValidationTextBox");
+dojo.require("dijit.layout.StackContainer");

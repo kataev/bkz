@@ -11,16 +11,14 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
     widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:[],
     render: function(item) {
         console.log('render')
-        var wid = this.id;
-        var store = this.store;
+        var wid = this.id; var store = this.store;
         var id = whs.id_to_dict(store.getValues(item, 'id')).id;
         var name = whs.id_to_dict(store.getValues(item, 'id')).name;
         if (!this.value)this.value = {};
         if (this.value[name]) this.value[name].push(id); else this.value[name] = [id];
-//        var tr = dojo.query('tr[name=' + name + ']' + '[id=' + id + ']', this.bodyNode)[0]
-        tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name}, this.bodyNode);
+        var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'info')}, this.bodyNode);
         dojo.create('td', {innerHTML:store.getValues(item, 'brick')}, tr);
-        dojo.create('td', {innerHTML:store.getValues(item, 'amount')}, tr);
+        dojo.create('td', {innerHTML:store.getValues(item, 'amount')+'|'+store.getValues(item, 'tara')}, tr);
         if (store.getValues(item, 'price').length) {
             dojo.create('td', {innerHTML:store.getValues(item, 'price')}, tr);
             dojo.create('td', {innerHTML:store.getValues(item, 'price') * store.getValues(item, 'amount')}, tr);
@@ -56,41 +54,54 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         }));
         menu.startup();
     },
+    refresh:function(){
+        var render = dojo.hitch(this, 'render');
+        dojo.empty(this.bodyNode);
+        this.store.fetch({query:{id:'*'},onItem:function(item) {
+            render(item);
+        }});
+    },
     postCreate : function() {
         this.store = new dojo.data.ItemFileWriteStore({url:'store/'});
         var store = this.store;
-        var id = this.id;
+        var id = this.id; var body = this.bodyNode;
         var render = dojo.hitch(this, 'render');
-        dojo.connect(store, 'onNew', function(item) {
-            render(item);
-        });
-        store.fetch({query:{id:'*'},onItem:function(item) {
-            render(item);
-        }});
+        var refresh = dojo.hitch(this, 'refresh');
+//        dojo.connect(store, 'onNew', function(item) {
+//            render(item);
+//        });
+        this.refresh();
         var name = whs.names[window.location.pathname.split('/')[1]]
         for (var o in name) {
             dojo.create('a', {innerHTML:whs.upper(whs.locale[name[o]]),href:'/' + name[o] + '/'}, this.captionNode)
         }
         dojo.query('a', this.captionNode).connect('onclick', function(e) {
             dojo.stopEvent(e);
-            window.open('/' + dojo.attr(this, 'href').split('/')[1] + '/#' + id, '', "width=460,height=300,top=100,left=300");
+            window.open('/' + dojo.attr(this, 'href').split('/')[1] + '/', '', "width=460,height=300,top=100,left=300");
         });
         dojo.subscribe("whs/FKSelect", function(data) {
             var count = 0;
+            var item = data.value; var brick = item.brick; item.brick = brick.label;
+            item.brick_id = brick.value; item.css = brick.css;
             store.fetch({query:{id:data.id},
-                onItem:function(item) {
+                onItem:function(item_old) {
                     count++;
-                    console.log(item, 'found!')
+                    console.log(item, 'found!');
+                    for (var f in item){
+//                        console.log(f,item[f])
+                        store.setValue(item_old,f,item[f]);
+                    }
                 },
                 onComplete:function(complite) {
                     if (!count) {
                         console.log(data, 'тю тю');
-                        var item = data.value; var brick = item.brick; item.brick = brick.label;
-                        item.brick_id = brick.value; item.css = brick.css; item.id = data.id;
+                        item.id = data.id;
                         store.newItem(item);
                     }
+                    refresh();
                 }
-            })
+            });
+
         });
     },
     _getValueAttr:function() {
