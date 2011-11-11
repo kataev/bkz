@@ -522,41 +522,30 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     }
 }
 
-.facial .label {
-    font-style: italic;
-}
+.facial { font-style: italic; }
 
-.common {
+.common { }
 
-}
+.cl_red, span.BrickSelect.cl_red { background: #f77a6c; }
+.cl_red:hover, span.BrickSelect.cl_red:hover { background: #DD6D61; }
 
-.cl_red, .cl_red td, span.BrickSelect.cl_red {
-    background: #f77a6c;
-}
+.cl_ye, span.BrickSelect.cl_ye { background: #f6d87c; }
+.cl_ye:hover, span.BrickSelect.cl_ye:hover { background: #DCC26F; }
 
-.cl_ye, .cl_ye td, span.BrickSelect.cl_ye {
-    background: #f6d87c;
-}
+.cl_br, span.BrickSelect.cl_br { background: #d48b6b; }
+.cl_br:hover, span.BrickSelect.cl_br:hover { background: #ba7C5E; }
 
-.cl_br, .cl_br td, span.BrickSelect.cl_br {
-    background: #d48b6b;
-}
+.cl_li, span.BrickSelect.cl_li { background: #38d187; }
+.cl_li:hover, span.BrickSelect.cl_li:hover { background: #31B777; }
 
-.cl_li, .cl_li td, span.BrickSelect.cl_li {
-    background: #38d187;
-}
+.cl_wh, span.BrickSelect.cl_wh { background-color: #fffafa; }
+.cl_wh:hover, span.BrickSelect.cl_wh:hover { background-color: #e5e1e1; }
 
-.cl_wh, .cl_wh td, span.BrickSelect.cl_wh {
-    background-color: #fffafa;
-}
+.cl_eu, span.BrickSelect.cl_eu { background-color: #4fc3eb; }
+.cl_eu:hover, span.BrickSelect.cl_eu:hover { background-color: #46aed1; }
 
-.cl_eu, .cl_eu td, span.BrickSelect.cl_eu {
-    background-color: #4fc3eb;
-}
-
-.cl_ot, .cl_ot td, span.BrickSelect.cl_ot {
-    background-color: #a9a4a4;
-}
+.cl_ot, span.BrickSelect.cl_ot { background-color: #a9a4a4; }
+.cl_ot:hover, span.BrickSelect.cl_ot:hover { background-color: #8f8b8b; }
 
 .BrickSelect .dijitTextBox {
     padding-left: 2px;
@@ -564,6 +553,7 @@ Inlined to avoid required HTTP connection: h5bp.com/r
     padding-top: 1px;
     padding-bottom: 1px;
 }
+table.BrickSelect tr {cursor: pointer;}
 
 td.sold, td.t_from, td.t_to, td.total, td.begin, td.label, td.add {
     padding-left: 5px !important;
@@ -623,3 +613,12 @@ width: 100%;
 height: 100%;
 margin: 0;
 }
+tr.hide {display:none;}
+
+#brick_select_table td {padding-left: 2px;}
+#stack .filter table td {border:1px solid white;}
+#stack .filter table td:hover {cursor: pointer;text-decoration: underline;}
+#stack .filter table.mark td.active {color:#a52a2a;background-color: #cdc932;}
+#stack .filter table.view td.active {color:#a52a2a;background-color: #cdc932;}
+#stack .filter table.weight td.active {color:#a52a2a;background-color: #cdc932;}
+#stack .filter table td.active {text-decoration: underline;}

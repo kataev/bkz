@@ -4,8 +4,8 @@
 {% endblock %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block dojango_content %}
-    <div dojoType="dijit.layout.BorderContainer" style='height: 100%;'>
     <div dojoType="dijit.layout.StackContainer" id='stack' style='height: 100%;' region='center'>
+    <div dojoType="dijit.layout.BorderContainer">
     <div dojoType="dijit.layout.ContentPane" region='center'>
     <form action='./post/' id='form' method='POST' dojoType='whs.form.Form.Oper'>
         <div class='field'>

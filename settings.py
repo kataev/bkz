@@ -44,7 +44,7 @@ DOJANGO_DOJO_PROFILE = "google_uncompressed"
 
 #DOJANGO_DOJO_PROFILE = "local"
 
-APPEND_SLASH = True
+
 
 DOJANGO_DOJO_VERSION = '1.6.0'
 
@@ -54,6 +54,7 @@ DOJANGO_CDN_USE_SSL = True
 
 DOJANGO_DOJO_SECURE_JSON = False
 
+APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

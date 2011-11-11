@@ -35,6 +35,9 @@ form>div {
 .oper td.view {
     width:36px;
 }
+
+
+
 .FKSelect table {width:300px;border: 1px black solid;}
 .FKSelect caption {padding-bottom: 5px;}
 .FKSelect caption a {margin: 5px 0 0 5px;}

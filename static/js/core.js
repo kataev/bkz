@@ -37,7 +37,7 @@ whs.locale = {bill:'накладная',sold:'продажа',transfer:'пере
 
 
 dojo.provide('whs.prefix');
-whs.prefix = {'mark':'m','class':'cl_'}
+whs.prefix = {'mark':'m','class':'cl_','view':'',weight:''}
 
 dojo.provide('whs.css_order');
 

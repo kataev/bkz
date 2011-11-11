@@ -9,14 +9,15 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
     baseClass: 'FKSelect',name:'',
     templateString: dojo.cache('whs', 'template/FKSelect.html'),
     widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:[],
+    popup:'width=500,height=300,top=100,left=350',
     render: function(item) {
-        console.log('render')
+        var pop = this.popup;
         var wid = this.id; var store = this.store;
         var id = whs.id_to_dict(store.getValues(item, 'id')).id;
         var name = whs.id_to_dict(store.getValues(item, 'id')).name;
         if (!this.value)this.value = {};
         if (this.value[name]) this.value[name].push(id); else this.value[name] = [id];
-        var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'info')}, this.bodyNode);
+        var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'label')+store.getValues(item, 'info')}, this.bodyNode);
         dojo.create('td', {innerHTML:store.getValues(item, 'brick')}, tr);
         dojo.create('td', {innerHTML:store.getValues(item, 'amount')+'|'+store.getValues(item, 'tara')}, tr);
         if (store.getValues(item, 'price').length) {
@@ -43,7 +44,7 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         menu.addChild(new dijit.MenuItem({
             label:'Изменить операцию',
             onClick: function(event) {
-                window.open('/' + name + '/' + id + '/#' + wid, '', "width=450,height=300,top=150,left=320");
+                window.open('/' + name + '/' + id + '/','', pop);
             }
         }));
         menu.addChild(new dijit.MenuItem({
@@ -62,6 +63,7 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         }});
     },
     postCreate : function() {
+        var pop = this.popup;
         this.store = new dojo.data.ItemFileWriteStore({url:'store/'});
         var store = this.store;
         var id = this.id; var body = this.bodyNode;
@@ -77,7 +79,7 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         }
         dojo.query('a', this.captionNode).connect('onclick', function(e) {
             dojo.stopEvent(e);
-            window.open('/' + dojo.attr(this, 'href').split('/')[1] + '/', '', "width=460,height=300,top=100,left=300");
+            window.open('/' + dojo.attr(this, 'href').split('/')[1] + '/', '',pop);
         });
         dojo.subscribe("whs/FKSelect", function(data) {
             var count = 0;
