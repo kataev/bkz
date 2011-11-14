@@ -51,6 +51,13 @@ def opers_form_get(request,form,id=None):
         form = form(instance=get_object_or_404(form._meta.model,pk=id))
     else:
         form = form(request.GET)
+    if request.GET.get('transfer'):
+        transfer = get_object_or_404(Transfer,id=request.GET.get('transfer'))
+        form.fields['brick'].queryset = transfer.brick.transfer()
+    if get_object_or_404(form._meta.model,pk=id).transfer:
+        transfer = get_object_or_404(form._meta.model,pk=id).transfer
+        form.fields['brick'].queryset = transfer.brick.transfer()
+
     if request.is_ajax():
         return HttpResponse(form)
     else:

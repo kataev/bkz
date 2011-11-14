@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from constants import *
+from django.db.models import Q
 
 class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
@@ -20,6 +21,15 @@ class Brick(models.Model):
 
     css=models.CharField(u"Css",max_length=360,default=u'')
     label=models.CharField(u"ИмяЯ",max_length=660,default='')
+
+    def transfer(self,view=False):
+        queryset =  Brick.objects.filter(brick_class=self.brick_class)
+        queryset = queryset.filter(weight=self.weight)
+        if self.mark != 9000:
+            queryset = queryset.filter(Q(mark__lt=self.mark) | Q(mark=9000))
+        if not view:
+            queryset = queryset.filter(view=self.view)
+        return queryset
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'

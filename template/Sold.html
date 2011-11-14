@@ -17,6 +17,9 @@
             {% endif %}
             </label>
             {{ form.brick }}
+            {% if form.transfer.value %}с учетом
+            <span class="BrickSelect dijitTextBox {{ form.fields.transfer.choices.queryset.get.brick.css }}" role='presentation'>{{ form.fields.transfer.choices.queryset.get }}</span>
+            {% endif %}
         </div>
         <div class='field'>
             <img src='/static/img/16x16/soil_layers.png' width="16" height="16" alt="{{ form.brick.label }}">

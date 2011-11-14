@@ -49,6 +49,7 @@ form>div {
 .FKSelect tfoot .amount {background-color: #cccccc;}
 .FKSelect tbody td.tara {width:20px;}
 .FKSelect tbody td.price {text-align: center;}
+.FKSelect .sum {width: 60px;padding-left: 5px;}
 
 .FKSelect tbody tr[name=transfer]{
     margin-bottom: 4px;

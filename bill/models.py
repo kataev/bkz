@@ -107,10 +107,7 @@ class Transfer(Oper):
 
     def __unicode__(self):
         if self.pk:
-            if self.sold is None:
-                return u'Незаконченный перевод № %d из %s, %d шт' % (self.pk,self.brick,self.amount)
-            else:
-                return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
+            return u'Перевод из %s, %d шт' % (self.brick,self.amount)
         else:
             return u'Новый перевод'
 

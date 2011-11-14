@@ -3,6 +3,10 @@ from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 import dojango.forms as forms
 from whs.brick.models import Brick
+from django.utils.encoding import force_unicode
+from itertools import chain
+from django.forms.util import flatatt
+from django.utils.safestring import mark_safe
 
 class BrickForm(forms.ModelForm):
     class Meta:
@@ -53,3 +57,53 @@ class BrickSelect(forms.Select):
 
 class BrickSelectStack(BrickSelect):
     dojo_type = 'whs.form.BrickSelect.StackConteiner'
+
+    def render(self, name, value, attrs=None, choices=()):
+        """ Переопределние метода для вывода нужного тега. """
+        if value is None: value = ''
+        final_attrs = self.build_attrs(attrs, name=name)
+        output = [u'<select%s>' % flatatt(final_attrs)]
+        options = self.render_options(choices, [value])
+        if options:
+            output.append(options)
+        output.append(u'</select>')
+        return mark_safe(u'\n'.join(output))
+
+    def render_option(self, brick, selected_choices, option_value=None, option_label=None):
+        """
+        Переопределние метода для вывода элемента тега с нужными тегами.
+        """
+        if brick is None:
+            return u''
+        else:
+            selected_html = ((brick.pk in selected_choices) or (
+            str(brick.pk) in selected_choices)) and u' selected="selected"' or ''
+            return u'<option class="%(class)s" total="%(total)s" value="%(pk)s"%(selected_html)s>%(title)s</option>' % {
+                'class': brick.css,
+                'total': brick.total,
+                'pk': brick.pk,
+                'selected_html': selected_html,
+                'title': brick
+            }
+
+    def render_options(self, choices, selected_choices):
+        selected_choices = set([v for v in selected_choices])
+        output = []
+        br = self.choices.queryset
+        for option_value, option_label in chain(self.choices, choices):
+            if isinstance(option_label, (list, tuple)):
+                output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
+                for option in option_label:
+                    try:
+                        val = int(option_value)
+                        output.append(self.render_option(br.get(pk=val), selected_choices, *option))
+                    except ValueError:
+                        output.append(self.render_option(None, selected_choices, *option))
+                output.append(u'</optgroup>')
+            else:
+                try:
+                    val = br.get(pk=option_value)
+                except:
+                    val = None
+                output.append(self.render_option(val, selected_choices))
+        return u'\n'.join(output)

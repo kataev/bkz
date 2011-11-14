@@ -5,7 +5,7 @@ dojo.require('dijit._Widget');
 dojo.require('dijit._Templated');
 dojo.require('dijit.Dialog');
 dojo.require("dijit.layout.ContentPane");
-dojo.require("dojo.data.ItemFileReadStore");
+dojo.require("dojo.data.ItemFileWriteStore");
 
 dojo.provide('whs.form.Dialog');
 dojo.declare('whs.form.Dialog', dijit.Dialog, {
@@ -20,23 +20,30 @@ dojo.declare("whs.form.BrickSelect", [dijit._Widget,dijit._Templated], {
     constructor:function() { this.conteiner = new whs.form.Dialog(); },
     show:function(e) { this.conteiner.show(); },
     hide:function(e) { this.conteiner.hide(); },
+    postMixInProperties:function(){
+        if (this.srcNodeRef.nodeName =='SELECT') {
+            var data = [];var value = 0;
+            dojo.query('option',this.srcNodeRef).forEach(function(node){
+                var item = {label:dojo.attr(node,'innerHTML'),id:'brick.brick__'+dojo.attr(node,'value'),
+                total:dojo.attr(node,'total'),css:dojo.attr(node,'class')};
+                data.push(item);
+                if (dojo.attr(node,'selected')) value = dojo.attr(node,'value');
+            });
+            this.value = value;
+            var store = this.store = new dojo.data.ItemFileWriteStore({data:{identifier:'id',label:'label',items:data}});
+            dojo.empty(this.srcNodeRef);
+        } else this.store = new dojo.data.ItemFileWriteStore({url:'/select/'});
+    },
     postCreate:function() {
         var setLabel = dojo.hitch(this, '_setLabelAttr'); var zero = this.zero;
-        var show = dojo.hitch(this, 'show');
-        var hide = dojo.hitch(this, 'hide');
+        var show = dojo.hitch(this, 'show'); var hide = dojo.hitch(this, 'hide');
         var setLabelClass = dojo.hitch(this, '_setLabelClassAttr');
-        var setValue = dojo.hitch(this, '_setValueAttr');
-        var value = this.value;
-        var content = this.conteiner;
-        dojo.connect(this.labelNode, 'onclick', function(e) {
-            show(e)
-        });
-        this.store = new dojo.data.ItemFileReadStore({url:'/select/'});
-        var store = this.store;
+        var setValue = dojo.hitch(this, '_setValueAttr'); var value = this.value;
+        var content = this.conteiner;var store = this.store;
+        dojo.connect(this.labelNode, 'onclick', function(e) { show(e) });
         var table = dojo.create('table', {id:'brick_select_table',class:this.baseClass,style:'width:300px;'}, content.containerNode);
         store.fetch({query:{id:'*'},onItem:function(item) {
-            if (!store.getValue(item, 'total') || zero) return;
-
+//            if (!store.getValue(item, 'total') || zero) return;
             var id = whs.id_to_dict(store.getValues(item, 'id')).id;
             if (id == value) {
                 setLabel(store.getLabel(item));
@@ -45,6 +52,7 @@ dojo.declare("whs.form.BrickSelect", [dijit._Widget,dijit._Templated], {
             var tr = dojo.create('tr', {class:store.getValues(item, 'css'),id:id}, table);
             dojo.create('td', {innerHTML:store.getLabel(item)}, tr);
             dojo.create('td', {innerHTML:store.getValue(item, 'total')}, tr);
+//            console.log(tr);
         }, onComplete: function (d) {
             dojo.query('tr', table).connect('onclick', function(e) {
                 setValue(dojo.attr(this, 'id'));
