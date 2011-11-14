@@ -58,9 +58,9 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
     refresh:function(){
         var render = dojo.hitch(this, 'render');
         dojo.empty(this.bodyNode);
-        this.store.fetch({query:{id:'*'},onItem:function(item) {
-            render(item);
-        }});
+        this.store.fetch({query:{id:'*'},
+            onItem:function(item) { render(item); },
+            onError:function(e){return}});
     },
     postCreate : function() {
         var pop = this.popup;

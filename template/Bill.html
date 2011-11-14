@@ -11,13 +11,6 @@
     <div dojoType="dijit.layout.BorderContainer" region='center'>
 {% endblock %}
 {% block content %}
-    <div dojoType="dijit.MenuBar" region='top' layoutPriority='1'>
-        <div dojoType="dijit.MenuBarItem"><span style='border:1px green solid;'>Сохранить</span></div>
-        {% if form.instance.pk %}
-        <div dojoType="dijit.MenuBarItem" onclick="window.location='/sold/?doc={{ form.instance.pk }}'"><span>Добавить отгрузку</span></div>
-        <div dojoType="dijit.MenuBarItem" onclick="window.location='/transfer/?doc={{ form.instance.pk }}'"><span>Добавить перевод</span></div>
-        {% endif %}
-    </div>
     <div dojoType="dijit.layout.ContentPane" region='center'>
         <form action='./post/' method='POST' dojoType='whs.form.Form.Bill' id='form'>
             <div class='field'>
@@ -64,7 +57,8 @@
             <div class='field'>
                 <label for='{{ form.sold.id_for_label }}'>Операции<sup id='{{ form.sold.id_for_label }}_sup'>?</sup>
                     <span data-dojo-type="dijit.Tooltip" style='display:none;'
-                          data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">Добавьте или измените операции</span>
+                          data-dojo-props="connectId:'{{ form.sold.id_for_label }}_sup'">Добавьте или измените операции.
+                        Для изменения шекните по операции правой кнопкой мыши</span>
                 </label>
                 {{ form.sold }}
             </div>

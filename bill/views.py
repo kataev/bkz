@@ -38,13 +38,10 @@ def bill_store(request,form,id):
     print id
     if id:
         bill = get_object_or_404(form._meta.model,pk=id)
-        store = BillStore()
-        for s in store.Meta.stores:
-            s.Meta.objects= s.Meta.objects.model.objects.filter(doc=bill)
+        store = SoldStore(objects=Sold.objects.filter(doc=bill))
+        store.add_store(TransferStore(objects=Transfer.objects.filter(doc=bill)))
     else:
-        store = BillStore()
-        store.Meta.objects = store.Meta.objects.empty()
-
+        store = SoldStore(objects=[])
     return HttpResponse(store.to_json(), mimetype='application/json')
 
 @require_http_methods(["GET",])
