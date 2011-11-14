@@ -91,24 +91,6 @@ class Bill(Doc):
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name,self.id)
 
-class Sold(Oper):
-    """
-    Класс для операций отгруки, является аналогом строки в накладной.
-    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной.
-    """
-    price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
-    delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
-    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
-    class Meta():
-            verbose_name = u"отгрузка"
-            verbose_name_plural =  u"отгрузки"
-
-    def __unicode__(self):
-        if self.pk:
-            return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
-        else:
-            return u'Новая отгрузка'
-
 class Transfer(Oper):
     """
     Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
@@ -117,7 +99,6 @@ class Transfer(Oper):
     точка перевода содержится по связи sold.
     Привязанн к накладной, т.к является операцией продажи.
     """
-    sold = models.ForeignKey(Sold,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
 
     class Meta():
@@ -132,6 +113,25 @@ class Transfer(Oper):
                 return u'Перевод № %d из %s в %s, %d шт' % (self.pk,self.brick,self.sold.brick,self.amount)
         else:
             return u'Новый перевод'
+
+class Sold(Oper):
+    """
+    Класс для операций отгруки, является аналогом строки в накладной.
+    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной.
+    """
+    price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
+    delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
+    doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
+    transfer = models.ForeignKey(Transfer,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
+    class Meta():
+            verbose_name = u"отгрузка"
+            verbose_name_plural =  u"отгрузки"
+
+    def __unicode__(self):
+        if self.pk:
+            return u'Отгрузка № %d %s, %d шт' % (self.pk,self.brick,self.amount)
+        else:
+            return u'Новая отгрузка'
 
 #@receiver(post_save,sender=Sold)
 #def money(*args,**kwargs):

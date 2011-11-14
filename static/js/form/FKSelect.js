@@ -19,7 +19,8 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         if (this.value[name]) this.value[name].push(id); else this.value[name] = [id];
         var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'label')+store.getValues(item, 'info')}, this.bodyNode);
         dojo.create('td', {innerHTML:store.getValues(item, 'brick')}, tr);
-        dojo.create('td', {innerHTML:store.getValues(item, 'amount')+'|'+store.getValues(item, 'tara')}, tr);
+        dojo.create('td', {innerHTML:store.getValues(item, 'amount')}, tr);
+        dojo.create('td', {innerHTML:store.getValues(item, 'tara')}, tr);
         if (store.getValues(item, 'price').length) {
             dojo.create('td', {innerHTML:store.getValues(item, 'price')}, tr);
             dojo.create('td', {innerHTML:store.getValues(item, 'price') * store.getValues(item, 'amount')}, tr);

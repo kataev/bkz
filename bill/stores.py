@@ -11,7 +11,6 @@ class TransferStore(Store):
     amount = StoreField()
     tara = StoreField()
     info = StoreField()
-    parent = ReferenceField('sold')
     class Meta(object):
         objects  = Transfer.objects.all()
 
@@ -25,6 +24,7 @@ class SoldStore(Store):
     price = StoreField()
     delivery = StoreField()
     info = StoreField()
+    parent = ReferenceField('transfer')
 
     class Meta(object):
         objects  = Sold.objects.all()

@@ -27,6 +27,7 @@ class SoldForm(forms.ModelForm):
             'doc': forms.HiddenInput(),
             'info': forms.Textarea(attrs={}),
             'brick': BrickSelectStack(),
+            'transfer': forms.HiddenInput(),
             'tara': forms.NumberSpinnerInput(
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}}),
             'price': forms.NumberSpinnerInput(attrs={'style': 'width:90px;', 'constraints': {'min': 0, 'max': 200}}),
@@ -43,8 +44,7 @@ class TransferForm(forms.ModelForm):
         widgets = {
             'doc': forms.HiddenInput(),
             'info': forms.Textarea(attrs={}),
-            'brick': BrickSelect(),
-            'sold': forms.HiddenInput(),
+            'brick': BrickSelectStack(),
             'tara': forms.NumberSpinnerInput(
                 attrs={'style': 'width:90px;', 'constraints': {'min': 1, 'max': 2000, 'places': 0}})
         }
