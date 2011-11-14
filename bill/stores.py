@@ -31,7 +31,7 @@ class SoldStore(Store):
 
 class BillStore(Store):
     class Meta:
-        stores = (SoldStore,TransferStore)
+        stores = (TransferStore,SoldStore)
 
 
 class BillsStore(Store):

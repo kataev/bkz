@@ -8,17 +8,20 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
     baseClass: 'FKSelect',name:'',
     templateString: dojo.cache('whs', 'template/FKSelect.html'),
-    widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:[],
+    widgetsInTemplate:true, label:'Щелкните для выбора кирпича',value:[],parents:[],
     popup:'width=500,height=300,top=100,left=350',
     render: function(item) {
-        var pop = this.popup;
+        var pop = this.popup;var style='';
         var wid = this.id; var store = this.store;
         var id = whs.id_to_dict(store.getValues(item, 'id')).id;
         var name = whs.id_to_dict(store.getValues(item, 'id')).name;
+        var parent = store.getValue(item,'parent');
         if (!this.value)this.value = {};
         if (this.value[name]) this.value[name].push(id); else this.value[name] = [id];
         var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'label')+store.getValues(item, 'info')}, this.bodyNode);
-        dojo.create('td', {innerHTML:store.getValues(item, 'brick')}, tr);
+        if (parent) this.parents.push([tr,store.getValue(parent,'id')]);
+        if (name=='sold') style='padding-left:20px;';
+        dojo.create('td', {innerHTML:store.getValues(item, 'brick'),style:style}, tr);
         dojo.create('td', {innerHTML:store.getValues(item, 'amount')}, tr);
         dojo.create('td', {innerHTML:store.getValues(item, 'tara')}, tr);
         if (store.getValues(item, 'price').length) {
@@ -57,11 +60,19 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         menu.startup();
     },
     refresh:function(){
-        var render = dojo.hitch(this, 'render');
-        dojo.empty(this.bodyNode);
+        var render = dojo.hitch(this, 'render');var body = this.bodyNode;
+        dojo.empty(body); var parents = this.parents;
         this.store.fetch({query:{id:'*'},
             onItem:function(item) { render(item); },
-            onError:function(e){return}});
+            onError:function(e){return},
+            onComplete:function(e){
+                dojo.forEach(parents,function(n){
+                    var id = whs.id_to_dict(n[1])
+                    var node = dojo.query('[oper_id='+id.id+'][name='+id.name+']',body)[0];
+                    if (node) dojo.place(n[0],node,'after');
+                });
+            }
+        });
     },
     postCreate : function() {
         var pop = this.popup;
