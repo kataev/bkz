@@ -528,24 +528,45 @@ Inlined to avoid required HTTP connection: h5bp.com/r
 
 .cl_red, span.BrickSelect.cl_red { background: #f77a6c; }
 .cl_red:hover, span.BrickSelect.cl_red:hover { background: #DD6D61; }
+.cl_red .d {background: #773b34;}
+.cl_red .l {background: #b75b50;}
+/*773b34 b75b50 ** 381c18 DD6D61*/
 
 .cl_ye, span.BrickSelect.cl_ye { background: #f6d87c; }
 .cl_ye:hover, span.BrickSelect.cl_ye:hover { background: #DCC26F; }
+.cl_ye .d { background: #76683c; }
+.cl_ye .l { background: #b6a05c; }
+/* 76683c b6a05c ** 37301c DCC26F*/
 
 .cl_br, span.BrickSelect.cl_br { background: #d48b6b; }
 .cl_br:hover, span.BrickSelect.cl_br:hover { background: #ba7C5E; }
+.cl_br .d { background: #54372b; }
+.cl_br .l { background: #94614b; }
+/*54372b 94614b ** 319371 ba7a5e*/
 
 .cl_li, span.BrickSelect.cl_li { background: #38d187; }
 .cl_li:hover, span.BrickSelect.cl_li:hover { background: #31B777; }
+.cl_li .d { background: #165135; }
+.cl_li .l { background: #27915e; }
+/*165135 27915e ** 3bde8f 31b777*/
 
 .cl_wh, span.BrickSelect.cl_wh { background-color: #fffafa; }
 .cl_wh:hover, span.BrickSelect.cl_wh:hover { background-color: #e5e1e1; }
+.cl_wh .d { background-color: #7f7d7d; }
+.cl_wh .l { background-color: #bfbbbb; }
+/*7f7d7d bfbbbb ** 403e3e e5e1e1*/
 
 .cl_eu, span.BrickSelect.cl_eu { background-color: #4fc3eb; }
 .cl_eu:hover, span.BrickSelect.cl_eu:hover { background-color: #46aed1; }
+.cl_eu .d { background-color: #24596b; }
+.cl_eu .l { background-color: #3a8eab; }
+/*24596b 3a8eab ** 53cef8 46aed1*/
 
 .cl_ot, span.BrickSelect.cl_ot { background-color: #a9a4a4; }
 .cl_ot:hover, span.BrickSelect.cl_ot:hover { background-color: #8f8b8b; }
+.cl_ot .d { background-color: #f5eeee; }
+.cl_ot .l { background-color: #696666; }
+/*f5eeee 696666 ** b6b1b1 8f8b8b*/
 
 .BrickSelect .dijitTextBox {
     padding-left: 2px;

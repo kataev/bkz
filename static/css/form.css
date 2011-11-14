@@ -43,6 +43,13 @@ form>div {
 .FKSelect caption {padding-bottom: 5px;}
 .FKSelect caption a {margin: 5px 0 0 5px;}
 .FKSelect caption:before {content:'Добавить:'}
+.FKSelect tbody tr[name=sold].parent :first-child{ padding-left: 17px; background:  url('/static/img/16x16/arrow.png') no-repeat; }
+/*.FKSelect tbody tr[name=sold] :first-child:{  }*/
+.FKSelect tbody td.amount {width:40px;}
+.FKSelect tfoot .amount {background-color: #cccccc;}
+.FKSelect tbody td.tara {width:20px;}
+.FKSelect tbody td.price {text-align: center;}
+
 .FKSelect tbody tr[name=transfer]{
     margin-bottom: 4px;
 }

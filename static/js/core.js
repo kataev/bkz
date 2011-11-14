@@ -35,6 +35,9 @@ whs.upper = function(s){return s[0].toLocaleUpperCase().concat(s.slice(1))}
 dojo.provide('whs.locale');
 whs.locale = {bill:'накладная',sold:'продажа',transfer:'перевод'}
 
+dojo.provide('whs.locale_plural');
+whs.locale_plural = {bill:'накладные',sold:'продажи',transfer:'переводы'}
+
 
 dojo.provide('whs.prefix');
 whs.prefix = {'mark':'m','class':'cl_','view':'',weight:''}

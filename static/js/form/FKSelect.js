@@ -19,14 +19,13 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         if (!this.value)this.value = {};
         if (this.value[name]) this.value[name].push(id); else this.value[name] = [id];
         var tr = dojo.create('tr', {class:store.getValues(item, 'css'),'oper_id':id,name:name,title:store.getValues(item, 'label')+store.getValues(item, 'info')}, this.bodyNode);
-        if (parent) this.parents.push([tr,store.getValue(parent,'id')]);
-        if (name=='sold') style='padding-left:20px;';
+        if (parent) {this.parents.push([tr,store.getValue(parent,'id')]);dojo.addClass(tr,'parent')}
         dojo.create('td', {innerHTML:store.getValues(item, 'brick'),style:style}, tr);
-        dojo.create('td', {innerHTML:store.getValues(item, 'amount')}, tr);
-        dojo.create('td', {innerHTML:store.getValues(item, 'tara')}, tr);
+        dojo.create('td', {innerHTML:store.getValues(item, 'amount'),class:'amount l'}, tr);
+        dojo.create('td', {innerHTML:store.getValues(item, 'tara'),class:'tara'}, tr);
         if (store.getValues(item, 'price').length) {
-            dojo.create('td', {innerHTML:store.getValues(item, 'price')}, tr);
-            dojo.create('td', {innerHTML:store.getValues(item, 'price') * store.getValues(item, 'amount')}, tr);
+            dojo.create('td', {class:'price',innerHTML:store.getValues(item, 'price')}, tr);
+            dojo.create('td', {class:'sum',innerHTML:store.getValues(item, 'price') * store.getValues(item, 'amount')}, tr);
         } else {
             dojo.create('td', {colspan:2}, tr)
         }
@@ -60,17 +59,30 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         menu.startup();
     },
     refresh:function(){
-        var render = dojo.hitch(this, 'render');var body = this.bodyNode;
-        dojo.empty(body); var parents = this.parents;
+        var render = dojo.hitch(this, 'render');var parents = this.parents = [];
+        var tbody = this.bodyNode;var tfoot = this.footNode;        
+        dojo.empty(tbody); dojo.empty(tfoot);
         this.store.fetch({query:{id:'*'},
             onItem:function(item) { render(item); },
             onError:function(e){return},
             onComplete:function(e){
                 dojo.forEach(parents,function(n){
                     var id = whs.id_to_dict(n[1])
-                    var node = dojo.query('[oper_id='+id.id+'][name='+id.name+']',body)[0];
+                    var node = dojo.query('[oper_id='+id.id+'][name='+id.name+']',tbody)[0];
                     if (node) dojo.place(n[0],node,'after');
                 });
+                var names = {}; dojo.query('tr',tbody).attr('name').forEach(function(e){names[e]=true;});
+                for (var name in names){
+                    var tr = dojo.create('tr',null,tfoot);
+                    dojo.create('th',{innerHTML:whs.upper(whs.locale_plural[name]),style:'text-align:right;padding-right:5px;'},tr);
+                    var opers = dojo.query('[name='+name+']',tbody);
+                    dojo.create('th',{class:'amount d',innerHTML:opers.query('td.amount').attr('innerHTML').reduce(function(e,w){return parseInt(e)+parseInt(w);})},tr);
+                    dojo.create('th',{class:'tara',innerHTML:opers.query('td.tara').attr('innerHTML').reduce(function(e,w){return parseInt(e)+parseInt(w);})},tr);
+                    dojo.create('th',null,tr);
+                    if (opers.query('td.price').length)
+                        dojo.create('th',{class:'tara',innerHTML:opers.query('td.sum').attr('innerHTML').reduce(function(e,w){return parseInt(e)+parseInt(w);})},tr);
+                    else dojo.create('th',null,tr);
+                }
             }
         });
     },
@@ -81,9 +93,6 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         var id = this.id; var body = this.bodyNode;
         var render = dojo.hitch(this, 'render');
         var refresh = dojo.hitch(this, 'refresh');
-//        dojo.connect(store, 'onNew', function(item) {
-//            render(item);
-//        });
         this.refresh();
         var name = whs.names[window.location.pathname.split('/')[1]]
         for (var o in name) {
