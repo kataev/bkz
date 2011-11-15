@@ -23,7 +23,7 @@ dijit.byId('OpenBill').onClick = function(e){
     year = new dijit.form.NumberSpinner({style:'width:60px;',min:2000,name:'year',value:new Date().getFullYear()},year);
     number = new dijit.form.NumberSpinner({style:'width:60px;',min:0,name:'number',value:1},number);
     button = new dijit.form.Button({label:'открыть'},button);
-    button.onClick = function(e){window.location = 'bill/'+year.get('value')+'/'+number.get('value')}
+    button.onClick = function(e){window.location = '/bill/'+year.get('value')+'/'+number.get('value')}
 
     dialog.show()
 };
@@ -39,7 +39,7 @@ dijit.byId('OpenAgent').onClick = function(e){
     select = new dijit.form.FilteringSelect({style:'width:200px;',name:'agent',store:store,searchAttr:'label'},select);
 
     button = new dijit.form.Button({label:'открыть'},button);
-    button.onClick = function(e){window.location = 'agent/'+whs.id_to_dict(select.get('value')).id}
+    button.onClick = function(e){window.location = '/agent/'+whs.id_to_dict(select.get('value')).id}
 
     dialog.show()
 };

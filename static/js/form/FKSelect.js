@@ -35,15 +35,27 @@ dojo.declare("whs.form.FKSelect", [dijit._Widget,dijit._Templated], {
         }
         if (!this[name + 'input']) this[name + 'input'] = dojo.create('select', {name:name, multiselect:'multiselect'
             ,class:'hidden'}, this.domNode);
-        dojo.create('option', {value:id,selected:'selected'}, this[name + 'input']);
+        var option = dojo.create('option', {value:id,selected:'selected'}, this[name + 'input']);
         dojo.connect(menu, 'onClose', function() { menu.uninitialize() })
         var menu = new dijit.Menu({targetNodeIds: [tr]});
         menu.addChild(new dijit.MenuItem({ label:'Изменить операцию',
             onClick: function(event) { window.open('/' + name + '/' + id + '/','', pop); }
         }));
+        menu.addChild(new dijit.MenuItem({ label:'<span style="color:red;">Удалить операцию</span>',
+            title:'Изменения вступают в силу немедленно и не обратимы',
+            onClick: function(event) {
+                dojo.xhrPost({url:'/'+name+'/'+id+'/delete/',data:{confirm:true}}).then(function(data){
+                    if (data.success) {
+                        dojo.destroy(tr);
+                        dojo.destroy(option);
+                    }
+                });
+            }
+        }));
         menu.addChild(new dijit.MenuItem({ label:'Посмотреть кирпич',
             onClick: function(event) { window.open('/brick/' + store.getValues(item, 'brick_id') + '/'); }
         }));
+
         menu.startup();
     },
     refresh:function(){

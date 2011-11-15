@@ -66,7 +66,6 @@ def opers_form_get(request,form,id=None):
 @require_http_methods(["POST",])
 def form_post(request,form,id=None):
     """ Представление для обработки POST данных формы """
-
     if id: form = form(request.POST,instance=get_object_or_404(form._meta.model,pk=id))
     else: form = form(request.POST)
     if form.is_valid():
@@ -75,13 +74,11 @@ def form_post(request,form,id=None):
             if form.cleaned_data['sold']: form.cleaned_data['sold'].update(doc=model)
             if form.cleaned_data['transfer']: form.cleaned_data['transfer'].update(doc=model)
         id = '%s.%s__%d' % (form._meta.model._meta.app_label,form._meta.model._meta.module_name,model.pk or 0)
-    print request.POST,form.errors
-    return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors,
-                                          'id': id}))
+    return HttpResponse(simplejson.dumps({'success':form.is_valid(),'errors':form.errors, 'id': id}))
 
 @require_http_methods(["POST", ])
 def delete(request,form,model,id):
-    """ Представление для удоления операций. //TODO: переписать.на rest или с выбором любой модели. """
+    """ Представление для удоления операций."""
     form = form(request.POST)
     if form.is_valid() and form.cleaned_data['confirm']:
         get_object_or_404(model,pk=id).delete()

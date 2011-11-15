@@ -104,12 +104,12 @@ def bricks_store(request):
     sold = Sold.objects.filter(doc__date__range=date).values('brick').annotate(s=Sum('amount'))
     add = Add.objects.filter(doc__date__range=date).values('brick').annotate(s=Sum('amount'))
     t_from = Transfer.objects.filter(doc__date__range=date).values('brick').annotate(s=Sum('amount'))
-    t_to = Transfer.objects.filter(doc__date__range=date).values('sold__brick').annotate(s=Sum('amount'))
+    t_to = Sold.objects.filter(doc__date__range=date,transfer__doc__date__range=date).values('brick').annotate(s=Sum('amount'))
 
     sold = dict(map(lambda x: [x['brick'],x['s']],sold))
     add = dict(map(lambda x: [x['brick'],x['s']],add))
     t_from = dict(map(lambda x: [x['brick'],x['s']],t_from))
-    t_to = dict(map(lambda x: [x['sold__brick'],x['s']],t_to))
+    t_to = dict(map(lambda x: [x['brick'],x['s']],t_to))
     for b in store.Meta.objects:
         b.sold = sold.get(b.pk,0)
         b.add = add.get(b.pk,0)
