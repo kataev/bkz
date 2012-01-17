@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import dojango.forms as forms
+import django.forms as forms
 from whs.agent.models import Agent
 
 class AgentForm(forms.ModelForm):

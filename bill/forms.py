@@ -3,7 +3,7 @@ from brick.forms import BrickSelect,BrickSelectStack
 from whs.bill.models import *
 from whs.brick.models import Brick
 
-from dojango import forms
+from django import forms
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 

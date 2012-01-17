@@ -7,7 +7,6 @@ class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
 
-    brick_class=models.IntegerField(u"Класс кирпича",max_length=60, choices=brick_class_c)
     color=models.CharField(u"Цвет",max_length=60, choices=color_c)
     mark=models.PositiveIntegerField(u"Марка",choices=mark_c)
     weight=models.CharField(u"Ширина",max_length=60, choices=weight_c)
@@ -22,15 +21,6 @@ class Brick(models.Model):
     css=models.CharField(u"Css",max_length=360,default=u'')
     label=models.CharField(u"ИмяЯ",max_length=660,default='')
 
-    def transfer(self,view=False):
-        queryset =  Brick.objects.filter(brick_class=self.brick_class)
-        queryset = queryset.filter(weight=self.weight)
-        if self.mark != 9000:
-            queryset = queryset.filter(Q(mark__lt=self.mark) | Q(mark=9000))
-        if not view:
-            queryset = queryset.filter(view=self.view)
-        return queryset
-
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
         else: return self.label
@@ -39,14 +29,14 @@ class Brick(models.Model):
         return "/brick/%i/" % self.id
 
     class Meta():
-        ordering=['brick_class','-weight','-view','color_type','defect','refuse','mark','features','color']
+        ordering=['color','-weight','-view','color_type','defect','refuse','mark','features',]
         verbose_name = u"кирпич"
         verbose_name_plural = u'кирпичи'
 
     css_dict= dict(
-        brick_class={0: u'cl_red', 1: u'cl_ye', 2: u'cl_br', 3: u'cl_li', 4: u'cl_wh', 5: u'cl_eu', 6: u'cl_ot'},
-        mark={100: u'm100', 125: u'm125', 150: u'm150', 175: u'm175', 200: u'm200', 250: u'm250', 9000: u'm9000'},
-        weight={u'1': u'single', u'1.4': u'thickened', u'2': u'double'}, view={u'Л': u'facial', u'Р': u'common',u'УЛ': u'facial', u'': u'common'},
+        color=[u'red',u'yellow',u'brown',u'light',u'white'],
+        weight={u'1': u'single', u'1.4': u'thickened', u'2': u'double', u'EU':u'euro'},
+        view={u'Л': u'facial', u'Р': u'common'},
         color_type={'': u'type0', '1': u"type1", '2': u'type2', '3': u'type3'},
         defect={u'': u'lux', u'<20': u'p_20', u'>20': u'm_20'})
 

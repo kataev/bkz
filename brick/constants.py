@@ -4,12 +4,18 @@ __author__ = 'bteam'
 euro_view={u'Л':u'УЛ',u'Р':u''} # Для имени
 
 view_c=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
-weight_c=((u'1',u'Одинарный'),(u'1.4',u'Утолщенный'),(u'2',u'Двойной'))
-color_c=((u'Кр',u'Красный'),
-                   (u'Же',u'Желтый'),
-                   (u'Ко',u'Коричневый'),
-                   (u'Св',u'Светлый'),
-                   (u'Бе',u'Белый'))
+
+weight_c=(
+    (u'1',u'Одинарный'),
+    (u'1.4',u'Утолщенный'),
+    (u'EU',u'Евро'),
+    (u'2',u'Двойной'))
+
+color_c=((0,u'Красный'),
+                   (1,u'Желтый'),
+                   (2,u'Коричневый'),
+                   (3,u'Светлый'),
+                   (4,u'Белый'))
 
 brick_class_c=((0,u'Красный'),
                    (1,u'Желтый'),
@@ -31,7 +37,7 @@ color_type_c=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
 defect_c=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
 refuse_c=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'),(u'П',u'Полосы'))
 
-def make_label(brick): # Хитро код для вывода имени когда вызываем строку
+def make_label(brick): # Говнокод для вывода имени
     if True:
 #        t = Template(u'К$weight_d$view_dПу $mark $defect $refuse $features $tip') # Шаблон для обычного кирпича
         values = brick.__dict__
@@ -41,7 +47,7 @@ def make_label(brick): # Хитро код для вывода имени ког
         template = u"К%(weight).1s%(view).1sПу %(mark)s %(color)s %(defect)s %(refuse)s %(features)s %(color_type)s"
 
         if brick.weight == u'Двойной':
-            template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для ебаного камня
+            template = u'КР %(mark)s %(color)s %(defect)s %(refuse)s %(features)s' # Шаблон для камня
 
         if brick.color==u'Кр':
             values['color'] = ''

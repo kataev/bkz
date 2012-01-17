@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
-import dojango.forms as forms
+import django.forms as forms
 from whs.manufacture.models import *
 
 class ManForm(forms.ModelForm):
