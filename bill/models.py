@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models import Sum
-from django.contrib import admin
 from whs.brick.models import Brick
 from whs.agent.models import Agent
 import pytils
 import datetime
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 class Oper(models.Model):
-    """
-    Абстрактный класс для всех операций
-    """
+    """ Абстрактный класс для всех операций """
     poddon_c = ((288,u'Маленький поддон'),(352,u'Обычный поддон'))
 
     brick=models.ForeignKey(Brick,related_name="%(app_label)s_%(class)s_related",verbose_name=u"Кирпич",help_text=u'Выберите кирпич')
@@ -31,9 +25,7 @@ class Oper(models.Model):
         return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 
 class Doc(models.Model):
-    """
-    Абстрактный класс для документов.
-    """
+    """ Абстрактный класс для документов. """
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
     date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
     info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация(напр водитель)')
@@ -44,10 +36,8 @@ class Doc(models.Model):
 
 ## Накладная
 class Bill(Doc):
-    """
-    Накладная, документ который используется при отгрузке кирпича покупателю
-    Основа продажи, на него ссылаются операции продажи - Sold && Transfer.
-    """
+    """ Накладная, документ который используется при отгрузке кирпича покупателю
+    Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
     number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число уникальное в этом году')
     agent = models.ForeignKey(Agent,verbose_name=u'Покупатель',related_name="%(app_label)s_%(class)s_related",
                               help_text=u"""Поле для выбора покупателя. Если продается через Cерверную керамику то \
@@ -62,19 +52,12 @@ class Bill(Doc):
             verbose_name_plural = u"накладные"
             ordering = ['-date','-number']
 
-    def css(self):
-        css = u''
-        for s in self.bill_sold_related.all():
-            css+= '%s ' % s.brick.css
-        return css.strip()
-
     def solds(self):
         return map(lambda x: (x.brick.label,x.brick.pk,x.brick.css,x.amount),self.bill_sold_related.all())
 
     def set_money(self):
-        """
-        Метод для обновления информации о кол-ве денег. Вызывается через сигнал после сохранение SOLD
-        """
+        """ Метод для обновления информации о кол-ве денег. Вызывается через сигнал после сохранение SOLD """
+
         self.money = sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
         self.save()
 
@@ -92,13 +75,12 @@ class Bill(Doc):
         return "/%s/%i/" % (self._meta.module_name,self.id)
 
 class Transfer(Oper):
-    """
-    Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
+    """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
     по цене другой, аналог скидки.
     Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
     точка перевода содержится по связи sold.
-    Привязанн к накладной, т.к является операцией продажи.
-    """
+    Привязанн к накладной, т.к является операцией продажи. """
+
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
 
     class Meta():
@@ -112,10 +94,9 @@ class Transfer(Oper):
             return u'Новый перевод'
 
 class Sold(Oper):
-    """
-    Класс для операций отгруки, является аналогом строки в накладной.
-    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной.
-    """
+    """ Класс для операций отгруки, является аналогом строки в накладной.
+    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
+
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')

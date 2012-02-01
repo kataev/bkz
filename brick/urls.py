@@ -1,9 +1,17 @@
 from django.conf.urls.defaults import *
-from whs.brick.forms import *
+from piston.resource import Resource
+from handlers import *
 
-urlpatterns = patterns('whs.views',
-    url(r'^select/$', 'brick_select',name='select'),
-    url(r'^brick/(?P<id>\d*)/?$', 'form_get',{'form':BrickForm},name='brick_get'),
-    url(r'^brick/?(?P<id>\d*)/post/$', 'form_post',{'form':BrickForm},name='brick_post'),
-    url(r'^brick/?(?P<id>\d+)/store/$', 'brick_store',name='brick_store'),
-    )
+brick_resource = Resource(BrickHandler)
+brick_table_resource = Resource(BrickTableHandler)
+
+urlpatterns = patterns('',
+    url(r'^brick/(?P<id>\d+)$', brick_resource),
+    url(r'^brick', brick_resource),
+
+    url(r'^table/(?P<id>\d+)$', brick_table_resource),
+    url(r'^table', brick_table_resource),
+
+
+
+)

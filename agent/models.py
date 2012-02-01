@@ -29,5 +29,3 @@ class Agent(models.Model):
                 return '%s, %s' % (self.name[:30],self.form)
         else:
             return u'Новый контрагент'
-
-admin.site.register(Agent)

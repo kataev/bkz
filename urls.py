@@ -7,7 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
-
+    (r'^', include('whs.brick.urls',namespace='brick')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

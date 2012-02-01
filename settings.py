@@ -166,7 +166,7 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.agent',
     'whs.bill',
-    'whs.manufacture',
+#    'whs.manufacture',
 
     'pytils',
     'piston'
