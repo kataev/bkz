@@ -14,17 +14,23 @@
     <!-- Le styles -->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link href="/static/css/bootstrap.responsive.css" rel="stylesheet">
+
+    <link href="/static/css/style.less" rel="stylesheet/less" type="text/css">
+    <script type="text/javascript" src="/static/js/libs/less-1.2.1.min.js"></script>
+
     <style>
         body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
         }
     </style>
     <style type="text/css" media="print">
-        .navbar {display: none}
+        .navbar {
+            display: none
+        }
     </style>
 
     <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="/static/img/cargo/cargo.png">
+    <link rel="shortcut icon" href="/static/img/cargo/cargo.png">
 </head>
 
 <body>
@@ -41,9 +47,8 @@
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li class="active"><a href="/">Главная</a></li>
+                    <li><a href="/form">Форма</a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -52,32 +57,43 @@
 </div>
 
 <div class="container">
-
-    <table class="table table-striped table-bordered table-condensed">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Имя</th>
-            <th>Остатки</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for b in Bricks %}
-            <tr class="{{ b.css }}">
-                <td> {{ b.id }} </td>
-                <td> {{ b.label }} </td>
-                <td> {{ b.total }} </td>
+    {% block container %}
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th width=15px>#</th>
+                <th>Имя</th>
+                <th>Вид</th>
+                <th>Размер</th>
+                <th>Цвет</th>
+                <th>Особенности</th>
+                <th>Остатки</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for b in Bricks %}
+                <tr class="{{ b.css }}">
+                    <td> {{ b.id }} </td>
+                    <td> {{ b.label }} </td>
+                    <td> {{ b.get_view_display }} </td>
+                    <td> {{ b.weight }} </td>
+                    <td> {{ b.get_color_display }} </td>
+                    <td> {{ b.refuse }} {{ b.defect }} {{ b.features|truncatewords:1 }}</td>
+                    <td> {{ b.total }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
 </div>
 <!-- /container -->
 
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+
 <script type="text/javascript" src="/static/js/libs/jquery.js"></script>
+<script type="text/javascript" src="/static/js/brick.js"></script>
 <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 <script src="/static/js/bootstrap/bootstrap-transition.js"></script>

@@ -7,7 +7,7 @@ class Agent(models.Model):
     type_c = ((0,u'Обычный покупатель'),(1,u'Строительная компания'))
 
     name=models.CharField(u"Имя",max_length=200,help_text=u'Название без юридической формы')
-    form=models.CharField(u"Юр форма",blank=True,max_length=200,help_text=u'Юридиская форма, ООО,ОАО и т.д')
+    form=models.CharField(u"Юр форма",blank=True,max_length=200,help_text=u'Юридическая форма, ООО,ОАО и т.д')
     type=models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
     address=models.CharField(u"Адрес",blank=True,max_length=200,help_text=u'Юридический адрес')
     bank=models.CharField(u"Банк",blank=True,max_length=200)

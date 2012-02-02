@@ -28,7 +28,7 @@ class Doc(models.Model):
     """ Абстрактный класс для документов. """
     draft_c=((False,u'Чистовик'),(True,u'Черновик'))
     date=models.DateField(u'Дата',help_text=u'Дата документа',default=datetime.date.today())
-    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация(напр водитель)')
+    info=models.CharField(u'Примечание',max_length=300,blank=True,help_text=u'Любая полезная информация')
     draft=models.BooleanField(u'Черновик',default=True,choices=draft_c,help_text=u'Если не черновик, то кирпич будет проводиться!')
 
     class Meta:
@@ -40,12 +40,11 @@ class Bill(Doc):
     Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
     number=models.PositiveIntegerField(unique_for_year='date',verbose_name=u'№ документа',help_text=u'Число уникальное в этом году')
     agent = models.ForeignKey(Agent,verbose_name=u'Покупатель',related_name="%(app_label)s_%(class)s_related",
-                              help_text=u"""Поле для выбора покупателя. Если продается через Cерверную керамику то \
-                              следует выбирать "Cерверную керамику" во втором поле а в первом указать настоящего покупателя""")
+                              help_text=u'Настоящий покупатель')
     money=models.PositiveIntegerField(verbose_name=u'Сумма',default=0)
-    proxy = models.ForeignKey(Agent,verbose_name=u'Прокси',related_name="proxy_%(app_label)s_%(class)s_related",
+    proxy = models.ForeignKey(Agent,verbose_name=u'Посредник',related_name="proxy_%(app_label)s_%(class)s_related",
                               limit_choices_to = {'pk__in':(1,)}, # Серверная керамика
-                              null=True,blank=True)
+                              null=True,blank=True,help_text=u'например Серверная керамика')
 
     class Meta():
             verbose_name = u"накладная"

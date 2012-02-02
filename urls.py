@@ -7,6 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
+    url(r'^form$', 'whs.views.form', name='form'),
+    url(r'^bill/(?P<id>\d*)/?$', 'whs.views.bill', name='bill'),
     (r'^', include('whs.brick.urls',namespace='brick')),
 )
 

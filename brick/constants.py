@@ -5,8 +5,8 @@ __author__ = 'bteam'
 view=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
 
 weight=(
-    (1,u'Одинарный'),
     (1.4,u'Утолщенный'),
+    (1,u'Одинарный'),
     (0.8,u'Евро'),
     (2,u'Двойной'))
 
@@ -32,16 +32,16 @@ mark=((100,u'100'),
             (250,u'250'),
             (9000,u'брак'))
 
-color_type=(('',''),('1','1 тип'),('2','2 тип'),('3','3 тип'))
-defect=((u'',u''),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
+color_type=(('','Без типа'),('1','1 тип'),('2','2 тип'),('3','3 тип'))
+defect=((u'',u'Люкс'),(u'<20',u'До 20%'),(u'>20',u'Более 20%'))
 refuse=((u'',u''),(u'Ф',u'Фаска'),(u'ФП',u'Фаска Полосы'),(u'ФФ',u'Фаска Фаска'),(u'ФФП',u'Фаска Фаска Полосы'),(u'П',u'Полосы'))
 
 css_dict= dict(
-    color=[u'red',u'yellow',u'brown',u'light',u'white'],
+    color=[u'bc-red',u'bc-yellow',u'bc-brown',u'bc-light',u'bc-white'],
     weight={1: u'single', 1.4: u'thickened', 2: u'double', 0.8:u'euro'},
     view={u'Л': u'facial', u'Р': u'common'},
-    color_type={'': u'type0', '1': u"type1", '2': u'type2', '3': u'type3'},
-    defect={u'': u'lux', u'<20': u'p_20', u'>20': u'm_20'},
+    ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
+    defect={u'': u'lux', u'<20': u'<20', u'>20': u'>20'},
     mark=0
 )
 
@@ -73,7 +73,7 @@ def make_css(brick):
         for field,dict in css_dict.iteritems():
             val = getattr(brick,field,None)
             if field == 'mark':
-                css+= u'm%d ' % val
+                css+= u'mark-%d ' % val
                 continue
             if field == 'color':
                 css+= u'%s ' % dict[val]

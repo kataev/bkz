@@ -23,22 +23,22 @@ DATABASES = {
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     },
-    'backup': {
+    'ajax': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'backup',                      # Or path to database file if using sqlite3.
+        'NAME': 'ajax',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     },
-#    'old': {
-#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': 'disp',                      # Or path to database file if using sqlite3.
-#        'USER': 'disp',                      # Not used with sqlite3.
-#        'PASSWORD': 'disp',                  # Not used with sqlite3.
-#        'HOST': 'server',                      # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-#    }
+    'old': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'disp',                      # Or path to database file if using sqlite3.
+        'USER': 'disp',                      # Not used with sqlite3.
+        'PASSWORD': 'disp',                  # Not used with sqlite3.
+        'HOST': 'server',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
 }
 
 DOJANGO_DATAGRID_ACCESS = (
@@ -144,6 +144,8 @@ MIDDLEWARE_CLASSES = (
 #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'dojango.middleware.DojoCollector',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'whs.urls'
@@ -162,14 +164,16 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-#    'whs.old',
+    'whs.old',
     'whs.brick',
     'whs.agent',
     'whs.bill',
-#    'whs.manufacture',
+    'whs.manufacture',
 
-    'pytils',
-    'piston'
+#    'south',
+#    'debug_toolbar',
+	'dojango',
+    'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging

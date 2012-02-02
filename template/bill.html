@@ -1,0 +1,28 @@
+        <fieldset>
+{#            <legend>{{ label|default:'Операции' }}</legend>#}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        </fieldset>
+        <fieldset class='row'>
+
+{#        <div class='row'>#}
+        <div class="span6">
+            <legend>{{ form.legend|default:'Форма'|capfirst }}</legend>
+            {{ form.id }}
+            {% for f in form.visible_fields %}
+                {% if f.name == 'agent' %}</div><div class="span6">{% endif %}
+{#                </div>#}
+                <div class="control-group {% if f.errors %}error{% endif %}">
+                    <label class="control-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                    <div class='controls'>
+                        {{ f }}
+                        {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
+                        {% endfor %}
+                        <p class="help-block">{{ f.help_text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+{#        </div>#}
+        </div>
+        </fieldset>

@@ -1,0 +1,23 @@
+@brick-color-red: #f77a6c;
+@brick-color-yellow: #f6d87c;
+@brick-color-brown: #d48b6b;
+@brick-color-light: #38d187;
+@brick-color-white: #fffafa;
+@brick-color-other: #a9a4a4;
+
+@increment: 4;
+
+.bc-red { background-color: @brick-color-red; }
+ .bc-red.facial { background-color: darken(@brick-color-red,@increment * 1%); }
+
+.bc-yellow { background-color: @brick-color-yellow }
+.bc-yellow.facial { background-color: darken(@brick-color-yellow,@increment * 1%); }
+
+.bc-brown { background-color: @brick-color-brown }
+.bc-brown.facial { background-color: darken(@brick-color-brown,@increment * 1%); }
+
+.bc-light { background-color: @brick-color-light }
+.bc-light.facial { background-color: darken(@brick-color-light,@increment * 1%); }
+
+.bc-white { background-color: @brick-color-white }
+.bc-white.facial { background-color: darken(@brick-color-white,@increment * 1%); }

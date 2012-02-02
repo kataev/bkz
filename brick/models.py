@@ -15,7 +15,7 @@ class Brick(models.Model):
     mark = models.PositiveIntegerField(u"Марка",choices=mark)
     weight = models.FloatField(u"Ширина",choices=weight)
     view = models.CharField(u"Вид",max_length=60, choices=view)
-    color_type = models.CharField(u"Тип цвета",max_length=6,choices=color_type,blank=True)
+    ctype = models.CharField(u"Тип цвета",max_length=6,choices=color_type,blank=True)
     defect = models.CharField(u"Брак в %",max_length=60,choices=defect,blank=True)
     refuse = models.CharField(u"Особенности",max_length=10,choices=refuse,blank=True)
     features = models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
@@ -23,7 +23,7 @@ class Brick(models.Model):
     total = models.PositiveIntegerField(u"Текуший остаток",default=0)
 
     css=models.CharField(u"Css",max_length=360,default=u'')
-    label=models.CharField(u"ИмяЯ",max_length=660,default='')
+    label=models.CharField(u"Имя",max_length=660,default='')
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
@@ -42,7 +42,7 @@ class Brick(models.Model):
             return self._get_FIELD_display(self._meta.get_field('view'))
 
     class Meta():
-        ordering=['color','-weight','-view','color_type','defect','refuse','mark','features',]
+        ordering=['-weight','color','-view','ctype','defect','refuse','mark','features',]
         verbose_name = u"кирпич"
         verbose_name_plural = u'кирпичи'
 

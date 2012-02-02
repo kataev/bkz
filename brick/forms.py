@@ -7,5 +7,4 @@ class BrickForm(forms.ModelForm):
         model=Brick
         exclude = ('total','css','label')
     class Media:
-        js = ('js/form.js',)
-        css = {'all':('css/form.css',),}
+        pass

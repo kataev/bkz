@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+
+{% block container %}
+    <form method="POST" action="./" class='form-horizontal'>
+        {% with form=doc %}
+            {% include 'bill.html' %}
+        {% endwith %}
+
+        {% for factory in opers %}
+            {{ factory.management_form }}
+        {% endfor %}
+
+        <div class="tabbable ">
+            <ul class="nav nav-tabs">
+                {% for factory in opers %}
+                    {% for form in factory %}
+                        {% if not forloop.last %}
+                            <li class="">
+                                <a href="#{{ form.prefix }}" data-toggle="tab">{{ form.instance }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                {% endfor %}
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Добавить <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                            {% for factory in opers %}
+                                <li class="">
+                                {% with p=factory|last %}
+                                    <a href="#{{ p.prefix }}" data-toggle="tab">{{ p.instance }}</a>
+                                {% endwith %}
+                                </li>
+                            {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            <div class="tab-content">
+                {% for factory in opers %}
+                    {% for form in factory %}
+                        <div class="tab-pane" id="{{ form.prefix }}">
+                            {% include 'form.html' %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            <button type="reset" class="btn">Отменить</button>
+        </div>
+    </form>
+
+
+{% endblock %}
