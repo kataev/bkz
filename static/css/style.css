@@ -1,0 +1,31 @@
+.subnav {
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: center;
+    padding: 2px;
+}
+.subnav .btn-group {
+    white-space: nowrap;
+}
+
+.subnav a.btn {
+    float: none;
+    /*position: */
+}
+
+/* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */
+@media (min-width: 980px) {
+    .subnav-fixed {
+        position: fixed;
+        top: 40px;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+    }
+    .subnav-fixed .nav {
+        width: 938px;
+        margin: 0 auto;
+        padding: 0 1px;
+    }
+
+}

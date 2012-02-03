@@ -81,6 +81,7 @@ class Transfer(Oper):
     Привязанн к накладной, т.к является операцией продажи. """
 
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
+    sold = models.ForeignKey('Transfer',blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка')
 
     class Meta():
             verbose_name = u"перевод"
@@ -99,7 +100,7 @@ class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
-    transfer = models.ForeignKey(Transfer,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка') #Куда
+     #Куда
     class Meta():
             verbose_name = u"отгрузка"
             verbose_name_plural =  u"отгрузки"

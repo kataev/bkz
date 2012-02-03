@@ -24,6 +24,9 @@ def form(request):
         form = BillFormSet(instance=b)
     return render(request, 'test.html',dict(form=form))
 
+def bills(request):
+    return render(request,'bills.html')
+
 
 def bill(request,id):
     """ Форма накладной """
@@ -34,11 +37,14 @@ def bill(request,id):
         form = BillForm(request.POST,instance=doc)
         sold = SoldFactory(request.POST,instance=doc,prefix='sold')
         transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
-        if form.is_valid() and sold.is_valid() and transfer.is_valid():
+        if form.is_valid():
             doc = form.save()
-            sold.save()
-            transfer.save()
+            if sold.is_valid():
+                sold.save()
+            if transfer.is_valid():
+                transfer.save()
             return redirect(doc)
+        print form.errors,sold.errors,transfer.errors
 
     else:
         form = BillForm(instance=doc)

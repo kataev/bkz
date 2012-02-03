@@ -1,17 +1,33 @@
 {% extends 'index.html' %}
 
 {% block container %}
+    {% block brick-select %}
+        <div id="brick-select" class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Выбор кирпича</h3>
+            </div>
+            <div class="modal-body">
+                {% include 'brick-select.html' %}
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary">Сохранить</a>
+                <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+            </div>
+        </div>
+    {% endblock %}
     <form method="POST" action="./" class='form-horizontal'>
-        {% with form=doc %}
-            {% include 'bill.html' %}
-        {% endwith %}
-
         {% for factory in opers %}
             {{ factory.management_form }}
         {% endfor %}
 
         <div class="tabbable ">
             <ul class="nav nav-tabs">
+                <li class="active">
+                    {% with form=doc %}
+                        <a href="#{{ form.prefix }}" data-toggle="tab">{{ form.instance|truncatewords:10 }}</a>
+                    {% endwith %}
+                </li>
                 {% for factory in opers %}
                     {% for form in factory %}
                         {% if not forloop.last %}
@@ -22,20 +38,27 @@
                     {% endfor %}
 
                 {% endfor %}
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Добавить <b class="caret"></b></a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class='icon-plus'></i>Добавить<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                            {% for factory in opers %}
-                                <li class="">
+                        {% for factory in opers %}
+                            <li class="">
                                 {% with p=factory|last %}
                                     <a href="#{{ p.prefix }}" data-toggle="tab">{{ p.instance }}</a>
                                 {% endwith %}
-                                </li>
-                            {% endfor %}
+                            </li>
+                        {% endfor %}
                     </ul>
                 </li>
             </ul>
             <div class="tab-content">
+                {% with form=doc %}
+                    <div class="tab-pane active" id="{{ form.prefix }}">
+                    {% include 'form.html' %}
+                    </div>
+                {% endwith %}
+
                 {% for factory in opers %}
                     {% for form in factory %}
                         <div class="tab-pane" id="{{ form.prefix }}">
@@ -46,8 +69,8 @@
             </div>
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-            <button type="reset" class="btn">Отменить</button>
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения</button>
+            <button type="reset" class="btn"><i class="icon-refresh"></i> Отменить</button>
         </div>
     </form>
 

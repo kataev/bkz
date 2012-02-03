@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>Склад кирпича : Березниковский кирпичный завод</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -15,6 +15,7 @@
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link href="/static/css/bootstrap.responsive.css" rel="stylesheet">
 
+    <link href="/static/css/style.css" rel="stylesheet">
     <link href="/static/css/style.less" rel="stylesheet/less" type="text/css">
     <script type="text/javascript" src="/static/js/libs/less-1.2.1.min.js"></script>
 
@@ -30,7 +31,7 @@
     </style>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="/static/img/cargo/cargo.png">
+    <link rel="shortcut icon" href="/static/img/cargo/cargo3.png">
 </head>
 
 <body>
@@ -48,7 +49,7 @@
             <div class="nav-collapse">
                 <ul class="nav">
                     <li class="active"><a href="/">Главная</a></li>
-                    <li><a href="/form">Форма</a></li>
+                    <li><a href="/bills">Накладные</a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -58,15 +59,32 @@
 
 <div class="container">
     {% block container %}
-        <table class="table table-bordered table-condensed">
+        <div class="subnav" id='brick-select'>
+            <span class="btn-group" data-toggle="buttons-radio">
+                <a class="btn btn-success ">Весь</a><a href="#bc-red" class="btn btn bc-red">Красный</a><a href="#bc-yellow" class="btn btn bc-yellow">Желтый</a>
+            </span>
+
+            <span class="btn-group" data-toggle="buttons-radio">
+                <a href="#mark-100" class="btn btn ">100</a><a href="#mark-125" class="btn btn ">125</a><a href="#mark-150" class="btn btn ">150</a><a href="#mark-175" class="btn btn ">175</a><a href="#mark-200" class="btn btn ">200</a><a href="#mark-250" class="btn btn ">250</a>
+            </span>
+
+            <span class="btn-group" data-toggle="buttons-radio">
+                <a href="#thickened" class="btn btn-warning ">Утолщенный</a><a href="#single" class="btn btn-info ">Одинарный</a><a href="#euro" class="btn btn-success ">Евро</a>
+            </span>
+            <span class="btn-group" data-toggle="buttons-radio">
+                <a href="#facial" class="btn btn-info ">Лицевой</a><a href="#common" class="btn btn-warning ">Рядовой</a>
+            </span>
+        </div>
+        <table id='Bricks' class=" table table-bordered table-condensed">
             <thead>
             <tr>
                 <th width=15px>#</th>
                 <th>Имя</th>
-                <th>Вид</th>
-                <th>Размер</th>
-                <th>Цвет</th>
-                <th>Особенности</th>
+                <th>Начало</th>
+                <th>Приход</th>
+                <th>Перевод из</th>
+                <th>Перевод в</th>
+                <th>Продажи</th>
                 <th>Остатки</th>
             </tr>
             </thead>
@@ -75,14 +93,28 @@
                 <tr class="{{ b.css }}">
                     <td> {{ b.id }} </td>
                     <td> {{ b.label }} </td>
-                    <td> {{ b.get_view_display }} </td>
-                    <td> {{ b.weight }} </td>
-                    <td> {{ b.get_color_display }} </td>
-                    <td> {{ b.refuse }} {{ b.defect }} {{ b.features|truncatewords:1 }}</td>
+                    <td> {{ b.begin }} </td>
+                    <td> {{ b.add }} </td>
+                    <td> {{ b.t_from }} </td>
+                    <td> {{ b.t_to }} </td>
+                    <td> {{ b.sold }} </td>
                     <td> {{ b.total }} </td>
                 </tr>
             {% endfor %}
             </tbody>
+        <tfoot>
+        <tr>
+            <th>{{ Bricks|length }}</th>
+
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+            <th>0</th>
+        </tr>
+        </tfoot>
         </table>
     {% endblock %}
 </div>
@@ -92,22 +124,25 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 
+<script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
 <script type="text/javascript" src="/static/js/libs/jquery.js"></script>
+
 <script type="text/javascript" src="/static/js/brick.js"></script>
+<script type="text/javascript" src="/static/js/script.js"></script>
 <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
-<script src="/static/js/bootstrap/bootstrap-transition.js"></script>
-<script src="/static/js/bootstrap/bootstrap-alert.js"></script>
+{#<script src="/static/js/bootstrap/bootstrap-transition.js"></script>#}
+{#<script src="/static/js/bootstrap/bootstrap-alert.js"></script>#}
 <script src="/static/js/bootstrap/bootstrap-modal.js"></script>
 <script src="/static/js/bootstrap/bootstrap-dropdown.js"></script>
-<script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>
+{#<script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>#}
 <script src="/static/js/bootstrap/bootstrap-tab.js"></script>
-<script src="/static/js/bootstrap/bootstrap-tooltip.js"></script>
-<script src="/static/js/bootstrap/bootstrap-popover.js"></script>
+{#<script src="/static/js/bootstrap/bootstrap-tooltip.js"></script>#}
+{#<script src="/static/js/bootstrap/bootstrap-popover.js"></script>#}
 <script src="/static/js/bootstrap/bootstrap-button.js"></script>
-<script src="/static/js/bootstrap/bootstrap-collapse.js"></script>
-<script src="/static/js/bootstrap/bootstrap-carousel.js"></script>
-<script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>
+{#<script src="/static/js/bootstrap/bootstrap-collapse.js"></script>#}
+{#<script src="/static/js/bootstrap/bootstrap-carousel.js"></script>#}
+{#<script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>#}
 
 </body>
 </html>

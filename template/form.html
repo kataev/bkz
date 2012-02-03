@@ -1,21 +1,27 @@
-        <fieldset>
-{#            <legend>{{ label|default:'Операции' }}</legend>#}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-        </fieldset>
-        <fieldset>
-            {{ form.id }}
-            <legend>{{ form.instance|default:'Форма'|capfirst }}</legend>
-            {% for f in form.visible_fields %}
-                <div class="control-group {% if f.errors %}error{% endif %}">
-                    <label class="control-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
-                    <div class='controls'>
-                        {{ f }}
-                        {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
-                        {% endfor %}
-                        <p class="help-block">{{ f.help_text }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </fieldset>
+<fieldset>
+    {#            <legend>{{ label|default:'Операции' }}</legend>#}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+</fieldset>
+<fieldset>
+    {{ form.id }}
+    {% for f in form.visible_fields %}
+        <div class="control-group {% if f.errors %}error{% endif %}">
+            <label class="control-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+
+            <div class='controls'>
+                {% if f.name == 'brick' %}
+                    <a data-toggle="modal" data-animation='false' data-backdrop='false' href="#brick-select" class="btn btn-primary">Выбрать кирпич</a>
+                {% else %}
+                    {{ f }}
+                {% endif %}
+                {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
+                {% endfor %}
+            {% if not f.value %}
+                <p class="help-block">{{ f.help_text }}</p>
+            {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</fieldset>

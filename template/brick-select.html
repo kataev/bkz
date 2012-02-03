@@ -1,0 +1,18 @@
+<table class="table table-bordered table-condensed">
+    <thead>
+    <tr>
+        <th width=15px>#</th>
+        <th>Имя</th>
+        <th>Остатки</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for b in Bricks %}
+        <tr class="{{ b.css }}">
+            <td> {{ b.id }} </td>
+            <td> {{ b.label }} </td>
+            <td> {{ b.total }} </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
