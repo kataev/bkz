@@ -5,6 +5,7 @@ from django.forms.models import inlineformset_factory
 from whs.brick.models import Brick
 from whs.brick.forms import BrickForm
 from whs.bill.forms import *
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 @require_http_methods(["GET",])
 def main(request):
@@ -25,7 +26,23 @@ def form(request):
     return render(request, 'test.html',dict(form=form))
 
 def bills(request):
-    return render(request,'bills.html')
+    Bills = Bill.objects.all()
+    form = BillFilter(request.GET)
+    if form.is_valid():
+        d = form.cleaned_data
+        Bills = Bills.filter(**dict([ [x,d[x]] for x in d if d[x] ]))
+    paginator = Paginator(Bills, 25) # Show 25 contacts per page
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        bills = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        bills = paginator.page(paginator.num_pages)
+    form = BillFilter()
+    return render(request,'bills.html',dict(Bills=bills,Filter=form))
 
 
 def bill(request,id):

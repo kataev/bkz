@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 
 {% block container %}
+    {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
     {% block brick-select %}
         <div id="brick-select" class="modal hide fade">
             <div class="modal-header">
@@ -17,55 +18,69 @@
             </div>
         </div>
     {% endblock %}
+
     <form method="POST" action="./" class='form-horizontal'>
+
         {% for factory in opers %}
             {{ factory.management_form }}
         {% endfor %}
-
+        {#  Навигация  #}
         <div class="tabbable ">
             <ul class="nav nav-tabs">
+                {#  Документ  #}
                 <li class="active">
                     {% with form=doc %}
-                        <a href="#{{ form.prefix }}" data-toggle="tab">{{ form.instance|truncatewords:10 }}</a>
+                        <a href="#{{ form.prefix }}" data-toggle="tab">
+                            <span class="label {% if form.errors %}label-important{% endif %}">
+                            {% if form.errors %}<i class="icon-warning-sign"></i>{% endif %}
+                                {{ form.instance|truncatewords:10 }}</span>
+                        </a>
                     {% endwith %}
                 </li>
+                {#  Операции  #}
                 {% for factory in opers %}
                     {% for form in factory %}
                         {% if not forloop.last %}
                             <li class="{{ form.Meta.name }}">
-
-                                <a class='{{ form.instance.brick.css }}' href="#{{ form.prefix }}"
-                                   data-toggle="tab">
-                                    {% if form.errors %}<span class="label label-important">Ошибка</span>{% endif %}
-                                    {{ form.instance }}</a>
+                                <a class='{{ form.instance.brick.css }}' href="#{{ form.prefix }}" data-toggle="tab">
+                                    {% if form.errors %}<i class="icon-warning-sign"></i>{% endif %}
+                                    <span class="label {% if form.errors %}label-important{% endif %}">
+                                        {{ form.instance }}</span>
+                                </a>
                             </li>
                         {% endif %}
                     {% endfor %}
-
                 {% endfor %}
+
+                {#  Добавления  #}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class='icon-plus'></i>Добавить<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for factory in opers %}
-                                {% with p=factory|last %}
-                                    <li class="{{ p.Meta.name }}">
-                                    <a href="#{{ p.prefix }}" data-toggle="tab">
-                                        {% if p.errors %}<span class="label label-important">Ошибка</span>{% endif %}
-                                        {{ p.instance }}</a>
-                                {% endwith %}
-                            </li>
+                            {% with p=factory|last %}
+                                <li class="{{ p.Meta.name }}">
+                                <a href="#{{ p.prefix }}" data-toggle="tab">
+                                    <i class="icon-warning-sign"></i>
+                                    {% if p.errors %}<span class="label label-important">
+
+                                        Ошибка</span>{% endif %}
+
+                                    {{ p.instance }}</a>
+                            {% endwith %}
+                        </li>
                         {% endfor %}
                     </ul>
                 </li>
             </ul>
+            {#  Форма документа  #}
             <div class="tab-content">
                 {% with form=doc %}
                     <div class="tab-pane active" id="{{ form.prefix }}">
                         {% include 'form.html' %}
                     </div>
                 {% endwith %}
-
+                {#  Формы операций  #}
                 {% for factory in opers %}
                     {% for form in factory %}
                         <div class="tab-pane" id="{{ form.prefix }}">

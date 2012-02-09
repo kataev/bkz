@@ -51,6 +51,8 @@
                     <li class="active"><a href="/">Главная</a></li>
                     <li><a href="/bills">Накладные</a></li>
                 </ul>
+                {% block navbar-form %}
+                {% endblock %}
             </div>
             <!--/.nav-collapse -->
         </div>
@@ -129,7 +131,6 @@
 
 <script type="text/javascript" src="/static/js/brick.js"></script>
 <script type="text/javascript" src="/static/js/script.js"></script>
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 {#<script src="/static/js/bootstrap/bootstrap-transition.js"></script>#}
 {#<script src="/static/js/bootstrap/bootstrap-alert.js"></script>#}

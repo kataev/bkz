@@ -10,7 +10,6 @@ urlpatterns = patterns('',
     url(r'^form$', 'whs.views.form', name='form'),
     url(r'^bill/(?P<id>\d*)/?$', 'whs.views.bill', name='bill'),
     url(r'^bills?$', 'whs.views.bills', name='bills'),
-    (r'^', include('whs.brick.urls',namespace='brick')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

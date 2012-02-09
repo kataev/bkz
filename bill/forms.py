@@ -20,7 +20,7 @@ class BillForm(forms.ModelForm):
 class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
-        model = Sold
+        model = Sold #autocomplete="off"
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),}
 
 class TransferForm(forms.ModelForm):
@@ -31,3 +31,17 @@ class TransferForm(forms.ModelForm):
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=1,form=SoldForm,)
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=1,form=TransferForm,)
+
+
+class BillFilter(forms.Form):
+    date__lte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Конец периода'}))
+    date__gte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Начало периода'}))
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
+    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        """
+        Изменение пустой ичейки для подсказки.
+        """
+        super(BillFilter, self).__init__(*args, **kwargs)
+        self.fields['agent'].empty_label = u'Выберите контрагента'

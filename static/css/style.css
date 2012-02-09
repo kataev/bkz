@@ -4,6 +4,10 @@ fieldset.Bill div.control-group {
     float:left;
 }
 
+.navbar form button, .navbar form select {
+    margin: auto !important;
+    /*padding: 0;*/
+}
 
 .subnav {
     margin-bottom: 5px;
