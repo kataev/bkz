@@ -1,23 +1,23 @@
 {% extends 'index.html' %}
+{% block brick-select %}
+    <div id="brick-select" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
 
+            <h3>Выбор кирпича</h3>
+        </div>
+        <div class="modal-body">
+            {% include 'brick-select.html' %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
+            <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+        </div>
+    </div>
+{% endblock %}
 {% block container %}
     {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
-    {% block brick-select %}
-        <div id="brick-select" class="modal hide fade">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">×</a>
 
-                <h3>Выбор кирпича</h3>
-            </div>
-            <div class="modal-body">
-                {% include 'brick-select.html' %}
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
-                <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
-            </div>
-        </div>
-    {% endblock %}
 
     <form method="POST" action="./" class='form-horizontal'>
 

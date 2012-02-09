@@ -16,6 +16,7 @@
     <link href="/static/css/bootstrap.responsive.css" rel="stylesheet">
 
     <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/ui-lightness/jquery-ui-1.8.17.custom.css" rel="stylesheet">
     <link href="/static/css/style.less" rel="stylesheet/less" type="text/css">
     <script type="text/javascript" src="/static/js/libs/less-1.2.1.min.js"></script>
 
@@ -44,20 +45,45 @@
                 <span class="i-bar"></span>
                 <span class="i-bar"></span>
             </a>
-            <a class="brand" href="#"><abbr title="WareHouse">WHS</abbr></a>
+            <a class="brand" href="#">
+                <i style='margin-top: 6px' class="icon-qrcode icon-white"></i>
+                <abbr title="WareHouse">BKZ-WHS</abbr></a>
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="/">Главная</a></li>
-                    <li><a href="/bills">Накладные</a></li>
+                    <li class=""><a href="/">
+                        <i class="icon-home icon-white"></i>
+                        Главная</a></li>
+                    <li><a href="/bills">
+                        <i class="icon-list-alt icon-white"></i>
+                        Накладные</a></li>
+                    <li><a href="/jurnal">
+                        <i class="icon-calendar icon-white"></i>
+                        Журнал</a></li>
                 </ul>
                 {% block navbar-form %}
                 {% endblock %}
             </div>
+            <ul class="nav pull-right">
+                <li><a href="#"><i class='icon-signal icon-white'></i> Статистика</a></li>
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus-sign icon-white'></i> Добавить <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/bill">Накладную</a></li>
+                        <li><a href="/add">Приход</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/brick">Кирпич</a></li>
+                    </ul>
+                </li>
+            </ul>
             <!--/.nav-collapse -->
         </div>
     </div>
 </div>
+
+{% block brick-select %}
+{% endblock %}
 
 <div class="container">
     {% block container %}
@@ -131,6 +157,7 @@
 
 <script type="text/javascript" src="/static/js/brick.js"></script>
 <script type="text/javascript" src="/static/js/script.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
 
 {#<script src="/static/js/bootstrap/bootstrap-transition.js"></script>#}
 {#<script src="/static/js/bootstrap/bootstrap-alert.js"></script>#}

@@ -3,7 +3,7 @@
  * Date: 03.02.12
  * Time: 11:01
  */
-$(function(){
+$(function () {
     var $win = $(window)
         , $nav = $('.subnav')
         , navTop = $('.subnav').length && $('.subnav').offset().top - 40
@@ -23,4 +23,8 @@ $(function(){
             $nav.removeClass('subnav-fixed')
         }
     }
+})
+
+$(function () {
+    $("[type=date]").datepicker({"dateFormat":"yy-mm-dd"});
 })

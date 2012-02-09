@@ -1,0 +1,17 @@
+<span class='label'>{{ f.value }}</span>
+{% if f.value == 'None' or not f.value %}
+    <span class="input uneditable-input" id='{{ f.id_for_label }}_span'>Нету</span>
+{% else %}
+    {% for b in Bricks %}
+        {# Выбиратор кирпича. Bug,Плохо стравнивает числа и строки  #}
+        {% if b.pk == f.value|add:0 %}
+            <span id='{{ f.id_for_label }}_span'
+                  class="input uneditable-input {{ b.css }}"> {{ b.label }} </span>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<a data-toggle="brick-select" data-input='{{ f.id_for_label }}' data-animation='false'
+   data-backdrop='false' href="#brick-select" class="btn btn-success"><i
+        class="icon-shopping-cart"></i> Выбрать кирпич</a>
+<input type='hidden' class='brick' name='{{ f.html_name }}' id='{{ f.id_for_label }}'
+       value="{{ f.value }}">

@@ -1,16 +1,38 @@
 {% extends 'index.html' %}
 
 {% block navbar-form %}
-    <form class="navbar-search pull-right" action="" method="GET">
-        <input type="date" autocomplete="off" class="search-query input-small" placeholder="Конец периода" name="date__lte" id="id_date__lte">
-        <input type="date" autocomplete="off" class="search-query input-small" placeholder="Начало периода" name="date__gte" id="id_date__gte">
-        {{ Filter.agent }}
-        <button type="submit" class="small btn btn-info">Фильтр</button>
-    </form>
+
+{% endblock %}
+
+{% block brick-select %}
+
+    <div id="brick-select" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+
+            <h3>Выбор кирпича</h3>
+        </div>
+        <div class="modal-body">
+            {% include 'brick-select.html' %}
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
+            <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+        </div>
+    </div>
 {% endblock %}
 
 {% block container %}
-
+    <form class="form-inline" action="" method="GET">
+        {{ Filter.date__gte.value.isoformat }}
+        <input type="date" autocomplete="off" class="input-small" placeholder="Конец периода" name="date__lte" id="id_date__lte" value='{{ Filter.date__lte.value.isoformat }}'>
+        <input type="date" autocomplete="off" class="input-small" placeholder="Начало периода" name="date__gte" id="id_date__gte" value='{{ Filter.date__gte.value.isoformat }}'>
+        {{ Filter.agent }}
+        {% with f=Filter.brick %}
+            {% include 'brick-select-form.html' %}
+        {% endwith %}
+        <button type="submit" class="small btn btn-info"><i class="icon-search icon-white"></i>Фильтр</button>
+    </form>
     <table id='Bills' class="table table-bordered table-condensed">
         <thead>
         <tr>
@@ -37,8 +59,14 @@
                 <td>{{ b.money }}</td>
             </tr>
         {% endfor %}
+
         </tbody>
         <tfoot>
+        <tr>
+            <th></th>
+            <th colspan="3">Всего {{ Bills.object_list|length }} шт.</th>
+            <th >{{ total }}</th>
+        </tr>
         </tfoot>
     </table>
 

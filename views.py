@@ -28,10 +28,15 @@ def form(request):
 def bills(request):
     Bills = Bill.objects.all()
     form = BillFilter(request.GET)
+    print form['brick'].value()
     if form.is_valid():
         d = form.cleaned_data
-        Bills = Bills.filter(**dict([ [x,d[x]] for x in d if d[x] ]))
-    paginator = Paginator(Bills, 25) # Show 25 contacts per page
+        d = dict([ [x,d[x]] for x in d if d[x]])
+        if 'brick' in d.keys():
+            d['bill_sold_related__brick'] = d['brick']
+            del d['brick']
+        Bills = Bills.filter(**d)
+    paginator = Paginator(Bills, 20) # Show 25 contacts per page
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -42,7 +47,8 @@ def bills(request):
     except (EmptyPage, InvalidPage):
         bills = paginator.page(paginator.num_pages)
     form = BillFilter()
-    return render(request,'bills.html',dict(Bills=bills,Filter=form))
+    total = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
+    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total))
 
 
 def bill(request,id):

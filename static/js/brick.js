@@ -55,7 +55,7 @@ $(function () {
     $('tr', modal).click(function (e) {
         var button = $(modal).data('button')
         var input = $(button).data('input')
-        $('#'+input).val($('td:first', this).text())
+        $('#'+input).val($('td:first', this).text().trim())
         $('#'+input+'_span').html($('td', this)[1].innerHTML)
         $('#'+input+'_span').attr('class','input uneditable-input '+ $(this).attr('class'))
     })
