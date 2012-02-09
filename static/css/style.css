@@ -1,3 +1,10 @@
+span.input {overflow: hidden;}
+
+fieldset.Bill div.control-group {
+    float:left;
+}
+
+
 .subnav {
     margin-bottom: 5px;
     width: 100%;

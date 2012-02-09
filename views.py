@@ -34,18 +34,14 @@ def bill(request,id):
     else: doc = None
 
     if request.method == 'POST':
-        form = BillForm(request.POST,instance=doc)
+        form = BillForm(request.POST,instance=doc,)
         sold = SoldFactory(request.POST,instance=doc,prefix='sold')
         transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
-        if form.is_valid():
+        if form.is_valid() and sold.is_valid() and transfer.is_valid():
             doc = form.save()
-            if sold.is_valid():
-                sold.save()
-            if transfer.is_valid():
-                transfer.save()
+            sold.save()
+            transfer.save()
             return redirect(doc)
-        print form.errors,sold.errors,transfer.errors
-
     else:
         form = BillForm(instance=doc)
         sold = SoldFactory(instance=doc,prefix='sold')

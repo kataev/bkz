@@ -5,13 +5,14 @@
         <div id="brick-select" class="modal hide fade">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
+
                 <h3>Выбор кирпича</h3>
             </div>
             <div class="modal-body">
                 {% include 'brick-select.html' %}
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Сохранить</a>
+                <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
                 <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
             </div>
         </div>
@@ -31,8 +32,12 @@
                 {% for factory in opers %}
                     {% for form in factory %}
                         {% if not forloop.last %}
-                            <li class="">
-                                <a href="#{{ form.prefix }}" data-toggle="tab">{{ form.instance }}</a>
+                            <li class="{{ form.Meta.name }}">
+
+                                <a class='{{ form.instance.brick.css }}' href="#{{ form.prefix }}"
+                                   data-toggle="tab">
+                                    {% if form.errors %}<span class="label label-important">Ошибка</span>{% endif %}
+                                    {{ form.instance }}</a>
                             </li>
                         {% endif %}
                     {% endfor %}
@@ -43,9 +48,11 @@
                         <i class='icon-plus'></i>Добавить<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for factory in opers %}
-                            <li class="">
                                 {% with p=factory|last %}
-                                    <a href="#{{ p.prefix }}" data-toggle="tab">{{ p.instance }}</a>
+                                    <li class="{{ p.Meta.name }}">
+                                    <a href="#{{ p.prefix }}" data-toggle="tab">
+                                        {% if p.errors %}<span class="label label-important">Ошибка</span>{% endif %}
+                                        {{ p.instance }}</a>
                                 {% endwith %}
                             </li>
                         {% endfor %}
@@ -55,7 +62,7 @@
             <div class="tab-content">
                 {% with form=doc %}
                     <div class="tab-pane active" id="{{ form.prefix }}">
-                    {% include 'form.html' %}
+                        {% include 'form.html' %}
                     </div>
                 {% endwith %}
 
@@ -69,7 +76,8 @@
             </div>
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения</button>
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
             <button type="reset" class="btn"><i class="icon-refresh"></i> Отменить</button>
         </div>
     </form>

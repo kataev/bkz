@@ -146,8 +146,6 @@ MIDDLEWARE_CLASSES = (
     #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'dojango.middleware.DojoCollector',
-    #    'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -181,11 +179,6 @@ INSTALLED_APPS = (
     'whs.agent',
     'whs.bill',
     'whs.manufacture',
-
-    #    'south',
-    #    'debug_toolbar',
-    'dojango',
-    'django_extensions',
     )
 
 # A sample logging configuration. The only tangible logging

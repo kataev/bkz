@@ -4,7 +4,7 @@
         {{ hidden }}
     {% endfor %}
 </fieldset>
-<fieldset>
+<fieldset class='{{ form.Meta.name }}'>
     {{ form.id }}
     {% for f in form.visible_fields %}
         <div class="control-group {% if f.errors %}error{% endif %}">
@@ -12,15 +12,24 @@
 
             <div class='controls'>
                 {% if f.name == 'brick' %}
-                    <a data-toggle="modal" data-animation='false' data-backdrop='false' href="#brick-select" class="btn btn-primary">Выбрать кирпич</a>
+                    {% for b in Bricks %}
+                        {% if b.pk == f.value|add:0 %}
+                            <span id='{{ f.id_for_label }}_span'
+                                  class="input uneditable-input {{ b.css }}"> {{ b.label }} </span>
+                        {% endif %}
+                    {% endfor %}
+                    <a data-toggle="brick-select" data-input='{{ f.id_for_label }}' data-animation='false'
+                       data-backdrop='false' href="#brick-select" class="btn btn-primary">Выбрать кирпич</a>
+                    <input type='hidden' class='brick' name='{{ f.html_name }}' id='{{ f.id_for_label }}'
+                           value="{{ f.value }}">
                 {% else %}
                     {{ f }}
                 {% endif %}
                 {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
                 {% endfor %}
-            {% if not f.value %}
-                <p class="help-block">{{ f.help_text }}</p>
-            {% endif %}
+                {% if not f.value %}
+                    <p class="help-block">{{ f.help_text }}</p>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
