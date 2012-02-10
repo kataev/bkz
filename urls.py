@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
     url(r'^form$', 'whs.views.form', name='form'),
     url(r'^bill/(?P<id>\d*)/?$', 'whs.views.bill', name='bill'),
+    url(r'^brick/(?P<id>\d*)/?$', 'whs.views.brick', name='brick'),
     url(r'^bills?$', 'whs.views.bills', name='bills'),
 )
 

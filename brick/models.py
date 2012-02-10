@@ -6,15 +6,15 @@ class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
 
-    color = models.PositiveIntegerField(u"Цвет", choices=color)
-    mark = models.PositiveIntegerField(u"Марка",choices=mark)
-    weight = models.FloatField(u"Ширина",choices=weight)
-    view = models.CharField(u"Вид",max_length=60, choices=view)
-    ctype = models.CharField(u"Тип цвета",max_length=6,choices=color_type,blank=True)
-    defect = models.CharField(u"Брак в %",max_length=60,choices=defect,blank=True)
+    color = models.PositiveIntegerField(u"Цвет", choices=color,default=gdc(color))
+    mark = models.PositiveIntegerField(u"Марка",choices=mark,default=gdc(mark))
+    weight = models.FloatField(u"Ширина",choices=weight,default=gdc(weight))
+    view = models.CharField(u"Вид",max_length=60, choices=view,default=gdc(view))
+    ctype = models.CharField(u"Тип цвета",max_length=6,choices=color_type,default=gdc(color_type))
+    defect = models.CharField(u"Брак в %",max_length=60,choices=defect,default=gdc(defect))
     refuse = models.CharField(u"Особенности",max_length=10,choices=refuse,blank=True)
     features = models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
-    name = models.CharField(u"Имя",max_length=160,default='')
+    name = models.CharField(u"Имя",max_length=160,default='',help_text=u'Полное название продукции')
     total = models.PositiveIntegerField(u"Остаток",default=0)
 
     css=models.CharField(u"Css",max_length=360,default=u'')

@@ -1,0 +1,33 @@
+<table class='span4 table table-condensed' style='margin: 0'>
+    <thead>
+    <tr>
+        <td colspan="2" width="15px">#</td>
+        <td>Имя</td>
+        <td>Кол-во</td>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for t in doc.instance.bill_transfer_related.all %}
+        <tr>
+            <td>{{ t.pk }}</td>
+            <td>
+                <label class='checkbox inline'>
+                    {% if form.instance.pk == t.bill_sold_related.get.pk %}
+                        <input type='checkbox' name='{{ f.html_name }}' checked="checked" value="{{ t.pk }}">
+                    {% else %}
+                        {% if t.bill_sold_related.get.pk %}
+                            <input type='checkbox' name='{{ f.html_name }}' disabled="disabled" value="{{ t.pk }}">
+                        {% else %}
+                            <input type='checkbox' name='{{ f.html_name }}'  value="{{ t.pk }}">
+                        {% endif %}
+                    {% endif %}
+                </label>
+            </td>
+            <td class='{{ t.brick.css }}'>{{ t.brick }}</td>
+            <td>{{ t.amount }}</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -53,11 +53,11 @@ def bills(request):
 
 def bill(request,id):
     """ Форма накладной """
-    if id: doc = get_object_or_404(Bill,pk=id)
+    if id: doc = get_object_or_404(Bill.objects.select_related(),pk=id)
     else: doc = None
-
+    print request.POST
     if request.method == 'POST':
-        form = BillForm(request.POST,instance=doc,)
+        form = BillForm(request.POST,instance=doc,prefix='bill')
         sold = SoldFactory(request.POST,instance=doc,prefix='sold')
         transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
         if form.is_valid() and sold.is_valid() and transfer.is_valid():
@@ -66,9 +66,22 @@ def bill(request,id):
             transfer.save()
             return redirect(doc)
     else:
-        form = BillForm(instance=doc)
+        form = BillForm(instance=doc,prefix='bill')
         sold = SoldFactory(instance=doc,prefix='sold')
         transfer = TransferFactory(instance=doc,prefix='transfer')
 
     return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer]))
 
+def brick(request,id):
+    """ Форма  """
+    if id: brick = get_object_or_404(Brick,pk=id)
+    else: brick = None
+    if request.method == 'POST':
+        form = BrickForm(request.POST,instance=brick)
+        if form.is_valid():
+            brick = form.save()
+            return redirect(brick)
+    else:
+        form = BrickForm(instance=brick)
+
+    return render(request, 'brick.html',dict(form=form))

@@ -54,12 +54,6 @@ class Bill(Doc):
     def solds(self):
         return map(lambda x: (x.brick.label,x.brick.pk,x.brick.css,x.amount),self.bill_sold_related.all())
 
-    def set_money(self):
-        """ Метод для обновления информации о кол-ве денег. Вызывается через сигнал после сохранение SOLD """
-
-        self.money = sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
-        self.save()
-
     def date_ru(self):
         return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
 
@@ -81,7 +75,7 @@ class Transfer(Oper):
     Привязанн к накладной, т.к является операцией продажи. """
 
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
-    sold = models.ForeignKey('Transfer',blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Отгрузка')
+
 
     class Meta():
             verbose_name = u"перевод"
@@ -100,6 +94,7 @@ class Sold(Oper):
     price=models.FloatField(u"Цена за единицу",help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
     delivery=models.FloatField(u"Цена доставки",blank=True,null=True,help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill,blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Накладная')
+    transfer = models.ManyToManyField('Transfer',blank=True,related_name="%(app_label)s_%(class)s_related",null=True,verbose_name=u'Перевод',help_text=u'')
      #Куда
     class Meta():
             verbose_name = u"отгрузка"
@@ -111,16 +106,5 @@ class Sold(Oper):
         else:
             return u'Новая отгрузка'
 
-#@receiver(post_save,sender=Sold)
-#def money(*args,**kwargs):
-#    kwargs['instance'].doc.set_money()
-
-#@receiver(post_save,sender=Sold)
-#def brick_total_actualizer(instance, created, *args,**kwargs):
-#    model = instance
-#    if created:
-#        brick = Brick.objects.get(pk=model.brick.pk)
-#        brick.total-=model.amount
-#        brick.save()
 
 from whs.bill.sygnals import *

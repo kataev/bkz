@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 
+def gdc(l):
+    return l[0][0]
+
 
 view=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
 

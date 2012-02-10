@@ -70,8 +70,9 @@
                     </ul>
                 </li>
             </ul>
-            {#  Форма документа  #}
+
             <div class="tab-content">
+                {#  Форма документа  #}
                 {% with form=doc %}
                     <div class="tab-pane active" id="{{ form.prefix }}">
                         {% include 'form.html' %}

@@ -4,9 +4,12 @@
     {% endfor %}
 </fieldset>
 <fieldset class='{{ form.Meta.name }}'>
+<legend>{{ form.instance }}</legend>
+    {{ form.errors }}
     {% for f in form.visible_fields %}
         <div class="control-group {% if f.errors %}error{% endif %} {{ f.name }}">
-            <label class="control-label" for="{{ f.id_for_label }}"><i class='icon-{{ f.name }}'></i> {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
+            <label class="control-label" for="{{ f.id_for_label }}"><i class='icon-{{ f.name }}'></i>
+                {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
             </label>
 
             <div class='controls'>
@@ -19,16 +22,22 @@
                             <span class="add-on">Руб</span>
                         </div>
                     {% else %}
-                        {{ f }}
+                        {% if f.name == 'transfer' %}
+                            {% include 'sold-transfer.html' %}
+                        {% else %}
+                            {{ f }}
+                        {% endif %}
                     {% endif %}
                 {% endif %}
-                {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
-                {% endfor %}
+                {% for q in f.errors %}<span class="help-inline">{{ q }}</span> {% endfor %}
                 {% if not f.value %}
                     <p class="help-block">{{ f.help_text }}</p>
                 {% endif %}
-
+                {#            {%  %}#}
             </div>
         </div>
+        {% if form.Meta.name == 'Transfer' and f.name == 'info' and form.instance.pk %}
+            {% include 'transfer-sold.html' %}
+        {% endif %}
     {% endfor %}
 </fieldset>
