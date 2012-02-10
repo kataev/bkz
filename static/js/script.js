@@ -28,3 +28,36 @@ $(function () {
 $(function () {
     $("[type=date]").datepicker({"dateFormat":"yy-mm-dd"});
 })
+
+$(function () {
+    $('.form-add').click(function (e) {
+        var prefix = $(this).attr('href').slice(1)
+        var node = $('#' + prefix + '-__prefix__').clone()
+        var total = $('#id_sold-TOTAL_FORMS') //0
+        var initial = $('#id_sold-INITIAL_FORMS') //0
+        var id = prefix + '-' + total.val()
+        $(node).attr('id', id)
+        $(node).html($(node).html().replace(/__prefix__/g, total.attr('value')))
+        $('div.DELETE',node).remove()
+        var menu = $(this).parent().clone()
+
+        $('a', menu).wrapInner('<span></span>')
+        var del = $('<i title="Удалить" class="icon-trash"></i>')
+        $('span', menu).after(del)
+
+        $('.tabbable ul.nav li.dropdown').before(menu)
+        $(node).appendTo('.tabbable .tab-content')
+        $('a', menu).attr('href', '#' + id).removeClass('form-add')
+            .data('toggle', 'tab').tab('show')
+            .click(function (e) {
+                $(this).tab('show')
+            });
+        $(del).click(function(e){
+            $(menu).remove()
+            $(node).remove()
+            $('.tabbable ul.nav li:first a').tab('show')
+            $(total).val(parseInt($(total).val()) + 1)
+        })
+        $(total).val(parseInt($(total).val()) + 1)
+    })
+})

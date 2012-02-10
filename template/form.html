@@ -4,16 +4,23 @@
     {% endfor %}
 </fieldset>
 <fieldset class='{{ form.Meta.name }}'>
-    {{ form.id }}
     {% for f in form.visible_fields %}
-        <div class="control-group {% if f.errors %}error{% endif %}">
-            <label class="control-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+        <div class="control-group {% if f.errors %}error{% endif %} {{ f.name }}">
+            <label class="control-label" for="{{ f.id_for_label }}"><i class='icon-{{ f.name }}'></i> {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
+            </label>
 
             <div class='controls'>
                 {% if f.name == 'brick' %}
                     {% include 'brick-select-form.html' %}
                 {% else %}
-                    {{ f }}
+                    {% if f.name == 'price' or f.name == 'delivery' %}
+                        <div class="input-append">
+                            {{ f }}
+                            <span class="add-on">Руб</span>
+                        </div>
+                    {% else %}
+                        {{ f }}
+                    {% endif %}
                 {% endif %}
                 {% for q in f.errors %}<span class="help-inline">{{ q }}</span>
                 {% endfor %}

@@ -15,12 +15,21 @@
         </div>
     </div>
 {% endblock %}
+
 {% block container %}
+    <div class='hidden'>
+        {% for factory in opers %}
+            {% with form=factory.empty_form %}
+                <div class="tab-pane" id="{{ form.prefix }}">
+                    {% include 'form.html' %}
+                </div>
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+
     {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
-
-
     <form method="POST" action="./" class='form-horizontal'>
-
         {% for factory in opers %}
             {{ factory.management_form }}
         {% endfor %}
@@ -40,7 +49,6 @@
                 {#  Операции  #}
                 {% for factory in opers %}
                     {% for form in factory %}
-                        {% if not forloop.last %}
                             <li class="{{ form.Meta.name }}">
                                 <a class='{{ form.instance.brick.css }}' href="#{{ form.prefix }}" data-toggle="tab">
                                     {% if form.errors %}<i class="icon-warning-sign"></i>{% endif %}
@@ -48,7 +56,6 @@
                                         {{ form.instance }}</span>
                                 </a>
                             </li>
-                        {% endif %}
                     {% endfor %}
                 {% endfor %}
 
@@ -58,17 +65,7 @@
                         <i class='icon-plus'></i>Добавить<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for factory in opers %}
-                            {% with p=factory|last %}
-                                <li class="{{ p.Meta.name }}">
-                                <a href="#{{ p.prefix }}" data-toggle="tab">
-                                    <i class="icon-warning-sign"></i>
-                                    {% if p.errors %}<span class="label label-important">
-
-                                        Ошибка</span>{% endif %}
-
-                                    {{ p.instance }}</a>
-                            {% endwith %}
-                        </li>
+                            <li><a class='form-add' href="#{{ factory.prefix }}"> {{ factory.model }} </a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -93,9 +90,11 @@
         <div class="form-actions">
             <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
             </button>
-            <button type="reset" class="btn"><i class="icon-refresh"></i> Отменить</button>
+            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
         </div>
     </form>
+<div>
 
+</div>
 
 {% endblock %}

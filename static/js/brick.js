@@ -59,7 +59,4 @@ $(function () {
         $('#'+input+'_span').html($('td', this)[1].innerHTML)
         $('#'+input+'_span').attr('class','input uneditable-input '+ $(this).attr('class'))
     })
-
-
-
 })

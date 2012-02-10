@@ -12,25 +12,29 @@ class BillForm(forms.ModelForm):
     class Meta:
         name = 'Bill'
         model = Bill
-        fields = ('date', 'agent', 'proxy','number', 'info')
+        fields = ('date', 'agent', 'proxy', 'number', 'info')
 
     class Media:
         pass
+
 
 class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
         model = Sold #autocomplete="off"
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),}
+        exclude = ('tara',)
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}), }
+
 
 class TransferForm(forms.ModelForm):
     class Meta:
         name = 'Transfer'
         model = Transfer
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),}
+        exclude = ('poddon',)
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}), }
 
-SoldFactory = inlineformset_factory(Bill, Sold, extra=1,form=SoldForm,)
-TransferFactory = inlineformset_factory(Bill, Transfer, extra=1,form=TransferForm,)
+SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
+TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
 
 
 class BillFilter(forms.Form):

@@ -114,7 +114,7 @@ class Sold(Oper):
 #@receiver(post_save,sender=Sold)
 #def money(*args,**kwargs):
 #    kwargs['instance'].doc.set_money()
-#
+
 #@receiver(post_save,sender=Sold)
 #def brick_total_actualizer(instance, created, *args,**kwargs):
 #    model = instance
@@ -122,3 +122,5 @@ class Sold(Oper):
 #        brick = Brick.objects.get(pk=model.brick.pk)
 #        brick.total-=model.amount
 #        brick.save()
+
+from whs.bill.sygnals import *

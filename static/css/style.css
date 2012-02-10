@@ -9,6 +9,9 @@ fieldset.Bill div.control-group {
     /*padding: 0;*/
 }
 
+.nav {
+
+}
 
 .subnav {
     margin-bottom: 5px;
@@ -41,3 +44,25 @@ fieldset.Bill div.control-group {
     }
 
 }
+
+/* Общее */
+.icon-DELETE { background-position:-456px 0 }
+
+/* Sold */
+.icon-brick { background-position:-240px 0 }
+.icon-amount { background-position:-240px 0 }
+.icon-tara { background-position: -216px 0 }
+.icon-poddon { background-position:-240px 0 }
+.icon-price { background-position:-360px -120px }
+.icon-delivery { background-position:-289px -96px }
+
+/* Transfer */
+.icon-sold { background-position:-336px -120px }
+
+
+/*Bill*/
+.icon-date { background-position: -192px -120px }
+.icon-agent { background-position: -168px 0 }
+.icon-number { background-position: -24px -24px; }
+.icon-proxy { background-position: -96px -24px; }
+.icon-info { background-position: 0 -72px; }
