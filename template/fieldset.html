@@ -4,8 +4,13 @@
     {% endfor %}
 </fieldset>
 <fieldset class='{{ form.Meta.name }}'>
-<legend>{{ form.instance }}</legend>
-    {{ form.errors }}
+    <legend>{{ form.instance }}</legend>
+    {% for e in form.non_field_errors %}
+        <div class="alert alert-error">
+            <strong>{{ e }}</strong>
+        </div>
+
+    {% endfor %}
     {% for f in form.visible_fields %}
         <div class="control-group {% if f.errors %}error{% endif %} {{ f.name }}">
             <label class="control-label" for="{{ f.id_for_label }}"><i class='icon-{{ f.name }}'></i>

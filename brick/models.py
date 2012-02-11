@@ -12,10 +12,9 @@ class Brick(models.Model):
     view = models.CharField(u"Вид",max_length=60, choices=view,default=gdc(view))
     ctype = models.CharField(u"Тип цвета",max_length=6,choices=color_type,default=gdc(color_type))
     defect = models.CharField(u"Брак в %",max_length=60,choices=defect,default=gdc(defect))
-    refuse = models.CharField(u"Особенности",max_length=10,choices=refuse,blank=True)
+    refuse = models.CharField(u"Особенности",max_length=10,choices=refuse,default=gdc(refuse))
     features = models.CharField(u"Редкие особенности",max_length=60,blank=True,help_text=u'Oттенки, тычки и прочее')
     name = models.CharField(u"Имя",max_length=160,default='',help_text=u'Полное название продукции')
-    total = models.PositiveIntegerField(u"Остаток",default=0)
 
     css=models.CharField(u"Css",max_length=360,default=u'')
     label=models.CharField(u"Имя",max_length=660,default='')
@@ -25,6 +24,7 @@ class Brick(models.Model):
     t_from = models.PositiveIntegerField(u"Перевод из",default=0)
     t_to = models.PositiveIntegerField(u"Перевод в",default=0)
     sold = models.PositiveIntegerField(u"Отгрузка",default=0)
+    total = models.PositiveIntegerField(u"Остаток",default=0)
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
@@ -34,7 +34,7 @@ class Brick(models.Model):
         return "/brick/%i/" % self.id
 
     class Meta():
-        ordering=['-weight','color','-view','ctype','defect','refuse','mark','features',]
+        ordering=['color','-weight','-view','ctype','defect','refuse','mark','features',]
         verbose_name = u"кирпич"
         verbose_name_plural = u'кирпичи'
 

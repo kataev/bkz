@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from whs.bill.models import Oper,Doc
 from django.db import models
-from django.contrib import admin
 import pytils
-
 
 class Man(Doc):
     """Класс документа для учета прихода кирпича с производства"""
@@ -16,7 +14,16 @@ class Man(Doc):
             return u'Принятие на склад от %s' % date
         else:
             return u'Новый приход'
+    def get_absolute_url(self):
+        return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 
+    @property
+    def opers(self):
+        return list(self.manufacture_add_related.all())
+
+    @property
+    def total(self):
+        return reduce(lambda memo,x: memo+x['amount'] ,self.manufacture_add_related.values('amount').all(),0)
 
 class Add(Oper):
     """Класс операций для документа"""

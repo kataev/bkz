@@ -44,7 +44,7 @@ class Jurnal(models.Model):
     price = models.FloatField()
     trans = models.FloatField()
     class Meta:
-        db_table = u'jurnal'
+        db_table = u'journal'
 
 class Sclad(models.Model):
     id = models.IntegerField(primary_key=True)

@@ -26,23 +26,40 @@ $(function () {
 })
 
 $(function () {
-    $("[type=date]").datepicker({"dateFormat":"yy-mm-dd"});
+    $.datepicker.regional['ru'] = {
+        closeText:'Закрыть',
+        prevText:'&#x3c;Пред',
+        nextText:'След&#x3e;',
+        currentText:'Сегодня',
+        monthNames:['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+        monthNamesShort:['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
+            'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+        dayNames:['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+        dayNamesShort:['вск', 'пнд', 'втр', 'срд', 'чтв', 'птн', 'сбт'],
+        dayNamesMin:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+        dateFormat:"yy-mm-dd",
+        firstDay:1,
+        isRTL:false
+    };
+    $.datepicker.setDefaults($.datepicker.regional['ru']);
+    $('[type=date],[name*="-date"]').datepicker();
 })
 
 $(function () {
-    $('.form-add').click(function (e,test) {
+    $('.form-add').click(function (e, test) {
         console.log(test)
         var prefix = $(this).attr('href').slice(1)
         var node = $('#' + prefix + '-__prefix__').clone()
-        var total = $('#id_'+prefix+'-TOTAL_FORMS') //0
-        var initial = $('#id_'+prefix+'-INITIAL_FORMS') //0
+        var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
+        var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
         $(node).attr('id', id)
         $(node).html($(node).html().replace(/__prefix__/g, total.attr('value')))
-        $('div.DELETE',node).remove()
+        $('div.DELETE', node).remove()
         var menu = $(this).parent().clone()
 
-        if ($(this).data('transfer')){
+        if ($(this).data('transfer')) {
             console.log('create sold from transfer')
         }
 
@@ -57,12 +74,20 @@ $(function () {
             .click(function (e) {
                 $(this).tab('show')
             });
-        $(del).click(function(e){
+        $(del).click(function (e) {
             $(menu).remove()
             $(node).remove()
             $('.tabbable ul.nav li:first a').tab('show')
             $(total).val(parseInt($(total).val()) - 1)
         })
         $(total).val(parseInt($(total).val()) + 1)
+    })
+})
+
+$(function () {
+    $('#Journal tr.doc, #Bills tr.doc').click(function (e) {
+        var i = $(this).data('opers')
+            $(this).toggleClass('opened')
+            $('#'+i).toggleClass('hidden')
     })
 })

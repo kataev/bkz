@@ -1,7 +1,8 @@
 <table class='span4 table table-condensed' style='margin: 0'>
     <thead>
     <tr>
-        <td colspan="2" width="15px">#</td>
+        <td width="15px">#</td>
+        <td width="10px"></td>
         <td>Имя</td>
         <td>Кол-во</td>
 
@@ -9,7 +10,7 @@
     </thead>
     <tbody>
     {% for t in doc.instance.bill_transfer_related.all %}
-        <tr>
+        <tr class='{{ t.brick.css }}'>
             <td>{{ t.pk }}</td>
             <td>
                 <label class='checkbox inline'>
@@ -24,7 +25,7 @@
                     {% endif %}
                 </label>
             </td>
-            <td class='{{ t.brick.css }}'>{{ t.brick }}</td>
+            <td >{{ t.brick }}</td>
             <td>{{ t.amount }}</td>
 
         </tr>

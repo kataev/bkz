@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib import admin
+type_c = ((0,u'Обычный покупатель'),(1,u'Строительная компания'))
+#form_c = ((0,u'Обычный покупатель'),(1,u'Строительная компания'))
 
 class Agent(models.Model):
-
-    type_c = ((0,u'Обычный покупатель'),(1,u'Строительная компания'))
-
     name=models.CharField(u"Имя",max_length=200,help_text=u'Название без юридической формы')
     form=models.CharField(u"Юр форма",blank=True,max_length=200,help_text=u'Юридическая форма, ООО,ОАО и т.д')
     type=models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
@@ -29,3 +28,6 @@ class Agent(models.Model):
                 return '%s, %s' % (self.name[:30],self.form)
         else:
             return u'Новый контрагент'
+
+    def get_absolute_url(self):
+        return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)

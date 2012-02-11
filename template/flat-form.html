@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block container %}
+    <form method="POST" action="./" class='form-horizontal'>
+        {% include 'fieldset.html' %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+        </div>
+    </form>
+{% endblock %}

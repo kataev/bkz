@@ -1,7 +1,16 @@
+body {
+    background-image: url('/static/img/whitediamond.png')
+}
+
+#Bricks a {color:#333}
+#Journal .name {padding-left: 10px;}
+#Journal .amount {padding-left: 10px;}
+.opened i.zoom { background-position: -360px 0 }
+
 span.input {overflow: hidden;}
 
 fieldset.Bill div.control-group {
-    float:left;
+    /*float:left;*/
 }
 
 .navbar form button, .navbar form select {
@@ -9,8 +18,8 @@ fieldset.Bill div.control-group {
     /*padding: 0;*/
 }
 
-.nav {
-
+.nav.nav-tabs li.active span.label, nav.nav-tabs li:hover span.label {
+    background-color: #F89406;
 }
 
 .subnav {
@@ -51,6 +60,7 @@ fieldset.Bill div.control-group {
 .icon-DELETE { background-position:-456px 0 }
 
 /* Sold */
+.icon-Sold { background-position: -336px -96px }
 .icon-brick { background-position:-240px 0 }
 .icon-amount { background-position:-240px 0 }
 .icon-tara { background-position: -216px 0 }
@@ -61,11 +71,18 @@ fieldset.Bill div.control-group {
 
 /* Transfer */
 .icon-sold { background-position:-336px -120px }
+.icon-Transfer { background-position: -336px -120px }
 
 
 /*Bill*/
+.icon-Bill { background-position: -360px -120px }
 .icon-date { background-position: -192px -120px }
 .icon-agent { background-position: -168px 0 }
 .icon-number { background-position: -24px -24px; }
 .icon-proxy { background-position: -96px -24px; }
 .icon-info { background-position: 0 -72px; }
+
+
+/* Man */
+.icon-Man { background-position: -408px -96px }
+.icon-Add { background-position: -289px -96px }

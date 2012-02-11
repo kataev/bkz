@@ -3,6 +3,9 @@ import django.forms as forms
 from django.forms.models import inlineformset_factory
 from whs.bill.models import *
 
+class DateForm(forms.Form):
+    date = forms.DateField()
+
 class BillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
@@ -12,7 +15,8 @@ class BillForm(forms.ModelForm):
     class Meta:
         name = 'Bill'
         model = Bill
-        fields = ('date', 'agent', 'proxy', 'number', 'info')
+        fields = ('date', 'number', 'agent', 'proxy', 'info')
+        widgets = {'info':forms.Textarea(attrs={'rows':2}) }
 
     class Media:
         pass
@@ -22,16 +26,24 @@ class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
         model = Sold #autocomplete="off"
-        exclude = ('tara',)
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}), }
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),'info':forms.Textarea(attrs={'rows':2}) }
+
+    def clean_amount(self):
+        data = self.cleaned_data
+        if self.instance.pk:
+            if self.instance.brick.total + self.instance.amount - data['amount'] < 0:
+                raise ValidationError(dict(amount='На складе не хватет кирпича'))
+        else:
+            if data['brick'].total-data['amount'] < 0:
+                raise ValidationError(dict(amount='На складе не хватет кирпича'))
+        return data['amount']
 
 
 class TransferForm(forms.ModelForm):
     class Meta:
         name = 'Transfer'
         model = Transfer
-        exclude = ('poddon',)
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}), }
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),'info':forms.Textarea(attrs={'rows':2}) }
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
