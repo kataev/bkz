@@ -1,10 +1,12 @@
 {% extends 'index.html' %}
 {% load class_name %}
+{% block title %}Журнал{% endblock %}
+
 {% block container %}
      <div class='row'>
     <div class="span9">
         <table id='Journal' class="table table-bordered table-condensed">
-            {#        <caption><h3>{{ date }}</h3></caption>#}
+{#                    <caption><h3>{{ date }}</h3></caption>#}
             <thead>
             <tr>
                 <th style='width: 15px;'>#</th>
@@ -12,14 +14,21 @@
                 <th>Кол-во</th>
                 <th>Стоимость</th>
             </tr>
-
             </thead>
             <tbody>
             {% for b in Journal %}
                 <tr class="doc" data-opers='{{ b|to_class_name }}_{{ b.pk }}'>
                     <td>{{ b.number|default:b.pk }}</td>
                     <td class="name"><i class="icon-{{ b|to_class_name }}"></i>
-                        <a href="{{ b.get_absolute_url }}">{{ b }}</a> <i class="icon-zoom-in"></i>
+                        <a href="{{ b.get_absolute_url }}">{{ b }}</a>,
+                        <a href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
+                        {% if b.proxy %}
+                            <a href="?proxy={{ b.proxy.pk }}">
+                        <span class="label label-info">
+                            {{ b.proxy.name }}
+                        </span></a>
+                        {% endif %}
+                        <i class="icon-zoom-in"></i>
                     </td>
                     <td><b>{{ b.total }}</b></td>
                     <td><span class="money">{{ b.money }}</span></td>
@@ -45,7 +54,27 @@
         </table>
     </div>
         <div class="span3">
-            <div type='date'></div>
+            <form class="form-vertical" action="" method="GET">
+                <fieldset>
+                    <legend> <i class="icon-calendar" style="vertical-align: baseline;"></i> Выберите дату</legend>
+                    <div class="control-group success">
+                        <div class="controls">
+                            <input id='date' type='date' placeholder='Шелкните для выбора даты' value="{{ date.date.value|default:'' }}" name={{ date.date.html_name }}>
+                        </div>
+                    </div>
+                    <div class="control-group success">
+                        <div class="controls">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-info ">Накл</a>
+                                <a class="btn btn-warning ">Пр-во</a>
+                                <a class="btn btn-success ">Цех</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
         </div>
     </div>
 {% endblock %}

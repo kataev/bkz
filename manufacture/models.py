@@ -13,7 +13,7 @@ class Man(Doc):
             date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
             return u'Принятие на склад от %s' % date
         else:
-            return u'Новый приход'
+            return u'Новая партия с производства'
     def get_absolute_url(self):
         return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
 

@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.decorators.http import require_http_methods
-from whs.bill.forms import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from manufacture.forms import *
 from django.db import transaction
+from django.http import QueryDict
+from django.db.models import Sum
+
+from manufacture.forms import *
+from whs.bill.forms import *
 
 @require_http_methods(["GET",])
 def main(request):
-    """ Главная страница """
-    return render(request, 'index.html',dict(Bricks=Brick.objects.all()))
+    """ Главная страница """ #
+    fields = dict([ (x,Sum(x)) for x in ['begin', 'add', 't_from', 't_to', 'sold', 'total'] ])
+    totals = Brick.objects.aggregate(**fields)
+    return render(request, 'index.html',dict(totals=totals))
 
 def bills(request):
     Bills = Bill.objects.all()
@@ -25,7 +30,7 @@ def bills(request):
             d['bill_sold_related__brick'] = d['brick']
             del d['brick']
         Bills = Bills.filter(**d)
-    paginator = Paginator(Bills, 20) # Show 25 contacts per page
+    paginator = Paginator(Bills, 20)
 
     try:
         page = int(request.GET.get('page', '1'))
@@ -38,7 +43,13 @@ def bills(request):
     form = BillFilter()
     money = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
     total = reduce(lambda memo,b: memo+b.total,bills.object_list,0)
-    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money))
+
+    url = QueryDict('',mutable=True)
+    get = request.GET.copy()
+    get = dict([ [x,get[x]] for x in get if get[x]])
+    if get.has_key('page'): del get['page']
+    url.update(get)
+    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
 
 def agents(request):
     Agents = Agent.objects.all()
@@ -63,10 +74,7 @@ def journal(request):
 
     Jounal = list(Bill.objects.select_related().filter(date=date))+list(Man.objects.select_related().filter(date=date))
 
-    prev = (date - datetime.timedelta(1))
-    next = (date + datetime.timedelta(1))
-
-    return render(request,'journal.html',dict(Journal=Jounal,date=date,next=next,prev=prev))
+    return render(request,'journal.html',dict(Journal=Jounal,date=form))
 
 
 def bill(request,id):

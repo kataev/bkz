@@ -1,5 +1,8 @@
 {% extends 'index.html' %}
 {% load class_name %}
+
+{% block title %}{{ doc.instance }}{% endblock %}
+
 {% block brick-select %}
     <div id="brick-select" class="modal hide fade">
         <div class="modal-header">

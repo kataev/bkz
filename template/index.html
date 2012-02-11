@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <title>BKZ-WHS</title>
+    <title>BKZ-WHS : {% block title %}Остатки{% endblock %}</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -77,13 +77,14 @@
         <tr>
             <th>{{ Bricks|length }}</th>
 
-            <th>0</th>
-            <th>0</th>
-            <th>0</th>
-            <th>0</th>
-            <th>0</th>
-            <th>0</th>
-            <th>0</th>
+            <th></th>
+            <th>{{ totals.begin }}</th>
+            <th>{{ totals.add }}</th>
+            <th>{{ totals.t_from }}</th>
+            <th>{{ totals.t_to }}</th>
+            <th>{{ totals.sold }}</th>
+            <th>{{ totals.total }}</th>
+
         </tr>
         </tfoot>
         </table>

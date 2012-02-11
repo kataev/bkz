@@ -42,6 +42,13 @@ $(function () {
         firstDay:1,
         isRTL:false,
         onSelect: function( selectedDate ) {
+            console.log(this.id)
+            if (this.id == 'date'){
+                window.location = '?date='+selectedDate
+                    return
+            }
+
+
             var option = this.id.split('__')[1] == "gte" ? "minDate" : "maxDate",
                 instance = $( this ).data( "datepicker" ),
                 date = $.datepicker.parseDate(

@@ -2,4 +2,5 @@
 from whs.brick.models import Brick
 
 def bricks(request):
-    return dict(Bricks=Brick.objects.all())
+    Bricks = Brick.objects.all()
+    return dict(Bricks=Bricks)

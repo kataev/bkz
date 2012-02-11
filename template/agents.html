@@ -1,14 +1,8 @@
 {% extends 'index.html' %}
+
+{% block title %}Контрагенты{% endblock %}
+
 {% block container %}
-{#    <table id='Agents' class="table table-bordered table-condensed">#}
-{#        <thead>#}
-{#        <tr>#}
-{#            <th width=15px>#</th>#}
-{#            <th>Имя</th>#}
-{#            <th>Адресс</th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody>#}
         {% for a in Agents.object_list %}
             {% ifchanged a.name|capfirst|first %}
         </tbody>

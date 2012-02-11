@@ -1,6 +1,7 @@
 body { background-image: url('/static/img/whitediamond.png') }
 
 span.uneditable-input,a.btn {vertical-align: bottom;}
+
 #Bricks a {color:#333}
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}

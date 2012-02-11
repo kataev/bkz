@@ -13,5 +13,5 @@ def fill_bills(count):
         b.save()
 
         for o in range(randrange(1,3)):
-            s = Sold(amount=randrange(288,28800),brick=bricks[randrange(len(bricks)-1)],price=randrange(10),doc=b)
+            s = Sold(amount=randrange(5,10),brick=bricks[randrange(len(bricks)-1)],price=randrange(10),doc=b)
             s.save()
