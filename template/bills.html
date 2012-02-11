@@ -6,8 +6,8 @@
     <div id="brick-select" class="modal hide fade">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
-
             <h3>Выбор кирпича</h3>
+            {% include 'brick-select-buttons.html' %}
         </div>
         <div class="modal-body">
             {% include 'brick-select.html' %}
@@ -20,97 +20,129 @@
 {% endblock %}
 
 {% block container %}
-    <form class="form-inline" action="" method="GET">
-        {{ Filter.date__gte.value.isoformat }}
-        <input type="date" autocomplete="off" class="input-small" placeholder="Конец периода" name="date__lte" id="id_date__lte" value='{{ Filter.date__lte.value.isoformat }}'>
-        <input type="date" autocomplete="off" class="input-small" placeholder="Начало периода" name="date__gte" id="id_date__gte" value='{{ Filter.date__gte.value.isoformat }}'>
-        {{ Filter.agent }}
-        {% with f=Filter.brick %}
-            {% include 'brick-select-form.html' %}
-        {% endwith %}
-        <button type="submit" class="small btn btn-info"><i class="icon-search icon-white"></i>Фильтр</button>
-    </form>
-    <table id='Bills' class="table table-bordered table-condensed">
-        <thead>
-        <tr>
-            <th width=15px>#</th>
-            <th>Имя</th>
-            <th>Дата</th>
-            <th>Агент</th>
-            <th>Кол-во</th>
-            <th>Кол-во</th>
-            <th>Ст-сть</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for b in Bills.object_list %}
-            <tr class="doc" data-opers='{{ b|to_class_name }}_{{ b.pk }}'>
-                <td>{{ b.number }}</td>
-                <td><i class="icon-{{ b|to_class_name }}"></i> <a href="{{ b.get_absolute_url }}">{{ b }}</a></td>
-                <td> {{ b.date }} </td>
-                <td> <a href="?agent={{ b.agent.pk }}">{{ b.agent|truncatewords:3 }}</a>
-                    {% if b.proxy %}
-                        <a href="?proxy={{ b.proxy.pk }}">
+    <div class="row">
+        <div class="span8">
+        <table id='Bills' class=" table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th width=15px>#</th>
+                <th width="100px">Дата</th>
+                <th>Имя</th>
+                <th>Кол-во</th>
+                <th>Ст-сть</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for b in Bills.object_list %}
+                <tr class="doc" data-opers='{{ b|to_class_name }}_{{ b.pk }}'>
+                    <td>{{ b.number }}</td>
+                    <td> {{ b.date }} </td>
+                    <td class="name"><i class="icon-{{ b|to_class_name }}"></i>
+                        <a href="{{ b.get_absolute_url }}">{{ b }}</a>,
+                        <a href="?agent={{ b.agent.pk }}">{{ b.agent|truncatewords:3 }}</a>
+                        {% if b.proxy %}
+                            <a href="?proxy={{ b.proxy.pk }}">
                         <span class="label label-info">
                             {{ b.proxy.name }}
                         </span></a>
-                    {% endif %} </td>
-                <td>{{ b.total }}</td>
-                <td>{{ b.tara }}</td>
-                <td>{{ b.money }}</td>
-            </tr>
-            {% with d=b %}
-                <tbody class="hidden" id='{{ d|to_class_name }}_{{ d.pk }}'>
-            {% for o in d.opers %}
-                <tr class="{{ o|to_class_name }} {{ o.brick.css }}">
-                    <td></td>
-                    <td class="name" colspan="4">
-                        <i class="icon-{{ o|to_class_name }}"></i> {{ o }}
-                    </td>
-                    <td class="amount">{{ o.amount }}</td>
-                    <td class="price">
-                        {% if o.price %}
-                            <i {% if o.price %}title='В том числе доставка: {{ o.delivery }} руб.'{% endif %}>{{ o.price }}</i>
-                            <span class="label
-                                        {% if o.delivery %}label-info" title="Доставка{% endif %}">Руб</span>
                         {% endif %}
+                        <i class="icon-zoom-in"></i>
                     </td>
+                    <td class="amount">{{ b.total }}</td>
+                    <td><span class="money">{{ b.money }}</span></td>
+
+
                 </tr>
+                {% with d=b %}
 
+                    <tbody class="opers" style='display: none' id='{{ d|to_class_name }}_{{ d.pk }}'>
+                    {% for o in d.opers %}
+                        <tr class="{{ o|to_class_name }} {{ o.brick.css }}">
+                            <td class="name" colspan="3">
+                                <i class="icon-{{ o|to_class_name }}"></i> {{ o }}
+                            </td>
+                            <td class="amount">{{ o.amount }}</td>
+                            <td class="price">
+                                {% if o.price %}
+                                    <span class="money">{{ o.price }}</span>
+                                {% endif %}
+                            </td>
+                            {#                <td></td>#}
+                            {#                <td></td>#}
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                {% endwith %}
             {% endfor %}
-                </tbody>
-            {% endwith %}
-        {% endfor %}
 
-        </tbody>
-        <tfoot>
-        <tr>
-            <th></th>
-            <th colspan="3">Показанно {{ Bills.object_list|length }} из {{ Bills.paginator.count }}</th>
-            <th >{{ total }}</th>
-            <th >{{ money }}</th>
-            <th >{{ money }}</th>
-        </tr>
-        </tfoot>
-    </table>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="3">Показанно {{ Bills.object_list|length }} из {{ Bills.paginator.count }}</th>
+                <th>{{ total }}</th>
+                <th><span class="money">{{ money }}</span></th>
+            </tr>
+            </tfoot>
+        </table>
+        </div>
+        <div class="span4">
+        <form class="form-vertical" action="" method="GET">
+            <fieldset>
+            <legend> <i class="icon-search"></i> Фильтр для поиска накладных</legend>
+                <div style="margin-top: 8px;" class="control-group success">
+                    {#                <label class="control-label" for="focusedInput">Focused input</label>#}
+                    <div class="controls">
+                        <input type="date" autocomplete="off" class="span2" placeholder="Начало периода"
+                               name="date__gte"
+                               id="id_date__gte" value='{{ Filter.date__gte.value.isoformat }}'>
+                        <input type="date" autocomplete="off" class="span2" placeholder="Конец периода" name="date__lte"
+                        id="id_date__lte" value='{{ Filter.date__lte.value.isoformat }}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {% with f=Filter.agent %}
+                            {% include 'agent-select.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {% with f=Filter.brick %}
+                            {% include 'brick-select-form.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="small btn btn-info">
+                        <i class="icon-search icon-white"></i> Фильтр
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+        </div>
 
-    <div class="pagination pagination-centered">
+    </div>
+    <div class="span8">
+        <div class="pagination pagination-centered">
 
-        <ul id='navigation'>
-            {% if Bills.has_previous %}
-                <li class="prev"><a href="?page={{ Bills.previous_page_number }}">&larr; Предыдущая</a></li>
-            {% else %}
-                <li class="prev disabled"><a>&larr; Предыдущая</a></li>
-            {% endif %}
+            <ul id='navigation'>
+                {% if Bills.has_previous %}
+                    <li class="prev"><a href="?page={{ Bills.previous_page_number }}">&larr; Предыдущая</a></li>
+                {% else %}
+                    <li class="prev disabled"><a>&larr; Предыдущая</a></li>
+                {% endif %}
 
-            <li class="active"><a>Страница {{ Bills.number }} из {{ Bills.paginator.num_pages }}</a></li>
+                <li class="active"><a>Страница {{ Bills.number }} из {{ Bills.paginator.num_pages }}</a></li>
 
-            {% if Bills.has_next %}
-                <li class="next"><a href="?page={{ Bills.next_page_number }}">Следующая &rarr;</a></li>
-            {% else %}
-                <li class="next disabled"><a>Следующая &rarr;</a></li>
-            {% endif %}
+                {% if Bills.has_next %}
+                    <li class="next"><a href="?page={{ Bills.next_page_number }}">Следующая &rarr;</a></li>
+                {% else %}
+                    <li class="next disabled"><a>Следующая &rarr;</a></li>
+                {% endif %}
 
-        </ul>
+            </ul>
+        </div>
     </div>
 {% endblock %}

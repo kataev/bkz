@@ -40,10 +40,19 @@ $(function () {
         dayNamesMin:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
         dateFormat:"yy-mm-dd",
         firstDay:1,
-        isRTL:false
+        isRTL:false,
+        onSelect: function( selectedDate ) {
+            var option = this.id.split('__')[1] == "gte" ? "minDate" : "maxDate",
+                instance = $( this ).data( "datepicker" ),
+                date = $.datepicker.parseDate(
+                    instance.settings.dateFormat ||
+                        $.datepicker._defaults.dateFormat,
+                    selectedDate, instance.settings );
+            dates.not( this ).datepicker( "option", option, date );
+        }
     };
     $.datepicker.setDefaults($.datepicker.regional['ru']);
-    $('[type=date],[name*="-date"]').datepicker();
+    var dates = $('[type=date],[name*="-date"]').datepicker();
 })
 
 $(function () {
@@ -85,9 +94,24 @@ $(function () {
 })
 
 $(function () {
-    $('#Journal tr.doc, #Bills tr.doc').click(function (e) {
-        var i = $(this).data('opers')
-            $(this).toggleClass('opened')
-            $('#'+i).toggleClass('hidden')
+    $('#Journal tr.doc i.icon-zoom-in, #Bills tr.doc i.icon-zoom-in').click(function (e) {
+        var i = $(this).parent().parent().data('opers')
+            $(this).toggleClass('zoom')
+        $('#' + i).toggle('blind', null, 500);
+    })
+})
+
+$(function () {
+    var options = {
+        symbol : "р",
+        decimal : ".",
+        thousand: " ",
+        precision : 2,
+        format: "%v <span class='ruble rel'>%s<span class='dot dborder'>.</span></span>"
+    };
+
+    $('span.money').each(function (id,n) {
+        var text = accounting.formatMoney($(n).text(),options)
+        $(n).html(text)
     })
 })

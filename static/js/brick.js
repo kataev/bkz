@@ -6,7 +6,7 @@
 $(function () {
     $('a', '#brick-select').on('toggle', function (e) {
         if (!$(this).attr('href')) {
-            $(this).siblings().removeClass('active')
+            $(this).parents('div.subnav').find('a.active').removeClass('active')
         }
         var active = $('a.active', '#brick-select')
         var names = _(active).reduce(function (m, n) {
@@ -33,7 +33,6 @@ $(function () {
         })
         _(nodes).each(function (node, m) {
             $('td', node).slice(2).each(function (id, td) {
-//                if (id <= 1) { return }
                 $(tf[id + 2]).html(parseInt(tf[id + 2].innerHTML) + parseInt(td.innerHTML))
             })
         })
@@ -48,11 +47,12 @@ $(function () {
             , option = $target.data('modal') ? 'toggle' : $.extend({}, $target.data(), $this.data())
 
         e.preventDefault()
-        $($target).data('button', e.target)
+        $($target).data('button', $(e.target).parent())
         $target.modal(option)
     })
     var modal = $('#brick-select')
     $('tr', modal).click(function (e) {
+        console.log(e)
         var button = $(modal).data('button')
         var input = $(button).data('input')
         $('#'+input).val($('td:first', this).text().trim())

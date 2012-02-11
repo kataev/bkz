@@ -69,19 +69,21 @@ class Bill(Doc):
     @property
     def opers(self):
         if not self.pk: return ()
-        return list(self.bill_sold_related.all()) + list(self.bill_transfer_related.all())
+        opers = []
+        for o in self.bill_sold_related.select_related().all():
+            opers.append(o)
+            if o.transfer.count():
+                opers.append(o.transfer.get())
+        print opers
+        return opers
 
     #    @property
     #    def money(self):
     #        return sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
 
-    def date_ru(self):
-        return pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-
     def __unicode__(self):
         if self.pk:
-            date = self.date_ru()
-            return u'Накладная № %d от %s %s' % (self.number, date, unicode(self.agent)[:50])
+            return u'Накладная № %d, %d' % (self.number, self.date.year)
         else:
             return u'Новая накладная'
 
@@ -106,7 +108,7 @@ class Transfer(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Перевод из %s, %d шт' % (self.brick, self.amount)
+            return u'Перевод %s' % self.brick
         else:
             return u'Новый перевод'
 
@@ -128,7 +130,7 @@ class Sold(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Отгрузка № %d %s, %d шт' % (self.pk, self.brick, self.amount)
+            return u'Отгрузка %s' % self.brick
         else:
             return u'Новая отгрузка'
 

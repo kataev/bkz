@@ -1,0 +1,12 @@
+<select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
+    <optgroup label="Выберите контрагента:">
+        {% for a in f.field.queryset %}
+            {% ifchanged a.name|capfirst|first %}</optgroup>
+                <optgroup label="{{ a.name|capfirst|first }}">{% endifchanged %}
+            <option value={{ a.pk }}>
+                {{ a }}
+            </option>
+
+        {% endfor %}
+        </optgroup>
+</select>

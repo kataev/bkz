@@ -1,11 +1,20 @@
-body {
-    background-image: url('/static/img/whitediamond.png')
-}
+body { background-image: url('/static/img/whitediamond.png') }
 
+span.uneditable-input,a.btn {vertical-align: bottom;}
 #Bricks a {color:#333}
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}
-.opened i.zoom { background-position: -360px 0 }
+tr.doc i.icon-zoom-in {cursor: pointer}
+.Sold td.name, .Transfer td.name {text-align: right}
+form legend + .control-group {
+    margin-top: 18px;
+    -webkit-margin-top-collapse: separate;
+}
+/* http://www.artlebedev.ru/tools/technogrette/html/rouble/ */
+span.ruble { text-transform:uppercase; }
+span.rel { position: relative; }
+span.dborder { top: -1.5ex; left: 0; width:.9ex; border-bottom: 0.16ex solid #333; // top: -1.3ex; }
+span.dot { position:absolute; text-indent: -1000em; }
 
 span.input {overflow: hidden;}
 
@@ -58,6 +67,7 @@ fieldset.Bill div.control-group {
 
 /* Общее */
 .icon-DELETE { background-position:-456px 0 }
+i.icon-zoom-in.zoom {background-position:-360px 0;}
 
 /* Sold */
 .icon-Sold { background-position: -336px -96px }
