@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^bills$', 'whs.views.bills', name='bills'),
     url(r'^agents$', 'whs.views.agents', name='agents'),
     url(r'^journal$', 'whs.views.journal', name='journal'),
+    url(r'^history$', 'whs.views.history', name='history'),
 
     url(r'^test$', 'whs.views.test', name='test'),
 )

@@ -6,14 +6,24 @@ from django.db import transaction
 from django.http import QueryDict
 from django.db.models import Sum
 
-from manufacture.forms import *
+from whs.brick.models import History
+from whs.manufacture.forms import *
 from whs.bill.forms import *
+from django.contrib import messages
+
 
 @require_http_methods(["GET",])
 def main(request):
     """ Главная страница """ #
     fields = dict([ (x,Sum(x)) for x in ['begin', 'add', 't_from', 't_to', 'sold', 'total'] ])
     totals = Brick.objects.aggregate(**fields)
+
+    messages.debug(request, '%s SQL statements were executed.' % 2)
+    messages.info(request, 'Three credits remain in your account.')
+    messages.success(request, 'Profile details updated.')
+    messages.warning(request, 'Your account expires in three days.')
+    messages.error(request, 'Document deleted.')
+
     return render(request, 'index.html',dict(totals=totals))
 
 def bills(request):
@@ -68,7 +78,7 @@ def agents(request):
 
 
 def journal(request):
-    form = DateForm(request.GET)
+    form = DateForm(request.GET or None)
     if form.is_valid(): date = form.cleaned_data.get('date')
     else: date = datetime.date.today()
 
@@ -149,3 +159,32 @@ def test(request):
 #    transfer.save()
     sold.transfer.add(transfer)
     return render(request,'index.html')
+
+
+def history(request):
+    if request.POST:
+        for b in Brick.objects.order_by('pk').all():
+            date=datetime.date.today().replace(day=1)
+            h = History(brick=b,date=date)
+            for f in ['begin', 'add', 't_from', 't_to', 'sold', 'total']:
+                setattr(h,f,getattr(b,f))
+            h.save()
+            b.begin = b.total
+            for f in [ 'add', 't_from', 't_to', 'sold', 'total']:
+                setattr(b,f,0)
+            b.save()
+        return redirect('/')
+    date = datetime.date.today().replace(day=1)
+    if date.month == 12:
+        date = date.replace(year=date.year-1,month=1)
+    f = DateForm(request.GET or None,initial={'date':date})
+    if f.is_valid():
+        date = f.cleaned_data.get('date').replace(day=1)
+
+    history = History.objects.filter(date=date)
+
+    dates = History.objects.dates('date','month')
+
+    return render(request,'history.html',dict(History=history,date=dates))
+
+

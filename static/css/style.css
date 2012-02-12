@@ -4,7 +4,7 @@ span.uneditable-input,a.btn {vertical-align: bottom;}
 #Bricks a {color:#333}
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}
-tr.doc i.icon-zoom-in {cursor: pointer;float: right;}
+table i.icon-zoom-in {cursor: pointer;float: right;}
 .Sold td.name, .Transfer td.name {text-align: right}
 form legend + .control-group {
     margin-top: 18px;
@@ -36,9 +36,15 @@ fieldset.Bill div.control-group {
     width: 100%;
     text-align: center;
     padding: 2px;
+    text-align: center
 }
 .subnav .btn-group {
     white-space: nowrap;
+}
+
+.subnav li {
+    display: inline-block;
+
 }
 
 .subnav a.btn {
@@ -50,17 +56,11 @@ fieldset.Bill div.control-group {
 @media (min-width: 980px) {
     .subnav-fixed {
         position: fixed;
-        top: 40px;
+        top: 45px;
         left: 0;
         right: 0;
         z-index: 1030;
     }
-    .subnav-fixed .nav {
-        width: 938px;
-        margin: 0 auto;
-        padding: 0 1px;
-    }
-
 }
 
 form {

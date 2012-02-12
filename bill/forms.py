@@ -2,6 +2,7 @@
 import django.forms as forms
 from django.forms.models import inlineformset_factory
 from whs.bill.models import *
+from django.contrib.admin.models import LogEntry
 
 class DateForm(forms.Form):
     date = forms.DateField()

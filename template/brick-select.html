@@ -9,8 +9,8 @@
     <tbody>
     {% for b in Bricks %}
         <tr class="{{ b.css }}">
-            <td> {{ b.id }} </td>
-            <td> {{ b.label }} </td>
+            <td> <input value="{{ b.pk }}" name='brick' type="radio"> </td>
+            <td class='name'> {{ b.label }} </td>
             <td> {{ b.total }} </td>
         </tr>
     {% endfor %}

@@ -38,7 +38,9 @@
 
 <body>
 {% load class_name %}
+
 {% include 'navbar.html' %}
+{% include 'messages.html' %}
 
 {% block brick-select %}
 {% endblock %}
@@ -63,7 +65,7 @@
             {% for b in Bricks %}
                 <tr class="{{ b.css }}">
                     <td> {{ b.id }} </td>
-                    <td class="name"> <a href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
+                    <td class="name"><a href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
                     <td> {{ b.begin }} </td>
                     <td> {{ b.add }} </td>
                     <td> {{ b.t_from }} </td>
@@ -73,23 +75,33 @@
                 </tr>
             {% endfor %}
             </tbody>
-        <tfoot>
-        <tr>
-            <th>{{ Bricks|length }}</th>
+            <tfoot>
+            <tr>
+                <th>{{ Bricks|length }}</th>
+                <th></th>
+                <th>{{ totals.begin }}</th>
+                <th>{{ totals.add }}</th>
+                <th>{{ totals.t_from }}</th>
+                <th>{{ totals.t_to }}</th>
+                <th>{{ totals.sold }}</th>
+                <th>{{ totals.total }}</th>
 
-            <th></th>
-            <th>{{ totals.begin }}</th>
-            <th>{{ totals.add }}</th>
-            <th>{{ totals.t_from }}</th>
-            <th>{{ totals.t_to }}</th>
-            <th>{{ totals.sold }}</th>
-            <th>{{ totals.total }}</th>
-
-        </tr>
-        </tfoot>
+            </tr>
+            </tfoot>
         </table>
     {% endblock %}
 </div>
+<div class="container">
+    <div class="row">
+        <div class="span6">
+            <p style='text-align: center' class="">Склад готовой продукции <b>ООО &laquo;Березниковский кирпичный завод&raquo;</b></p>
+        </div>
+        <div class="span6">
+            <p style="text-align: center" class="">Разработчик: <a href="https://plus.google.com/u/0/101946326841894739802">Катаев Денис</a></p>
+        </div>
+    </div>
+</div>
+
 <!-- /container -->
 
 <!-- Le javascript
@@ -105,7 +117,7 @@
 <script type="text/javascript" src="/static/js/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
 
 {#<script src="/static/js/bootstrap/bootstrap-transition.js"></script>#}
-{#<script src="/static/js/bootstrap/bootstrap-alert.js"></script>#}
+<script src="/static/js/bootstrap/bootstrap-alert.js"></script>
 <script src="/static/js/bootstrap/bootstrap-modal.js"></script>
 <script src="/static/js/bootstrap/bootstrap-dropdown.js"></script>
 {#<script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>#}

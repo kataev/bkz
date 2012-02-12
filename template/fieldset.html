@@ -30,7 +30,11 @@
                         {% if f.name == 'transfer' %}
                             {% include 'sold-transfer.html' %}
                         {% else %}
+                            {% if f.name == 'agent' %}
+                                {% include 'agent-select.html' %}
+                            {% else %}
                             {{ f }}
+                        {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}

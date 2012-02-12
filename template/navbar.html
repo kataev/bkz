@@ -1,3 +1,4 @@
+{% load pytils_numeral %}
 <div class="navbar navbar-fixed-top" style='position: fixed;'>
     <div class="navbar-inner">
         <div class="container">
@@ -6,14 +7,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="#">
+            <a class="brand" href="/">
                 <i style='margin-top: 4px' class="icon-qrcode icon-white"></i>
-{#                <img src="/static/img/cargo/cargo3.png" style="height: 16px; width: 16px;">#}
+
                 <i title="BKZ WareHouse">BKZ-WHS</i></a>
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class=""><a href="/"> <i class="icon-home icon-white"></i> Главная</a></li>
                     <li><a href="/bills"> <i class="icon-list-alt icon-white"></i> Накладные</a></li>
                     <li><a href="/journal"> <i class="icon-calendar icon-white"></i> Журнал</a></li>
                     <li><a href="/agents"><i class="icon-user icon-white"></i> КонтрАгенты</a></li>
@@ -21,6 +21,9 @@
                 {% block navbar-form %}
                 {% endblock %}
                 <ul class="nav pull-right">
+                    {% if messages %}
+                    <li><a href="#Messages" data-toggle="modal"><i class="icon-envelope icon-white"></i> У вас {{ messages|length }} {{ messages|length|choose_plural:'сообещние,сообщения,сообщений' }}</a></li>
+                    {% endif %}
                     <li><a href="/stats"><i class='icon-signal icon-white'></i> Статистика</a></li>
                     <li class="divider-vertical"></li>
                     <li class="dropdown">

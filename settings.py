@@ -175,6 +175,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
+
+    'django_extensions',
+    'pytils',
+
     'whs.old',
     'whs.brick',
     'whs.agent',
