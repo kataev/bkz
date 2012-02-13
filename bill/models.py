@@ -133,6 +133,3 @@ class Sold(Oper):
             return u'Отгрузка %s' % self.brick
         else:
             return u'Новая отгрузка'
-
-
-from whs.bill.signals import *

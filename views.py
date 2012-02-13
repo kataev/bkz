@@ -10,6 +10,7 @@ from whs.brick.models import History
 from whs.manufacture.forms import *
 from whs.bill.forms import *
 from django.contrib import messages
+from whs.brick import signals
 
 
 @require_http_methods(["GET",])
@@ -28,7 +29,7 @@ def main(request):
 
 def bills(request):
     Bills = Bill.objects.all()
-    form = BillFilter(request.GET)
+    form = BillFilter(request.GET or None)
     order = request.GET.get('order')
     if order in map(lambda x: x.name,Bill._meta.fields):
         Bills = Bills.order_by(order)
@@ -50,7 +51,6 @@ def bills(request):
         bills = paginator.page(page)
     except (EmptyPage, InvalidPage):
         bills = paginator.page(paginator.num_pages)
-    form = BillFilter()
     money = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
     total = reduce(lambda memo,b: memo+b.total,bills.object_list,0)
 
@@ -136,7 +136,9 @@ def man(request,id):
         form = ManForm(request.POST,instance=doc,prefix='man',)
         add = AddFactory(request.POST,instance=doc,prefix='add')
         if form.is_valid() and add.is_valid():
-            doc = form.save()
+            try:doc = form.save()
+            except ValidationError,e: pass
+            form.errors['__all__']=['test']
             add.save()
             return redirect(doc)
     else:

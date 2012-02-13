@@ -1,6 +1,6 @@
 <div class="input-append">
 {% if f.value == 'None' or not f.value %}
-        <span class="input uneditable-input {% if span %}span{{ span }}{% endif %}" id='{{ f.id_for_label }}_span'>Нет</span>
+        <span class="input uneditable-input {% if span %}span{{ span }}{% endif %}" id='{{ f.id_for_label }}_span'>Выберете кирпич</span>
 {% else %}
     {% for b in Bricks %}
         {# Выбиратор кирпича. Bug,Плохо стравнивает числа и строки  #}

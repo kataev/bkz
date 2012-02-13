@@ -13,7 +13,12 @@
             <tr>
                 <th width=15px>#</th>
                 <th>Имя</th>
-                <th>Адресс</th>
+                <th>Адрес</th>
+                <th>Телефон</th>
+                <th>Банк</th>
+                <th>Счет</th>
+                <th>Инн</th>
+
             </tr>
             </thead>
             <tbody>
@@ -24,8 +29,15 @@
                     {% if a.form %}
                     <span class='label'>{{ a.form }}</span>
                     {% endif %}
+                {% if a.type  %}
+                    {{ a.type }}
+                {% endif %}
                 </a></td>
                 <td>{{ a.address }}</td>
+                <td>{{ a.phone }}</td>
+                <td>{{ a.bank }}</td>
+                <td>{{ a.account }}</td>
+                <td>{{ a.inn }}</td>
 
             </tr>
         {% endfor %}
