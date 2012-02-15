@@ -19,52 +19,7 @@ class Brick(models.Model):
     css=models.CharField(u"Css",max_length=360,default=u'')
     label=models.CharField(u"Имя",max_length=660,default='')
 
-    _begin = 0
-    _add = 0
-    _t_from = 0
-    _t_to = 0
-    _sold = 0
     total = models.PositiveIntegerField(u"Остаток",default=0)
-
-    @property
-    def begin(self):
-        return self._begin
-
-    @begin.setter
-    def begin(self,value):
-        self._begin = value
-
-    @property
-    def add(self):
-        return self._add
-
-    @add.setter
-    def add(self,value):
-        self._add = value
-
-    @property
-    def t_from(self):
-        return self._t_from
-
-    @t_from.setter
-    def t_from(self,value):
-        self._t_from = value
-
-    @property
-    def t_to(self):
-        return self._t_to
-
-    @t_to.setter
-    def t_to(self,value):
-        self._t_to = value
-
-    @property
-    def sold(self):
-        return self._sold
-
-    @sold.setter
-    def sold(self,value):
-        self._sold = value
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'

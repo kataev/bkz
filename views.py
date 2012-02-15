@@ -4,13 +4,13 @@ from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db import transaction
 from django.http import QueryDict
-from django.db.models import Sum
+from django.db.models import Sum,Max
 
 from whs.brick.models import History
 from whs.manufacture.forms import *
 from whs.bill.forms import *
 from django.contrib import messages
-#from whs.brick import signals
+from whs import signals
 
 
 @require_http_methods(["GET",])
@@ -86,10 +86,13 @@ def bill(request,id):
         form = BillForm(request.POST,instance=doc,prefix='bill')
         sold = SoldFactory(request.POST,instance=doc,prefix='sold')
         transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
-        if form.is_valid() and sold.is_valid() and transfer.is_valid():
+        if form.is_valid():
             doc = form.save()
+        if sold.is_valid():
             sold.save()
+        if transfer.is_valid():
             transfer.save()
+        if not (bool(form.errors) or bool(sold.errors) or bool(transfer.errors)):
             return redirect(doc)
     else:
         initial = {}

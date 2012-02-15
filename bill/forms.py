@@ -3,6 +3,7 @@ import django.forms as forms
 from django.forms.models import inlineformset_factory
 from whs.bill.models import *
 from whs.brick.models import *
+from django.core.exceptions import ValidationError
 
 class DateForm(forms.Form):
     date = forms.DateField()
@@ -32,19 +33,20 @@ class SoldForm(forms.ModelForm):
     def clean_amount(self):
         data = self.cleaned_data
         if self.instance.pk:
-            if self.instance.doc.date == datetime.date.today().replace(day=self.instance.doc.date.day):
-                brick = self.instance.brick
-            else:
-                try:
-                    brick = History.objects.get(brick=self.instance.brick,date=self.instance.doc.date.replace(day=1))
-                except History.DoesNotExist:
-                    raise ValidationError(dict(brick='Не было тогда такого кирпича'))
-            if brick.total + self.instance.amount - data['amount'] < 0:
+            if self.instance.brick.total + self.instance.amount - data['amount'] < 0:
                 raise ValidationError(dict(amount='На складе не хватет кирпича'))
         else:
             if data['brick'].total-data['amount'] < 0:
                 raise ValidationError(dict(amount='На складе не хватет кирпича'))
         return data['amount']
+
+    def clean_transfer(self):
+        print sum(map(lambda t: t.amount,self.cleaned_data['transfer'])),self.cleaned_data['amount']
+        data = self.cleaned_data
+        if sum(map(lambda t: t.amount,data['transfer'])) > data['amount']:
+            raise ValidationError(dict(transfer='Переводится больше чем отгружается'))
+
+        return data['transfer']
 
 
 class TransferForm(forms.ModelForm):
@@ -52,6 +54,11 @@ class TransferForm(forms.ModelForm):
         name = 'Transfer'
         model = Transfer
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),'info':forms.Textarea(attrs={'rows':2}) }
+
+    def clean(self):
+        if self.instance.bill_sold_related.count():
+            raise ValidationError('Перевод не может редактироваться когда прикреплен к продаже')
+        return self.cleaned_data
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
