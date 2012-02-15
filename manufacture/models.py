@@ -6,8 +6,10 @@ import pytils
 class Man(Doc):
     """Класс документа для учета прихода кирпича с производства"""
     class Meta():
-            verbose_name = u"производство за день"
-            verbose_name_plural = u"производство за день"
+            verbose_name = u"Производство за день"
+            verbose_name_plural = u"Производство за день"
+
+
     def __unicode__(self):
         if self.pk:
             date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
@@ -29,8 +31,9 @@ class Add(Oper):
     """Класс операций для документа"""
     doc = models.ForeignKey(Man,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
     class Meta():
-            verbose_name = u"производство"
-            verbose_name_plural = u"производство"
+            verbose_name = u"Произведённый кирпич"
+            verbose_name_plural = u"Произведённые кирпичи"
+
     def __unicode__(self):
         if self.pk:
             date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.doc.date)

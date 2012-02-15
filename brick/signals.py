@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db.models.signals import *
 from django.dispatch import receiver
-from django.db import transaction
+from django.db import transaction,IntegrityError
 from django.db.models import F
 from django.core.exceptions import ValidationError
 
@@ -10,22 +10,39 @@ from whs.brick.models import *
 from whs.manufacture.models import *
 
 @receiver(pre_save, sender=Sold)
+@transaction.commit_on_success
 def sold_pre_save(instance, *args, **kwargs):
     if instance.pk:
         origin = Sold.objects.get(pk=instance.pk)
         brick = Brick.objects.get(pk=origin.brick.pk)
         brick.total += origin.amount
-        brick.sold -= origin.amount
-        brick.save()
-
+        try:
+            if origin.doc.date == datetime.date.today().replace(day=origin.doc.date.day):
+                brick.sold -= origin.amount
+            else:
+                History.objects.filter(brick=brick,date=origin.date).update(sold=F('sold')-origin.amount)
+                History.objects.filter(brick=brick,date__gt=origin.date).update(begin=F('begin')+origin.amount)
+                History.objects.filter(brick=brick,date__gte=origin.date).update(total=F('total')+origin.amount)
+            brick.save()
+        except IndentationError:
+            raise ValidationError('Произошла ошибка операция отменена')
 
 @receiver(post_save, sender=Sold)
+@transaction.commit_on_success
 def sold_post_save(instance, *args, **kwargs):
-    brick = Brick.objects.get(pk=instance.brick.pk)
-    brick.total -= instance.amount
-    brick.sold += instance.amount
-    brick.save()
-
+    origin = Sold.objects.get(pk=instance.pk)
+    brick = Brick.objects.get(pk=origin.brick.pk)
+    brick.total -= origin.amount
+    try:
+        if origin.doc.date == datetime.date.today().replace(day=origin.doc.date.day):
+            brick.sold += origin.amount
+        else:
+            History.objects.filter(brick=brick,date=origin.date).update(sold=F('sold')+origin.amount)
+            History.objects.filter(brick=brick,date__gt=origin.date).update(begin=F('begin')-origin.amount)
+            History.objects.filter(brick=brick,date__gte=origin.date).update(total=F('total')-origin.amount)
+        brick.save()
+    except IndentationError:
+        raise ValidationError('Произошла ошибка операция отменена')
 
 @receiver(post_save, sender=Sold)
 def money(instance, *args, **kwargs):
@@ -75,12 +92,13 @@ def sold_m2m(instance, pk_set, model, action, sender, *args, **kwargs):
 def add_pre_save(instance, *args, **kwargs):
     if instance.pk:
         for h in History.objects.filter(date__gte=origin.doc.date.replace(day=1), brick=origin.brick).values('date',
-            total=F('total') - origin.amount, begin=F('begin') - origin.amount,): # Проверка на отрицательные
+            total=F('total') - origin.amount, begin=F('begin') - origin.amount, ): # Проверка на отрицательные
             if h['total'] < 0:
                 raise ValidationError(
                     'Остаток в месяце %s получится меньше 0, операция прервана' % h['date'])
             if h['begin'] < 0:
-                raise ValidationError('Значение кирпича на начало месяца %s получится меньше 0, операция прервана' % h['date'])
+                raise ValidationError(
+                    'Значение кирпича на начало месяца %s получится меньше 0, операция прервана' % h['date'])
 
         origin = Add.objects.get(pk=instance.pk) # Берём оригинальную операцию
         if History.objects.get(date=origin.doc.date.replace(day=1),

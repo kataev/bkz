@@ -2,10 +2,7 @@
 from django.db import models
 from whs.brick.models import Brick
 from whs.agent.models import Agent
-import pytils
 import datetime
-from django.core.exceptions import ValidationError
-from django.db.models import Max
 
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """
@@ -54,8 +51,8 @@ class Bill(Doc):
         null=True, blank=True, help_text=u'например Серверная керамика')
 
     class Meta():
-        verbose_name = u"накладная"
-        verbose_name_plural = u"накладные"
+        verbose_name = u"Накладная"
+        verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
 
     @property
@@ -103,8 +100,8 @@ class Transfer(Oper):
 
 
     class Meta():
-        verbose_name = u"перевод"
-        verbose_name_plural = u"переводы"
+        verbose_name = u"Перевод"
+        verbose_name_plural = u"Переводы"
 
     def __unicode__(self):
         if self.pk:
@@ -125,8 +122,8 @@ class Sold(Oper):
         verbose_name=u'Перевод', help_text=u'')
     #Куда
     class Meta():
-        verbose_name = u"отгрузка"
-        verbose_name_plural = u"отгрузки"
+        verbose_name = u"Отгрузка"
+        verbose_name_plural = u"Отгрузки"
 
     def __unicode__(self):
         if self.pk:

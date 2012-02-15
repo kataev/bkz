@@ -19,12 +19,52 @@ class Brick(models.Model):
     css=models.CharField(u"Css",max_length=360,default=u'')
     label=models.CharField(u"Имя",max_length=660,default='')
 
-    begin = models.PositiveIntegerField(u"Начало месяца",default=0)
-    add = models.PositiveIntegerField(u"Приход",default=0)
-    t_from = models.PositiveIntegerField(u"Перевод из",default=0)
-    t_to = models.PositiveIntegerField(u"Перевод в",default=0)
-    sold = models.PositiveIntegerField(u"Отгрузка",default=0)
+    _begin = 0
+    _add = 0
+    _t_from = 0
+    _t_to = 0
+    _sold = 0
     total = models.PositiveIntegerField(u"Остаток",default=0)
+
+    @property
+    def begin(self):
+        return self._begin
+
+    @begin.setter
+    def begin(self,value):
+        self._begin = value
+
+    @property
+    def add(self):
+        return self._add
+
+    @add.setter
+    def add(self,value):
+        self._add = value
+
+    @property
+    def t_from(self):
+        return self._t_from
+
+    @t_from.setter
+    def t_from(self,value):
+        self._t_from = value
+
+    @property
+    def t_to(self):
+        return self._t_to
+
+    @t_to.setter
+    def t_to(self,value):
+        self._t_to = value
+
+    @property
+    def sold(self):
+        return self._sold
+
+    @sold.setter
+    def sold(self,value):
+        self._sold = value
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
@@ -35,8 +75,8 @@ class Brick(models.Model):
 
     class Meta():
         ordering=['color','-weight','-view','ctype','defect','refuse','mark','features',]
-        verbose_name = u"кирпич"
-        verbose_name_plural = u'кирпичи'
+        verbose_name = u"Кирпич"
+        verbose_name_plural = u'Кирпичи'
 
 
 class History(models.Model):
@@ -49,3 +89,6 @@ class History(models.Model):
     t_to = models.PositiveIntegerField(u"Перевод в")
     sold = models.PositiveIntegerField(u"Отгрузка")
     total = models.PositiveIntegerField(u"Остаток")
+
+    class Meta:
+        verbose_name = u'Архив'

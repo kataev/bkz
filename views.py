@@ -10,22 +10,13 @@ from whs.brick.models import History
 from whs.manufacture.forms import *
 from whs.bill.forms import *
 from django.contrib import messages
-from whs.brick import signals
+#from whs.brick import signals
 
 
 @require_http_methods(["GET",])
 def main(request):
-    """ Главная страница """ #
-    fields = dict([ (x,Sum(x)) for x in ['begin', 'add', 't_from', 't_to', 'sold', 'total'] ])
-    totals = Brick.objects.aggregate(**fields)
-
-    messages.debug(request, '%s SQL statements were executed.' % 2)
-    messages.info(request, 'Three credits remain in your account.')
-    messages.success(request, 'Profile details updated.')
-    messages.warning(request, 'Your account expires in three days.')
-    messages.error(request, 'Document deleted.')
-
-    return render(request, 'index.html',dict(totals=totals))
+    """ Главная страница """
+    return render(request, 'index.html')
 
 def bills(request):
     Bills = Bill.objects.all()
@@ -97,9 +88,8 @@ def bill(request,id):
         transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
         if form.is_valid() and sold.is_valid() and transfer.is_valid():
             doc = form.save()
-            with transaction.commit_on_success():
-                sold.save()
-                transfer.save()
+            sold.save()
+            transfer.save()
             return redirect(doc)
     else:
         initial = {}
@@ -150,16 +140,10 @@ def man(request,id):
 
 
 def test(request):
-    number = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(Max('number')).get('number__max', 1)
-    number = (number or 0) + 1
-
-    bill = Bill.objects.create(number=number,agent=Agent.objects.get(pk=1))
-    sold = Sold.objects.create(brick=Brick.objects.get(pk=1),amount=100,tara=1,doc=bill,price=1)
-
-    sold.save()
-    transfer = Transfer.objects.create(brick=Brick.objects.get(pk=2),amount=100,tara=1,doc=bill)
-#    transfer.save()
-    sold.transfer.add(transfer)
+    b = Brick.objects.get(pk=1)
+    b.total+=100
+    b.save()
+    raise ValueError
     return render(request,'index.html')
 
 

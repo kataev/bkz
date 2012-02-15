@@ -70,8 +70,10 @@ $(function () {
         var input = $(button).data('input')
             var val = $('#'+input).val()
         if (val){
-            $('[value='+val+']',modal).attr()
-
+            $('[value='+val+']',modal).attr('checked','checked')
+        }
+        else {
+            $('[value]',modal).removeAttr('checked')
         }
     })
 })
