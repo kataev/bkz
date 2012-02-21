@@ -6,13 +6,10 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
-DECIMAL_SEPARATOR = ','
 
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
     )
-
-
 
 DATABASES = {
     'sqlite': {
@@ -45,6 +42,7 @@ DATABASES = {
 
 DATABASE_ROUTERS = ('routes.WHSRouter',)
 
+DECIMAL_SEPARATOR = ','
 APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -60,6 +58,7 @@ TIME_ZONE = 'Asia/Yekaterinburg'
 LANGUAGE_CODE = 'ru-Ru'
 #DATE_FORMAT='Y-m-d'
 LANGUAGE_CODE = 'ru'
+
 LANGUAGES = (
     ('ru', 'Russian'),
     )
@@ -103,8 +102,6 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'static/'),
-    '/home/bteam/dojo-release-1.6.0/',
-
     )
 
 # List of finder classes that know how to find static files in
