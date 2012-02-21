@@ -7,6 +7,8 @@ from whs.agent.forms import AgentForm
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+
     url(r'^$', 'whs.views.main', name='main'),
     url(r'^bill/(?P<id>\d*)/?$', 'whs.views.bill', name='bill'),
     url(r'^man/(?P<id>\d*)/?$', 'whs.views.man', name='man'),
