@@ -5,8 +5,10 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
 from django.http import QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
-from bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
-from bill.models import Bill
+
+from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
+from whs.bill.models import Bill
+import whs.bill.signals
 
 __author__ = 'bteam'
 
