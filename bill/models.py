@@ -71,7 +71,6 @@ class Bill(Doc):
             opers.append(o)
             if o.transfer.count():
                 opers.append(o.transfer.get())
-        print opers
         return opers
 
     #    @property
@@ -114,7 +113,7 @@ class Sold(Oper):
     """ Класс для операций отгруки, является аналогом строки в накладной.
     Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
 
-    price = models.FloatField(u"Цена за единицу", help_text=u'Дробное число максимум 8символов в т.ч 4 после запятой')
+    price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", blank=True, null=True, help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill, blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
         verbose_name=u'Накладная')

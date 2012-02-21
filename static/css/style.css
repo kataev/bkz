@@ -74,7 +74,7 @@ form {
     border-radius: 4px;
 }
 
-.Sold p.help-block {display: none}
+.Sold .transfer p.help-block {display: none}
 
 /* Общее */
 .icon-DELETE { background-position:-456px 0 }

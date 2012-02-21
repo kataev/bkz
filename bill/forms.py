@@ -8,6 +8,10 @@ from django.core.exceptions import ValidationError
 class DateForm(forms.Form):
     date = forms.DateField()
 
+
+class NumberInput(forms.TextInput):
+    input_type = 'number'
+
 class BillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
@@ -18,7 +22,10 @@ class BillForm(forms.ModelForm):
         name = 'Bill'
         model = Bill
         fields = ('date', 'number', 'agent', 'proxy', 'info')
-        widgets = {'info':forms.Textarea(attrs={'rows':2}) }
+        widgets = {
+            'number': NumberInput(attrs={'autocomplete': 'off','min':1}),
+            'info':forms.Textarea(attrs={'rows':2})
+        }
 
     class Media:
         pass
@@ -28,7 +35,13 @@ class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
         model = Sold #autocomplete="off"
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),'info':forms.Textarea(attrs={'rows':2}) }
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+                   'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
+                   'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
+                   'price': NumberInput(attrs={'autocomplete': 'off','min':1,'step':0.1}),
+                   'delivery': NumberInput(attrs={'autocomplete': 'off','step':0.1}),
+                   'info':forms.Textarea(attrs={'rows':2})
+        }
 
     def clean_amount(self):
         data = self.cleaned_data
@@ -40,8 +53,12 @@ class SoldForm(forms.ModelForm):
                 raise ValidationError(dict(amount='На складе не хватет кирпича'))
         return data['amount']
 
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        print price
+        return price
+
     def clean_transfer(self):
-        print sum(map(lambda t: t.amount,self.cleaned_data['transfer'])),self.cleaned_data['amount']
         data = self.cleaned_data
         if sum(map(lambda t: t.amount,data['transfer'])) > data['amount']:
             raise ValidationError(dict(transfer='Переводится больше чем отгружается'))
@@ -53,7 +70,10 @@ class TransferForm(forms.ModelForm):
     class Meta:
         name = 'Transfer'
         model = Transfer
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),'info':forms.Textarea(attrs={'rows':2}) }
+        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+                   'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
+                   'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
+                   'info':forms.Textarea(attrs={'rows':2}) }
 
     def clean(self):
         if self.instance.bill_sold_related.count():

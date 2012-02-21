@@ -137,3 +137,6 @@ $(function () {
         $(n).html(text)
     })
 })
+$(function () {
+    $('[rel="tooltip"]').tooltip()
+})

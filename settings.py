@@ -5,6 +5,8 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = True
+INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
+DECIMAL_SEPARATOR = ','
 
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
@@ -39,27 +41,6 @@ DATABASES = {
     }
 }
 
-DOJANGO_DATAGRID_ACCESS = (
-    'agent.Agent',
-    #    'bill.Bill',
-    )
-
-DOJANGO_DOJO_PROFILE = "google_uncompressed"
-
-#DOJANGO_BASE_MEDIA_ROOT = '/home/bteam/dojango-media'
-
-#DOJANGO_DOJO_PROFILE = "local"
-
-
-
-DOJANGO_DOJO_VERSION = '1.6.0'
-
-DOJANGO_DOJO_DEBUG = True
-
-DOJANGO_CDN_USE_SSL = True
-
-DOJANGO_DOJO_SECURE_JSON = False
-
 APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -74,6 +55,11 @@ TIME_ZONE = 'Asia/Yekaterinburg'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'ru-Ru'
 #DATE_FORMAT='Y-m-d'
+LANGUAGE_CODE = 'ru'
+LANGUAGES = (
+    ('ru', 'Russian'),
+    )
+
 
 SITE_ID = 1
 
@@ -83,8 +69,7 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
-#USE_L10N = True
-USE_L10N = False
+USE_L10N = True
 
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
@@ -143,6 +128,7 @@ MIDDLEWARE_CLASSES = (
     #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -173,7 +159,9 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
 
     'django_extensions',
+    'debug_toolbar',
     'pytils',
+    'south',
 
     'whs.old',
     'whs.brick',
