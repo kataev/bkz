@@ -18,17 +18,21 @@ class Agent(models.Model):
     bank = models.TextField()
     phone = models.TextField()
     cp = models.IntegerField()
+
+    def __unicode__(self):
+        return self.name
+
     class Meta:
         db_table = u'agent'
         
 
 class Jurnal(models.Model):
     id = models.IntegerField(primary_key=True)
-    tov = models.IntegerField()
+    tov = models.ForeignKey('Tovar',db_column='tov')
     plus = models.IntegerField()
     minus = models.IntegerField()
     poddon = models.IntegerField()
-    agent = models.IntegerField()
+    agent = models.ForeignKey('Agent',db_column='agent')
     akt = models.IntegerField()
     nakl = models.TextField()
     makt = models.IntegerField()
@@ -44,11 +48,16 @@ class Jurnal(models.Model):
     price = models.FloatField()
     trans = models.FloatField()
     class Meta:
-        db_table = u'journal'
+        db_table = u'jurnal'
+        ordering = ('-date',)
 
 class Sclad(models.Model):
     id = models.IntegerField(primary_key=True)
     total = models.IntegerField()
+
+    def __unicode__(self):
+        return str(self.total)
+
     class Meta:
         db_table = u'sclad'
 
@@ -64,9 +73,12 @@ class Tovar(models.Model):
     prim = models.TextField()
     sort = models.IntegerField()
     price = models.IntegerField()
-#    total = models.ForeignKey(Sclad)
+    total = models.ForeignKey('Sclad',db_column='id')
 
+    def __unicode__(self):
+        return self.prim
 
     class Meta:
         db_table = u'tovar'
+        ordering = ('id',)
 

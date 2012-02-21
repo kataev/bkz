@@ -12,6 +12,8 @@ ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
     )
 
+
+
 DATABASES = {
     'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -40,6 +42,8 @@ DATABASES = {
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+DATABASE_ROUTERS = ('routes.WHSRouter',)
 
 APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
