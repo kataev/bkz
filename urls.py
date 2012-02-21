@@ -10,7 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'whs.views.main', name='main'),
 
-    url(r'^man/(?P<id>\d*)/?$', 'whs.views.man', name='man'),
+
     url(r'^brick/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':BrickForm}, name='brick'),
 
     url(r'^journal$', 'whs.views.journal', name='journal'),
