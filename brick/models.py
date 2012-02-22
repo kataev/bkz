@@ -17,7 +17,7 @@ class Brick(models.Model):
     name = models.CharField(u"Имя", max_length=160, default='', help_text=u'Полное название продукции')
 
     css = models.CharField(u"Css", max_length=360, default=u'')
-    label = models.CharField(u"Имя", max_length=660, default='')
+    label = models.CharField(u"Ярлык", max_length=660, default='')
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
 

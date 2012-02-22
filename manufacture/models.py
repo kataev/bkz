@@ -40,4 +40,3 @@ class Add(Oper):
             return u'Операция принятия на склад от %s' % date
         else:
             return u'Новая операция'
-

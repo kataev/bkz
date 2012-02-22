@@ -45,7 +45,6 @@ class Bill(Doc):
         help_text=u'Число уникальное в этом году')
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related",
         help_text=u'Настоящий покупатель')
-    money = models.PositiveIntegerField(verbose_name=u'Сумма', default=0)
     proxy = models.ForeignKey(Agent, verbose_name=u'Посредник', related_name="proxy_%(app_label)s_%(class)s_related",
         limit_choices_to={'pk__in': (1,)}, # Серверная керамика
         null=True, blank=True, help_text=u'например Серверная керамика')
@@ -73,9 +72,9 @@ class Bill(Doc):
                 opers.append(o.transfer.get())
         return opers
 
-    #    @property
-    #    def money(self):
-    #        return sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
+    @property
+    def money(self):
+        return sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
 
     def __unicode__(self):
         if self.pk:
