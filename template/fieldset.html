@@ -3,7 +3,7 @@
         {{ hidden }}
     {% endfor %}
 </fieldset>
-<fieldset class='{{ form.Meta.name }}'>
+<fieldset class='{{ form.Meta.name }} {% if form.transfered.value %}transfered{% endif %}' >
     <legend>{{ form.instance }}</legend>
     {% for e in form.non_field_errors %}
         <div class="alert alert-error">

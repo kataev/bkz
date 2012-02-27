@@ -15,9 +15,6 @@ class Oper(models.Model):
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
-    def get_id(self):
-        return u'%s.%s__%d' % (self._meta.app_label, self._meta.module_name, self.pk)
-
     class Meta:
         abstract = True
 
@@ -56,11 +53,12 @@ class Bill(Doc):
 
     @property
     def total(self):
-        return reduce(lambda memo, x: memo + x['amount'], self.bill_sold_related.values('amount').all(), 0)
-
+        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('amount')])
+        else: return 0
     @property
     def tara(self):
-        return reduce(lambda memo, x: memo + x['tara'], self.bill_sold_related.values('tara').all(), 0)
+        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('tara')])
+        else: return 0
 
     @property
     def opers(self):
@@ -74,7 +72,8 @@ class Bill(Doc):
 
     @property
     def money(self):
-        return sum(map(lambda x: x['amount']*x['price'], self.bill_sold_related.values('amount','price')))
+        if self.pk: return sum([x[0]*x[1] for x in self.bill_sold_related.values_list('amount','price')])
+        else: return 0
 
     def __unicode__(self):
         if self.pk:
@@ -95,7 +94,6 @@ class Transfer(Oper):
 
     doc = models.ForeignKey(Bill, blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
         verbose_name=u'Накладная')
-
 
     class Meta():
         verbose_name = u"Перевод"
@@ -118,7 +116,8 @@ class Sold(Oper):
         verbose_name=u'Накладная')
     transfer = models.ManyToManyField('Transfer', blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
         verbose_name=u'Перевод', help_text=u'')
-    #Куда
+    transfered = models.BooleanField(u'С переводом?',default=False)
+
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
@@ -128,3 +127,8 @@ class Sold(Oper):
             return u'Отгрузка %s' % self.brick
         else:
             return u'Новая отгрузка'
+
+    @property
+    def transfer_amount(self):
+        if self.pk: return sum([x[0] for x in self.transfer.values_list('amount')])
+        else: return 0

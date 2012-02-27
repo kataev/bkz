@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from django.db.models import Sum
+from django.db.models import Sum, Q
 
 from whs.brick.models import Brick
 from whs.bill.models import *
@@ -10,9 +10,9 @@ def bricks(request):
     Bricks = Brick.objects.all()
 
     date = datetime.date.today().replace(day=1)
-    sold = Sold.objects.filter(doc__date__gte=date).values('brick').annotate(s=Sum('amount'))
+    sold = Sold.objects.filter(doc__date__gte=date).filter(Q(transfered=False) and Q(transfer__isnull=False)).values('brick','pk').annotate(s=Sum('amount'))
     add = Add.objects.filter(doc__date__gte=date).values('brick').annotate(s=Sum('amount'))
-    t_from = Transfer.objects.filter(doc__date__gte=date).values('brick').annotate(s=Sum('amount'))
+    t_from = Transfer.objects.filter(doc__date__gte=date,bill_sold_related__isnull=False).values('brick').annotate(s=Sum('amount'))
     t_to = Sold.objects.filter(doc__date__gte=date,transfer__isnull=False).values('brick').annotate(s=Sum('transfer__amount'))
 
     sold = dict(map(lambda x: [x['brick'],x['s']],sold))

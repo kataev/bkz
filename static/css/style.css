@@ -75,25 +75,22 @@ form {
 }
 
 .Sold .transfer p.help-block {display: none}
+.Sold .transfer {display: none}
+.Sold.transfered .transfer {display: block;}
 
 /* Общее */
 .icon-DELETE { background-position:-456px 0 }
 i.icon-zoom-in.zoom {background-position:-360px 0;}
 
 /* Sold */
-.icon-Sold { background-position: -336px -96px }
+.icon-Sold, .icon-sold { background-position: -336px -96px }
+.icon-Transfer, .icon-transfer { background-position: -336px -120px }
 .icon-brick { background-position:-240px 0 }
 .icon-amount { background-position:-240px 0 }
 .icon-tara { background-position: -216px 0 }
 .icon-poddon { background-position:-240px 0 }
 .icon-price { background-position:-360px -120px }
 .icon-delivery { background-position:-289px -96px }
-.icon-transfer { background-position:-216px -120px }
-
-/* Transfer */
-.icon-sold { background-position:-336px -120px }
-.icon-Transfer { background-position: -336px -120px }
-
 
 /*Bill*/
 .icon-Bill { background-position: -360px -120px }
@@ -102,7 +99,6 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 .icon-number { background-position: -24px -24px; }
 .icon-proxy { background-position: -96px -24px; }
 .icon-info { background-position: 0 -72px; }
-
 
 /* Man */
 .icon-Man { background-position: -408px -96px }

@@ -44,9 +44,12 @@
                 <li class="active">
                     {% with form=doc %}
                         <a href="#{{ form.prefix }}" data-toggle="tab">
+                            {% if form.errors %}
+                                <i class="icon-warning-sign"></i>
+                            {% else %}
+                                <i class="icon-{{ form.instance|to_class_name }}"></i>
+                            {% endif %}
                             <span class="label {% if form.errors %}label-important{% endif %}">
-                            {% if form.errors %}<i class="icon-warning-sign"></i>{% endif %}
-                            <i class="icon-{{ form.instance|to_class_name }}"></i>
                                 {{ form.instance|truncatewords:10 }}</span>
                         </a>
                     {% endwith %}
@@ -56,8 +59,13 @@
                     {% for form in factory %}
                             <li class="{{ form.Meta.name }}">
                                 <a class='' href="#{{ form.prefix }}" data-toggle="tab">
-                                    {% if form.errors %}<i class="icon-warning-sign"></i>{% endif %}
+                                    {% if form.errors %}
+                                        <i class="icon-warning-sign"></i>
+                                    {% else %}
+                                        <i class="icon-{{ form.instance|to_class_name }}"></i>
+                                    {% endif %}
                                     <span class="label {% if form.errors %}label-important{% endif %}">
+
                                         {{ form.instance }}</span>
                                 </a>
                             </li>

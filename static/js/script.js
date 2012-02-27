@@ -61,8 +61,7 @@ $(function () {
 })
 
 $(function () {
-    $('.form-add').click(function (e, test) {
-        console.log(test)
+    $('.form-add').click(function (e) {
         var prefix = $(this).attr('href').slice(1)
         var node = $('#' + prefix + '-__prefix__').clone()
         var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
@@ -71,10 +70,16 @@ $(function () {
         $(node).attr('id', id)
         $(node).html($(node).html().replace(/__prefix__/g, total.attr('value')))
         $('div.DELETE', node).remove()
-        var menu = $(this).parent().clone()
+
 
         if ($(this).data('transfer')) {
-            console.log('create sold from transfer')
+            var menu = $('ul a[href="#sold"]').parent().clone()
+                $('.Sold',node).addClass('transfered')
+                $('#id_sold-'+total.attr('value')+'-transfered',node).val('True')
+
+        }
+        else {
+            var menu = $(this).parent().clone()
         }
 
         $('a', menu).wrapInner('<span></span>')

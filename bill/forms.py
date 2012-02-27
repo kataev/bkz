@@ -40,7 +40,8 @@ class SoldForm(forms.ModelForm):
                    'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
                    'price': NumberInput(attrs={'autocomplete': 'off','min':1,'step':0.1}),
                    'delivery': NumberInput(attrs={'autocomplete': 'off','step':0.1}),
-                   'info':forms.Textarea(attrs={'rows':2})
+                   'info':forms.Textarea(attrs={'rows':2}),
+                   'transfered':forms.HiddenInput()
         }
 
     def clean_amount(self):
@@ -55,7 +56,6 @@ class SoldForm(forms.ModelForm):
 
     def clean_price(self):
         price = self.cleaned_data['price']
-        print price
         return price
 
     def clean_transfer(self):
@@ -74,11 +74,6 @@ class TransferForm(forms.ModelForm):
                    'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
                    'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
                    'info':forms.Textarea(attrs={'rows':2}) }
-
-    def clean(self):
-        if self.instance.bill_sold_related.count():
-            raise ValidationError('Перевод не может редактироваться когда прикреплен к продаже')
-        return self.cleaned_data
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
