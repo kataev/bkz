@@ -67,7 +67,7 @@ class Bill(Doc):
         for o in self.bill_sold_related.select_related().all():
             opers.append(o)
             if o.transfer.count():
-                opers.append(o.transfer.get())
+                opers.append(o.transfer.all())
         return opers
 
     @property

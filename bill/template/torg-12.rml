@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<document filename="test.pdf">
+<docinit>
+    <registerFont fontName="Arial" fontFile="bill/fonts/Arial.ttf"/>
+    <registerFont fontName="Arial-Bold" fontFile="bill/fonts/Arial_Bold.ttf"/>
+</docinit>
+<template pageSize="(842.0,595.0)" title="Test" author="Martin Simon" allowSplitting="1">
+    <pageTemplate id="first">
+        <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
+
+    </pageTemplate>
+</template>
+<stylesheet>
+    <blockTableStyle id="Standard_Outline">
+        <blockAlignment value="LEFT"/>
+
+        <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Invoice_Line_Content">
+        <blockAlignment value="RIGHT"/>
+        <blockLeftPadding value="0"/>
+        <blockBottomPadding value="0"/>
+        <blockValign value="CENTER"/>
+        <lineStyle kind="GRID" colorName="#000000" thickness="0.5"/>
+        <lineStyle kind="BOX" colorName="#000000" start="2,0" stop="2,-1" thickness="1.5"/>
+        <lineStyle kind="BOX" colorName="#000000" start="4,0" stop="11,-1" thickness="1.5"/>
+        <lineStyle kind="BOX" colorName="#000000" start="13,0" stop="-1,-1" thickness="1.5"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Taxes_Total">
+        <blockAlignment value="LEFT"/>
+        <blockLeftPadding value="0"/>
+        <blockTopPadding value="0"/>
+        <blockBottomPadding value="0"/>
+        <blockRightPadding value="0"/>
+        <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Total_Include_Taxes">
+        <blockAlignment value="RIGHT"/>
+        <blockValign value="CENTER"/>
+        <blockBottomPadding value="0"/>
+        <lineStyle kind="GRID" colorName="#000000" start="1,0" stop="-1,-1"/>
+    </blockTableStyle>
+
+
+    <initialize>
+        <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="Standard" fontName="Arial"/>
+    <paraStyle name="Text body" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Arial" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Arial" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Arial"/>
+    <paraStyle name="Heading" fontName="Arial" fontSize="15.0" leading="19" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header" fontName="Arial-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0"
+               spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" rightIndent="0.0" leftIndent="0.0" fontName="Arial" fontSize="10.0" leading="12"
+               alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_8" rightIndent="0.0" leftIndent="0.0" fontName="Arial" fontSize="8.0"
+               leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+</stylesheet>
+<images/>
+<story>
+<para style="terp_default_8">Срок возврата поддонов 30 дней</para>
+<blockTable style="Table_Taxes_Total" colWidths="15.5cm,10cm">
+    <tr>
+        <td></td>
+        <td>
+            <para style="terp_default_Right_8">Унифицированная форма № ТОРГ-12</para>
+            <para style="terp_default_Right_8">Утвеждена постановлением Госкомстата России от 25.12.98 №132</para>
+        </td>
+    </tr>
+</blockTable>
+{#<para style="Standard" leading="0">30 дней</para>#}
+<illustration height="80mm" width="295mm">
+    <lineMode width="0.5"/>
+    <lines> {# Линии под заголовком грузоотправитель и т.д #}
+        5cm 2cm 24.5cm 2cm
+        5cm 2.5cm 24.5cm 2.5cm
+        5cm 3.5cm 21.5cm 3.5cm
+        5cm 4cm 21.5cm 4cm
+        5cm 5.4cm 21.5cm 5.4cm
+        5cm 6cm 19cm 6cm
+    </lines>
+    <lines>
+        11.5cm 1cm 16.5cm 1cm
+        11.5cm 1.5cm 16.5cm 1.5cm
+        11.5cm 1cm 11.5cm 1.5cm
+        16.5cm 1cm 16.5cm 1.5cm
+        14cm 1cm 14cm 1.5cm
+    </lines>
+    <!--- Коды справа -->
+    <lines>
+        24.5cm 7cm 24.5cm 8cm
+        24.5cm 8cm 26.5cm 8cm
+        26.5cm 8cm 26.5cm 7cm
+        24.5cm 7cm 26.5cm 7cm
+        24.5cm 2cm 26.5cm 2cm
+        24.5cm 2.5cm 26.5cm 2.5cm
+        24.5cm 3.5cm 26.5cm 3.5cm
+        24.5cm 4cm 26.5cm 4cm
+        24.5cm 5cm 26.5cm 5cm
+        24.5cm 5.5cm 26.5cm 5.5cm
+        24.5cm 6cm 26.5cm 6cm
+        24.5cm 7.5cm 26.5cm 7.5cm
+        24.5cm 0.5cm 26.5cm 0.5cm
+        24.5cm 1cm 26.5cm 1cm
+        24.5cm 1.5cm 26.5cm 1.5cm
+
+        22.5cm 0.5cm 24.5cm 0.5cm
+        22.5cm 1cm 24.5cm 1cm
+        22.5cm 1.5cm 24.5cm 1.5cm
+        22.5cm 0.5cm 22.5cm 2.5cm
+    </lines>
+    <lineMode width="1.5"/>
+    <lines>
+        11.5cm 0.5cm 16.5cm 0.5cm
+        11.5cm 1cm 16.5cm 1cm
+        11.5cm 0.5cm 11.5cm 1cm
+        16.5cm 0.5cm 16.5cm 1cm
+        14cm 0.5cm 14cm 1cm
+
+        24.5cm 0 26.5cm 0
+        24.5cm 0 24.5cm 7.5cm
+        26.5cm 0 26.5cm 7.5cm
+
+    </lines>
+    <setFont name="Arial-Bold" size="12"/>
+    <drawString x="6cm" y="0.7cm">ТОВАРНАЯ НАКЛАДНАЯ</drawString>
+    <drawCentredString x="12.75cm" y="0.6cm">{{ doc.number }}</drawCentredString>
+    <drawCentredString x="15.25cm" y="0.6cm">{{ doc.date|date:'d.m.Y' }}</drawCentredString>
+    <setFont name="Arial" size="8"/>
+    <drawString x="11.6cm" y="1.1cm">Номер документа</drawString>
+    <drawString x="14.1cm" y="1.1cm">Дата составления</drawString>
+    <drawString x="22.5cm" y="0.1cm">Вид операции</drawString>
+    <drawRightString x="24.3cm" y="0.6cm">Дата</drawRightString>
+    <drawRightString x="24.3cm" y="1.1cm">Номер</drawRightString>
+    <drawRightString x="22.3cm" y="1.1cm">Транспортная накладная</drawRightString>
+    <drawRightString x="24.3cm" y="1.6cm">Дата</drawRightString>
+    <drawRightString x="24.3cm" y="2.1cm">Номер</drawRightString>
+    <drawRightString x="24.3cm" y="2.6cm">По ОКПО</drawRightString>
+    <drawRightString x="24.3cm" y="3.6cm">По ОКПО</drawRightString>
+    <drawRightString x="24.3cm" y="4.1cm">По ОКПО</drawRightString>
+    <drawRightString x="24.3cm" y="5.1cm">Вид деятельности по ОКДП</drawRightString>
+    <drawRightString x="26.3cm" y="5.1cm">75401000000</drawRightString>
+    <drawRightString x="24.3cm" y="6.1cm">По ОКПО</drawRightString>
+    <drawCentredString x="25.5cm" y="6.1cm">12578129</drawCentredString>
+    <drawRightString x="24.3cm" y="7.1cm">Форма по ОКУД</drawRightString>
+    <drawCentredString x="25.5cm" y="7.6cm">Коды</drawCentredString>
+    <drawCentredString x="25.5cm" y="7.1cm">0330212</drawCentredString>
+    <drawRightString x="4.8cm" y="6cm">Грузоотправитель</drawRightString>
+    <drawRightString x="4.8cm" y="5.5cm">С\П</drawRightString>
+    <drawRightString x="4.8cm" y="4cm">Грузополучатель</drawRightString>
+    <drawRightString x="4.8cm" y="3.5cm">Поставщик</drawRightString>
+    <drawRightString x="4.8cm" y="2.5cm">Плательщик</drawRightString>
+    <drawRightString x="4.8cm" y="2cm">Основание</drawRightString>
+    <setFont name="Arial" size="6"/>
+    <drawCentredString x="14.75cm" y="1.8cm">наименование документа (договор, контракт, заказ-наряд)</drawCentredString>
+    <drawCentredString x="12cm" y="5.8cm">организация, адрес, телефон, банковские</drawCentredString>
+    <setFont name="Arial-Bold" size="8"/>
+    <drawString x="5cm" y="6.4cm">ЗОВОД</drawString>
+    <drawString x="5cm" y="6.1cm">р/с 40702810472310019209 в Челябинском ОСБ 8597 БИК 047501602, корр/с
+        30101810700000000602
+    </drawString>
+    <setFont name="Arial" size="8"/>
+    <drawString x="5cm" y="5.5cm">С\П</drawString>
+    <drawString x="5cm" y="4.1cm">{{ doc.agent }}</drawString>
+    <drawString x="5cm" y="3.1cm">Поставщик</drawString>
+    <drawString x="5cm" y="2.1cm">с/ф [[o.number]] от [[str(o.date_invoice)]]</drawString>
+    <drawString x="5cm" y="3.6cm">хз</drawString>
+</illustration>
+
+<illustration height="23mm">
+    <lineMode width="0.5"/>
+    <lines> {# Линии таблицы товара #}
+        1.5cm 0 26.5cm 0
+        1.5cm 0.5cm 26.5cm 0.5cm
+        1.5cm 2cm 26.5cm 2cm
+        1.5cm 0cm 1.5cm 2cm
+        2.5cm 0cm 2.5cm 2cm
+        2.5cm 1.5cm 10.5cm 1.5cm
+        26.5cm 0cm 26.5cm 2cm
+        7.5cm 0cm 7.5cm 2cm
+        6.5cm 0cm 6.5cm 1.5cm
+        10.5cm 0cm 10.5cm 2cm
+        9cm 1.5cm 9cm 0cm
+        12cm 0cm 12cm 2cm
+        14cm 0cm 14cm 2cm
+        13cm 1.5cm 13cm 0
+        12cm 1.5cm 14cm 1.5cm
+        15.5cm 0cm 15.5cm 2cm
+        17cm 0cm 17cm 2cm
+        18.5cm 0cm 18.5cm 2cm
+        20.5cm 0cm 20.5cm 2cm
+        23.5cm 0cm 23.5cm 2cm
+        21.5cm 1.5cm 21.5cm 0cm
+        20.5cm 1.5cm 23.5cm 1.5cm
+    </lines>
+    <setFont name="Arial" size="7"/>
+    <drawCentredString x="2cm" y="1.6cm">Номер</drawCentredString>
+    <drawCentredString x="2cm" y="1.3cm">по</drawCentredString>
+    <drawCentredString x="2cm" y="1cm">порядку</drawCentredString>
+    <drawCentredString x="2cm" y="0.2cm">1</drawCentredString>
+    <drawCentredString x="5cm" y="1.6cm">Товар</drawCentredString>
+    <drawCentredString x="4.5cm" y="1.2cm">Наименование, характеристика,</drawCentredString>
+    <drawCentredString x="4.5cm" y="0.9cm">сорт, артикул товара</drawCentredString>
+    <drawCentredString x="4.5cm" y="0.2cm">2</drawCentredString>
+    <drawCentredString x="7cm" y="0.9cm">код</drawCentredString>
+    <drawCentredString x="7cm" y="0.2cm">3</drawCentredString>
+    <drawCentredString x="9cm" y="1.6cm">Единица измерения</drawCentredString>
+    <drawCentredString x="8.25cm" y="1.2cm">наиме-</drawCentredString>
+    <drawCentredString x="8.25cm" y="0.9cm">нование</drawCentredString>
+    <drawCentredString x="8.25cm" y="0.2cm">4</drawCentredString>
+    <drawCentredString x="9.75cm" y="1.1cm">код по ОКЕИ</drawCentredString>
+    <drawCentredString x="9.75cm" y="0.2cm">5</drawCentredString>
+    <drawCentredString x="11.25cm" y="1.3cm">Вид</drawCentredString>
+    <drawCentredString x="11.25cm" y="1cm">упаковки</drawCentredString>
+    <drawCentredString x="11.25cm" y="0.2cm">6</drawCentredString>
+    <drawCentredString x="13cm" y="1.6cm">Количество</drawCentredString>
+    <drawCentredString x="12.5cm" y="1.1cm">в одном</drawCentredString>
+    <drawCentredString x="12.5cm" y="0.8cm">месте</drawCentredString>
+    <drawCentredString x="12.5cm" y="0.2cm">7</drawCentredString>
+    <drawCentredString x="13.5cm" y="1.1cm">мест,</drawCentredString>
+    <drawCentredString x="13.5cm" y="0.8cm">штук</drawCentredString>
+    <drawCentredString x="13.5cm" y="0.2cm">8</drawCentredString>
+    <drawCentredString x="14.75cm" y="1.6cm">Масса</drawCentredString>
+    <drawCentredString x="14.75cm" y="1.3cm">брутто</drawCentredString>
+    <drawCentredString x="14.75cm" y="0.2cm">9</drawCentredString>
+    <drawCentredString x="16.25cm" y="1.6cm">Количество</drawCentredString>
+    <drawCentredString x="16.25cm" y="1.3cm">(масса нетто)</drawCentredString>
+    <drawCentredString x="16.25cm" y="0.2cm">10</drawCentredString>
+    <drawCentredString x="17.75cm" y="1.6cm">Цена,</drawCentredString>
+    <drawCentredString x="17.75cm" y="1.3cm">руб. коп.</drawCentredString>
+    <drawCentredString x="17.75cm" y="0.2cm">11</drawCentredString>
+    <drawCentredString x="19.5cm" y="1.6cm">Сумма без</drawCentredString>
+    <drawCentredString x="19.5cm" y="1.3cm">учёта НДС</drawCentredString>
+    <drawCentredString x="19.5cm" y="1cm">руб. коп.</drawCentredString>
+    <drawCentredString x="19.5cm" y="0.2cm">12</drawCentredString>
+    <drawCentredString x="22cm" y="1.6cm">НДС</drawCentredString>
+    <drawCentredString x="21cm" y="1.1cm">ставка,</drawCentredString>
+    <drawCentredString x="21cm" y="0.8cm">%</drawCentredString>
+    <drawCentredString x="21cm" y="0.2cm">13</drawCentredString>
+    <drawCentredString x="22.5cm" y="1.1cm">сумма</drawCentredString>
+    <drawCentredString x="22.5cm" y="0.2cm">14</drawCentredString>
+    <drawCentredString x="22.5cm" y="0.8cm">руб. коп.</drawCentredString>
+    <drawCentredString x="25cm" y="1.3cm">Сумма с учётом НДС,</drawCentredString>
+    <drawCentredString x="25cm" y="1cm">руб. коп.</drawCentredString>
+    <drawCentredString x="25cm" y="0.2cm">15</drawCentredString>
+</illustration>
+<blockTable style="Table_Taxes_Total" colWidths="24.3cm">
+    <tr>
+        <td>
+{#            <section>#}
+            {% for s in doc.bill_sold_related.all %}
+                <para leading="0">{{ forloop.counter }}</para>
+              <blockTable style="Table_Invoice_Line_Content" colWidths="1cm,4cm,1cm,1.5cm,1.5cm,1.5cm,1cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1cm,2cm,3cm"><tr>
+                      <td><para style="terp_default_Right_8"></para></td>
+                      <td><para style="terp_default_Right_8">{{ s.brick.name }}</para></td>
+                      <td><para style="terp_default_8"></para></td>
+                      <td><para style="terp_default_Right_8">-</para></td>
+                      <td><para style="terp_default_Right_8">796</para></td>
+                      <td><para style="terp_default_Right_8">поддон</para></td>
+                      <td><para style="terp_default_Right_8">{{ s.poddon }}</para></td>
+                      <td><para style="terp_default_Right_8">мест, шт</para></td>
+                      <td><para style="terp_default_Right_8">брутто</para></td>
+                      <td><para style="terp_default_Right_8">нетто</para></td>
+                      <td><para style="terp_default_Right_8">{{ s.amount }}</para></td>
+                      <td><para style="terp_default_Right_8">money</para></td>
+                      <td><para style="terp_default_Right_8"></para></td>
+                      <td><para style="terp_default_Right_8"></para></td>
+                      <td><para style="terp_default_Right_8"></para></td>
+              </tr></blockTable>
+            {% endfor %}
+{#              </section>#}
+            <blockTable style="Table_Total_Include_Taxes" colWidths="11.5cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1cm,2cm,3cm"
+                        rowHeights="0.4cm,0.4cm">
+                <tr>
+                    <td> <para style="terp_default_Right_8">Итого</para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para></para> </td>
+                    <td> <para style="terp_default_Right_8">X</para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para style="terp_default_Right_8">X</para> </td>
+                    <td> <para style="terp_default_Right_8">tax</para> </td>
+                    <td> <para style="terp_default_Right_8">{{ doc.total }}</para> </td>
+                </tr>
+                <tr>
+                    <td> <para style="terp_default_Right_8">Всего по накладной</para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para></para> </td>
+                    <td> <para style="terp_default_Right_8">X</para> </td>
+                    <td> <para style="terp_default_Right_8"></para> </td>
+                    <td> <para style="terp_default_Right_8">X</para> </td>
+                    <td> <para style="terp_default_Right_8">tax</para> </td>
+                    <td> <para style="terp_default_Right_8">{{ doc.total }}</para> </td>
+                </tr>
+            </blockTable>
+        </td>
+    </tr>
+</blockTable>
+<illustration height="6cm">
+    <setFont name="Arial" size="8"/>
+    <lineMode width="0.5"/>
+    <drawString x="5cm" y="5.5cm">Товарная накладная имеет приложение на</drawString>
+    <drawString x="19.2cm" y="5.5cm">листах</drawString>
+    <drawString x="5cm" y="5cm">и содержит</drawString>
+    <drawString x="5cm" y="4.5cm">всего мест</drawString>
+    <drawString x="19.2cm" y="5cm">порядковых номеров записей</drawString>
+    <drawString x="11.5cm" y="4.5cm">Масса груза (нетто)</drawString>
+    <drawString x="17.5cm" y="4.6cm">[[numeral.in_words(reduce (lambda a,b:a+b,x.product_id.product_tmpl_id.weight for x
+        in o.invoice_line)) ]]
+    </drawString>
+    <drawString x="17.5cm" y="4.1cm">[[numeral.in_words(reduce (lambda a,b:a+b,x.product_id.product_tmpl_id.weight_net
+        for x in o.invoice_line)) ]]
+    </drawString>
+    <drawString x="11.5cm" y="4cm">Масса груза (брутто)</drawString>
+    <drawString x="1.5cm" y="3.5cm">Приложение (паспорта, сертификаты и т. д.) на</drawString>
+    <drawString x="10.5cm" y="3.5cm">листах</drawString>
+    <drawString x="1.5cm" y="3cm">Всего отпущено на сумму</drawString>
+    <drawString x="1.5cm" y="2.5cm">Отпуск груза разрешил</drawString>
+    <drawString x="1.5cm" y="1.5cm">Отпуск груза произвёл</drawString>
+    <drawString x="1.5cm" y="1cm">М. П. " " _______________ 20 года</drawString>
+    <drawString x="16cm" y="0.3cm">М. П. " " _______________ 20 года</drawString>
+    <drawString x="16cm" y="3cm">По доверенности № __________ от " " _______________________ 20 года</drawString>
+    <drawString x="16cm" y="2.5cm">выданной</drawString>
+    <drawString x="16cm" y="1.5cm">Груз принял</drawString>
+    <drawString x="16cm" y="1cm">Груз получил</drawString>
+    <drawString x="16cm" y="0.7cm">Грузополучатель</drawString>
+    <drawCentredString x="13cm" y="5.1cm">[[numeral.in_words(len(o.invoice_line)) ]]</drawCentredString>
+    <setFont name="Arial" size="6"/>
+    <drawCentredString x="15cm" y="5.2cm">прописью</drawCentredString>
+    <drawCentredString x="13cm" y="4.8cm">прописью</drawCentredString>
+    <drawCentredString x="8.25cm" y="4.3cm">прописью</drawCentredString>
+    <drawCentredString x="19.5cm" y="4.3cm">прописью</drawCentredString>
+    <drawCentredString x="19.5cm" y="3.8cm">прописью</drawCentredString>
+    <drawCentredString x="8.9cm" y="3.2cm">прописью</drawCentredString>
+    <drawCentredString x="6.5cm" y="2.3cm">должность</drawCentredString>
+    <drawCentredString x="10cm" y="2.3cm">подпись</drawCentredString>
+    <drawCentredString x="13.5cm" y="2.3cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="10cm" y="1.8cm">подпись</drawCentredString>
+    <drawCentredString x="13.5cm" y="1.8cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="6.5cm" y="1.3cm">должность</drawCentredString>
+    <drawCentredString x="10cm" y="1.3cm">подпись</drawCentredString>
+    <drawCentredString x="13.5cm" y="1.3cm">расшифровка подписи</drawCentredString>
+
+    <!---справа-->
+    <drawCentredString x="19.25cm" y="1.3cm">должность</drawCentredString>
+    <drawCentredString x="22.25cm" y="1.3cm">подпись</drawCentredString>
+    <drawCentredString x="25.25cm" y="1.3cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="19.25cm" y="0.8cm">должность</drawCentredString>
+    <drawCentredString x="22.25cm" y="0.8cm">подпись</drawCentredString>
+    <drawCentredString x="25.25cm" y="0.8cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="22cm" y="2.3cm">кем, кому (организация, место работы, должность, фамилия, и. о.)
+    </drawCentredString>
+    <!---опять слева-->
+
+    <setFont name="Arial-Bold" size="7"/>
+    <drawCentredString x="6.5cm" y="2.6cm">Зам. ГД по качеству и развитию</drawCentredString>
+    <drawString x="4.5cm" y="2cm">Главный (старший) бухгалтер</drawString>
+    <drawCentredString x="6.5cm" y="1.6cm">Кладовщик</drawCentredString>
+    <drawCentredString x="13.5cm" y="2.6cm">[[company.chief_id and company.chief_id.partner_id.shortname or '']]
+    </drawCentredString>
+    <drawCentredString x="13.5cm" y="2.1cm">[[company.bookkeeper_id and company.bookkeeper_id.partner_id.shortname or
+        '']]
+    </drawCentredString>
+    <lines>
+        11cm 5.4cm 19cm 5.4cm
+        7cm 5cm 19cm 5cm
+        14.5cm 4.5cm 26.5cm 4.5cm
+        6.5cm 4.5cm 10cm 4.5cm
+        14.5cm 4cm 24.5cm 4cm
+        7.8cm 3.5cm 10cm 3.5cm
+        5cm 2.5cm 8cm 2.5cm
+        8.5cm 2.5cm 11.5cm 2.5cm
+        12cm 2.5cm 15cm 2.5cm
+        8.5cm 2cm 11.5cm 2cm
+        12cm 2cm 15cm 2cm
+        5cm 1.5cm 8cm 1.5cm
+        8.5cm 1.5cm 11.5cm 1.5cm
+        12cm 1.5cm 15cm 1.5cm
+        15.5cm 1cm 15.5cm 3.5cm
+        17.5cm 2.5cm 26.5cm 2.5cm
+        17.5cm 2cm 26.5cm 2cm
+        18cm 1cm 20.5cm 1cm
+        21cm 1cm 23.5cm 1cm
+        24cm 1cm 26.5cm 1cm
+        18cm 1.5cm 20.5cm 1.5cm
+        21cm 1.5cm 23.5cm 1.5cm
+        24cm 1.5cm 26.5cm 1.5cm
+    </lines>
+    <lineMode width="1.5"/>
+    <lines>
+        24.5cm 4cm 26.5cm 4cm
+        24.5cm 5cm 26.5cm 5cm
+        24.5cm 4cm 24.5cm 5cm
+        26.5cm 4cm 26.5cm 5cm
+    </lines>
+</illustration>
+</story>
+</document>

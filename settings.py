@@ -146,7 +146,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'whs.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'template/')
+    os.path.join(PROJECT_PATH, 'template/'),
+    os.path.join(PROJECT_PATH, 'bill/template/')
     )
 
 INSTALLED_APPS = (
