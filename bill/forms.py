@@ -21,10 +21,11 @@ class BillForm(forms.ModelForm):
     class Meta:
         name = 'Bill'
         model = Bill
-        fields = ('date', 'number', 'agent', 'proxy', 'info')
+        fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
         widgets = {
             'number': NumberInput(attrs={'autocomplete': 'off','min':1}),
-            'info':forms.Textarea(attrs={'rows':2})
+            'reason':forms.Textarea(attrs={'rows':2}),
+            'info':forms.Textarea(attrs={'rows':2}),
         }
 
     class Media:
@@ -70,7 +71,9 @@ class TransferForm(forms.ModelForm):
     class Meta:
         name = 'Transfer'
         model = Transfer
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+        widgets = {
+            'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+            'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
                    'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
                    'info':forms.Textarea(attrs={'rows':2}) }

@@ -18,7 +18,7 @@
             </label>
 
             <div class='controls'>
-                {% if f.name == 'brick' %}
+                {% if 'brick' in f.name %}
                     {% include 'brick-select-form.html' %}
                 {% else %}
                     {% if f.name == 'price' or f.name == 'delivery' %}

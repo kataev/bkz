@@ -4,9 +4,10 @@ from whs.brick.models import Brick
 from whs.agent.models import Agent
 import datetime
 
+poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
+
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """
-    poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
@@ -33,6 +34,7 @@ class Doc(models.Model):
     class Meta:
         abstract = True
 
+bill_type_c = (('pickup','Самовывоз'),(''))
 
 ## Накладная
 class Bill(Doc):
@@ -42,9 +44,12 @@ class Bill(Doc):
         help_text=u'Число уникальное в этом году')
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related",
         help_text=u'Настоящий покупатель')
-    proxy = models.ForeignKey(Agent, verbose_name=u'Посредник', related_name="proxy_%(app_label)s_%(class)s_related",
-        limit_choices_to={'pk__in': (1,)}, # Серверная керамика
-        null=True, blank=True, help_text=u'например Серверная керамика')
+    seller = models.ForeignKey(Agent, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
+        limit_choices_to={'pk__in': (1,350)}, # Серверная керамика
+        null=False, blank=False, help_text=u'например Серверная керамика')
+
+    reason = models.CharField(u'Основание', max_length=300, blank=True, help_text=u'Основание для выставления товарной накладной')
+    type = models.CharField(u'Вид операции', max_length=300, blank=True, help_text=u'')
 
     class Meta():
         verbose_name = u"Накладная"
@@ -61,14 +66,19 @@ class Bill(Doc):
         else: return 0
 
     @property
+    def tara_return(self):
+        return self.date + datetime.timedelta(days=30)
+
+    @property
     def opers(self):
         if not self.pk: return ()
         opers = []
-        for o in self.bill_sold_related.select_related().all():
-            opers.append(o)
-            if o.transfer.count():
-                opers.append(o.transfer.all())
-        return opers
+        return self.bill_sold_related.select_related().all()
+#        for o in self.bill_sold_related.select_related().all():
+#            opers.append(o)
+#            if o.transfer.count():
+#                opers.append(o.transfer.all())
+#        return opers
 
     @property
     def money(self):
@@ -84,39 +94,14 @@ class Bill(Doc):
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name, self.id)
 
-
-class Transfer(Oper):
-    """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
-    по цене другой, аналог скидки.
-    Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
-    точка перевода содержится по связи sold.
-    Привязанн к накладной, т.к является операцией продажи. """
-
-    doc = models.ForeignKey(Bill, blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
-        verbose_name=u'Накладная')
-
-    class Meta():
-        verbose_name = u"Перевод"
-        verbose_name_plural = u"Переводы"
-
-    def __unicode__(self):
-        if self.pk:
-            return u'Перевод %s' % self.brick
-        else:
-            return u'Новый перевод'
-
-
 class Sold(Oper):
     """ Класс для операций отгруки, является аналогом строки в накладной.
-    Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
+Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
 
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", blank=True, null=True, help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill, blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
         verbose_name=u'Накладная')
-    transfer = models.ManyToManyField('Transfer', blank=True, related_name="%(app_label)s_%(class)s_related", null=True,
-        verbose_name=u'Перевод', help_text=u'')
-    transfered = models.BooleanField(u'С переводом?',default=False)
 
     class Meta():
         verbose_name = u"Отгрузка"
@@ -132,3 +117,33 @@ class Sold(Oper):
     def transfer_amount(self):
         if self.pk: return sum([x[0] for x in self.transfer.values_list('amount')])
         else: return 0
+
+    @property
+    def places(self):
+        return self.poddon * self.tara
+
+    @property
+    def money(self):
+        return self.amount * self.price
+
+class Transfer(Sold):
+    """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
+    по цене другой, аналог скидки.
+    Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
+    точка перевода содержится по связи sold.
+    Привязанн к накладной, т.к является операцией продажи. """
+
+    brick_from = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
+        help_text=u'Выберите кирпич')
+
+    class Meta():
+        verbose_name = u"Перевод"
+        verbose_name_plural = u"Переводы"
+
+    def __unicode__(self):
+        if self.pk:
+            return u'Перевод %s' % self.brick
+        else:
+            return u'Новый перевод'
+
+
