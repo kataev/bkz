@@ -12,6 +12,7 @@ class DateForm(forms.Form):
 class NumberInput(forms.TextInput):
     input_type = 'number'
 
+
 class BillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
@@ -23,10 +24,10 @@ class BillForm(forms.ModelForm):
         model = Bill
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
         widgets = {
-            'number': NumberInput(attrs={'autocomplete': 'off','min':1}),
-            'reason':forms.Textarea(attrs={'rows':2}),
-            'info':forms.Textarea(attrs={'rows':2}),
-        }
+            'number': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
+            'reason': forms.Textarea(attrs={'rows': 2}),
+            'info': forms.Textarea(attrs={'rows': 2}),
+            }
 
     class Media:
         pass
@@ -35,14 +36,15 @@ class BillForm(forms.ModelForm):
 class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
+        verbose_name = Sold._meta.verbose_name
+        verbose_name_plural = Sold._meta.verbose_name_plural
         model = Sold #autocomplete="off"
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
-                   'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
-                   'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
-                   'price': NumberInput(attrs={'autocomplete': 'off','min':1,'step':0.1}),
-                   'delivery': NumberInput(attrs={'autocomplete': 'off','step':0.1}),
-                   'info':forms.Textarea(attrs={'rows':2}),
-                   'transfered':forms.HiddenInput()
+                   'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
+                   'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
+                   'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.1}),
+                   'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.1}),
+                   'info': forms.Textarea(attrs={'rows': 2}),
         }
 
     def clean_amount(self):
@@ -51,7 +53,7 @@ class SoldForm(forms.ModelForm):
             if self.instance.brick.total + self.instance.amount - data['amount'] < 0:
                 raise ValidationError(dict(amount='На складе не хватет кирпича'))
         else:
-            if data['brick'].total-data['amount'] < 0:
+            if data['brick'].total - data['amount'] < 0:
                 raise ValidationError(dict(amount='На складе не хватет кирпича'))
         return data['amount']
 
@@ -61,22 +63,31 @@ class SoldForm(forms.ModelForm):
 
     def clean_transfer(self):
         data = self.cleaned_data
-        if sum(map(lambda t: t.amount,data['transfer'])) > data['amount']:
+        if sum(map(lambda t: t.amount, data['transfer'])) > data['amount']:
             raise ValidationError(dict(transfer='Переводится больше чем отгружается'))
-
         return data['transfer']
 
 
 class TransferForm(forms.ModelForm):
+    def __init__(self,*args, **kwargs):
+        super(TransferForm, self).__init__(*args, **kwargs)
+        self['brick'].label = u'Кирпич куда'
+
     class Meta:
         name = 'Transfer'
         model = Transfer
+        verbose_name = Transfer._meta.verbose_name
+        verbose_name_plural = Transfer._meta.verbose_name_plural
+        fields = ('brick_from', 'brick', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
         widgets = {
             'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
-                   'amount': NumberInput(attrs={'autocomplete': 'off','min':1}),
-                   'tara': NumberInput(attrs={'autocomplete': 'off','min':0}),
-                   'info':forms.Textarea(attrs={'rows':2}) }
+            'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
+            'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
+            'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.1}),
+            'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.1}),
+            'info': forms.Textarea(attrs={'rows': 2}),
+        }
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
@@ -89,8 +100,6 @@ class BillFilter(forms.Form):
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
-        """
-        Изменение пустой ичейки для подсказки.
-        """
+        """ Изменение пустой ичейки для подсказки. """
         super(BillFilter, self).__init__(*args, **kwargs)
         self.fields['agent'].empty_label = u'Выберите контрагента'

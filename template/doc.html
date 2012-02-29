@@ -7,6 +7,7 @@
     <div id="brick-select" class="modal hide fade">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
+
             <h3>Выбор кирпича</h3>
             {% include 'brick-select-buttons.html' %}
         </div>
@@ -32,74 +33,92 @@
     </div>
 
 
+
     {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
     <form method="POST" action="./" class='form-horizontal'>
+        {% csrf_token %}
         {% for factory in opers %}
             {{ factory.management_form }}
         {% endfor %}
-        {#  Навигация  #}
-        <div class="tabbable ">
-            <ul class="nav nav-tabs">
-                {#  Документ  #}
-                <li class="active">
-                    {% with form=doc %}
-                        <a href="#{{ form.prefix }}" data-toggle="tab">
-                            {% if form.errors %}
-                                <i class="icon-warning-sign"></i>
-                            {% else %}
-                                <i class="icon-{{ form.instance|to_class_name }}"></i>
-                            {% endif %}
-                            <span class="label {% if form.errors %}label-important{% endif %}">
-                                {{ form.instance|truncatewords:10 }}</span>
-                        </a>
-                    {% endwith %}
-                </li>
-                {#  Операции  #}
-                {% for factory in opers %}
-                    {% for form in factory %}
+
+
+        <div class='row'>
+            <div class="span3">
+                <ul class="nav nav-list">
+                    {#  Документ  #}
+                    <li class="nav-header">
+                        <i class="icon-{{ doc.instance|to_class_name }}"></i> Документ
+                    </li>
+                    <li class="active">
+                        {% with form=doc %}
+                            <a href="#{{ form.prefix }}" data-toggle="tab">
+                                {% if form.errors %}
+                                    <i class="icon-warning-sign"></i>
+                                {% else %}
+                                    <i class="icon-"></i>
+                                {% endif %}
+                                {{ form.instance|truncatewords:10 }}
+                            </a>
+                        {% endwith %}
+                    </li>
+                    {#  Операции  #}
+                    {% for factory in opers %}
+                        <li class="nav-header {{ factory.form.Meta.model|to_class_name }}">
+                            <i class='icon-{{ factory.form.Meta.model|to_class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }}
+                        </li>
+                        {% for form in factory %}
+
                             <li class="{{ form.Meta.name }}">
                                 <a class='' href="#{{ form.prefix }}" data-toggle="tab">
                                     {% if form.errors %}
                                         <i class="icon-warning-sign"></i>
                                     {% else %}
-                                        <i class="icon-{{ form.instance|to_class_name }}"></i>
+                                        <i class="icon-"></i>
                                     {% endif %}
-                                    <span class="label {% if form.errors %}label-important{% endif %}">
 
-                                        {{ form.instance }}</span>
+                                        {{ form.instance }}
                                 </a>
                             </li>
-                    {% endfor %}
-                {% endfor %}
-
-                {#  Добавления  #}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class='icon-plus'></i> Добавить<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        {% for factory in opers %}
-                            <li><a class='form-add' href="#{{ factory.prefix }}"><i class="icon-{{ factory.model|to_class_name }}"></i> {{ factory.model }} </a></li>
                         {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                {#  Форма документа  #}
-                {% with form=doc %}
-                    <div class="tab-pane active" id="{{ form.prefix }}">
-                        {% include 'fieldset.html' %}
-                    </div>
-                {% endwith %}
-                {#  Формы операций  #}
-                {% for factory in opers %}
-                    {% for form in factory %}
-                        <div class="tab-pane" id="{{ form.prefix }}">
-                            {% include 'fieldset.html' %}
-                        </div>
                     {% endfor %}
-                {% endfor %}
+
+                    {#  Добавления  #}
+                    <li class="nav-header"><i class='icon-plus-sign'></i> Добавить</li>
+
+                    {% for factory in opers %}
+                        <li><a class='form-add' href="#{{ factory.prefix }}"><i
+                                class="icon-{{ factory.model|to_class_name }}"></i> {{ factory.model }} </a>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+
             </div>
+
+            <div class="span8">
+                {#  Навигация  #}
+                <div class="tabbable ">
+
+
+                    <div class="tab-content">
+                        {#  Форма документа  #}
+                        {% with form=doc %}
+                            <div class="tab-pane active" id="{{ form.prefix }}">
+                                {% include 'fieldset.html' %}
+                            </div>
+                        {% endwith %}
+                        {#  Формы операций  #}
+                        {% for factory in opers %}
+                            {% for form in factory %}
+                                <div class="tab-pane" id="{{ form.prefix }}">
+                                    {% include 'fieldset.html' %}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
@@ -107,8 +126,9 @@
             <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
         </div>
     </form>
-<div>
 
-</div>
+    <div>
+
+    </div>
 
 {% endblock %}

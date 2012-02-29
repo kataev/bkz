@@ -6,6 +6,8 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
+DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
+
 
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
@@ -126,7 +128,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #    'django.middleware.csrf.CsrfViewMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',

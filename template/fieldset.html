@@ -42,11 +42,7 @@
                 {% if not f.value %}
                     <p class="help-block">{{ f.help_text }}</p>
                 {% endif %}
-                {#            {%  %}#}
             </div>
         </div>
-        {% if form.Meta.name == 'Transfer' and f.name == 'info' and form.instance.pk %}
-            {% include 'transfer-sold.html' %}
-        {% endif %}
     {% endfor %}
 </fieldset>

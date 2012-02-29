@@ -34,7 +34,7 @@ class Doc(models.Model):
     class Meta:
         abstract = True
 
-bill_type_c = (('pickup','Самовывоз'),(''))
+bill_type_c = (('pickup', 'Самовывоз'), (''))
 
 ## Накладная
 class Bill(Doc):
@@ -45,10 +45,11 @@ class Bill(Doc):
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related",
         help_text=u'Настоящий покупатель')
     seller = models.ForeignKey(Agent, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
-        limit_choices_to={'pk__in': (1,350)}, # Серверная керамика
+        limit_choices_to={'pk__in': (1, 350)}, # Серверная керамика
         null=False, blank=False, help_text=u'например Серверная керамика')
 
-    reason = models.CharField(u'Основание', max_length=300, blank=True, help_text=u'Основание для выставления товарной накладной')
+    reason = models.CharField(u'Основание', max_length=300, blank=True,
+        help_text=u'Основание для выставления товарной накладной')
     type = models.CharField(u'Вид операции', max_length=300, blank=True, help_text=u'')
 
     class Meta():
@@ -56,34 +57,30 @@ class Bill(Doc):
         verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
 
-    @property
-    def total(self):
-        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('amount')])
-        else: return 0
-    @property
-    def tara(self):
-        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('tara')])
-        else: return 0
-
-    @property
-    def tara_return(self):
-        return self.date + datetime.timedelta(days=30)
-
-    @property
-    def opers(self):
-        if not self.pk: return ()
-        opers = []
-        return self.bill_sold_related.select_related().all()
-#        for o in self.bill_sold_related.select_related().all():
-#            opers.append(o)
-#            if o.transfer.count():
-#                opers.append(o.transfer.all())
-#        return opers
-
-    @property
-    def money(self):
-        if self.pk: return sum([x[0]*x[1] for x in self.bill_sold_related.values_list('amount','price')])
-        else: return 0
+#    @property
+#    def total(self):
+#        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('amount')])
+#        else: return 0
+#
+#    @property
+#    def tara(self):
+#        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('tara')])
+#        else: return 0
+#
+#    @property
+#    def tara_return(self):
+#        return self.date + datetime.timedelta(days=30)
+#
+#    @property
+#    def opers(self):
+#        if not self.pk: return ()
+#        opers = []
+#        return self.bill_sold_related.all()
+#
+#    @property
+#    def money(self):
+#        if self.pk: return sum([x[0] * x[1] for x in self.bill_sold_related.values_list('amount', 'price')])
+#        else: return 0
 
     def __unicode__(self):
         if self.pk:
@@ -93,6 +90,7 @@ class Bill(Doc):
 
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name, self.id)
+
 
 class Sold(Oper):
     """ Класс для операций отгруки, является аналогом строки в накладной.
@@ -109,22 +107,23 @@ class Sold(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Отгрузка %s' % self.brick
+            return u'Отгрузка %s, %d шт' % (self.brick,self.amount)
         else:
             return u'Новая отгрузка'
 
-    @property
-    def transfer_amount(self):
-        if self.pk: return sum([x[0] for x in self.transfer.values_list('amount')])
-        else: return 0
+#    @property
+#    def transfer_amount(self):
+#        if self.pk: return sum([x[0] for x in self.transfer.values_list('amount')])
+#        else: return 0
+#
+#    @property
+#    def places(self):
+#        return self.poddon * self.tara
+#
+#    @property
+#    def money(self):
+#        return self.amount * self.price
 
-    @property
-    def places(self):
-        return self.poddon * self.tara
-
-    @property
-    def money(self):
-        return self.amount * self.price
 
 class Transfer(Sold):
     """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
@@ -133,8 +132,8 @@ class Transfer(Sold):
     точка перевода содержится по связи sold.
     Привязанн к накладной, т.к является операцией продажи. """
 
-    brick_from = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
-        help_text=u'Выберите кирпич')
+    brick_from = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
+        verbose_name=u"Кирпич откуда", help_text=u'Выберите кирпич')
 
     class Meta():
         verbose_name = u"Перевод"

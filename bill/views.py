@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from exceptions import ValueError
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
+#from exceptions import ValueError
+#from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
-from django.http import QueryDict
+#from django.http import QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
 
 from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
 from whs.bill.models import Bill
-from whs.bill.pdf import pdf_render_to_response
+#from whs.bill.pdf import pdf_render_to_response
 import whs.bill.signals
 
 __author__ = 'bteam'
 
 def bill(request,id):
     """ Форма накладной """
-    if id: doc = get_object_or_404(Bill.objects.select_related(),pk=id)
+    if id: doc = get_object_or_404(Bill,pk=id)
     else: doc = None
     if request.method == 'POST':
         form = BillForm(request.POST,instance=doc,prefix='bill')
@@ -28,8 +28,8 @@ def bill(request,id):
             sold.save()
         if transfer.is_valid():
             transfer.save()
-        if not (bool(form.errors) or bool(sold.errors) or bool(transfer.errors)):
-            return redirect(doc)
+        if form.is_valid() and sold.is_valid() and transfer.is_valid():
+            return redirect('/bill/%d/' % doc.pk)
     else:
         initial = {}
         if not id:
@@ -41,42 +41,41 @@ def bill(request,id):
 
     return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer]))
 
-
-def bills(request):
-    Bills = Bill.objects.all()
-    form = BillFilter(request.GET or None)
-    order = request.GET.get('order')
-    if order in map(lambda x: x.name,Bill._meta.fields):
-        Bills = Bills.order_by(order)
-
-    if form.is_valid():
-        d = form.cleaned_data
-        d = dict([ [x,d[x]] for x in d if d[x]])
-        if 'brick' in d.keys():
-            d['bill_sold_related__brick'] = d['brick']
-            del d['brick']
-        Bills = Bills.filter(**d)
-    paginator = Paginator(Bills, 20)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        bills = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        bills = paginator.page(paginator.num_pages)
-    money = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
-    total = reduce(lambda memo,b: memo+b.total,bills.object_list,0)
-
-    url = QueryDict('',mutable=True)
-    get = request.GET.copy()
-    get = dict([ [x,get[x]] for x in get if get[x]])
-    if get.has_key('page'): del get['page']
-    url.update(get)
-    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
-
-
-def bill_print(request,id):
-    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
-    return pdf_render_to_response('torg-12.rml',{'doc':doc})
+#def bills(request):
+#    Bills = Bill.objects.all()
+#    form = BillFilter(request.GET or None)
+#    order = request.GET.get('order')
+#    if order in map(lambda x: x.name,Bill._meta.fields):
+#        Bills = Bills.order_by(order)
+#
+#    if form.is_valid():
+#        d = form.cleaned_data
+#        d = dict([ [x,d[x]] for x in d if d[x]])
+#        if 'brick' in d.keys():
+#            d['bill_sold_related__brick'] = d['brick']
+#            del d['brick']
+#        Bills = Bills.filter(**d)
+#    paginator = Paginator(Bills, 20)
+#
+#    try:
+#        page = int(request.GET.get('page', '1'))
+#    except ValueError:
+#        page = 1
+#    try:
+#        bills = paginator.page(page)
+#    except (EmptyPage, InvalidPage):
+#        bills = paginator.page(paginator.num_pages)
+#    money = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
+#    total = reduce(lambda memo,b: memo+b.total,bills.object_list,0)
+#
+#    url = QueryDict('',mutable=True)
+#    get = request.GET.copy()
+#    get = dict([ [x,get[x]] for x in get if get[x]])
+#    if get.has_key('page'): del get['page']
+#    url.update(get)
+#    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
+#
+#
+#def bill_print(request,id):
+#    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
+#    return pdf_render_to_response('torg-12.rml',{'doc':doc})
