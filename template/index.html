@@ -49,14 +49,18 @@
     {% block container %}
         {% include 'brick-select-buttons.html' %}
         <table id='Bricks' class=" table table-bordered table-condensed">
+        <colgroup>
+            <col span=2>
+            <col span="6" style='width:70px '>
+        </colgroup>
             <thead>
             <tr>
                 <th width=15px>#</th>
                 <th>Имя</th>
                 <th>Начало</th>
                 <th>Приход</th>
-                <th>Перевод из</th>
-                <th>Перевод в</th>
+                <th>Пер-д из</th>
+                <th>Пер-д в</th>
                 <th>Продажи</th>
                 <th>Остатки</th>
             </tr>

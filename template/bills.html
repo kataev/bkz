@@ -36,14 +36,6 @@
                 <tbody>
                 {% for b in Bills.object_list %}
                     {% include 'Bill_tr.html' %}
-                    <tbody class="opers" style='display: none' id='{{ b|to_class_name }}_{{ b.pk }}'>
-                    {% for s in b.bill_sold_related.all %}
-                        {% include 'Sold_tr.html' %}
-                    {% endfor %}
-                    {% for t in b.bill_transfer_related.all %}
-                        {% include 'Transfer_tr.html' %}
-                    {% endfor %}
-                    </tbody>
                 {% endfor %}
                 </tbody>
                 <tfoot>
@@ -88,6 +80,9 @@
                     <div class="form-actions">
                         <button type="submit" class="small btn btn-info">
                             <i class="icon-search icon-white"></i> Фильтр
+                        </button>
+                        <button type="reset" class="small btn">
+                            Сбросить
                         </button>
                     </div>
                 </fieldset>

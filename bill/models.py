@@ -27,8 +27,6 @@ class Doc(models.Model):
     draft_c = ((False, u'Чистовик'), (True, u'Черновик'))
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-    draft = models.BooleanField(u'Черновик', default=True, choices=draft_c,
-        help_text=u'Если не черновик, то кирпич будет проводиться!')
 
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name, self.id)
