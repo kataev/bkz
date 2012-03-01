@@ -62,31 +62,23 @@ $(function () {
 
 $(function () {
     $('.form-add').click(function (e) {
-        var prefix = $(this).attr('href').slice(1)
+        var prefix = $(this).data('prefix')
         var node = $('#' + prefix + '-__prefix__').clone()
         var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
         var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
-        $(node).attr('id', id)
-        $(node).html($(node).html().replace(/__prefix__/g, total.attr('value')))
+        $(node).attr('id', id).html($(node).html().replace(/__prefix__/g, total.attr('value')))
         $('div.DELETE', node).remove()
 
+        var menu = $('<li><a href="#__prefix__" data-toggle="tab"><i class="icon-"></i><span></span></a></li>'
+            .replace(/__prefix__/g, total.attr('value')))
+            $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
+        $('span', menu).text($(this).attr('title'))
 
-        if ($(this).data('transfer')) {
-            var menu = $('ul a[href="#sold"]').parent().clone()
-                $('.Sold',node).addClass('transfered')
-                $('#id_sold-'+total.attr('value')+'-transfered',node).val('True')
-
-        }
-        else {
-            var menu = $(this).parent().clone()
-        }
-
-        $('a', menu).wrapInner('<span></span>')
         var del = $('<i title="Удалить" class="icon-trash"></i>')
         $('span', menu).after(del)
 
-        $('.tabbable ul.nav li.dropdown').before(menu)
+        $('li.' + prefix[0].toUpperCase() + prefix.slice(1)).last().after(menu)
         $(node).appendTo('.tabbable .tab-content')
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
             .data('toggle', 'tab').tab('show')
@@ -104,7 +96,7 @@ $(function () {
 })
 
 $(function () {
-    $('#Journal tr.doc i.icon-zoom-in, #Bills tr.doc i.icon-zoom-in').click(function (e) {
+    $('tr.Bill i.icon-zoom-in').click(function (e) {
         var i = $(this).parent().parent().data('opers')
         $(this).toggleClass('zoom')
         $('#' + i).toggle('blind', null, 500)
@@ -131,14 +123,14 @@ $(function () {
 $(function () {
     var options = {
         symbol:"р",
-        decimal:".",
+        decimal:",",
         thousand:" ",
         precision:2,
         format:"%v <span class='ruble rel'>%s<span class='dot dborder'>.</span></span>"
     };
 
     $('span.money').each(function (id, n) {
-        var text = accounting.formatMoney($(n).text(), options)
+        var text = accounting.formatMoney($(n).text().replace(',','.'), options)
         $(n).html(text)
     })
 })

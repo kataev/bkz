@@ -1,0 +1,7 @@
+<tr class='Bill' data-opers='Bill_{{ b.pk }}'>
+    <td>{{ b.number }}</td>
+    <td>{{ b.date }}</td>
+    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a><i class="icon-zoom-in"></i></td>
+    <td>{{ b.total }}</td>
+    <td><span class='money'>{{ b.money }}</span></td>
+</tr>

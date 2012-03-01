@@ -1,6 +1,7 @@
 <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
-
+    {% if not f.field.required %}
     <option value="" {% if not f.value %}selected="selected"{% endif %}>---------</option>
+{% endif %}
     <optgroup label="Выберите контрагента:">
         {% for a in f.field.queryset %}
             {% ifchanged a.name|capfirst|first %}</optgroup>

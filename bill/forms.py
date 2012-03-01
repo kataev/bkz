@@ -39,53 +39,30 @@ class SoldForm(forms.ModelForm):
         verbose_name = Sold._meta.verbose_name
         verbose_name_plural = Sold._meta.verbose_name_plural
         model = Sold #autocomplete="off"
+        fields = ('brick', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
-                   'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.1}),
-                   'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.1}),
+                   'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
+                   'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
                    'info': forms.Textarea(attrs={'rows': 2}),
         }
 
-    def clean_amount(self):
-        data = self.cleaned_data
-        if self.instance.pk:
-            if self.instance.brick.total + self.instance.amount - data['amount'] < 0:
-                raise ValidationError(dict(amount='На складе не хватет кирпича'))
-        else:
-            if data['brick'].total - data['amount'] < 0:
-                raise ValidationError(dict(amount='На складе не хватет кирпича'))
-        return data['amount']
-
-    def clean_price(self):
-        price = self.cleaned_data['price']
-        return price
-
-    def clean_transfer(self):
-        data = self.cleaned_data
-        if sum(map(lambda t: t.amount, data['transfer'])) > data['amount']:
-            raise ValidationError(dict(transfer='Переводится больше чем отгружается'))
-        return data['transfer']
-
 
 class TransferForm(forms.ModelForm):
-    def __init__(self,*args, **kwargs):
-        super(TransferForm, self).__init__(*args, **kwargs)
-        self['brick'].label = u'Кирпич куда'
-
     class Meta:
         name = 'Transfer'
         model = Transfer
         verbose_name = Transfer._meta.verbose_name
         verbose_name_plural = Transfer._meta.verbose_name_plural
-        fields = ('brick_from', 'brick', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
+        fields = ('brick_from', 'brick_to', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
         widgets = {
-            'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+            'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
             'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
-            'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.1}),
-            'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.1}),
+            'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
+            'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
             'info': forms.Textarea(attrs={'rows': 2}),
         }
 

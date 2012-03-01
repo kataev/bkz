@@ -43,7 +43,7 @@
 
 
         <div class='row'>
-            <div class="span3">
+            <div style='border-right: 1px solid #EEE;' class="span3">
                 <ul class="nav nav-list">
                     {#  Документ  #}
                     <li class="nav-header">
@@ -64,10 +64,9 @@
                     {#  Операции  #}
                     {% for factory in opers %}
                         <li class="nav-header {{ factory.form.Meta.model|to_class_name }}">
-                            <i class='icon-{{ factory.form.Meta.model|to_class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }}
+                            <i class='icon-{{ factory.form.Meta.model|to_class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }} <i title='{{ factory.model }}' data-prefix="{{ factory.prefix }}" class="icon-plus form-add "></i>
                         </li>
                         {% for form in factory %}
-
                             <li class="{{ form.Meta.name }}">
                                 <a class='' href="#{{ form.prefix }}" data-toggle="tab">
                                     {% if form.errors %}
@@ -75,22 +74,11 @@
                                     {% else %}
                                         <i class="icon-"></i>
                                     {% endif %}
-
                                         {{ form.instance }}
                                 </a>
                             </li>
                         {% endfor %}
                     {% endfor %}
-
-                    {#  Добавления  #}
-                    <li class="nav-header"><i class='icon-plus-sign'></i> Добавить</li>
-
-                    {% for factory in opers %}
-                        <li><a class='form-add' href="#{{ factory.prefix }}"><i
-                                class="icon-{{ factory.model|to_class_name }}"></i> {{ factory.model }} </a>
-                        </li>
-                    {% endfor %}
-
                 </ul>
 
             </div>

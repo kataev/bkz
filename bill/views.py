@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-#from exceptions import ValueError
-#from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from exceptions import ValueError
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
-#from django.http import QueryDict
+from django.http import QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
 
 from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
@@ -41,39 +41,39 @@ def bill(request,id):
 
     return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer]))
 
-#def bills(request):
-#    Bills = Bill.objects.all()
-#    form = BillFilter(request.GET or None)
-#    order = request.GET.get('order')
-#    if order in map(lambda x: x.name,Bill._meta.fields):
-#        Bills = Bills.order_by(order)
-#
-#    if form.is_valid():
-#        d = form.cleaned_data
-#        d = dict([ [x,d[x]] for x in d if d[x]])
-#        if 'brick' in d.keys():
-#            d['bill_sold_related__brick'] = d['brick']
-#            del d['brick']
-#        Bills = Bills.filter(**d)
-#    paginator = Paginator(Bills, 20)
-#
-#    try:
-#        page = int(request.GET.get('page', '1'))
-#    except ValueError:
-#        page = 1
-#    try:
-#        bills = paginator.page(page)
-#    except (EmptyPage, InvalidPage):
-#        bills = paginator.page(paginator.num_pages)
-#    money = reduce(lambda memo,b: memo+b.money,bills.object_list,0)
-#    total = reduce(lambda memo,b: memo+b.total,bills.object_list,0)
-#
-#    url = QueryDict('',mutable=True)
-#    get = request.GET.copy()
-#    get = dict([ [x,get[x]] for x in get if get[x]])
-#    if get.has_key('page'): del get['page']
-#    url.update(get)
-#    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
+def bills(request):
+    Bills = Bill.objects.all()
+    form = BillFilter(request.GET or None)
+    order = request.GET.get('order')
+    if order in map(lambda x: x.name,Bill._meta.fields):
+        Bills = Bills.order_by(order)
+
+    if form.is_valid():
+        d = form.cleaned_data
+        d = dict([ [x,d[x]] for x in d if d[x]])
+        if 'brick' in d.keys():
+            d['bill_sold_related__brick'] = d['brick']
+            del d['brick']
+        Bills = Bills.filter(**d)
+    paginator = Paginator(Bills, 20)
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        bills = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        bills = paginator.page(paginator.num_pages)
+    money = 0# reduce(lambda memo,b: memo+b.money,bills.object_list,0)
+    total = 0#reduce(lambda memo,b: memo+b.total,bills.object_list,0)
+
+    url = QueryDict('',mutable=True)
+    get = request.GET.copy()
+    get = dict([ [x,get[x]] for x in get if get[x]])
+    if get.has_key('page'): del get['page']
+    url.update(get)
+    return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
 #
 #
 #def bill_print(request,id):

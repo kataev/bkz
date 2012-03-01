@@ -9,11 +9,14 @@ class ManForm(forms.ModelForm):
         name = 'Man'
         model = Man
         exclude=('draft',)
-#        widgets = {'date':forms.TextInput(attrs={'type':'date'}) }
+        verbose_name = Man._meta.verbose_name
+        verbose_name_plural = Man._meta.verbose_name_plural
 
 class AddForm(forms.ModelForm):
     class Meta:
         name = 'Add'
         model = Add
+        verbose_name = Add._meta.verbose_name
+        verbose_name_plural = Add._meta.verbose_name_plural
 
 AddFactory = inlineformset_factory(Man, Add, extra=0, form=AddForm, )
