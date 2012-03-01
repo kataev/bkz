@@ -10,7 +10,8 @@
 @brick-color-red-dark: darken(@brick-color-red,3%);
 @brick-color-yellow-dark: darken(@brick-color-yellow,3%);
 
-.bc-red { background-color: @brick-color-red; }
+.bc-red { background-color: @brick-color-red; color:inherit; }
+
 tr.bc-red:hover { background-color: @brick-color-red; }
 a.btn.bc-red {
     color:#ffffff;
@@ -26,7 +27,7 @@ a.btn.bc-red.active {
 }
  .bc-red.facial { background-color: @brick-color-red-dark; }
 
-.bc-yellow { background-color: @brick-color-yellow }
+.bc-yellow { background-color: @brick-color-yellow; color:inherit;  }
 a.btn.bc-yellow {
     color:#ffffff;
     text-shadow: 0 -1px 0 @brick-color-yellow-dark;
@@ -39,12 +40,12 @@ a.bc-yellow.active {
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-yellow), to(@brick-color-yellow-dark));  }
 .bc-yellow.facial { background-color: @brick-color-yellow-dark; }
 
-.bc-brown { background-color: @brick-color-brown }
+.bc-brown { background-color: @brick-color-brown; color:inherit;  }
 a.bc-brown { background: @brick-color-brown }
 .bc-brown.facial { background-color: darken(@brick-color-brown,@increment * 1%); }
 
-.bc-light { background-color: @brick-color-light }
+.bc-light { background-color: @brick-color-light; color:inherit;  }
 .bc-light.facial { background-color: darken(@brick-color-light,@increment * 1%); }
 
-.bc-white { background-color: @brick-color-white }
+.bc-white { background-color: @brick-color-white; color:inherit;  }
 .bc-white.facial { background-color: darken(@brick-color-white,@increment * 1%); }

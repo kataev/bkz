@@ -10,6 +10,9 @@ form legend + .control-group {
     margin-top: 18px;
     -webkit-margin-top-collapse: separate;
 }
+
+table span.label a {color:white}
+
 /* http://www.artlebedev.ru/tools/technogrette/html/rouble/ */
 span.ruble { text-transform:uppercase; }
 span.rel { position: relative; }
