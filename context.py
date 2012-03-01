@@ -23,4 +23,8 @@ def bricks(request):
         b.begin = b.total + b.sold + b.t_from - b.t_to - b.add
         b.sold += t_to.get(b.pk,0)
 
-    return dict(Bricks=Bricks)
+    total = {}
+    for f in ['sold','add','t_from','t_to','total','begin']:
+        total[f]=sum([getattr(b,f) for b in Bricks])
+
+    return dict(Bricks=Bricks, totals=total)

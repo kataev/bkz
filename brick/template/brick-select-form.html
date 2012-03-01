@@ -14,5 +14,5 @@
                         href="#brick-select"> <i class="icon-search"></i></a></span>
 </div>
 
-<input type='hidden' class='brick' name='{{ f.html_name }}' id='{{ f.id_for_label }}'
+<input type='text' style='display: none' class='brick' name='{{ f.html_name }}' id='{{ f.id_for_label }}'
        value="{{ f.value|default_if_none:'' }}">

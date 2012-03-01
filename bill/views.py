@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
 from whs.bill.models import Bill
-#from whs.bill.pdf import pdf_render_to_response
+from whs.bill.pdf import pdf_render_to_response
 import whs.bill.signals
 
 __author__ = 'bteam'
@@ -74,8 +74,7 @@ def bills(request):
     if get.has_key('page'): del get['page']
     url.update(get)
     return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
-#
-#
-#def bill_print(request,id):
-#    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
-#    return pdf_render_to_response('torg-12.rml',{'doc':doc})
+
+def bill_print(request,id):
+    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
+    return pdf_render_to_response('torg-12.rml',{'doc':doc})

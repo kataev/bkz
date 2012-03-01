@@ -149,7 +149,9 @@ ROOT_URLCONF = 'whs.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
-    os.path.join(PROJECT_PATH, 'bill/template/')
+    os.path.join(PROJECT_PATH, 'bill/template/'),
+    os.path.join(PROJECT_PATH, 'brick/template/'),
+    os.path.join(PROJECT_PATH, 'agent/template/'),
     )
 
 INSTALLED_APPS = (
