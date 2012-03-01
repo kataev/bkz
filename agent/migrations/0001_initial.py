@@ -19,6 +19,7 @@ class Migration(SchemaMigration):
             ('phone', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
             ('inn', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
             ('account', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
+            ('account_ks', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
         ))
         db.send_create_signal('agent', ['Agent'])
 
@@ -33,6 +34,7 @@ class Migration(SchemaMigration):
         'agent.agent': {
             'Meta': {'ordering': "('name',)", 'object_name': 'Agent'},
             'account': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'account_ks': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'address': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'bank': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'form': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
