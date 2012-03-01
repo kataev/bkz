@@ -12,7 +12,9 @@ class Agent(models.Model):
     bank=models.CharField(u"Банк",blank=True,max_length=200)
     phone=models.CharField(u"Телефон",blank=True,max_length=200)
     inn=models.CharField(u"Инн",blank=True,max_length=200)
-    account=models.CharField(u"Счет",blank=True,max_length=200)
+    okpo=models.IntegerField(u'ОКПО',help_text=u'Введите код ОКПО',default=0)
+    account=models.CharField(u"Расчетный счет",blank=True,max_length=200)
+    account_ks=models.CharField(u"Корректиционный счет",blank=True,max_length=200)
 
     class Meta:
         verbose_name=u'Контрагент'
