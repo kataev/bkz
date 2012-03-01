@@ -264,11 +264,17 @@
     <tr>
         <td>
 {#            <section>#}
-            {% for s in doc.bill_sold_related.all %}
+            {% for s in doc.opers %}
                 <para leftIndent="0.4cm" leading="0" >{{ forloop.counter }}</para>
               <blockTable style="Table_Invoice_Line_Content" colWidths="1cm,4cm,1cm,1.5cm,1.5cm,1.5cm,1cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1cm,2cm,3cm"><tr>
                       <td><para style="terp_default_Right_8"></para></td>
-                      <td><para style="terp_default_Right_8">{{ s.brick.name }}</para></td>
+                      <td><para style="terp_default_Right_8">
+                          {% if s.brick %}
+                              {{ s.brick.name }}
+                          {% else %}
+                              {{ s.brick_to.name }}
+                          {% endif %}
+                      </para></td>
                       <td><para style="terp_default_Center_8">-</para></td>
                       <td><para style="terp_default_Center_8">шт.</para></td>
                       <td><para style="terp_default_Right_8">796</para></td>
@@ -284,6 +290,7 @@
                       <td><para style="terp_default_Right_8">{{ s.money }}</para></td>
               </tr></blockTable>
             {% endfor %}
+
 {#              </section>#}
             <blockTable style="Table_Total_Include_Taxes" colWidths="11.5cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1cm,2cm,3cm"
                         rowHeights="0.4cm,0.4cm">

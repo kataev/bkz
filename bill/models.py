@@ -8,8 +8,6 @@ poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный п
 
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """
-
-
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
@@ -54,6 +52,9 @@ class Bill(Doc):
         verbose_name = u"Накладная"
         verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
+
+    def opers(self):
+        return list(self.bill_sold_related.all()) + list(self.bill_transfer_related.all())
 
     @property
     def total(self):
