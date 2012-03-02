@@ -12,8 +12,8 @@ urlpatterns = patterns('',
 
     url(r'^brick/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':BrickForm}, name='brick'),
 
-    url(r'^journal$', 'whs.views.journal', name='journal'),
-    url(r'^history$', 'whs.views.history', name='history'),
+#    url(r'^journal$', 'whs.views.journal', name='journal'),
+#    url(r'^history$', 'whs.views.history', name='history'),
 )
 
 urlpatterns += patterns('',

@@ -42,13 +42,13 @@ def bill(request,id):
     return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer]))
 
 def bills(request):
-    Bills = Bill.objects.all()
+    Bills = Bill.objects.select_related().all()
     form = BillFilter(request.GET or None)
     order = request.GET.get('order')
     if order in map(lambda x: x.name,Bill._meta.fields):
         Bills = Bills.order_by(order)
 
-    if form.is_valid():
+    if form.is_valid() and request.GET:
         d = form.cleaned_data
         d = dict([ [x,d[x]] for x in d if d[x]])
         if 'brick' in d.keys():
