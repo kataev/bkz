@@ -2,12 +2,17 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.decorators.http import require_http_methods
 
+from error_pages.http import Http403,Http401
+
 from whs.manufacture.forms import *
 from whs.bill.forms import *
+from whs.log import construct_change_message,log_change,log_addition,log_deletion
 
 @require_http_methods(["GET",])
 def main(request):
     """ Главная страница """
+    if not request.user.is_authenticated():
+        raise Http403
     return render(request, 'index.html')
 
 def journal(request):
@@ -28,6 +33,11 @@ def flat_form(request,Form,id):
         form = Form(request.POST,instance=model)
         if form.is_valid():
             model = form.save()
+            if id:
+                message = construct_change_message(form,[])
+                log_change(request,model,message)
+            else:
+                log_addition(request,model)
             return redirect(model)
     else:
         form = Form(instance=model)

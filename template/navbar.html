@@ -1,4 +1,3 @@
-{% load pytils_numeral %}
 <div class="navbar navbar-fixed-top" style='position: fixed;'>
     <div class="navbar-inner">
         <div class="container">
@@ -14,17 +13,15 @@
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="/bills"> <i class="icon-list-alt icon-white"></i> Накладные</a></li>
+                    <li><a href="/bills"> <i class="icon-book icon-white"></i> Накладные</a></li>
                     <li><a href="/journal"> <i class="icon-calendar icon-white"></i> Журнал</a></li>
                     <li><a href="/agents"><i class="icon-user icon-white"></i> КонтрАгенты</a></li>
+                    <li><a href="/stats"><i class='icon-signal icon-white'></i> Статистика</a></li>
                 </ul>
                 {% block navbar-form %}
                 {% endblock %}
                 <ul class="nav pull-right">
-                    {% if messages %}
-                    <li><a href="#Messages" data-toggle="modal"><i class="icon-envelope icon-white"></i> У вас {{ messages|length }} {{ messages|length|choose_plural:'сообещние,сообщения,сообщений' }}</a></li>
-                    {% endif %}
-                    <li><a href="/stats"><i class='icon-signal icon-white'></i> Статистика</a></li>
+                    {% include 'auth.html' %}
                     <li class="divider-vertical"></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus icon-white'></i>

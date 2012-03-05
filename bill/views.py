@@ -11,13 +11,18 @@ from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
 from whs.bill.models import Bill
 from whs.bill.pdf import pdf_render_to_response
 import whs.bill.signals
+from whs.log import construct_change_message,log_change,log_addition,log_deletion,ContentType,LogEntry
 
 __author__ = 'bteam'
 
 def bill(request,id):
     """ Форма накладной """
-    if id: doc = get_object_or_404(Bill,pk=id)
-    else: doc = None
+    if id:
+        doc = get_object_or_404(Bill,pk=id)
+        c = ContentType.objects.get_for_model(doc)
+        log = LogEntry.objects.filter(content_type=c,object_id=id)[:5]
+    else:
+        doc = None
     if request.method == 'POST':
         form = BillForm(request.POST,instance=doc,prefix='bill')
         sold = SoldFactory(request.POST,instance=doc,prefix='sold')
@@ -29,6 +34,11 @@ def bill(request,id):
         if transfer.is_valid():
             transfer.save()
         if form.is_valid() and sold.is_valid() and transfer.is_valid():
+            if id:
+                message = construct_change_message(form,[sold,transfer])
+                log_change(request,doc,message)
+            else:
+                log_addition(request,doc)
             return redirect('/bill/%d/' % doc.pk)
     else:
         initial = {}
@@ -39,7 +49,7 @@ def bill(request,id):
         sold = SoldFactory(instance=doc,prefix='sold')
         transfer = TransferFactory(instance=doc,prefix='transfer')
 
-    return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer]))
+    return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer],log=log))
 
 def bills(request):
     Bills = Bill.objects.select_related().all()

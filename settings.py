@@ -6,7 +6,7 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
-#DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
+DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
 
 
 ADMINS = (
@@ -132,7 +132,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'whs.ipaccess.middleware.IPAccessMiddleware'
+    'whs.ipaccess.middleware.IPAccessMiddleware',
+    'error_pages.middleware.ErrorPageMiddleware',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -171,6 +172,7 @@ INSTALLED_APPS = (
     'pytils',
     'south',
     'trml2pdf',
+    'error_pages',
 
     'whs.ipaccess',
 

@@ -68,7 +68,7 @@ class Bill(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Накладная № %d, %d' % (self.number, self.date.year)
+            return u'№ %d, %d' % (self.number, self.date.year)
         else:
             return u'Новая накладная'
 
@@ -91,7 +91,7 @@ class Sold(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Отгрузка %s, %d шт' % (self.brick, self.amount)
+            return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новая отгрузка'
 
@@ -135,7 +135,7 @@ class Transfer(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Перевод %s' % self.brick_to
+            return u'Из %s в %s, %d шт' % (self.brick_from,self.brick_to,self.amount)
         else:
             return u'Новый перевод'
 

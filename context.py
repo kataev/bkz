@@ -41,3 +41,5 @@ def bricks(request):
             total[f] = sum([getattr(b, f) for b in Bricks])
 
     return dict(Bricks=Bricks, totals=total)
+
+

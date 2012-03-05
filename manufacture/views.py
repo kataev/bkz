@@ -4,24 +4,35 @@ from django.shortcuts import get_object_or_404, redirect, render
 from manufacture.forms import *
 from manufacture.models import *
 import signals
+from whs.log import construct_change_message,log_change,log_addition,log_deletion,LogEntry
 
 def man(request,id):
     """ Форма накладной """
-    if id: doc = get_object_or_404(Man.objects.select_related(),pk=id)
+    if id:
+        doc = get_object_or_404(Man.objects.select_related(),pk=id)
+        c = ContentType.objects.get_for_model(doc)
+        log = LogEntry.objects.filter(content_type=c,object_id=id)
     else: doc = None
 
     if request.method == 'POST':
         form = ManForm(request.POST,instance=doc,prefix='man',)
         add = AddFactory(request.POST,instance=doc,prefix='add')
-        if form.is_valid() and add.is_valid():
+        if form.is_valid():
             doc = form.save()
+        if add.is_valid():
             add.save()
-            return redirect(doc)
+        if form.is_valid() and add.is_valid():
+            if id:
+                message = construct_change_message(form,[add])
+                log_change(request,doc,message)
+            else:
+                log_addition(request,doc)
+            return redirect('/man/%d/' % doc.pk)
     else:
         form = ManForm(instance=doc,prefix='man')
         add = AddFactory(instance=doc,prefix='add')
 
-    return render(request, 'doc.html',dict(doc=form,opers=[add]))
+    return render(request, 'doc.html',dict(doc=form,opers=[add],log=log))
 
 
 def srt(request,id):

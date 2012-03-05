@@ -22,6 +22,8 @@ urlpatterns += patterns('',
     url(r'^', include('whs.agent.urls')),
     url(r'^', include('whs.bill.urls')),
     url(r'^', include('whs.manufacture.urls')),
+
+    url(r'^__errorpage__/(?P<code>\d+)$', 'error_pages.views.display_error'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

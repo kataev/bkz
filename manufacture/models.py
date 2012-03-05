@@ -21,7 +21,7 @@ class Man(models.Model):
     def __unicode__(self):
         if self.pk:
             date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-            return u'Принятие на склад от %s' % date
+            return u'%s' % date
         else:
             return u'Новая партия с производства'
 
@@ -46,7 +46,7 @@ class Add(models.Model):
     objects = models.Manager()
     def __unicode__(self):
         if self.pk:
-            return u'Партия %s' % self.brick
+            return u'%s, %d шт' % (self.brick,self.amount)
         else:
             return u'Новая партия'
 
@@ -69,7 +69,7 @@ class Sorting(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Сортировка от %s' % self.date
+            return u'от %s %s, %d шт' % (self.date,self.brick,self.amount)
         else:
             return u'Новая сортировка'
 
@@ -88,7 +88,7 @@ class Sorted(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'После сортировки %s' % self.brick
+            return u'%s, %d шт' % (self.brick,self.amount)
         else:
             return u'Новый сортированый кирпич'
 
@@ -106,7 +106,7 @@ class Removed(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Списаный %s' % self.brick
+            return u'%s, %d шт' % (self.brick,self.amount)
         else:
             return u'Списание'
 
@@ -122,7 +122,7 @@ class Inventory(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Инвентаризация от %s' % self.date
+            return u'от %s' % self.date
         else:
             return u'Новая инвентаризация'
 
@@ -139,6 +139,6 @@ class Write_off(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Списаный %s' % self.brick
+            return u'%s, %d шт' % (self.brick,self.amount)
         else:
             return u'Списание'

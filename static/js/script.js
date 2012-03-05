@@ -136,4 +136,5 @@ $(function () {
 })
 $(function () {
     $('[rel="tooltip"]').tooltip()
+    $('[rel="popover"]').popover()
 })
