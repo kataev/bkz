@@ -28,7 +28,7 @@ class Bill(models.Model):
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
     seller = models.ForeignKey(Agent, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
-        limit_choices_to={'pk__in': (1, 350)}, help_text=u'',default=350)
+        limit_choices_to={'pk__in': (1, 350)}, help_text=u'', default=350)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
         help_text=u'Основание для выставления товарной накладной')
@@ -44,19 +44,18 @@ class Bill(models.Model):
 
     @property
     def total(self):
-        total =  self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
+        total = self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
         return total + self.bill_transfer_related.aggregate(models.Sum('amount'))['amount__sum']
 
     @property
     def tara(self):
-        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('tara\
-        ')])+sum([x[0] for x in self.bill_transfer_related.values_list('tara')])
-        else: return 0
+        tara = self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
+        return tara + self.bill_transfer_related.aggregate(models.Sum('amount'))['amount__sum']
 
     @property
     def money(self):
-        if self.pk: return sum([x[0] * x[1] for x in self.bill_sold_related.values_list('amount', 'price')])+sum([x[0] * x[1] for x in self.bill_transfer_related.values_list('amount', 'price')])
-        else: return 0
+        money = self.bill_transfer_related.extra(select={'money':'Sum("amount" * "price")'}).values('money')['money']
+        return money + self.bill_sold_related.extra(select={'money':'Sum("amount" * "price")'}).values('money')['money']
 
     def get_absolute_url(self):
         return "/%s/%i/" % (self._meta.module_name, self.id)
@@ -66,8 +65,6 @@ class Bill(models.Model):
             return u'Накладная № %d, %d' % (self.number, self.date.year)
         else:
             return u'Новая накладная'
-
-
 
 
 class Sold(Oper):
@@ -86,7 +83,7 @@ class Sold(Oper):
 
     def __unicode__(self):
         if self.pk:
-            return u'Отгрузка %s, %d шт' % (self.brick,self.amount)
+            return u'Отгрузка %s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новая отгрузка'
 
@@ -107,7 +104,8 @@ class Transfer(Oper):
     Привязанн к накладной, т.к является операцией продажи. """
     brick_from = models.ForeignKey(Brick, related_name="brick_from_%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич откуда", help_text=u'Выберите кирпич')
-    brick_to = models.ForeignKey(Brick, related_name="brick_to_%(app_label)s_%(class)s_related", verbose_name=u"Кирпич куда",
+    brick_to = models.ForeignKey(Brick, related_name="brick_to_%(app_label)s_%(class)s_related",
+        verbose_name=u"Кирпич куда",
         help_text=u'Выберите кирпич')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", blank=True, null=True, help_text=u'0 если доставки нет')

@@ -21,8 +21,9 @@ def bricks(request):
             b.add = add.get(b.pk,0)
             b.t_from = t_from.get(b.pk,0)
             b.t_to = t_to.get(b.pk,0)
-            b.begin = b.total + b.sold + b.t_from - b.t_to - b.add
             b.sold += t_to.get(b.pk,0)
+            b.begin = b.total + b.sold + b.t_from - b.t_to - b.add
+
 
         for f in ['sold','add','t_from','t_to','total','begin']:
             total[f]=sum([getattr(b,f) for b in Bricks])
