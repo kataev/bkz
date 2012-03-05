@@ -106,3 +106,10 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 /* Man */
 .icon-Man { background-position: -408px -96px }
 .icon-Add { background-position: -289px -96px }
+
+.icon-Sorting { background-position: -216px -24px}
+.icon-Sorted { background-position: -240px -24px}
+.icon-Removed { background-position: -120px -24px}
+
+.icon-Inventory { background-position: -144px -96px }
+.icon-Write_off { background-position: -120px -24px }

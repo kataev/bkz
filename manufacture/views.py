@@ -26,10 +26,10 @@ def man(request,id):
 
 def srt(request,id):
     """ Форма накладной """
-    if id: doc = get_object_or_404(Sorted,pk=id)
+    if id: doc = get_object_or_404(Sorting,pk=id)
     else: doc = None
     if request.method == 'POST':
-        form = SortedForm(request.POST,instance=doc,prefix='sorting')
+        form = SortingForm(request.POST,instance=doc,prefix='sorting')
         srted = SortedFactory(request.POST,instance=doc,prefix='sorted')
         removed = RemovedFactory(request.POST,instance=doc,prefix='removed')
         if form.is_valid():
@@ -42,8 +42,29 @@ def srt(request,id):
             return redirect('/sort/%d/' % doc.pk)
     else:
         initial = {}
-        form = SortedForm(instance=doc,initial=initial,prefix='sorting')
+        form = SortingForm(instance=doc,initial=initial,prefix='sorting')
         srted = SortedFactory(instance=doc,prefix='sorted')
         removed = RemovedFactory(instance=doc,prefix='removed')
 
     return render(request, 'doc.html',dict(doc=form,opers=[srted,removed]))
+
+def inventory(request,id):
+    """ Форма накладной """
+    if id: doc = get_object_or_404(Inventory,pk=id)
+    else: doc = None
+    if request.method == 'POST':
+        form = InventoryForm(request.POST,instance=doc,prefix='inventory')
+        write_off = Write_offFactory(request.POST,instance=doc,prefix='write_off')
+
+        if form.is_valid():
+            doc = form.save()
+        if write_off.is_valid():
+            write_off.save()
+        if form.is_valid() and write_off.is_valid():
+            return redirect('/inventory/%d/' % doc.pk)
+    else:
+        initial = {}
+        form = InventoryForm(instance=doc,initial=initial,prefix='inventory')
+        write_off = Write_offFactory(instance=doc,prefix='write_off')
+
+    return render(request, 'doc.html',dict(doc=form,opers=[write_off]))

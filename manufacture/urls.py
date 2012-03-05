@@ -4,4 +4,5 @@ from whs.manufacture.forms import *
 urlpatterns = patterns('whs.manufacture.views',
     url(r'^man/(?P<id>\d*)/?$', 'man', name='man'),
     url(r'^sort/(?P<id>\d*)/?$', 'srt', name='srt'),
+    url(r'^inventory/(?P<id>\d*)/?$', 'inventory', name='inventory'),
     )

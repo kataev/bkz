@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.db import models
 
 from whs.brick.models import Brick
 from whs.agent.models import Agent
-import datetime
+from whs.managers import *
+
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
@@ -38,6 +41,9 @@ class Bill(models.Model):
         verbose_name = u"Накладная"
         verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
+
+    current = CurrendMonthDateDocManager()
+    objects = models.Manager()
 
     def opers(self):
         return list(self.bill_sold_related.all()) + list(self.bill_transfer_related.all())
@@ -80,6 +86,8 @@ class Sold(Oper):
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
+    current = CurrendMonthDateManager()
+    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
@@ -122,6 +130,8 @@ class Transfer(Oper):
     class Meta():
         verbose_name = u"Перевод"
         verbose_name_plural = u"Переводы"
+    current = CurrendMonthDateManager()
+    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:

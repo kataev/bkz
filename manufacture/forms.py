@@ -33,7 +33,6 @@ class SortedForm(forms.ModelForm):
     class Meta:
         name = 'Sorted'
         model = Sorted
-        #        fields = ('brick', 'amount', 'poddon', 'tara', 'info')
         verbose_name = Sorted._meta.verbose_name
         verbose_name_plural = Sorted._meta.verbose_name_plural
 
@@ -41,10 +40,27 @@ class RemovedForm(forms.ModelForm):
     class Meta:
         name = 'Removed'
         model = Removed
-        #        fields = ('brick', 'amount', 'poddon', 'tara', 'info')
         verbose_name = Removed._meta.verbose_name
         verbose_name_plural = Removed._meta.verbose_name_plural
 
 
 SortedFactory = inlineformset_factory(Sorting, Sorted, extra=0, form=SortedForm, )
 RemovedFactory = inlineformset_factory(Sorting, Removed, extra=0, form=RemovedForm, )
+
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        name = 'Inventory'
+        model = Inventory
+        verbose_name = Inventory._meta.verbose_name
+        verbose_name_plural = Inventory._meta.verbose_name_plural
+
+class Write_offForm(forms.ModelForm):
+    class Meta:
+        name = 'Write_off'
+        model = Write_off
+        verbose_name = Write_off._meta.verbose_name
+        verbose_name_plural = Write_off._meta.verbose_name_plural
+
+
+Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Write_offForm, )
