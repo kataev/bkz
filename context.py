@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
-from django.db.models import Sum, Q
+from django.db.models import Sum
 
-from whs.brick.models import Brick
 from whs.bill.models import *
 from whs.manufacture.models import *
 

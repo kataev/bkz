@@ -3,12 +3,12 @@ import datetime
 
 from django.db import models
 
-from whs.brick.models import Brick
+from whs.brick.models import *
 from whs.agent.models import Agent
 from whs.managers import *
 
 
-poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
+
 
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """

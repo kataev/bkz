@@ -4,6 +4,8 @@ __author__ = 'bteam'
 def gdc(l):
     return l[0][0]
 
+poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
+
 BrickOrder = ('-weight','color','-view','ctype','defect','features','refuse','mark','id')
 
 view=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))

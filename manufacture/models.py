@@ -2,10 +2,8 @@
 from django.db import models
 
 import pytils
-import datetime
 
-from whs.bill.models import *
-from whs.brick.models import Brick
+from whs.brick.models import *
 from whs.managers import *
 
 class Man(models.Model):
@@ -31,10 +29,14 @@ class Man(models.Model):
     def total(self):
         return sum([x['amount'] for a in self.manufacture_add_related.values('amount').all()])
 
-class Add(Oper):
+class Add(models.Model):
     """Класс операций для документа"""
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
+    poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
+    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     doc = models.ForeignKey(Man,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
     class Meta():
             verbose_name = u"Партия"
