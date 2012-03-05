@@ -44,9 +44,8 @@ class Bill(models.Model):
 
     @property
     def total(self):
-        if self.pk: return sum([x[0] for x in self.bill_sold_related.values_list('amount\
-        ')])+sum([x[0] for x in self.bill_transfer_related.values_list('amount')])
-        else: return 0
+        total =  self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
+        return total + self.bill_transfer_related.aggregate(models.Sum('amount'))['amount__sum']
 
     @property
     def tara(self):
