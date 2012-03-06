@@ -28,6 +28,7 @@ def add_post_save(instance, *args, **kwargs):
     brick = Brick.objects.get(pk=instance.brick.pk)
     brick.total += instance.amount
     brick.save()
+    print brick.total
 
 
 @receiver(pre_delete, sender=Sorting)

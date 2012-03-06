@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
-#from dojango.conf import settings
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = True
+
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
 DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
 
@@ -45,6 +45,7 @@ DATABASES = {
 DATABASE_ROUTERS = ('routes.WHSRouter',)
 
 DECIMAL_SEPARATOR = ','
+
 APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -128,7 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',

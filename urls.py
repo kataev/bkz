@@ -3,7 +3,10 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 
+
 from whs.brick.forms import BrickForm
+
+
 
 admin.autodiscover()
 
@@ -14,6 +17,7 @@ urlpatterns = patterns('',
 
 #    url(r'^journal$', 'whs.views.journal', name='journal'),
 #    url(r'^history$', 'whs.views.history', name='history'),
+    url(r'^stats$', 'whs.views.stats', name='stats'),
 )
 
 urlpatterns += patterns('',
@@ -23,7 +27,6 @@ urlpatterns += patterns('',
     url(r'^', include('whs.bill.urls')),
     url(r'^', include('whs.manufacture.urls')),
 
-    url(r'^__errorpage__/(?P<code>\d+)$', 'error_pages.views.display_error'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

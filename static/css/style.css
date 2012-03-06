@@ -11,6 +11,13 @@ form legend + .control-group {
     -webkit-margin-top-collapse: separate;
 }
 
+.thumbnail > div {
+    display: block;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 table span.label a {color:white}
 
 /* http://www.artlebedev.ru/tools/technogrette/html/rouble/ */

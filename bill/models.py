@@ -41,6 +41,9 @@ class Bill(models.Model):
         verbose_name = u"Накладная"
         verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
+        permissions = (
+            ("view_bill", u"Может просматривать накладные"),
+            )
 
     current = CurrendMonthDateDocManager()
     objects = models.Manager()

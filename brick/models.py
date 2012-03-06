@@ -32,6 +32,7 @@ class Brick(models.Model):
         ordering = BrickOrder
         verbose_name = u"Кирпич"
         verbose_name_plural = u'Кирпичи'
+        permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
 
 
 class History(models.Model):

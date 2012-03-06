@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 {% load class_name %}
 
-{% block title %}{{ doc.instance|model_verbose_name }} {{ doc.instance }}{% endblock %}
+{% block title %}{{ form.instance|model_verbose_name }} {{ form.instance }}{% endblock %}
 
 {% block brick-select %}
     <div id="brick-select" class="modal hide fade">
@@ -47,19 +47,17 @@
                 <ul class="nav nav-list">
                     {#  Документ  #}
                     <li class="nav-header">
-                        <i class="icon-{{ doc.instance|to_class_name }}"></i> Документ
+                        <i class="icon-{{ form.instance|to_class_name }}"></i> Документ
                     </li>
                     <li class="active">
-                        {% with form=doc %}
-                            <a href="#{{ form.prefix }}" data-toggle="tab">
-                                {% if form.errors %}
-                                    <i class="icon-warning-sign"></i>
-                                {% else %}
-                                    <i class="icon-"></i>
-                                {% endif %}
-                                {{ form.instance|truncatewords:10 }}
-                            </a>
-                        {% endwith %}
+                        <a href="#{{ form.prefix }}" data-toggle="tab">
+                            {% if form.errors %}
+                                <i class="icon-warning-sign"></i>
+                            {% else %}
+                                <i class="icon-"></i>
+                            {% endif %}
+                            {{ form.instance|truncatewords:10 }}
+                        </a>
                     </li>
                     {#  Операции  #}
                     {% for factory in opers %}
@@ -91,11 +89,16 @@
                 <div class="tabbable ">
                     <div class="tab-content">
                         {#  Форма документа  #}
-                        {% with form=doc %}
-                            <div class="tab-pane active" id="{{ form.prefix }}">
-                                {% include 'fieldset.html' %}
-                            </div>
-                        {% endwith %}
+                        <div class="tab-pane active" id="{{ form.prefix }}">
+                            {% for factory in opers %}
+                                {% for e in factory.errors.values %}
+                                    <div class="alert alert-error">
+                                        <strong>{{ e }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% include 'fieldset.html' %}
+                        </div>
                         {#  Формы операций  #}
                         {% for factory in opers %}
                             {% for form in factory %}

@@ -19,6 +19,7 @@ class Agent(models.Model):
     class Meta:
         verbose_name=u'Контрагент'
         verbose_name_plural=u'Контрагенты'
+        permissions = (("view_agent", u"Может просматривать контрагентa"),)
         ordering = ('name', )
 
     def __unicode__(self):

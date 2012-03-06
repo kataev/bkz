@@ -12,8 +12,9 @@ class Man(models.Model):
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
     class Meta():
-            verbose_name = u"Производство"
-            verbose_name_plural = u"Производства"
+        verbose_name = u"Производство"
+        verbose_name_plural = u"Производства"
+        permissions = (("view_man", u"Может просматривать производсво"),)
 
     current = CurrendMonthDateDocManager()
     objects = models.Manager()
@@ -25,9 +26,13 @@ class Man(models.Model):
         else:
             return u'Новая партия с производства'
 
+    def get_absolute_url(self):
+        return "/%s/%i/" % (self._meta.module_name, self.id)
+
     @property
     def total(self):
         return sum([x['amount'] for a in self.manufacture_add_related.values('amount').all()])
+
 
 class Add(models.Model):
     """Класс операций для документа"""
@@ -37,16 +42,18 @@ class Add(models.Model):
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-    doc = models.ForeignKey(Man,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
+    doc = models.ForeignKey(Man, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+
     class Meta():
-            verbose_name = u"Партия"
-            verbose_name_plural = u"Партия"
+        verbose_name = u"Партия"
+        verbose_name_plural = u"Партия"
 
     current = CurrendMonthDateManager()
     objects = models.Manager()
+
     def __unicode__(self):
         if self.pk:
-            return u'%s, %d шт' % (self.brick,self.amount)
+            return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новая партия'
 
@@ -57,9 +64,11 @@ class Sorting(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+
     class Meta():
         verbose_name = u"Сортировка"
         verbose_name_plural = u"Сортировки"
+        permissions = (("view_man", u"Может просматривать сортировку"),)
 
     current = CurrendMonthDateDocManager()
     objects = models.Manager()
@@ -69,7 +78,7 @@ class Sorting(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'от %s %s, %d шт' % (self.date,self.brick,self.amount)
+            return u'от %s %s, %d шт' % (self.date, self.brick, self.amount)
         else:
             return u'Новая сортировка'
 
@@ -79,36 +88,42 @@ class Sorted(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Sorting,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
+    doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+
     class Meta():
         verbose_name = u"Сортированый кирпич"
         verbose_name_plural = u"Кирпич после сортировки"
+
     current = CurrendMonthDateManager()
     objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
-            return u'%s, %d шт' % (self.brick,self.amount)
+            return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новый сортированый кирпич'
+
 
 class Removed(models.Model):
     """ Списание при сортировке """
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Sorting,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
+    doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+
     class Meta():
         verbose_name = u"Списанный кирпич"
         verbose_name_plural = u"Списанные"
+
     current = CurrendMonthDateManager()
     objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
-            return u'%s, %d шт' % (self.brick,self.amount)
+            return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Списание'
+
 
 class Inventory(models.Model):
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
@@ -117,8 +132,13 @@ class Inventory(models.Model):
     class Meta():
         verbose_name = u"Инвентаризация"
         verbose_name_plural = u"Инвентаризации"
+        permissions = (("view_inventory", u"Может просматривать инвентаризацию"),)
+
     current = CurrendMonthDateDocManager()
     objects = models.Manager()
+
+    def get_absolute_url(self):
+        return "/%s/%i/" % (self._meta.module_name, self.id)
 
     def __unicode__(self):
         if self.pk:
@@ -126,19 +146,22 @@ class Inventory(models.Model):
         else:
             return u'Новая инвентаризация'
 
+
 class Write_off(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Inventory,blank=False,related_name="%(app_label)s_%(class)s_related",null=False)
+    doc = models.ForeignKey(Inventory, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+
     class Meta():
         verbose_name = u"Списанние"
         verbose_name_plural = u"Списания"
+
     current = CurrendMonthDateManager()
     objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
-            return u'%s, %d шт' % (self.brick,self.amount)
+            return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Списание'

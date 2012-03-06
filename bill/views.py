@@ -5,51 +5,35 @@ from exceptions import ValueError
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
 from django.http import QueryDict
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
+from error_pages.http import Http403
 
-from whs.bill.forms import BillForm, SoldFactory, TransferFactory, BillFilter
-from whs.bill.models import Bill
+from whs.bill.forms import BillFilter,Bill
+from whs.views import CreateView, UpdateView
 from whs.bill.pdf import pdf_render_to_response
-import whs.bill.signals
-from whs.log import construct_change_message,log_change,log_addition,log_deletion,ContentType,LogEntry
 
 __author__ = 'bteam'
 
-def bill(request,id):
-    """ Форма накладной """
-    if id:
-        doc = get_object_or_404(Bill,pk=id)
-        c = ContentType.objects.get_for_model(doc)
-        log = LogEntry.objects.filter(content_type=c,object_id=id)[:5]
-    else:
-        doc = None
-    if request.method == 'POST':
-        form = BillForm(request.POST,instance=doc,prefix='bill')
-        sold = SoldFactory(request.POST,instance=doc,prefix='sold')
-        transfer = TransferFactory(request.POST,instance=doc,prefix='transfer')
-        if form.is_valid():
-            doc = form.save()
-        if sold.is_valid():
-            sold.save()
-        if transfer.is_valid():
-            transfer.save()
-        if form.is_valid() and sold.is_valid() and transfer.is_valid():
-            if id:
-                message = construct_change_message(form,[sold,transfer])
-                log_change(request,doc,message)
-            else:
-                log_addition(request,doc)
-            return redirect('/bill/%d/' % doc.pk)
-    else:
-        initial = {}
-        if not id:
+class CreateView(CreateView):
+    def get_context_data(self, **kwargs):
+        context = super(CreateView, self).get_context_data(**kwargs)
+
+        if not self.request.user.has_perm('%s.add_%s' % (self.model._meta.app_label,self.model._meta.module_name)):
+            raise Http403
+
+        if self.request.method == 'GET':
             initial = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
             initial['number'] = (initial.get('number') or 0) + 1
-        form = BillForm(instance=doc,prefix='bill',initial=initial)
-        sold = SoldFactory(instance=doc,prefix='sold')
-        transfer = TransferFactory(instance=doc,prefix='transfer')
+            print context['form'].instance
+            context['form'].initial = initial
+        print context['form'].initial
+        return context
 
-    return render(request, 'doc.html',dict(doc=form,opers=[sold,transfer],log=log))
+#@permission_required('bill.view_bill')
+def bill_print(request,id):
+    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
+    return pdf_render_to_response('torg-12.rml',{'doc':doc})
+
 
 def bills(request):
     Bills = Bill.objects.select_related().all()
@@ -84,7 +68,3 @@ def bills(request):
     if get.has_key('page'): del get['page']
     url.update(get)
     return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
-
-def bill_print(request,id):
-    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
-    return pdf_render_to_response('torg-12.rml',{'doc':doc})

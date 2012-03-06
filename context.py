@@ -5,9 +5,12 @@ from whs.bill.models import *
 from whs.manufacture.models import *
 
 def bricks(request):
-    Bricks = Brick.objects.all()
+    if request.user.has_perm('brick.view_brick'):
+        Bricks = Brick.objects.all()
+    else:
+        Bricks = Brick.objects.filter(mark__lte=300,features='',defect='',refuse=u'Ф')
     total = {}
-    if request.path == '/':
+    if request.path == '/' and request.user.has_perm('brick.view_brick'):
         sold = dict(Sold.current.values_list('brick').annotate(Sum('amount')))
         add = dict(Add.current.values_list('brick').annotate(Sum('amount')))
         t_from = dict(Transfer.current.values_list('brick_from').annotate(Sum('amount')))
