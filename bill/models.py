@@ -67,7 +67,7 @@ class Bill(models.Model):
         return money + self.bill_sold_related.extra(select={'money':'Sum("amount" * "price")'}).values('money')['money']
 
     def get_absolute_url(self):
-        return "/%s/%i/" % (self._meta.module_name, self.id)
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
     def __unicode__(self):
         if self.pk:

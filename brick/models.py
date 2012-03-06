@@ -26,7 +26,7 @@ class Brick(models.Model):
         else: return self.label
 
     def get_absolute_url(self):
-        return "/brick/%i/" % self.id
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
     class Meta():
         ordering = BrickOrder

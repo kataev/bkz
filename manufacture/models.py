@@ -27,7 +27,7 @@ class Man(models.Model):
             return u'Новая партия с производства'
 
     def get_absolute_url(self):
-        return "/%s/%i/" % (self._meta.module_name, self.id)
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
     @property
     def total(self):
@@ -74,7 +74,7 @@ class Sorting(models.Model):
     objects = models.Manager()
 
     def get_absolute_url(self):
-        return "/%s/%i/" % (self._meta.module_name, self.id)
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
     def __unicode__(self):
         if self.pk:
@@ -138,7 +138,7 @@ class Inventory(models.Model):
     objects = models.Manager()
 
     def get_absolute_url(self):
-        return "/%s/%i/" % (self._meta.module_name, self.id)
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
     def __unicode__(self):
         if self.pk:

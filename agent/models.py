@@ -33,4 +33,4 @@ class Agent(models.Model):
             return u'Новый контрагент'
 
     def get_absolute_url(self):
-        return '/%s/%d/' % (self._meta.module_name.lower(),self.pk)
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)

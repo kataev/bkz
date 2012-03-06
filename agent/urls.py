@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 from whs.agent.forms import *
 
 urlpatterns = patterns('',
-    url(r'^agent/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='agent'),
-    url(r'^agents$', 'whs.agent.views.agents', name='agents'),
+    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='agent'),
+    url(ur'^Контрагенты$', 'whs.agent.views.agents', name='agents'),
 )
