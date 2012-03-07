@@ -2,14 +2,13 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
+from django.utils.encoding import smart_str
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(u'',
     url(r'^$', 'whs.views.main', name='main'),
 
-#    url(r'^journal$', 'whs.views.journal', name='journal'),
-#    url(r'^history$', 'whs.views.history', name='history'),
     url(ur'^Статистика$', 'whs.views.stats', name='stats'),
 )
 

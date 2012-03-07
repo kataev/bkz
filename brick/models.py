@@ -35,18 +35,18 @@ class Brick(models.Model):
         permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
 
 
-class History(models.Model):
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Кирпич')
-    date = models.DateField()
-
-    begin = models.PositiveIntegerField(u"Начало месяца")
-    add = models.PositiveIntegerField(u"Приход")
-    t_from = models.PositiveIntegerField(u"Перевод из")
-    t_to = models.PositiveIntegerField(u"Перевод в")
-    sold = models.PositiveIntegerField(u"Отгрузка")
-    total = models.PositiveIntegerField(u"Остаток")
-
-    class Meta:
-        verbose_name = u'Архив'
+#class History(models.Model):
+#    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Кирпич')
+#    date = models.DateField()
+#
+#    begin = models.PositiveIntegerField(u"Начало месяца")
+#    add = models.PositiveIntegerField(u"Приход")
+#    t_from = models.PositiveIntegerField(u"Перевод из")
+#    t_to = models.PositiveIntegerField(u"Перевод в")
+#    sold = models.PositiveIntegerField(u"Отгрузка")
+#    total = models.PositiveIntegerField(u"Остаток")
+#
+#    class Meta:
+#        verbose_name = u'Архив'
 
 

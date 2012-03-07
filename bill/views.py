@@ -6,13 +6,48 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
 from django.http import QueryDict
 from django.shortcuts import get_object_or_404, render
-from error_pages.http import Http403
+from error_pages.http import Http403,Http404
+from django.utils.translation import ugettext as _
 
-from whs.bill.forms import BillFilter,Bill
+from whs.bill.forms import BillFilter,Bill,DateForm
 from whs.views import CreateView, UpdateView
 from whs.bill.pdf import pdf_render_to_response
 
 __author__ = 'bteam'
+
+class UpdateView(UpdateView):
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        # Next, try looking up by primary key.
+        pk = self.kwargs.get('pk', None)
+        date = self.kwargs.get('date', None)
+        number = self.kwargs.get('number', None)
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+
+        # Next, try looking up by slug.
+        elif date is not None and number is not None:
+            f = DateForm(dict(date=date))
+            if f.is_valid():
+                date = f.cleaned_data['date']
+            else:
+                raise Http404
+            queryset = queryset.filter(date=date,number=number)
+
+        # If none of those are defined, it's an error.
+        else:
+            raise AttributeError(u"Generic detail view %s must be called with "
+                                 u"either an object pk or a slug."
+            % self.__class__.__name__)
+
+        try:
+            obj = queryset.get()
+        except self.model.DoesNotExist:
+            raise Http404(_(u"No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 class CreateView(CreateView):
     def get_context_data(self, **kwargs):
