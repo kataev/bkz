@@ -6,13 +6,13 @@ class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
 
-    color = models.PositiveIntegerField(u"Цвет", choices=color, default=gdc(color))
-    mark = models.PositiveIntegerField(u"Марка", choices=mark, default=gdc(mark))
-    weight = models.FloatField(u"Ширина", choices=weight, default=gdc(weight))
-    view = models.CharField(u"Вид", max_length=60, choices=view, default=gdc(view))
-    ctype = models.CharField(u"Тип цвета", max_length=6, choices=color_type, default=gdc(color_type),blank=True)
-    defect = models.CharField(u"Брак в %", max_length=60, choices=defect, default=gdc(defect),blank=True)
-    refuse = models.CharField(u"Особенности", max_length=10, choices=refuse, default=gdc(refuse))
+    color = models.PositiveIntegerField(u"Цвет", choices=color, default=color[0][0])
+    mark = models.PositiveIntegerField(u"Марка", choices=mark, default=mark[0][0])
+    weight = models.FloatField(u"Ширина", choices=weight, default=weight[0][0])
+    view = models.CharField(u"Вид", max_length=60, choices=view, default=view[0][0])
+    ctype = models.CharField(u"Тип цвета", max_length=6, choices=color_type, default=color_type[0][0],blank=True)
+    defect = models.CharField(u"Брак в %", max_length=60, choices=defect, default=defect[0][0],blank=True)
+    refuse = models.CharField(u"Особенности", max_length=10, choices=refuse, default=refuse[0][0],blank=True)
     features = models.CharField(u"Редкие особенности", max_length=60, blank=True, help_text=u'Oттенки, тычки и прочее')
     name = models.CharField(u"Имя", max_length=160, default='', help_text=u'Полное название продукции')
 
@@ -27,6 +27,12 @@ class Brick(models.Model):
 
     def get_absolute_url(self):
         return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+
+    def make_label(self):
+        return make_label(self)
+
+    def make_css(self):
+        return make_css(self)
 
     class Meta():
         ordering = BrickOrder

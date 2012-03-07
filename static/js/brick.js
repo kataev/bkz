@@ -8,6 +8,9 @@ $(function () {
         if (!$(this).attr('href')) {
             $(this).parents('.subnav').find('a.active').removeClass('active')
         }
+        if ($(this).attr('rel')) {
+            $(this).parents('.subnav').find('[rel='+$(this).attr('rel')+']').not(this).removeClass('active')
+        }
         var active = $('a.active', '#brick-select-buttons')
         var names = _(active).reduce(function (m, n) {
             return m + ' ' + $(n).html()
@@ -24,14 +27,13 @@ $(function () {
             $('tr', '#Bricks tbody').hide()
             nodes = $(filter, '#Bricks tbody').show()
         }
-
         var tf = $('th', '#Bricks tfoot');
         if (tf) {
-        $(tf[0]).html(nodes.length)
-        $(tf[1]).html(names)
-        _(tf.slice(2)).each(function (node, id) {
-            node.innerHTML = 0
-        })
+            $(tf[0]).html(nodes.length)
+            $(tf[1]).html(names)
+            _(tf.slice(2)).each(function (node, id) {
+                node.innerHTML = 0
+            })
 
             _(nodes).each(function (node, m) {
                 $('td', node).slice(2).each(function (id, td) {
@@ -58,22 +60,22 @@ $(function () {
         var button = $(modal).data('button')
         var input = $(button).data('input')
 
-        $('#' + input).val($('input',this).val())
+        $('#' + input).val($('input', this).val())
 
         $('#' + input + '_span').html($('td.name', this).text().trim())
         $('#' + input + '_span').attr('class', 'input uneditable-input ' + $(this).attr('class'))
-            tr = this
+        tr = this
     })
 
     $(modal).on('show', function () {
         var button = $(modal).data('button')
         var input = $(button).data('input')
-            var val = $('#'+input).val()
-        if (val){
-            $('[value='+val+']',modal).attr('checked','checked')
+        var val = $('#' + input).val()
+        if (val) {
+            $('[value=' + val + ']', modal).attr('checked', 'checked')
         }
         else {
-            $('[value]',modal).removeAttr('checked')
+            $('[value]', modal).removeAttr('checked')
         }
     })
 })

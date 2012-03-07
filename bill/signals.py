@@ -2,7 +2,6 @@
 from django.db.models.signals import *
 from django.dispatch import receiver
 
-from whs.brick.models import *
 from whs.bill.models import *
 
 @receiver(pre_delete, sender=Sold)

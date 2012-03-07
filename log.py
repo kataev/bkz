@@ -2,7 +2,6 @@
 __author__ = 'bteam'
 
 from django.utils.translation import ugettext as _
-from django.utils.text import  get_text_list
 from django.utils.encoding import force_unicode
 from django.contrib.admin.models import  LogEntry, DELETION,ADDITION,CHANGE
 from django.contrib.contenttypes.models import ContentType

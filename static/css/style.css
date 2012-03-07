@@ -46,15 +46,19 @@ fieldset.Bill div.control-group {
     width: 100%;
     text-align: center;
     padding: 2px;
-    text-align: center
+    text-align: center;
+    line-height: 200%;
 }
 .subnav .btn-group {
     white-space: nowrap;
 }
 
-.subnav li {
+.subnav>li {
     display: inline-block;
 
+}
+.subnav a.btn.active i, .subnav a.btn-group.active i {
+    background-position: -288px 0;
 }
 
 .subnav a.btn {

@@ -11,7 +11,6 @@ urlpatterns = patterns('whs.bill.views',
 
     url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/удалить$', DeleteView.as_view(
         model=Bill,
-
     ), name='bill-delete'),
 
     url(ur'^Накладная/$', CreateView.as_view(

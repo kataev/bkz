@@ -4,9 +4,8 @@ import datetime
 from exceptions import ValueError
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Max
-from django.http import QueryDict
+from django.http import QueryDict,Http404
 from django.shortcuts import get_object_or_404, render
-from error_pages.http import Http403,Http404
 from django.utils.translation import ugettext as _
 
 from whs.bill.forms import BillFilter,Bill,DateForm
@@ -58,9 +57,6 @@ class DeleteView(BillSlugMixin,DeleteView):
 class CreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
-
-        if not self.request.user.has_perm('%s.add_%s' % (self.model._meta.app_label,self.model._meta.module_name)):
-            raise Http403
 
         if self.request.method == 'GET':
             initial = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
     <meta charset="utf-8">
+    <meta name="description" content="Склад готовой продукции ООО 'Березниковский кирпичный завод'">
+    <meta name="author" content="Катаев Денис">
+
     <title>BKZ-WHS : {% block title %}Остатки{% endblock %}</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -68,10 +68,9 @@
             </thead>
             <tbody>
             {% for b in Bricks %}
-                <tr class="{{ b.css }}">
+                <tr class="{{ b.css }} {% if b.opers %}zero{% endif %}">
                     <td> {{ b.id }} </td>
-                    <td class="name"><a rel='tooltip' data-original-title="{{ b.name }}"
-                                        href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
+                    <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
                     <td> {{ b.begin }} </td>
                     <td> {{ b.add }} </td>
                     <td> {{ b.t_from }} </td>
@@ -99,13 +98,29 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="span6">
-            <p style='text-align: center' class="">Склад готовой продукции <b>ООО &laquo;Березниковский кирпичный
-                завод&raquo;</b></p>
+        <div class="span4">
+            <blockquote>
+                <ul class="unstyled">
+                    <li><b>ООО &laquo;Березниковский кирпичный завод&raquo;</b></li>
+                    <li>Склад готовой продукции</li>
+                </ul>
+            </blockquote>
         </div>
-        <div class="span6">
-            <p style="text-align: center" class="">Разработчик: <a
-                    href="https://plus.google.com/u/0/101946326841894739802">Катаев Денис</a></p>
+        <div class="span3">
+            <blockquote>
+                <ul class="unstyled">
+                    <li>
+                        <i class="icon-star"></i>
+                        <a title="Разработчик" href="https://plus.google.com/u/0/101946326841894739802/about">Катаев Денис</a>
+                    </li>
+                    <li>
+                        <i class="icon-question-sign"></i>
+                        <a href="/Помошь">Помощь</a></li>
+                </ul>
+            </blockquote>
+        </div>
+        <div class="span5">
+
         </div>
     </div>
 </div>
