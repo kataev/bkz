@@ -10,12 +10,12 @@ from error_pages.http import Http403,Http404
 from django.utils.translation import ugettext as _
 
 from whs.bill.forms import BillFilter,Bill,DateForm
-from whs.views import CreateView, UpdateView
+from whs.views import CreateView, UpdateView, DeleteView
 from whs.bill.pdf import pdf_render_to_response
 
 __author__ = 'bteam'
 
-class UpdateView(UpdateView):
+class BillSlugMixin(object):
     def get_object(self, queryset=None):
         if queryset is None:
             queryset = self.get_queryset()
@@ -49,6 +49,12 @@ class UpdateView(UpdateView):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+class UpdateView(BillSlugMixin,UpdateView):
+    pass
+
+class DeleteView(BillSlugMixin,DeleteView):
+    pass
+
 class CreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
@@ -64,9 +70,15 @@ class CreateView(CreateView):
         print context['form'].initial
         return context
 
+
+
 #@permission_required('bill.view_bill')
-def bill_print(request,id):
-    doc = get_object_or_404(Bill.objects.select_related(),pk=id)
+def bill_print(request,date,number):
+    f = DateForm(dict(date=date))
+    if f.is_valid():
+        doc = get_object_or_404(Bill.objects.select_related(),number=number,date=f.cleaned_data['date'])
+    else:
+        raise Http404
     return pdf_render_to_response('torg-12.rml',{'doc':doc})
 
 

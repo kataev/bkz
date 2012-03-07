@@ -3,7 +3,7 @@ import datetime
 from django.db.models import Max
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.decorators.http import require_http_methods
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from error_pages.http import Http403,Http401
 from bill.models import Bill
@@ -50,6 +50,9 @@ def flat_form(request,Form,id):
 def stats(request):
     return render(request,'stats.html',dict(charts=[1,2,3,4]))
 
+class DeleteView(DeleteView):
+    template_name = 'delete.html'
+    success_url = '/'
 
 class CreateView(CreateView):
     template_name = 'doc.html'

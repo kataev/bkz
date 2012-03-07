@@ -2,12 +2,17 @@
 from django.conf.urls.defaults import *
 
 from whs.bill.forms import TransferFactory, SoldFactory, BillForm, Bill
-from whs.bill.views import UpdateView, CreateView
+from whs.bill.views import UpdateView, CreateView, DeleteView
 
 urlpatterns = patterns('whs.bill.views',
 
     url(r'^bills$', 'bills', name='bills'),
     url(ur'^Накладные$', 'bills', name='bills'),
+
+    url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/удалить$', DeleteView.as_view(
+        model=Bill,
+
+    ), name='bill-delete'),
 
     url(ur'^Накладная/$', CreateView.as_view(
         form_class=BillForm,
@@ -26,7 +31,8 @@ urlpatterns = patterns('whs.bill.views',
         opers=[SoldFactory, TransferFactory]
     ), name='bill-view'),
 
-    url(ur'^Накладная/(?P<id>\d*)/print$', 'bill_print', name='print', ),
+    url(ur'^Накладная/(?P<id>\d*)/печать$', 'bill_print', name='print', ),
+    url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
 
 
 )

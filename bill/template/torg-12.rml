@@ -4,7 +4,7 @@
     <registerFont fontName="Arial" fontFile="bill/fonts/Arial.ttf"/>
     <registerFont fontName="Arial-Bold" fontFile="bill/fonts/Arial_Bold.ttf"/>
 </docinit>
-<template pageSize="(842.0,595.0)" title="Test" author="Martin Simon" allowSplitting="1">
+<template pageSize="(842.0,595.0)" title="Bill" author="Kataev Denis" allowSplitting="1">
     <pageTemplate id="first">
         <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
 
