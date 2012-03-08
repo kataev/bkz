@@ -9,7 +9,7 @@ urlpatterns = patterns('whs.bill.views',
     url(r'^bills$', 'bills', name='bills'),
     url(ur'^Накладные$', 'bills', name='bills'),
 
-    url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/удалить$', DeleteView.as_view(
+    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', DeleteView.as_view(
         model=Bill,
     ), name='bill-delete'),
 
@@ -24,14 +24,14 @@ urlpatterns = patterns('whs.bill.views',
         opers=[SoldFactory, TransferFactory]
     ), name='bill-view'),
 
-    url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/$', UpdateView.as_view(
+    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/$', UpdateView.as_view(
         form_class=BillForm,
         model=Bill,
         opers=[SoldFactory, TransferFactory]
     ), name='bill-view'),
 
     url(ur'^Накладная/(?P<id>\d*)/печать$', 'bill_print', name='print', ),
-    url(ur'^Накладная/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
+    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
 
 
 )

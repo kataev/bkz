@@ -21,19 +21,14 @@ class BillSlugMixin(object):
 
         # Next, try looking up by primary key.
         pk = self.kwargs.get('pk', None)
-        date = self.kwargs.get('date', None)
+        year = self.kwargs.get('year', None)
         number = self.kwargs.get('number', None)
         if pk is not None:
             queryset = queryset.filter(pk=pk)
 
         # Next, try looking up by slug.
-        elif date is not None and number is not None:
-            f = DateForm(dict(date=date))
-            if f.is_valid():
-                date = f.cleaned_data['date']
-            else:
-                raise Http404
-            queryset = queryset.filter(date=date,number=number)
+        elif year is not None and number is not None:
+            queryset = queryset.filter(date__year=year,number=number)
 
         # If none of those are defined, it's an error.
         else:
@@ -69,12 +64,8 @@ class CreateView(CreateView):
 
 
 #@permission_required('bill.view_bill')
-def bill_print(request,date,number):
-    f = DateForm(dict(date=date))
-    if f.is_valid():
-        doc = get_object_or_404(Bill.objects.select_related(),number=number,date=f.cleaned_data['date'])
-    else:
-        raise Http404
+def bill_print(request,year,number):
+    doc = get_object_or_404(Bill.objects.select_related(),number=number,date__year=year)
     return pdf_render_to_response('torg-12.rml',{'doc':doc})
 
 
