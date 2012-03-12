@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import pytils
+import datetime
+
 from django.db import models
 
-import pytils
-
 from whs.brick.models import *
+
 
 class Man(models.Model):
     """Класс документа для учета прихода кирпича с производства"""

@@ -82,8 +82,6 @@ class Sold(Oper):
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
@@ -126,8 +124,6 @@ class Transfer(Oper):
     class Meta():
         verbose_name = u"Перевод"
         verbose_name_plural = u"Переводы"
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:

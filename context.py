@@ -6,8 +6,8 @@ from whs.manufacture.models import *
 
 def bricks(request,date=None):
     Bricks = Brick.objects.all()
-    print date
     total = {}
+
     if request.path == '/' or date:
         if date is None:
             date = datetime.date.today().replace(day=1)
