@@ -4,23 +4,23 @@ from django.db.models import Sum
 from whs.bill.models import *
 from whs.manufacture.models import *
 
-def bricks(request):
-#    if request.user.has_perm('brick.view_brick'):
+def bricks(request,date=None):
     Bricks = Brick.objects.all()
-#    else:
-#        Bricks = Brick.objects.filter(mark__lte=300,features='',defect='',refuse=u'Ф')
+    print date
     total = {}
-    if request.path == '/':
-        sold = dict(Sold.current.values_list('brick').annotate(Sum('amount')))
-        add = dict(Add.current.values_list('brick').annotate(Sum('amount')))
-        t_from = dict(Transfer.current.values_list('brick_from').annotate(Sum('amount')))
-        t_to = dict(Transfer.current.values_list('brick_to').annotate(Sum('amount')))
+    if request.path == '/' or date:
+        if date is None:
+            date = datetime.date.today().replace(day=1)
+        sold = dict(Sold.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
+        add = dict(Add.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
+        t_from = dict(Transfer.objects.filter(doc__date__gte=date).values_list('brick_from').annotate(Sum('amount')))
+        t_to = dict(Transfer.objects.filter(doc__date__gte=date).values_list('brick_to').annotate(Sum('amount')))
 
-        m_from = dict(Sorting.current.values_list('brick').annotate(Sum('amount')))
-        m_to = dict(Sorted.current.values_list('brick').annotate(Sum('amount')))
-        m_rmv = dict(Removed.current.values_list('brick').annotate(Sum('amount')))
+        m_from = dict(Sorting.objects.filter(date__gte=date).values_list('brick').annotate(Sum('amount')))
+        m_to = dict(Sorted.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
+        m_rmv = dict(Removed.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
 
-        inv = dict(Write_off.current.values_list('brick').annotate(Sum('amount')))
+        inv = dict(Write_off.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
 
         for b in Bricks:
             b.sold = sold.get(b.pk, 0)

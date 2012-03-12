@@ -5,10 +5,6 @@ from django.db import models
 
 from whs.brick.models import *
 from whs.agent.models import Agent
-from whs.managers import *
-
-
-
 
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """
@@ -44,9 +40,6 @@ class Bill(models.Model):
         permissions = (
             ("view_bill", u"Может просматривать накладные"),
             )
-
-    current = CurrendMonthDateDocManager()
-    objects = models.Manager()
 
     def opers(self):
         return list(self.bill_sold_related.all()) + list(self.bill_transfer_related.all())

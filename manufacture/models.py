@@ -4,7 +4,6 @@ from django.db import models
 import pytils
 
 from whs.brick.models import *
-from whs.managers import *
 
 class Man(models.Model):
     """Класс документа для учета прихода кирпича с производства"""
@@ -15,9 +14,6 @@ class Man(models.Model):
         verbose_name = u"Производство"
         verbose_name_plural = u"Производства"
         permissions = (("view_man", u"Может просматривать производсво"),)
-
-    current = CurrendMonthDateDocManager()
-    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
@@ -48,9 +44,6 @@ class Add(models.Model):
         verbose_name = u"Партия"
         verbose_name_plural = u"Партия"
 
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
-
     def __unicode__(self):
         if self.pk:
             return u'%s, %d шт' % (self.brick, self.amount)
@@ -69,9 +62,6 @@ class Sorting(models.Model):
         verbose_name = u"Сортировка"
         verbose_name_plural = u"Сортировки"
         permissions = (("view_man", u"Может просматривать сортировку"),)
-
-    current = CurrendMonthDateDocManager()
-    objects = models.Manager()
 
     def get_absolute_url(self):
         return u"/%s/%i/" % (self._meta.verbose_name,self.id)
@@ -94,9 +84,6 @@ class Sorted(models.Model):
         verbose_name = u"Сортированый кирпич"
         verbose_name_plural = u"Кирпич после сортировки"
 
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
-
     def __unicode__(self):
         if self.pk:
             return u'%s, %d шт' % (self.brick, self.amount)
@@ -115,9 +102,6 @@ class Removed(models.Model):
         verbose_name = u"Списанный кирпич"
         verbose_name_plural = u"Списанные"
 
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
-
     def __unicode__(self):
         if self.pk:
             return u'%s, %d шт' % (self.brick, self.amount)
@@ -133,9 +117,6 @@ class Inventory(models.Model):
         verbose_name = u"Инвентаризация"
         verbose_name_plural = u"Инвентаризации"
         permissions = (("view_inventory", u"Может просматривать инвентаризацию"),)
-
-    current = CurrendMonthDateDocManager()
-    objects = models.Manager()
 
     def get_absolute_url(self):
         return u"/%s/%i/" % (self._meta.verbose_name,self.id)
@@ -156,9 +137,6 @@ class Write_off(models.Model):
     class Meta():
         verbose_name = u"Списанние"
         verbose_name_plural = u"Списания"
-
-    current = CurrendMonthDateManager()
-    objects = models.Manager()
 
     def __unicode__(self):
         if self.pk:
