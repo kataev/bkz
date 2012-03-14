@@ -2,6 +2,8 @@
 from django.db import models
 from constants import *
 
+from whs.buh.models import Nomenclature
+
 class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
@@ -20,6 +22,8 @@ class Brick(models.Model):
     label = models.CharField(u"Ярлык", max_length=660, default='')
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
+
+    nomenclature = models.ForeignKey(Nomenclature, null=True, blank=True, verbose_name=u'Номенклатура')
 
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
@@ -55,4 +59,6 @@ class Brick(models.Model):
 #    class Meta:
 #        verbose_name = u'Архив'
 
-
+class OldBrick(Brick):
+    old = models.IntegerField('Старое ID')
+    prim = models.CharField(u"Имя", max_length=260, default='', help_text=u'Старое "имя"')

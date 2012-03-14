@@ -72,7 +72,7 @@ $(function () {
 
         var menu = $('<li><a href="#__prefix__" data-toggle="tab"><i class="icon-"></i><span></span></a></li>'
             .replace(/__prefix__/g, total.attr('value')))
-            $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
+        $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
         $('span', menu).text($(this).attr('title'))
 
         var del = $('<i title="Удалить" class="icon-trash"></i>')
@@ -130,11 +130,34 @@ $(function () {
     };
 
     $('span.money').each(function (id, n) {
-        var text = accounting.formatMoney($(n).text().replace(',','.'), options)
+        var text = accounting.formatMoney($(n).text().replace(',', '.'), options)
         $(n).html(text)
     })
 })
 $(function () {
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
+})
+$(function () {
+    var color_select = function(select,val){
+        $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
+        if (val == 0) {$(select).addClass('bc-red')}
+        if (val == 1) {$(select).addClass('bc-yellow')}
+        if (val == 2) {$(select).addClass('bc-brown')}
+        if (val == 3) {$(select).addClass('bc-light')}
+        if (val == 4) {$(select).addClass('bc-white')}
+    }
+        var select = $('#id_color')
+    var val = parseInt($(select).val())
+    color_select(select,val)
+    if (!val)
+        $('div.ctype').hide()
+    $(select).change(function () {
+        var val = parseInt($(this).val())
+        if (val)
+            $('div.ctype').show()
+        else
+            $('div.ctype').hide()
+        color_select(this,val)
+    })
 })

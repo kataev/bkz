@@ -2,10 +2,7 @@
 import pytils
 import datetime
 
-from django.db import models
-
 from whs.brick.models import *
-
 
 class Man(models.Model):
     """Класс документа для учета прихода кирпича с производства"""

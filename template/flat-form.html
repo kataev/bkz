@@ -1,6 +1,13 @@
 {% extends 'index.html' %}
+{% load class_name %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block container %}
+    {% if success %}
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <strong>Сохранено!</strong> Вы успешно сохранили документ.
+        </div>
+    {% endif %}
     <form method="POST" action="./" class='form-horizontal'>
     {% csrf_token %}
         {% include 'fieldset.html' %}
@@ -8,6 +15,9 @@
             <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
             </button>
             <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+            {% if form.instance|to_class_name == 'Brick' %}
+            <a href="/Кирпич/{{ form.instance.pk|add:1 }}/" class="btn"><i class="icon-chevron-right"></i> Следующий {{ form.instance|model_verbose_name }}</a>
+            {% endif %}
         </div>
     </form>
 {% endblock %}

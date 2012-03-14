@@ -14,7 +14,7 @@ def flat_form(request,Form,id):
             instance.label = make_label(instance)
             instance.css = make_css(instance)
             instance.save()
-            return redirect(instance.get_absolute_url())
+            return redirect(instance.get_absolute_url()+'?success=True')
     else:
         form = Form(instance=instance)
-    return render(request, 'flat-form.html',dict(form=form))
+    return render(request, 'flat-form.html',dict(form=form,success=request.GET.get('success',False)))

@@ -32,14 +32,14 @@ DATABASES = {
 #        'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
 #        'PORT': '5433', # Set to empty string for default. Not used with sqlite3.
 #    },
-#    'old': {
-#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': 'disp', # Or path to database file if using sqlite3.
-#        'USER': 'disp', # Not used with sqlite3.
-#        'PASSWORD': 'disp', # Not used with sqlite3.
-#        'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '', # Set to empty string for default. Not used with sqlite3.
-#    }
+    'old': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'disp', # Or path to database file if using sqlite3.
+        'USER': 'disp', # Not used with sqlite3.
+        'PASSWORD': 'disp', # Not used with sqlite3.
+        'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '', # Set to empty string for default. Not used with sqlite3.
+    }
 }
 
 DATABASE_ROUTERS = ('routes.WHSRouter',)
@@ -181,6 +181,7 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.agent',
     'whs.bill',
+    'whs.buh',
     'whs.manufacture',
     )
 

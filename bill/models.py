@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from django.db import models
-
 from whs.brick.models import *
 from whs.agent.models import Agent
 

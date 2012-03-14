@@ -10,6 +10,7 @@ form legend + .control-group {
     margin-top: 18px;
     -webkit-margin-top-collapse: separate;
 }
+div.ctype div.controls, div.defect div.controls {padding-left: 20px;}
 
 .thumbnail > div {
     display: block;
