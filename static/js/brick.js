@@ -29,15 +29,15 @@ $(function () {
         }
         var tf = $('th', '#Bricks tfoot');
         if (tf) {
-            $(tf[0]).html(nodes.length)
-            $(tf[1]).html(names)
-            _(tf.slice(2)).each(function (node, id) {
+//            $(tf[0]).html(nodes.length)
+            $(tf[0]).html(names)
+            _(tf.slice(1)).each(function (node, id) {
                 node.innerHTML = 0
             })
 
             _(nodes).each(function (node, m) {
-                $('td', node).slice(2).each(function (id, td) {
-                    $(tf[id + 2]).html(parseInt(tf[id + 2].innerHTML) + parseInt(td.innerHTML))
+                $('td', node).slice(1).each(function (id, td) {
+                    $(tf[id + 1]).html(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
                 })
             })
         }

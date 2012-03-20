@@ -1,7 +1,12 @@
 body { background-image: url('/static/img/whitediamond.png') }
-
+.icon-logo {
+    background: url('/static/img/log.png') no-repeat;
+    vertical-align: 0px;
+    background-position: 4px 0px;
+}
 span.uneditable-input,a.btn {vertical-align: bottom;}
 #Bricks a {color:#333}
+li.mark a { padding: 5px; }
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}
 table i.icon-zoom-in {cursor: pointer;float: right;}

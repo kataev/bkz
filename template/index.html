@@ -5,7 +5,7 @@
     <meta name="description" content="Склад готовой продукции ООО 'Березниковский кирпичный завод'">
     <meta name="author" content="Катаев Денис">
 
-    <title>BKZ-WHS : {% block title %}Остатки{% endblock %}</title>
+    <title>BKZ:WHS : {% block title %}Остатки{% endblock %}</title>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -51,12 +51,11 @@
         {% include 'brick-select-buttons.html' %}
         <table id='Bricks' class="table table-bordered table-condensed">
             <colgroup>
-                <col span=2>
-                <col span="6" style='width:70px; color:green; '>
+                <col span=1>
+                <col span="6" style='width:70px;'>
             </colgroup>
             <thead>
             <tr>
-                <th width=15px>#</th>
                 <th>Имя</th>
                 <th>Начало</th>
                 <th>Приход</th>
@@ -69,7 +68,6 @@
             <tbody>
             {% for b in Bricks %}
                 <tr class="{{ b.css }} {% if b.opers %}zero{% endif %}">
-                    <td> {{ b.id }} </td>
                     <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
                     <td> {{ b.begin }} </td>
                     <td> {{ b.add }} </td>
@@ -82,7 +80,6 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>{{ Bricks|length }}</th>
                 <th></th>
                 <th>{{ totals.begin }}</th>
                 <th>{{ totals.add }}</th>

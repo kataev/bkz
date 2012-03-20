@@ -3,47 +3,56 @@
 {% block title %}Контрагенты{% endblock %}
 
 {% block container %}
-        {% for a in Agents.object_list %}
-            {% ifchanged a.name|capfirst|first %}
-        </tbody>
-    </table>
-        <table id='Agents' class="table table-bordered table-condensed">
-                <caption><h3>{{ a.name|capfirst|first }}</h3></caption>
+    {% for a in Agents.object_list %}
+        {% ifchanged a.name|capfirst|first %}
+            </tbody>
+            </table>
+            <table id='Agents' class="table table-bordered table-condensed">
+            <caption><h3>{{ a.name|capfirst|first }}</h3></caption>
             <thead>
             <tr>
                 <th width=15px>#</th>
-                <th>Имя</th>
+                <th width=250px>Имя</th>
                 <th>Адрес</th>
                 <th>Телефон</th>
                 <th>Банк</th>
-                <th>Счет</th>
+                <th>Счет
+                Р\С
+                К\С
+                </th>
                 <th>Инн</th>
 
             </tr>
             </thead>
             <tbody>
-            {% endifchanged %}
-            <tr class="">
-                <td>{{ a.pk }}</td>
-                <td><a href="{{ a.get_absolute_url }}">{{ a }}
-                    {% if a.form %}
-                    <span class='label'>{{ a.form }}</span>
-                    {% endif %}
-                {% if a.type  %}
-                    {{ a.type }}
+        {% endifchanged %}
+        <tr class="">
+            <td>{{ a.pk }}</td>
+            <td><a href="{{ a.get_absolute_url }}">{{ a }}</a>
+                {% if a.type %}
+                    <span class='label'>{{ a.get_type_display }}</span>
+                {% else %}
+                    <span class='label label-success'>{{ a.get_type_display }}</span>
                 {% endif %}
-                </a></td>
-                <td>{{ a.address }}</td>
-                <td>{{ a.phone }}</td>
-                <td>{{ a.bank }}</td>
-                <td>{{ a.account }}</td>
-                <td>{{ a.inn }}</td>
+            </td>
+            <td>{{ a.address }}</td>
+            <td>{{ a.phone }}</td>
+            <td>
+                {% if a.bank %}
+                {{ a.bank }} <span class="label">{{ a.bic }}</span>
+                {% endif %}
+            </td>
+            <td>
+                <p>{{ a.rs }}</p>
+                <p>{{ a.ks }}</p>
+            </td>
+            <td>{{ a.inn }}</td>
 
-            </tr>
-        {% endfor %}
+        </tr>
+    {% endfor %}
 
-        </tbody>
-    </table>
+</tbody>
+</table>
 
     <div class="pagination pagination-centered">
 

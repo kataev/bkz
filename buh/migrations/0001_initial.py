@@ -8,37 +8,29 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'Agent'
-        db.create_table('agent_agent', (
+        # Adding model 'Nomenclature'
+        db.create_table('buh_nomenclature', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=400)),
-            ('fullname', self.gf('django.db.models.fields.CharField')(max_length=400)),
-            ('type', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('address', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('inn', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('kpp', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('bank', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('ks', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('bic', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
-            ('rs', self.gf('django.db.models.fields.CharField')(max_length=200, blank=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200)),
+            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=11)),
         ))
-        db.send_create_signal('agent', ['Agent'])
+        db.send_create_signal('buh', ['Nomenclature'])
 
-        # Adding model 'Seller'
-        db.create_table('agent_seller', (
+        # Adding model 'Agent'
+        db.create_table('buh_agent', (
             ('agent_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['agent.Agent'], unique=True, primary_key=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=11)),
         ))
-        db.send_create_signal('agent', ['Seller'])
+        db.send_create_signal('buh', ['Agent'])
 
 
     def backwards(self, orm):
         
-        # Deleting model 'Agent'
-        db.delete_table('agent_agent')
+        # Deleting model 'Nomenclature'
+        db.delete_table('buh_nomenclature')
 
-        # Deleting model 'Seller'
-        db.delete_table('agent_seller')
+        # Deleting model 'Agent'
+        db.delete_table('buh_agent')
 
 
     models = {
@@ -57,10 +49,17 @@ class Migration(SchemaMigration):
             'rs': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'type': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
-        'agent.seller': {
-            'Meta': {'ordering': "('name',)", 'object_name': 'Seller', '_ormbases': ['agent.Agent']},
-            'agent_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['agent.Agent']", 'unique': 'True', 'primary_key': 'True'})
+        'buh.agent': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'Agent', '_ormbases': ['agent.Agent']},
+            'agent_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['agent.Agent']", 'unique': 'True', 'primary_key': 'True'}),
+            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '11'})
+        },
+        'buh.nomenclature': {
+            'Meta': {'object_name': 'Nomenclature'},
+            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '11'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200'})
         }
     }
 
-    complete_apps = ['agent']
+    complete_apps = ['buh']

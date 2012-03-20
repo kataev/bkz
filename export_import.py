@@ -2,6 +2,7 @@
 __author__ = 'bteam'
 from old.models import *
 from brick.models import *
+from buh.models import BuxAgent
 
 def nomenclature():
     f = file('bricks.txt','r').readlines()
@@ -12,7 +13,7 @@ def nomenclature():
         n.save()
 
 
-def main():
+def brick():
     for t in Tovar.objects.all():
         b = OldBrick()
         b.old = t.id
@@ -63,5 +64,25 @@ def main():
         b.full_clean()
         b.save()
 
+def agents():
+    f = file('agents.txt','r').readlines()
+    for l in f:
+        a = BuxAgent()
+        fields = l.split('\t')
+        a.code = fields[0]
+        a.fullname = fields[1]
+        a.address = fields[2]
+        a.type = fields[3]
+        a.name = fields[4]
+        a.inn = fields[6]
+        a.kpp = fields[7]
+        a.bank = fields[9]
+        a.rs = fields[10]
+        a.ks = fields[11]
+        a.bic = fields[12]
+        a.full_clean()
+        a.save()
+
 if __name__ == '__main__':
-    main()
+#    brick()
+    agents()

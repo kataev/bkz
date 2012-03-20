@@ -171,16 +171,20 @@
     <drawRightString x="4.8cm" y="2cm">Основание</drawRightString>
     <setFont name="Arial" size="6"/>
     <drawCentredString x="14.75cm" y="1.8cm">наименование документа (договор, контракт, заказ-наряд)</drawCentredString>
-    <drawCentredString x="12cm" y="5.8cm">организация, адрес, телефон, банковские</drawCentredString>
+    <drawCentredString x="12cm" y="5.8cm">организация, адрес, телефон, банковские данные</drawCentredString>
     <setFont name="Arial" size="8"/>
-    <drawString x="5cm" y="6.4cm">{{ doc.seller.form }} "{{ doc.seller }}" {{ doc.seller.address }}, {{ doc.seller.phone }}</drawString>
-    <drawString x="5cm" y="6.1cm">р\с {{ doc.seller.account }}, к\с {{ doc.seller.account_ks }}, {{ doc.seller.bank }}</drawString>
+    <drawString x="5cm" y="6.4cm">
+        {{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }}
+    </drawString>
+    <drawString x="5cm" y="6.1cm"></drawString>
     <setFont name="Arial" size="8"/>
     <drawString x="5cm" y="5.5cm">С\П</drawString>
-    <drawString x="5cm" y="4.5cm">{{ doc.agent }} {{ doc.agent.address }}, {{ doc.agent.phone }}</drawString>
-    <drawString x="5cm" y="3.2cm">р\с {{ doc.seller.account }}, к\с {{ doc.seller.account_ks }}, {{ doc.seller.bank }}</drawString>
+    <drawString x="5cm" y="4.5cm">
+        {{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }}
+    </drawString>
+{#    <drawString x="5cm" y="3.2cm"></drawString>#}
     <drawString x="5cm" y="2.1cm">{{ doc.reason }}</drawString>
-    <drawString x="5cm" y="3.6cm">{{ doc.seller.form }} "{{ doc.seller }}" {{ doc.seller.address }}, {{ doc.seller.phone }}</drawString>
+    <drawString x="5cm" y="3.6cm"></drawString>
 </illustration>
 
 <illustration height="23mm">
@@ -270,9 +274,9 @@
                       <td><para style="terp_default_Right_8"></para></td>
                       <td><para style="terp_default_Right_8">
                           {% if s.brick %}
-                              {{ s.brick.name }}
+                              {{ s.brick.nomenclature.title }}
                           {% else %}
-                              {{ s.brick_to.name }}
+                              {{ s.brick_to.nomenclature.title }}
                           {% endif %}
                       </para></td>
                       <td><para style="terp_default_Center_8">-</para></td>

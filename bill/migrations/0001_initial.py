@@ -11,12 +11,11 @@ class Migration(SchemaMigration):
         # Adding model 'Bill'
         db.create_table('bill_bill', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateField')(default=datetime.date(2012, 3, 1))),
-            ('info', self.gf('django.db.models.fields.CharField')(max_length=300, blank=True)),
-            ('draft', self.gf('django.db.models.fields.BooleanField')(default=True)),
             ('number', self.gf('django.db.models.fields.PositiveIntegerField')()),
+            ('date', self.gf('django.db.models.fields.DateField')(default=datetime.date(2012, 3, 20))),
             ('agent', self.gf('django.db.models.fields.related.ForeignKey')(related_name='bill_bill_related', to=orm['agent.Agent'])),
-            ('seller', self.gf('django.db.models.fields.related.ForeignKey')(related_name='proxy_bill_bill_related', to=orm['agent.Agent'])),
+            ('seller', self.gf('django.db.models.fields.related.ForeignKey')(default=350, related_name='proxy_bill_bill_related', to=orm['agent.Agent'])),
+            ('info', self.gf('django.db.models.fields.CharField')(max_length=300, blank=True)),
             ('reason', self.gf('django.db.models.fields.CharField')(max_length=300, blank=True)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=300, blank=True)),
         ))
@@ -30,7 +29,7 @@ class Migration(SchemaMigration):
             ('poddon', self.gf('django.db.models.fields.PositiveIntegerField')(default=352)),
             ('info', self.gf('django.db.models.fields.CharField')(max_length=300, blank=True)),
             ('brick', self.gf('django.db.models.fields.related.ForeignKey')(related_name='bill_sold_related', to=orm['brick.Brick'])),
-            ('doc', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='bill_sold_related', null=True, to=orm['bill.Bill'])),
+            ('doc', self.gf('django.db.models.fields.related.ForeignKey')(related_name='bill_sold_related', to=orm['bill.Bill'])),
             ('price', self.gf('django.db.models.fields.FloatField')()),
             ('delivery', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
         ))
@@ -47,7 +46,7 @@ class Migration(SchemaMigration):
             ('brick_to', self.gf('django.db.models.fields.related.ForeignKey')(related_name='brick_to_bill_transfer_related', to=orm['brick.Brick'])),
             ('price', self.gf('django.db.models.fields.FloatField')()),
             ('delivery', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('doc', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='bill_transfer_related', null=True, to=orm['bill.Bill'])),
+            ('doc', self.gf('django.db.models.fields.related.ForeignKey')(related_name='bill_transfer_related', to=orm['bill.Bill'])),
         ))
         db.send_create_signal('bill', ['Transfer'])
 
@@ -67,26 +66,28 @@ class Migration(SchemaMigration):
     models = {
         'agent.agent': {
             'Meta': {'ordering': "('name',)", 'object_name': 'Agent'},
-            'account': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'address': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'bank': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'form': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'bic': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'fullname': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inn': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'kpp': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'ks': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
+            'rs': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'type': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
         'bill.bill': {
             'Meta': {'ordering': "['-date', '-number']", 'object_name': 'Bill'},
             'agent': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'bill_bill_related'", 'to': "orm['agent.Agent']"}),
-            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.date(2012, 3, 1)'}),
-            'draft': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.date(2012, 3, 20)'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'}),
             'number': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'reason': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'}),
-            'seller': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'proxy_bill_bill_related'", 'to': "orm['agent.Agent']"}),
+            'seller': ('django.db.models.fields.related.ForeignKey', [], {'default': '350', 'related_name': "'proxy_bill_bill_related'", 'to': "orm['agent.Agent']"}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'})
         },
         'bill.sold': {
@@ -94,7 +95,7 @@ class Migration(SchemaMigration):
             'amount': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'brick': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'bill_sold_related'", 'to': "orm['brick.Brick']"}),
             'delivery': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'doc': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'bill_sold_related'", 'null': 'True', 'to': "orm['bill.Bill']"}),
+            'doc': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'bill_sold_related'", 'to': "orm['bill.Bill']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'}),
             'poddon': ('django.db.models.fields.PositiveIntegerField', [], {'default': '352'}),
@@ -107,7 +108,7 @@ class Migration(SchemaMigration):
             'brick_from': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'brick_from_bill_transfer_related'", 'to': "orm['brick.Brick']"}),
             'brick_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'brick_to_bill_transfer_related'", 'to': "orm['brick.Brick']"}),
             'delivery': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'doc': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'bill_transfer_related'", 'null': 'True', 'to': "orm['bill.Bill']"}),
+            'doc': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'bill_transfer_related'", 'to': "orm['bill.Bill']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'}),
             'poddon': ('django.db.models.fields.PositiveIntegerField', [], {'default': '352'}),
@@ -125,10 +126,17 @@ class Migration(SchemaMigration):
             'label': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '660'}),
             'mark': ('django.db.models.fields.PositiveIntegerField', [], {'default': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '160'}),
-            'refuse': ('django.db.models.fields.CharField', [], {'default': "u''", 'max_length': '10'}),
+            'nomenclature': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['buh.Nomenclature']", 'null': 'True', 'blank': 'True'}),
+            'refuse': ('django.db.models.fields.CharField', [], {'default': "u''", 'max_length': '10', 'blank': 'True'}),
             'total': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'view': ('django.db.models.fields.CharField', [], {'default': "u'\\u041b'", 'max_length': '60'}),
             'weight': ('django.db.models.fields.FloatField', [], {'default': '1.4'})
+        },
+        'buh.nomenclature': {
+            'Meta': {'object_name': 'Nomenclature'},
+            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '11'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200'})
         }
     }
 

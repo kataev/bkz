@@ -2,7 +2,7 @@
 import datetime
 
 from whs.brick.models import *
-from whs.agent.models import Agent
+from whs.agent.models import Agent,Seller
 
 class Oper(models.Model):
     """ Абстрактный класс для всех операций """
@@ -24,7 +24,7 @@ class Bill(models.Model):
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
-    seller = models.ForeignKey(Agent, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
+    seller = models.ForeignKey(Seller, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
         limit_choices_to={'pk__in': (1, 350)}, help_text=u'', default=350)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,

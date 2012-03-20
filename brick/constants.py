@@ -3,7 +3,7 @@ __author__ = 'bteam'
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
-BrickOrder = ('-weight','color','-view','ctype','defect','features','refuse','mark','id')
+BrickOrder = ('-weight','color','-view','ctype','defect','features','mark','refuse','id')
 
 view=((u'Л',u'Лицевой'),(u'Р',u'Рядовой'))
 

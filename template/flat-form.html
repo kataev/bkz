@@ -2,6 +2,11 @@
 {% load class_name %}
 {% block title %}{{ form.instance }}{% endblock %}
 {% block container %}
+    {% if form.Meta.message %}
+        <div class="alert alert-warning">
+            <strong>Внимание!</strong> {{ form.Meta.message }}
+        </div>
+    {% endif %}
     {% if success %}
         <div class="alert alert-success">
             <a class="close" data-dismiss="alert">×</a>
