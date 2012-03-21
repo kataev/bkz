@@ -39,10 +39,9 @@ class SoldForm(forms.ModelForm):
         verbose_name = Sold._meta.verbose_name
         verbose_name_plural = Sold._meta.verbose_name_plural
         model = Sold #autocomplete="off"
-        fields = ('brick', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
+        fields = ('brick', 'amount', 'info', 'price', 'delivery')
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-                   'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
                    'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
                    'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
                    'info': forms.Textarea(attrs={'rows': 2}),
@@ -55,24 +54,34 @@ class TransferForm(forms.ModelForm):
         model = Transfer
         verbose_name = Transfer._meta.verbose_name
         verbose_name_plural = Transfer._meta.verbose_name_plural
-        fields = ('brick_from', 'brick_to', 'amount', 'poddon', 'tara', 'info', 'price', 'delivery')
+        fields = ('brick_from', 'brick_to', 'amount', 'info', 'price', 'delivery')
         widgets = {
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-            'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 0}),
             'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
             'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
             'info': forms.Textarea(attrs={'rows': 2}),
         }
 
+class PalletForm(forms.ModelForm):
+    class Meta:
+        name = 'Pallet'
+        model = Pallet
+        verbose_name = Pallet._meta.verbose_name
+        verbose_name_plural = Pallet._meta.verbose_name_plural
+        widgets = {
+            'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
+            'info': forms.Textarea(attrs={'rows': 2}),
+            }
+
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
+PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
 
 
 class BillFilter(forms.Form):
-    date__lte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Конец периода'}))
-    date__gte = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': u'Начало периода'}))
+    year_month = forms.TextInput(required=False)
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
 
@@ -80,3 +89,6 @@ class BillFilter(forms.Form):
         """ Изменение пустой ичейки для подсказки. """
         super(BillFilter, self).__init__(*args, **kwargs)
         self.fields['agent'].empty_label = u'Выберите контрагента'
+
+    class Meta:
+        dates = Bill.objects.dates('date','month')

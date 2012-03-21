@@ -52,15 +52,11 @@
                 <fieldset>
                     <legend><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр для поиска накладных
                     </legend>
-                    <div style="margin-top: 8px;" class="control-group success">
-                        {#                <label class="control-label" for="focusedInput">Focused input</label>#}
+                    <div style="margin-top: 8px;" class="control-group">
                         <div class="controls">
-                            <input type="date" autocomplete="off" class="span2" placeholder="Начало периода"
-                                   name="date__gte"
-                                   id="id_date__gte" value='{{ Filter.date__gte.value.isoformat }}'>
-                            <input type="date" autocomplete="off" class="span2" placeholder="Конец периода"
-                                   name="date__lte"
-                                   id="id_date__lte" value='{{ Filter.date__lte.value.isoformat }}'>
+                            {% with dates=Filter.Meta.dates f=Filter.year_month %}
+                                {% include 'year_month_select.html' %}
+                            {% endwith %}
                         </div>
                     </div>
                     <div class="control-group">

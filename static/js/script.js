@@ -57,7 +57,7 @@ $(function () {
         }
     };
     $.datepicker.setDefaults($.datepicker.regional['ru']);
-    var dates = $('[type=date],[name*="-date"]').datepicker();
+    var dates = $('[type=date],[name*="date"]').datepicker();
 })
 
 $(function () {
@@ -159,5 +159,15 @@ $(function () {
         else
             $('div.ctype').hide()
         color_select(this,val)
+    })
+})
+
+$(function(){
+    $('[name=agent]').change(function(e){
+        var val = $(this).val()
+        if (val) {
+            var a = $(this).parents('div').find('a')
+            var href = $(a).attr('href',"/Контрагент/val/".replace('val',val))
+        }
     })
 })

@@ -4,16 +4,6 @@ import datetime
 from whs.brick.models import *
 from whs.agent.models import Agent,Seller
 
-class Oper(models.Model):
-    """ Абстрактный класс для всех операций """
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
-    poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
-    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-
-    class Meta:
-        abstract = True
-
 bill_type_c = (('pickup', 'Самовывоз'), (''))
 
 ## Накладная
@@ -24,8 +14,7 @@ class Bill(models.Model):
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
-    seller = models.ForeignKey(Seller, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
-        limit_choices_to={'pk__in': (1, 350)}, help_text=u'', default=350)
+    seller = models.ForeignKey(Seller, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related", help_text=u'', default=350)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
         help_text=u'Основание для выставления товарной накладной')
@@ -43,14 +32,13 @@ class Bill(models.Model):
         return list(self.bill_sold_related.all()) + list(self.bill_transfer_related.all())
 
     @property
+    def tara_return(self):
+        return self.date #+ datetime.timedelta(day=30)
+
+    @property
     def total(self):
         total = self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
         return total + self.bill_transfer_related.aggregate(models.Sum('amount'))['amount__sum']
-
-    @property
-    def tara(self):
-        tara = self.bill_sold_related.aggregate(models.Sum('amount'))['amount__sum']
-        return tara + self.bill_transfer_related.aggregate(models.Sum('amount'))['amount__sum']
 
     @property
     def money(self):
@@ -67,11 +55,13 @@ class Bill(models.Model):
             return u'Новая накладная'
 
 
-class Sold(Oper):
+class Sold(models.Model):
     """ Класс для операций отгруки, является аналогом строки в накладной.
 Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     doc = models.ForeignKey(Bill, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Накладная')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", blank=True, null=True, help_text=u'0 если доставки нет')
@@ -88,15 +78,11 @@ class Sold(Oper):
             return u'Новая отгрузка'
 
     @property
-    def places(self):
-        return self.poddon * self.tara
-
-    @property
     def money(self):
         return self.amount * self.price
 
 
-class Transfer(Oper):
+class Transfer(models.Model):
     """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
     по цене другой, аналог скидки.
     Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
@@ -107,13 +93,11 @@ class Transfer(Oper):
     brick_to = models.ForeignKey(Brick, related_name="brick_to_%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич куда",
         help_text=u'Выберите кирпич')
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", blank=True, null=True, help_text=u'0 если доставки нет')
     doc = models.ForeignKey(Bill, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Накладная')
-
-    @property
-    def places(self):
-        return self.poddon * self.tara
 
     @property
     def money(self):
@@ -130,3 +114,22 @@ class Transfer(Oper):
             return u'Новый перевод'
 
 
+class Pallet(models.Model):
+    """
+    Поддоны при продаже
+    """
+    amount = models.PositiveIntegerField(u"Кол-во поддоннов")
+    poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
+    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
+
+    doc = models.ForeignKey(Bill, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Накладная')
+
+    class Meta():
+        verbose_name = u"Поддон"
+        verbose_name_plural = u"Поддоны"
+
+    def __unicode__(self):
+        if self.pk:
+            return u'Поддоны %d шт' % self.amount
+        else:
+            return u'Продажа поддонов'
