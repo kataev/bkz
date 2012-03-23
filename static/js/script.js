@@ -139,17 +139,27 @@ $(function () {
     $('[rel="popover"]').popover()
 })
 $(function () {
-    var color_select = function(select,val){
+    var color_select = function (select, val) {
         $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
-        if (val == 0) {$(select).addClass('bc-red')}
-        if (val == 1) {$(select).addClass('bc-yellow')}
-        if (val == 2) {$(select).addClass('bc-brown')}
-        if (val == 3) {$(select).addClass('bc-light')}
-        if (val == 4) {$(select).addClass('bc-white')}
+        if (val == 0) {
+            $(select).addClass('bc-red')
+        }
+        if (val == 1) {
+            $(select).addClass('bc-yellow')
+        }
+        if (val == 2) {
+            $(select).addClass('bc-brown')
+        }
+        if (val == 3) {
+            $(select).addClass('bc-light')
+        }
+        if (val == 4) {
+            $(select).addClass('bc-white')
+        }
     }
-        var select = $('#id_color')
+    var select = $('#id_color')
     var val = parseInt($(select).val())
-    color_select(select,val)
+    color_select(select, val)
     if (!val)
         $('div.ctype').hide()
     $(select).change(function () {
@@ -158,16 +168,17 @@ $(function () {
             $('div.ctype').show()
         else
             $('div.ctype').hide()
-        color_select(this,val)
+        color_select(this, val)
     })
 })
 
-$(function(){
-    $('[name=agent]').change(function(e){
+$(function () {
+    $('[name=agent]').change(function (e) {
         var val = $(this).val()
-        if (val) {
-            var a = $(this).parents('div').find('a')
-            var href = $(a).attr('href',"/Контрагент/val/".replace('val',val))
-        }
+        var a = $(this).parent('.input-append').find('a')
+        if (val)
+            $(a).attr('href', "/Контрагент/val/".replace('val', val))
+        else
+            $(a).removeAttr('href')
     })
 })

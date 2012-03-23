@@ -54,9 +54,28 @@
                     </legend>
                     <div style="margin-top: 8px;" class="control-group">
                         <div class="controls">
-                            {% with dates=Filter.Meta.dates f=Filter.year_month %}
-                                {% include 'year_month_select.html' %}
-                            {% endwith %}
+                            <select class="span1" name="{{ Filter.date__year.name }}">
+                                <option value="">--------</option>
+                                {% for d in Filter.Meta.dates %}
+                                    {% ifchanged d.year %}
+                                        <option {% if d.year == Filter.date__year.value|add:0 %}selected="selected" {% endif %}
+                                                value="{{ d.year }}">{{ d.year }}</option>
+                                    {% endifchanged %}
+                                {% endfor %}
+                            </select>
+                            <select class="span2" name="{{ Filter.date__month.name }}">
+                                <optgroup label="Выберите месяц">
+                                    <option value="">--------</option>
+                                    {% for d in Filter.Meta.dates %}
+                                        {% ifchanged d.year %}
+                                            </optgroup>
+                                            <optgroup label="{{ d|date:'Y'  }}">
+                                        {% endifchanged %}
+                                        <option {% if d.month == Filter.date__month.value|add:0 %}selected="selected" {% endif %}
+                                                value="{{ d.month }}">{{ d|date:'F' }}</option>
+                                    {% endfor %}
+                                    </optgroup>
+                            </select>
                         </div>
                     </div>
                     <div class="control-group">

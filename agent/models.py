@@ -37,10 +37,27 @@ class Agent(models.Model):
     def get_absolute_url(self):
         return u"/%s/%i/" % (self._meta.verbose_name,self.id)
 
+class People(models.Model):
+    name = models.CharField(u"Имя",max_length=400)
+    official = models.CharField(u"Должность",max_length=400)
+
+    class Meta:
+        verbose_name=u'Человек'
+        verbose_name_plural=u'Люди'
+
 class Seller(Agent):
+    director = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_director_related", verbose_name=u'Директор')
+    buhgalter = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_buhgalter_related", verbose_name=u'Бухгалтер')
+    dispetcher = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_dispetcher_related", verbose_name=u'Диспечер')
+
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
 
         ordering = ('name', )
+
+    @property
+    def nds(self):
+        return 0.18
+
 

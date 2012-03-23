@@ -38,6 +38,10 @@ class Brick(models.Model):
     def make_css(self):
         return make_css(self)
 
+    @property
+    def mass(self):
+        return mass[self.weight]
+
     class Meta():
         ordering = BrickOrder
         verbose_name = u"Кирпич"

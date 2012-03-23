@@ -53,6 +53,7 @@
                     {#  Документ  #}
                     <li class="nav-header">
                         <i class="icon-{{ form.instance|to_class_name }}"></i> Документ
+                        {% if form.instance.pk %}id:{{ form.instance.pk }}{% endif %}
                     </li>
                     <li class="active">
                         <a href="#{{ form.prefix }}" data-toggle="tab">

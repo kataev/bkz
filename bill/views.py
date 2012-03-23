@@ -79,6 +79,7 @@ def bills(request):
     if form.is_valid() and request.GET:
         d = form.cleaned_data
         d = dict([ [x,d[x]] for x in d if d[x]])
+        print d
         if 'brick' in d.keys():
             d['bill_sold_related__brick'] = d['brick']
             del d['brick']

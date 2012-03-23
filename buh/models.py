@@ -9,5 +9,8 @@ class Nomenclature(models.Model):
     def __unicode__(self):
         return u'%s - %s' % (self.code,self.title)
 
+    def intcode(self):
+        return int(self.code)
+
 class BuxAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)

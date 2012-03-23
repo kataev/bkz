@@ -39,7 +39,7 @@ class SoldForm(forms.ModelForm):
         verbose_name = Sold._meta.verbose_name
         verbose_name_plural = Sold._meta.verbose_name_plural
         model = Sold #autocomplete="off"
-        fields = ('brick', 'amount', 'info', 'price', 'delivery')
+#        fields = ('brick', 'amount', 'info', 'price', 'delivery')
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
@@ -54,7 +54,7 @@ class TransferForm(forms.ModelForm):
         model = Transfer
         verbose_name = Transfer._meta.verbose_name
         verbose_name_plural = Transfer._meta.verbose_name_plural
-        fields = ('brick_from', 'brick_to', 'amount', 'info', 'price', 'delivery')
+#        fields = ('brick_from', 'brick_to', 'amount', 'info', 'price', 'delivery')
         widgets = {
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
@@ -81,7 +81,8 @@ PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
 
 
 class BillFilter(forms.Form):
-    year_month = forms.TextInput(required=False)
+    date__year = forms.IntegerField(required=False)
+    date__month = forms.IntegerField(required=False)
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
 
