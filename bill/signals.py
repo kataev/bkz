@@ -7,7 +7,6 @@ from whs.bill.models import *
 @receiver(pre_delete, sender=Sold)
 @receiver(pre_save, sender=Sold)
 def sold_pre_save(instance, *args, **kwargs):
-    print 'test'
     if instance.pk:
         instance = Sold.objects.get(pk=instance.pk)
         brick = Brick.objects.get(pk=instance.brick.pk)

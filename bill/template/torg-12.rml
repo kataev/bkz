@@ -2,7 +2,7 @@
 {% load pytils_numeral %}
 {% spaceless %}
 <!DOCTYPE document SYSTEM "rml.dtd">
-<document filename="bill.pdf">
+<document filename="bill.pdf" debug="1">
 <docinit>
     <registerFont fontName="Arial" fontFile="bill/fonts/Arial.ttf"/>
     <registerFont fontName="Arial-Bold" fontFile="bill/fonts/Arial_Bold.ttf"/>
@@ -351,19 +351,19 @@
     <drawString x="1.5cm" y="3.5cm">Приложение (паспорта, сертификаты и т. д.) на</drawString>
     <drawString x="10.5cm" y="3.5cm">листах</drawString>
     <drawString x="1.5cm" y="3cm">Всего отпущено на сумму</drawString>
-{#    <place x="0cm" y="0cm" width="2cm" height="2cm">#}
-        <para>testetstetesttets</para>
-{#    </place>#}
-    <frame id="second" x1="300" y1="400" width="150" height="200"/>
 
-    <drawString x="5.0cm" y="3cm">{{ doc.in_total|rubles }}</drawString>
-    <drawString x="1.5cm" y="2.5cm">Отпуск груза разрешил</drawString>
-    <drawString x="1.5cm" y="1.5cm">Отпуск груза произвёл</drawString>
-    <drawString x="3cm" y="0.8cm">М. П. "___" _______________ ____ года</drawString>
-    <drawString x="3.93cm" y="0.8cm">{{ doc.date|date:'d' }}</drawString>
-    <drawString x="5.3cm" y="0.8cm">{{ doc.date|date:'E' }}</drawString>
-    <drawString x="6.9cm" y="0.8cm">{{ doc.date|date:'Y' }}</drawString>
-    <drawString x="16cm" y="0.3cm">М. П. "___" _______________    ____ года</drawString>
+
+    <drawCentredString x="10cm" y="3cm"> {{ doc.in_total|rubles }} </drawCentredString>
+
+
+{#    <drawString x="5.0cm" y="3cm">{{ doc.in_total|rubles }}</drawString>#}
+    <drawString x="1.5cm" y="1.5cm">Отпуск груза разрешил</drawString>
+    <drawString x="1.5cm" y="0.5cm">Отпуск груза произвёл</drawString>
+    <drawString x="3cm" y="0cm">М. П. "___" _______________ ____ года</drawString>
+    <drawString x="3.93cm" y="0cm">{{ doc.date|date:'d' }}</drawString>
+    <drawString x="5.3cm" y="0cm">{{ doc.date|date:'E' }}</drawString>
+    <drawString x="6.9cm" y="0cm">{{ doc.date|date:'Y' }}</drawString>
+    <drawString x="16cm" y="0cm">М. П. "___" _______________    ____ года</drawString>
     <drawString x="16cm" y="3cm">По доверенности № __________ от " " _______________________    ____ года</drawString>
     <drawString x="16cm" y="2.5cm">выданной</drawString>
     <drawString x="16cm" y="1.5cm">Груз принял</drawString>
@@ -377,17 +377,17 @@
     <drawCentredString x="15cm" y="5.2cm">прописью</drawCentredString>
     <drawCentredString x="13cm" y="4.8cm">прописью</drawCentredString>
     <drawCentredString x="8.25cm" y="4.3cm">прописью</drawCentredString>
-    <drawCentredString x="19.5cm" y="4.3cm">прописью</drawCentredString>
-    <drawCentredString x="19.5cm" y="3.8cm">прописью</drawCentredString>
-    <drawCentredString x="8.9cm" y="3.2cm">прописью</drawCentredString>
-    <drawCentredString x="6.5cm" y="2.3cm">должность</drawCentredString>
-    <drawCentredString x="10cm" y="2.3cm">подпись</drawCentredString>
-    <drawCentredString x="13.5cm" y="2.3cm">расшифровка подписи</drawCentredString>
-    <drawCentredString x="10cm" y="1.8cm">подпись</drawCentredString>
-    <drawCentredString x="13.5cm" y="1.8cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="19.5cm" y="4.33cm">прописью</drawCentredString>
+    <drawCentredString x="19.5cm" y="3.83cm">прописью</drawCentredString>
+    <drawCentredString x="8.9cm" y="2.2cm">прописью</drawCentredString>
     <drawCentredString x="6.5cm" y="1.3cm">должность</drawCentredString>
     <drawCentredString x="10cm" y="1.3cm">подпись</drawCentredString>
     <drawCentredString x="13.5cm" y="1.3cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="10cm" y="0.8cm">подпись</drawCentredString>
+    <drawCentredString x="13.5cm" y="0.8cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="6.5cm" y="0.3cm">должность</drawCentredString>
+    <drawCentredString x="10cm" y="0.3cm">подпись</drawCentredString>
+    <drawCentredString x="13.5cm" y="0.3cm">расшифровка подписи</drawCentredString>
 
     <!---справа-->
     <drawCentredString x="19.25cm" y="1.3cm">должность</drawCentredString>
@@ -400,28 +400,32 @@
     <!---опять слева-->
 
     <setFont name="Arial-Bold" size="7"/>
-    <drawCentredString x="6.5cm" y="2.6cm">{{ doc.seller.director.official }}</drawCentredString>
-    <drawCentredString x="6.5cm" y="2cm">Главный бухгалтер</drawCentredString>
-    <drawCentredString x="6.5cm" y="1.6cm">{{ doc.seller.dispetcher.official }}</drawCentredString>
-    <drawCentredString x="13.5cm" y="2.6cm">{{ doc.seller.director.name }}</drawCentredString>
-    <drawCentredString x="13.5cm" y="2.1cm">{{ doc.seller.buhgalter.name }}</drawCentredString>
-    <drawCentredString x="13.5cm" y="1.6cm">{{ doc.seller.dispetcher.name }}</drawCentredString>
+    <drawCentredString x="6.5cm" y="1.6cm">{{ doc.seller.director.official }}</drawCentredString>
+    <drawCentredString x="6.5cm" y="1cm">Главный бухгалтер</drawCentredString>
+    <drawCentredString x="6.5cm" y="0.6cm">{{ doc.seller.dispetcher.official }}</drawCentredString>
+    <drawCentredString x="13.5cm" y="1.6cm">{{ doc.seller.director.name }}</drawCentredString>
+    <drawCentredString x="13.5cm" y="1.1cm">{{ doc.seller.buhgalter.name }}</drawCentredString>
+    <drawCentredString x="13.5cm" y="0.6cm">{{ doc.seller.dispetcher.name }}</drawCentredString>
     <lines>
         11cm 5.4cm 19cm 5.4cm
         7cm 5cm 19cm 5cm
         14.5cm 4.5cm 28.5cm 4.5cm
         6.5cm 4.5cm 10cm 4.5cm
+{#        #}
+        5.2cm 2.9cm 15cm 2.9cm
+        1.5cm 2.4cm 15cm 2.4cm
+{#        #}
         14.5cm 4cm 24.5cm 4cm
         7.8cm 3.5cm 10cm 3.5cm
-        5cm 2.5cm 8cm 2.5cm
-        8.5cm 2.5cm 11.5cm 2.5cm
-        12cm 2.5cm 15cm 2.5cm
-        8.5cm 2cm 11.5cm 2cm
-        12cm 2cm 15cm 2cm
         5cm 1.5cm 8cm 1.5cm
         8.5cm 1.5cm 11.5cm 1.5cm
         12cm 1.5cm 15cm 1.5cm
-        15.5cm 1cm 15.5cm 3.5cm
+        8.5cm 1cm 11.5cm 1cm
+        12cm 1cm 15cm 1cm
+        5cm 0.5cm 8cm 0.5cm
+        8.5cm 0.5cm 11.5cm 0.5cm
+        12cm 0.5cm 15cm 0.5cm
+        15.5cm 0cm 15.5cm 3.5cm
         17.5cm 2.5cm 28.5cm 2.5cm
         17.5cm 2cm 28.5cm 2cm
         18cm 1cm 20.5cm 1cm

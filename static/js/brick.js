@@ -3,6 +3,7 @@
  * Date: 02.02.12
  * Time: 16:24
  */
+"use strict";
 $(function () {
     $('a', '#brick-select-buttons').on('toggle', function (e) {
         if (!$(this).attr('href')) {
@@ -64,7 +65,7 @@ $(function () {
 
         $('#' + input + '_span').html($('td.name', this).text().trim())
         $('#' + input + '_span').attr('class', 'input uneditable-input ' + $(this).attr('class'))
-        tr = this
+        $('#' + input).change()
     })
 
     $(modal).on('show', function () {

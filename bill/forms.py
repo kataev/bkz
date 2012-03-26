@@ -41,11 +41,20 @@ class SoldForm(forms.ModelForm):
         model = Sold #autocomplete="off"
 #        fields = ('brick', 'amount', 'info', 'price', 'delivery')
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+                   'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
                    'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
                    'info': forms.Textarea(attrs={'rows': 2}),
         }
+
+    def clean(self):
+        data = self.cleaned_data
+        brick, amount = data['brick'],data['amount']
+        print brick.total
+        if brick.total < amount:
+            raise ValidationError(u'На складе нету столько кирпича')
+        return data
 
 
 class TransferForm(forms.ModelForm):
@@ -58,11 +67,23 @@ class TransferForm(forms.ModelForm):
         widgets = {
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
+            'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
             'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
             'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
             'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
             'info': forms.Textarea(attrs={'rows': 2}),
         }
+
+    def clean(self):
+        data = self.cleaned_data
+        brick_from, brick_to, amount = data['brick_from'],data['brick_to'],data['amount']
+        if brick_from.mark < brick_to.mark:
+            raise ValidationError(u'Нельзя делать перевод из меньшей марки в большую')
+        if brick_from.weight != brick_to.weight:
+            raise ValidationError(u'Нельзя в переводе менять размер кирпича')
+        if brick_from.total < amount:
+            raise ValidationError(u'На складе нету столько кирпича для перевода')
+        return data
 
 class PalletForm(forms.ModelForm):
     class Meta:

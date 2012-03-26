@@ -26,34 +26,35 @@
             <div class='controls'>
                 {% if 'brick' in f.name %}
                     {% include 'brick-select-form.html' %}
+                    {% elif f.name == 'price' or f.name == 'delivery' %}
+                    <div class="input-append">
+                        {{ f }}
+                        <span class="add-on">Руб</span>
+                    </div>
+                    {% elif f.name == 'tara' %}
+                    <div class="input-append">
+                        {{ f }}
+                        <span class="add-on" title='Рассчитывать по поддонам кол-во кирпича'>
+                            <input type="checkbox" id="{{ f.id_for_label }}_checkbox" checked="checked">
+                        </span>
+                    </div>
+                    {% elif f.name == 'transfer' %}
+                    {% include 'sold-transfer.html' %}
+                    {% elif f.name == 'agent' %}
+                    {% include 'agent-select.html' %}
                 {% else %}
-                    {% if f.name == 'price' or f.name == 'delivery' %}
-                        <div class="input-append">
-                            {{ f }}
-                            <span class="add-on">Руб</span>
-                        </div>
-                    {% else %}
-                        {% if f.name == 'transfer' %}
-                            {% include 'sold-transfer.html' %}
-                        {% else %}
-                            {% if f.name == 'agent' %}
-                                {% include 'agent-select.html' %}
-                            {% else %}
-                                {{ f }}
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
+                    {{ f }}
                 {% endif %}
-                <span class="help-inline">
+                {% if f.errors %}
+                    <span class="help-inline">
                 {% for q in f.errors %}
                     {{ q }}
                 {% endfor %}
                 </span>
-                {% if f.help_text %}
+                {% endif %}
+                {% if f.help_text and not f.value %}
                     <p class="help-block">
-                        {% if not f.value %}
-                            {{ f.help_text }}
-                        {% endif %}
+                        {{ f.help_text }}
                     </p>
                 {% endif %}
             </div>

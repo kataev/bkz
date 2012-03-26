@@ -3,6 +3,7 @@
  * Date: 03.02.12
  * Time: 11:01
  */
+"use strict";
 $(function () {
     var $win = $(window)
         , $nav = $('.subnav')
@@ -92,6 +93,7 @@ $(function () {
             $(total).val(parseInt($(total).val()) - 1)
         })
         $(total).val(parseInt($(total).val()) + 1)
+        tara_amount()
     })
 })
 
@@ -175,10 +177,79 @@ $(function () {
 $(function () {
     $('[name=agent]').change(function (e) {
         var val = $(this).val()
-        var a = $(this).parent('.input-append').find('a')
-        if (val)
-            $(a).attr('href', "/Контрагент/val/".replace('val', val))
-        else
-            $(a).removeAttr('href')
+        var input = $(this).parent(".input-append")
+        var a = $(input).find("a")
+        var i = $(input).find("i")
+        var href = "/Контрагент/"
+        if (val) {
+            $(a).attr('href', href + val + "/")
+            $(a).attr('title', "Редактировать выбранного контрагента")
+            $(i).attr('class', "icon-info-sign")
+        }
+        else {
+            $(a).attr('href', href)
+            $(a).attr('title', "Создать контрагента")
+            $(i).attr('class', "icon-plus-sign")
+        }
     })
 })
+
+function tara(cl) {
+    var f = function (str) {
+        return cl.indexOf(str) >= 0
+    }
+    console.log(cl)
+//  weight={1: u'single', 1.4: u'thickened', 0: u'double', 0.8: u'euro'},
+//  view={u'Л': u'facial', u'Р': u'common'},
+    if (f('double')) {
+        return 160
+    }
+    if (f('bc-yellow')) {
+        if (f('thickened')) {
+            return 192
+        }
+        else if (f('single')) {
+            return 264
+        }
+    }
+
+    if (f('common')) {
+        if (f('thickened')) {
+            return 288
+        }
+        else if (f('single')) {
+            return 352
+        }
+        else if (f('euro')) {
+            return 352
+        }
+    } else {
+        if (f('thickened')) {
+            return 192
+        }
+        else if (f('single')) {
+            return 264
+        }
+        else if (f('euro')) {
+            return 256
+        }
+    }
+
+}
+
+function tara_amount() {
+    $('input[name*="tara"],input[name*="brick"],input[name*="brick_to"]').change(function (e) {
+        var id = $(this).attr('id')
+        var s = id.split('-')
+        var form = id.split(s[s.length - 1])[0]
+        var val = parseInt($('#' + form + 'tara').val())
+        var brick = $('#' + form + 'brick').length ? $('#' + form + 'brick') : $('#' + form + 'brick_to')
+        var checkbox = $('#' + form + 'tara_checkbox')
+        if ($(checkbox).attr('checked') && $(brick).val() && val) {
+            var factor = tara($('#' + $(brick).attr('id') + '_span').attr('class'))
+            var amount = $('#' + form + 'amount')
+            $(amount).val(factor * val)
+        }
+    })
+}
+$(tara_amount)

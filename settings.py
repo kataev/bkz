@@ -173,7 +173,7 @@ INSTALLED_APPS = (
     'south',
     'trml2pdf',
 #    'error_pages',
-    'test_utils',
+#    'test_utils',
 
     'whs.ipaccess',
 

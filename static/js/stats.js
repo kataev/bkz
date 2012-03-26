@@ -3,8 +3,9 @@
  * Date: 05.03.12 #Вдовина Мария Николаевна Вконтакте
  * Time: 19:53
  */
+"use strict";
 $(function () {
-    chart = new Highcharts.Chart({
+    var chart = new Highcharts.Chart({
         chart: {
             renderTo: '1',
             type: 'line',

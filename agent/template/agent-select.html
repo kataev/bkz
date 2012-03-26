@@ -16,8 +16,14 @@
             </optgroup>
     </select>
 <span class="add-on">
-    <a target="_blank" {% if f.value %}href="/Контрагент/{{ f.value }}/"{% endif %} title="Редактировать выбранного контрагента">
-        <i class="icon-edit"></i>
-    </a>
+    {% if f.value %}
+        <a target="_blank" href="/Контрагент/{{ f.value }}/" title="Редактировать выбранного контрагента">
+            <i class="icon-info-sign"></i>
+        </a>
+    {% else %}
+        <a target="_blank" href="/Контрагент/" title="Создать контрагента">
+            <i class="icon-plus-sign"></i>
+        </a>
+    {% endif %}
 </span>
 </div>
