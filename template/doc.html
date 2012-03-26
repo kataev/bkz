@@ -3,7 +3,7 @@
 
 {% block title %}
     {% if form.instance.pk %}
-    {{ form.instance|model_verbose_name }}
+        {{ form.instance|model_verbose_name }}
     {% endif %}
     {{ form.instance }}
 {% endblock %}
@@ -27,6 +27,15 @@
 {% endblock %}
 
 {% block container %}
+    {% for factory in opers %}
+        {% for e in factory.non_form_errors %}
+            <div class="alert alert-error">
+                <i class="icon-warning-sign"></i>
+                <strong>{{ e }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <div class='hidden'>
         {% for factory in opers %}
             {% with form=factory.empty_form %}
@@ -121,18 +130,18 @@
             <button type="submit" class="btn btn-primary">
                 <i class="icon-ok icon-white"></i> Сохранить изменения
             </button>
-        {% if form.instance|to_class_name == 'Bill' and form.instance.pk %}
-            <a href="печать" target="_blank" class="btn btn-info">
-                <i class='icon-print icon-white'></i> Печать
-            </a>
-        {% endif %}
+            {% if form.instance|to_class_name == 'Bill' and form.instance.pk %}
+                <a href="печать" target="_blank" class="btn btn-info">
+                    <i class='icon-print icon-white'></i> Печать
+                </a>
+            {% endif %}
             <button type="reset" class="btn">
                 <i class="icon-ban-circle"></i> Сбросить
             </button>
             {% if form.instance.pk %}
-            <a href="удалить" style='float:right' class="btn btn-danger">
+                <a href="удалить" style='float:right' class="btn btn-danger">
                 <i class='icon-remove icon-white'></i> Удалить
-                {% endif %}
+            {% endif %}
             </a>
         </div>
     </form>

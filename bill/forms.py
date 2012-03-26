@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory
+from django.core.exceptions import ValidationError
+
+
 from whs.bill.models import *
 from whs.brick.models import *
-from django.core.exceptions import ValidationError
+
 
 class DateForm(forms.Form):
     date = forms.DateField()
@@ -96,10 +99,45 @@ class PalletForm(forms.ModelForm):
             'info': forms.Textarea(attrs={'rows': 2}),
             }
 
-SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm, )
+
+
+SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm)
 TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
 PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
 
+class SoldFactory(SoldFactory):
+    def clean(self):
+        if any(self.errors):
+            return
+        bricks = {}
+        amounts = {}
+        for i in range(0, self.total_form_count()):
+            form = self.forms[i]
+            brick, amount = form.cleaned_data['brick'],form.cleaned_data['amount']
+            bricks[brick.pk] = brick
+            amounts[brick.pk] = amounts.get(brick.pk,0) + amount
+
+        for pk in bricks:
+            b = bricks[pk]
+            if b.total < amounts[pk]:
+                raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
+
+class TransferFactory(TransferFactory):
+    def clean(self):
+        if any(self.errors):
+            return
+        bricks = {}
+        amounts = {}
+        for i in range(0, self.total_form_count()):
+            form = self.forms[i]
+            brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['amount']
+            bricks[brick.pk] = brick
+            amounts[brick.pk] = amounts.get(brick.pk,0) + amount
+
+        for pk in bricks:
+            b = bricks[pk]
+            if b.total < amounts[pk]:
+                raise ValidationError(u'Не хватает кирпича для накладной, проверьте переводы по кирпичу %s' % b.label)
 
 class BillFilter(forms.Form):
     date__year = forms.IntegerField(required=False)
