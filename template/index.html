@@ -43,9 +43,19 @@
 {% include 'navbar.html' %}
 {% include 'messages.html' %}
 
+
 {% block brick-select %}
 {% endblock %}
-
+<div class="container">
+<div class="row">
+        <ul class="breadcrumb span6">
+            {% block breadcrump %}
+            <li><a href="{% url 'main' %}">Главная</a> <span class="divider">/</span></li>
+            <li><a href="#">Склад</a> </li>
+            {% endblock %}
+        </ul>
+</div>
+</div>
 <div class="container">
     {% block container %}
         {% include 'brick-select-buttons.html' %}

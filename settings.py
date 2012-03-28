@@ -144,6 +144,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     'whs.context.bricks',
+    'whs.context.current_app',
     )
 
 ROOT_URLCONF = 'whs.urls'
@@ -184,7 +185,8 @@ INSTALLED_APPS = (
     'whs.bill',
     'whs.buh',
     'whs.manufacture',
-    'whs.api'
+    'whs.api',
+    'whs.energy',
     )
 
 # A sample logging configuration. The only tangible logging

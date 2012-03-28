@@ -22,6 +22,7 @@ urlpatterns += patterns('',
     url(r'^', include('whs.bill.urls')),
     url(r'^', include('whs.manufacture.urls')),
     url(r'^', include('whs.api.urls')),
+    url(ur'^Показания/', include('whs.energy.urls', namespace='energy')),
 
 )
 

@@ -12,10 +12,11 @@ def help(request):
     return render(request, 'help.html')
 
 
-def flat_form(request,Form,id):
+def flat_form(request,Form,id=None,date=None):
     """ Форма  """
 #    id = args[0]
     if id: model = get_object_or_404(Form._meta.model,pk=id)
+    elif date: model = get_object_or_404(Form._meta.model,date=date)
     else: model = None
     if request.method == 'POST':
         form = Form(request.POST,instance=model)
