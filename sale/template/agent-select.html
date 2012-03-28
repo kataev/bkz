@@ -1,0 +1,29 @@
+<div class="input-append">
+    <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
+        {% if not f.field.required %}
+            <option value="" {% if not f.value %}selected="selected"{% endif %}>---------</option>
+        {% endif %}
+        <optgroup label="Выберите контрагента:">
+            {% for a in f.field.queryset %}
+                {% ifchanged a.name|capfirst|first %}
+                    </optgroup>
+                    <optgroup label="{{ a.name|capfirst|first }}">
+                {% endifchanged %}
+                <option value="{{ a.pk }}" {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>
+                    {{ a }}
+                </option>
+            {% endfor %}
+            </optgroup>
+    </select>
+<span class="add-on">
+    {% if f.value %}
+        <a target="_blank" href="/Контрагент/{{ f.value }}/" title="Редактировать выбранного контрагента">
+            <i class="icon-info-sign"></i>
+        </a>
+    {% else %}
+        <a target="_blank" href="/Контрагент/" title="Создать контрагента">
+            <i class="icon-plus-sign"></i>
+        </a>
+    {% endif %}
+</span>
+</div>

@@ -1,0 +1,76 @@
+{% extends 'index.html' %}
+
+{% block title %}Контрагенты{% endblock %}
+
+{% block container %}
+    {% for a in Agents.object_list %}
+        {% ifchanged a.name|capfirst|first %}
+            </tbody>
+            </table>
+            <table id='Agents' class="table table-bordered table-condensed">
+            <caption><h3>{{ a.name|capfirst|first }}</h3></caption>
+            <thead>
+            <tr>
+                <th width=15px>#</th>
+                <th width=250px>Имя</th>
+                <th>Адрес</th>
+                <th>Телефон</th>
+                <th>Банк</th>
+                <th>Счет
+                Р\С
+                К\С
+                </th>
+                <th>Инн</th>
+
+            </tr>
+            </thead>
+            <tbody>
+        {% endifchanged %}
+        <tr class="">
+            <td>{{ a.pk }}</td>
+            <td><a href="{{ a.get_absolute_url }}">{{ a }}</a>
+                {% if a.type %}
+                    <span class='label'>{{ a.get_type_display }}</span>
+                {% else %}
+                    <span class='label label-success'>{{ a.get_type_display }}</span>
+                {% endif %}
+            </td>
+            <td>{{ a.address }}</td>
+            <td>{{ a.phone }}</td>
+            <td>
+                {% if a.bank %}
+                {{ a.bank }} <span class="label">{{ a.bic }}</span>
+                {% endif %}
+            </td>
+            <td>
+                <p>{{ a.rs }}</p>
+                <p>{{ a.ks }}</p>
+            </td>
+            <td>{{ a.inn }}</td>
+
+        </tr>
+    {% endfor %}
+
+</tbody>
+</table>
+
+    <div class="pagination pagination-centered">
+
+        <ul id='navigation'>
+            {% if Agents.has_previous %}
+                <li class="prev"><a href="?page={{ Agents.previous_page_number }}">&larr; Предыдущая</a></li>
+            {% else %}
+                <li class="prev disabled"><a>&larr; Предыдущая</a></li>
+            {% endif %}
+
+            <li class="active"><a>Страница {{ Agents.number }} из {{ Agents.paginator.num_pages }}</a></li>
+
+            {% if Agents.has_next %}
+                <li class="next"><a href="?page={{ Agents.next_page_number }}">Следующая &rarr;</a></li>
+            {% else %}
+                <li class="next disabled"><a>Следующая &rarr;</a></li>
+            {% endif %}
+
+        </ul>
+    </div>
+{% endblock %}
