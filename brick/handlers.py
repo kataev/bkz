@@ -3,7 +3,7 @@ __author__ = 'bteam'
 from piston.handler import BaseHandler
 from piston.utils import rc
 
-from whs.bill.models import Sold,Transfer
+from whs.sale.models import Sold,Transfer
 from whs.manufacture.models import Add,Sorted,Sorting,Removed
 
 class BrickHandler(BaseHandler):

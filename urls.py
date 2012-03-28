@@ -18,7 +18,7 @@ urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^', include('whs.brick.urls')),
-    url(r'^', include('whs.bill.urls')),
+    url(r'^', include('whs.sale.urls')),
     url(r'^', include('whs.manufacture.urls')),
     url(ur'^Показания/', include('whs.energy.urls', namespace='energy')),
 

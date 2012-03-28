@@ -151,7 +151,7 @@ ROOT_URLCONF = 'whs.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
-    os.path.join(PROJECT_PATH, 'bill/template/'),
+    os.path.join(PROJECT_PATH, 'sale/template/'),
     os.path.join(PROJECT_PATH, 'brick/template/'),
     os.path.join(PROJECT_PATH, 'manufacture/template/'),
     )
@@ -173,14 +173,13 @@ INSTALLED_APPS = (
     'south',
     'trml2pdf',
 #    'piston',
-#    'error_pages',
-#    'test_utils',
 
     'whs.ipaccess',
 
     'whs.old',
+
     'whs.brick',
-    'whs.bill',
+    'whs.sale',
     'whs.manufacture',
 
     'whs.energy',

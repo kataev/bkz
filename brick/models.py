@@ -21,7 +21,7 @@ class Brick(models.Model):
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
 
-    nomenclature = models.ForeignKey('bill.Nomenclature', null=True, blank=True, verbose_name=u'Номенклатура')
+    nomenclature = models.ForeignKey('sale.Nomenclature', null=True, blank=True, verbose_name=u'Номенклатура')
 
     order = ('begin','add','t_from','t_to','sold','m_from','m_to','m_rmv','inv','total')
 

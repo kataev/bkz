@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 from old.models import *
-from bill.models import *
+from sale.models import *
 
 def nomenclature():
     f = file('bricks.txt','r').readlines()

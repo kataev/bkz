@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Sum
 
-from whs.bill.models import *
+from whs.sale.models import *
 from whs.manufacture.models import *
 
 def bricks(request,date=None):
