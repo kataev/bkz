@@ -18,7 +18,6 @@ urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^', include('whs.brick.urls')),
-    url(r'^', include('whs.agent.urls')),
     url(r'^', include('whs.bill.urls')),
     url(r'^', include('whs.manufacture.urls')),
     url(r'^', include('whs.api.urls')),

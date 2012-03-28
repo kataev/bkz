@@ -2,7 +2,7 @@
 __author__ = 'bteam'
 from old.models import *
 from brick.models import *
-from buh.models import BuxAgent
+from bill.models import BuxAgent
 
 def nomenclature():
     f = file('bricks.txt','r').readlines()

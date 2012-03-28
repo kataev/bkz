@@ -103,3 +103,18 @@ def bills(request):
     if get.has_key('page'): del get['page']
     url.update(get)
     return render(request,'bills.html',dict(Bills=bills,Filter=form,total=total,money=money,url=url.urlencode()))
+
+
+def agents(request):
+    Agents = Agent.objects.all()
+    paginator = Paginator(Agents, 20) # Show 25 contacts per page
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        agents = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        agents = paginator.page(paginator.num_pages)
+    return render(request,'agents.html',dict(Agents=agents))

@@ -46,3 +46,5 @@ def bricks(request,date=None):
     return dict(Bricks=Bricks, totals=total)
 
 
+def current_app(request):
+    return dict(current_app='energy')

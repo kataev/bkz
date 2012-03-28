@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
 
-from whs.bill.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill
+from whs.bill.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill, Agent,AgentForm
 from whs.bill.views import UpdateView, CreateView, DeleteView
 
 urlpatterns = patterns('whs.bill.views',
@@ -33,5 +33,7 @@ urlpatterns = patterns('whs.bill.views',
     url(ur'^Накладная/(?P<id>\d*)/печать$', 'bill_print', name='print', ),
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
 
+    url(ur'^Контрагенты$', 'agents', name='agents'),
+    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='agent'),
 
 )

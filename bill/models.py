@@ -2,7 +2,6 @@
 import datetime
 
 from whs.brick.models import *
-from whs.agent.models import Agent, Seller
 
 from bill.pdf import OperationsMixin, BillMixin, PalletMixin
 
@@ -13,8 +12,8 @@ class Bill(BillMixin, models.Model):
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    agent = models.ForeignKey(Agent, verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
-    seller = models.ForeignKey(Seller, verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
+    agent = models.ForeignKey('Agent', verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
+    seller = models.ForeignKey('Seller', verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
         help_text=u'', default=350)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
@@ -111,3 +110,74 @@ class Pallet(PalletMixin, models.Model):
             return u'Поддоны %d шт' % self.amount
         else:
             return u'Продажа поддонов'
+
+type_c = ((0,u'Юр.Лицо'),(1,u'Физ.лицо'))
+
+class Agent(models.Model):
+    name = models.CharField(u"Имя",max_length=400,
+        help_text=u'Название без юридической формы, без ООО, без ИП, без кавычек.')
+    fullname = models.CharField(u"Полное имя",max_length=400,help_text=u'Название для накладных')
+    type = models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
+
+    address = models.CharField(u"Адрес",blank=True,max_length=200,help_text=u'Юридический адрес')
+    phone = models.CharField(u"Телефон",blank=True,max_length=200)
+
+    inn = models.CharField(u"Инн",blank=True,max_length=200)
+    kpp = models.CharField(u'КПП',help_text=u'Введите код ОКПО',blank=True,max_length=200)
+
+    bank = models.CharField(u"Банк",blank=True,max_length=200)
+    ks = models.CharField(u"Корректиционный счет",blank=True,max_length=200)
+    bic = models.CharField(u"Бик",blank=True,max_length=200)
+
+    rs=models.CharField(u"Расчетный счет",blank=True,max_length=200)
+
+    class Meta:
+        verbose_name=u'Контрагент'
+        verbose_name_plural=u'Контрагенты'
+        permissions = (("view_agent", u"Может просматривать контрагентa"),)
+        ordering = ('name', )
+
+    def __unicode__(self):
+        if self.pk:
+            return self.name[:40]
+        else:
+            return u'Новый контрагент'
+
+    def get_absolute_url(self):
+        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+
+class People(models.Model):
+    name = models.CharField(u"Имя",max_length=400)
+    official = models.CharField(u"Должность",max_length=400)
+
+    class Meta:
+        verbose_name=u'Человек'
+        verbose_name_plural=u'Люди'
+
+class Seller(Agent):
+    director = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_director_related", verbose_name=u'Директор')
+    buhgalter = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_buhgalter_related", verbose_name=u'Бухгалтер')
+    dispetcher = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_dispetcher_related", verbose_name=u'Диспечер')
+
+    class Meta:
+        verbose_name=u'Продавец'
+        verbose_name_plural=u'Продавецы'
+
+        ordering = ('name', )
+
+    @property
+    def nds(self):
+        return 0.18
+
+class Nomenclature(models.Model):
+    title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)
+    code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.code,self.title)
+
+    def intcode(self):
+        return int(self.code)
+
+class BuxAgent(Agent):
+    code = models.CharField(u"Код", max_length=11,blank=False,unique=True)

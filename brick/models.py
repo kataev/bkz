@@ -2,8 +2,6 @@
 from django.db import models
 from constants import *
 
-from whs.buh.models import Nomenclature
-
 class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
@@ -23,7 +21,7 @@ class Brick(models.Model):
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
 
-    nomenclature = models.ForeignKey(Nomenclature, null=True, blank=True, verbose_name=u'Номенклатура')
+    nomenclature = models.ForeignKey('bill.Nomenclature', null=True, blank=True, verbose_name=u'Номенклатура')
 
     order = ('begin','add','t_from','t_to','sold','m_from','m_to','m_rmv','inv','total')
 
@@ -49,21 +47,6 @@ class Brick(models.Model):
         verbose_name = u"Кирпич"
         verbose_name_plural = u'Кирпичи'
         permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
-
-
-#class History(models.Model):
-#    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Кирпич')
-#    date = models.DateField()
-#
-#    begin = models.PositiveIntegerField(u"Начало месяца")
-#    add = models.PositiveIntegerField(u"Приход")
-#    t_from = models.PositiveIntegerField(u"Перевод из")
-#    t_to = models.PositiveIntegerField(u"Перевод в")
-#    sold = models.PositiveIntegerField(u"Отгрузка")
-#    total = models.PositiveIntegerField(u"Остаток")
-#
-#    class Meta:
-#        verbose_name = u'Архив'
 
 class OldBrick(Brick):
     old = models.IntegerField('Старое ID')

@@ -145,3 +145,15 @@ class BillFilter(forms.Form):
 
     class Meta:
         dates = Bill.objects.dates('date','month')
+
+
+class AgentForm(forms.ModelForm):
+    class Meta:
+        message = 'Внимательно заполняйте значения имя и полное имя.'
+        model=Agent
+        widgets = {
+            'name': forms.Textarea(attrs=dict(rows=2)),
+            'bank': forms.Textarea(attrs=dict(rows=2)),
+            'address': forms.Textarea(attrs=dict(rows=2)),
+            }
+

@@ -153,7 +153,6 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
     os.path.join(PROJECT_PATH, 'bill/template/'),
     os.path.join(PROJECT_PATH, 'brick/template/'),
-    os.path.join(PROJECT_PATH, 'agent/template/'),
     os.path.join(PROJECT_PATH, 'manufacture/template/'),
     )
 
@@ -181,9 +180,7 @@ INSTALLED_APPS = (
 
     'whs.old',
     'whs.brick',
-    'whs.agent',
     'whs.bill',
-    'whs.buh',
     'whs.manufacture',
     'whs.api',
     'whs.energy',
