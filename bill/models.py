@@ -179,5 +179,5 @@ class Nomenclature(models.Model):
     def intcode(self):
         return int(self.code)
 
-class BuxAgent(Agent):
+class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)

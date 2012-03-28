@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 from old.models import *
-from brick.models import *
-from bill.models import BuxAgent
+from bill.models import *
 
 def nomenclature():
     f = file('bricks.txt','r').readlines()
@@ -67,7 +66,7 @@ def brick():
 def agents():
     f = file('agents.txt','r').readlines()
     for l in f:
-        a = BuxAgent()
+        a = BuhAgent()
         fields = l.split('\t')
         a.code = fields[0]
         a.fullname = fields[1]

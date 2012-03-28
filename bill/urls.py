@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
 
-from whs.bill.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill, Agent,AgentForm
+from whs.bill.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill,AgentForm
 from whs.bill.views import UpdateView, CreateView, DeleteView
 
 urlpatterns = patterns('whs.bill.views',

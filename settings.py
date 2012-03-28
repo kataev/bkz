@@ -182,7 +182,7 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.bill',
     'whs.manufacture',
-    'whs.api',
+
     'whs.energy',
     )
 
