@@ -37,14 +37,12 @@ def bricks(request,date=None):
                        + b.sold + b.t_from - b.t_to # Накладные
                        - b.add # Приход
                        + b.inv # Инвенторизация
-                       + b.m_from + b.m_rmv - b.m_to # Перебор кирпича в цехе
+                       + b.m_from - b.m_to # + b.m_rmv # Перебор кирпича в цехе
                 )
 
             b.opers = b.sold + b.add + b.t_from + b.t_to + b.m_from + b.m_to + b.m_rmv + b.inv
-
-        for f in ['sold', 'add', 't_from', 't_to', 'total', 'begin']:
+        for f in Brick.order:
             total[f] = sum([getattr(b, f) for b in Bricks])
-
     return dict(Bricks=Bricks, totals=total)
 
 

@@ -138,7 +138,8 @@ $(function () {
 })
 $(function () {
     $('[rel="tooltip"]').tooltip()
-    $('[rel="popover"]').popover()
+//    $('[rel="popover"]').popover()
+    $(".collapse").collapse()
 })
 $(function () {
     var color_select = function (select, val) {
@@ -253,3 +254,38 @@ function tara_amount() {
     })
 }
 $(tara_amount)
+
+$(function () {
+    $("td[rel='popover']").click(function (e) {
+        if (parseInt($(this).text()) <= 0)
+            return
+        var name = $(this).data('name')
+        if ( name == 'total' || name == 'begin')
+            return
+        $(this).popover()
+        var tr = $(this).parent('tr')
+        var brick = $(tr).find('td:first').text()
+        $(this).data('popover').$element.attr('data-original-title', brick + '<i class="close">&times;</i>')
+        $(this).data('popover').$element.attr('data-content', '<table class="table"><tr><td>test</td><td>test</td></tr></table>')
+
+        $(this).popover('show')
+        $(this).data('popover').$tip.on('click.close', $.proxy(function (e) {
+            $(this).popover('hide')
+        }, this))
+
+        var url = '/brick/' + $(tr).data('pk') + '/' + name + '/2012/03/'
+        $.ajax({url:url, context:this }).success(function (data) {
+            var table = $('<table class="table table-condensed table-striped" style="margin-top:-14px"></table>')
+                .appendTo($(this).data('popover')
+                .$tip.find('.popover-content').empty())
+            var tbody = $('<tbody></tbody>').appendTo(table)
+            $('<thead><tr><th>Дата</th><th>Кол-во</th></tr></thead>').appendTo(table)
+            _(data).each(function (a) {
+                var tr = $('<tr></tr>').appendTo(tbody)
+                _(a).each(function (e) {
+                    $('<td></td>').appendTo(tr).text(e)
+                })
+            })
+        })
+    })
+})

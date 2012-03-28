@@ -17,7 +17,8 @@
         <blockAlignment value="LEFT"/>
         <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Table_Invoice_Line_Content">
+
+    <blockTableStyle id="table_invoice">
         <blockAlignment value="RIGHT"/>
         <blockLeftPadding value="0"/>
         <blockBottomPadding value="0"/>
@@ -27,19 +28,22 @@
         <lineStyle kind="BOX" colorName="#000000" start="4,0" stop="11,-1" thickness="1.5"/>
         <lineStyle kind="BOX" colorName="#000000" start="13,0" stop="-1,-1" thickness="1.5"/>
     </blockTableStyle>
-    <blockTableStyle id="Table_Taxes_Total">
+
+    <blockTableStyle id="table_total">
+        <blockAlignment value="RIGHT"/>
+        <blockLeftPadding value="0"/>
+        <blockBottomPadding value="0"/>
+        <blockValign value="CENTER"/>
+        <lineStyle kind="GRID" colorName="#000000" start="1,0" stop="-1,-1" thickness="0.5"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="table_taxes">
         <blockAlignment value="LEFT"/>
         <blockLeftPadding value="0"/>
         <blockTopPadding value="0"/>
         <blockBottomPadding value="0"/>
         <blockRightPadding value="0"/>
         <blockValign value="TOP"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table_Total_Include_Taxes">
-        <blockAlignment value="RIGHT"/>
-        <blockValign value="CENTER"/>
-        <blockBottomPadding value="0"/>
-        <lineStyle kind="GRID" colorName="#000000" start="1,0" stop="-1,-1"/>
     </blockTableStyle>
     <initialize>
         <paraStyle name="all" alignment="justify"/>
@@ -57,12 +61,12 @@
     <paraStyle name="tr_default" rightIndent="0.0" leftIndent="2.0" fontName="Arial" fontSize="8.0" leading="12"
                alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="tr_right" rightIndent="0.0" leftIndent="0.0" fontName="Arial" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="tr_center" rightIndent="0.0" leftIndent="0.2cm" fontName="Arial" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="tr_center" rightIndent="0.0" leftIndent="0.3cm" fontName="Arial" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
 </stylesheet>
 <images/>
 <story>
 
-<blockTable style="Table_Taxes_Total" colWidths="15.5cm,14cm">
+<blockTable style="table_taxes" colWidths="15.5cm,14cm">
     <tr>
         <td></td>
         <td>
@@ -178,20 +182,24 @@
     <drawString x="1.4cm" y="2cm">Основание</drawString>
     <setFont name="Arial" size="6"/>
     <drawCentredString x="14.75cm" y="1.8cm">наименование документа (договор, контракт, заказ-наряд)</drawCentredString>
-    <drawCentredString x="12cm" y="5.8cm">организация, адрес, телефон, банковские данные</drawCentredString>
-    <drawCentredString x="12cm" y="3.3cm">организация, адрес, телефон, банковские данные</drawCentredString>
-    <drawCentredString x="12cm" y="4.2cm">организация, адрес, телефон, банковские данные</drawCentredString>
+    <drawCentredString x="14cm" y="5.8cm">организация, адрес, телефон, банковские данные</drawCentredString>
+    <drawCentredString x="14cm" y="3.3cm">организация, адрес, телефон, банковские данные</drawCentredString>
+    <drawCentredString x="14cm" y="4.2cm">организация, адрес, телефон, банковские данные</drawCentredString>
     <setFont name="Arial" size="8"/>
 
     {# Грузоотправитель #}
-    <drawString x="4cm" y="6.4cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }}, к/с {{ doc.seller.ks }}</drawString>
-    <drawString x="4cm" y="6.1cm"> {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawString>
+    <drawCentredString x="14cm" y="6.4cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }}, к/с {{ doc.seller.ks }}</drawCentredString>
+    <drawCentredString x="14cm" y="6.1cm"> {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
     <setFont name="Arial" size="8"/>
     {# С\П ъх что такое #}
 {#    <drawString x="4cm" y="5.5cm">С\П</drawString>#}
 
-    <drawString x="4cm" y="4.5cm">{{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }}</drawString>
-{#    <drawString x="5cm" y="3.2cm"></drawString>#}
+    <drawCentredString x="14cm" y="4.5cm">{{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }} </drawCentredString>
+    <drawCentredString x="14cm" y="3.9cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }}, к/с {{ doc.seller.ks }}</drawCentredString>
+    <drawCentredString x="14cm" y="3.6cm"> {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
+
+    <drawCentredString x="14cm" y="2.6cm">{{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }} </drawCentredString>
+
     <drawString x="4cm" y="2.1cm">{{ doc.reason }}</drawString>
     <drawString x="4cm" y="3.6cm"></drawString>
 </illustration>
@@ -279,13 +287,12 @@
     <drawCentredString x="27cm" y="1cm">руб. коп.</drawCentredString>
     <drawCentredString x="27cm" y="0.2cm">15</drawCentredString>
 </illustration>
-<blockTable style="Table_Taxes_Total" colWidths="24.3cm">
+<blockTable style="table_taxes" colWidths="24.3cm">
     <tr>
         <td>
-{#            <section>#}
             {% for s in doc.opers %}
                 <para leftIndent="0.4cm" leading="0" >{{ forloop.counter }}</para>
-              <blockTable style="Table_Invoice_Line_Content" colWidths="1cm,6cm,1cm,1.5cm,1.5cm,1.5cm,1cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1.1cm,1.9cm,3cm"><tr>
+              <blockTable style="table_invoice" colWidths="1cm,6cm,1cm,1.5cm,1.5cm,1.5cm,1cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1.1cm,1.9cm,3cm"><tr>
                       <td><para style="tr_right"></para></td>
                       <td><para style="tr_default"> {{ s.nomenclature.title }} </para> </td>
                       <td><para style="tr_center"> {{ s.nomenclature.intcode }} </para> </td>
@@ -303,15 +310,13 @@
                       <td><para style="tr_center">{{ s.in_total }}</para></td>
               </tr></blockTable>
             {% endfor %}
-
-{#              </section>#}
-            <blockTable style="Table_Total_Include_Taxes" colWidths="13.5cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1.1cm,1.9cm,3cm"
-                        rowHeights="0.4cm{# ,0.4cm #}">
+            <blockTable style="table_total" colWidths="13.5cm,1cm,1.5cm,1.5cm,1.5cm,2cm,1.1cm,1.9cm,3cm"
+                        rowHeights="0.4cm{# , 0.4cm #}">
                 <tr>
                     <td><para style="tr_right">Итого</para></td>
                     <td><para style="tr_center">{{ doc.items }}</para></td>
-                    <td><para style="tr_center"></para></td>
-                    <td><para></para></td>
+                    <td><para style="tr_center">-</para></td>
+                    <td><para style="tr_center">-</para></td>
                     <td><para style="tr_center">X</para></td>
                     <td><para style="tr_center">{{ doc.money }}</para></td>
                     <td><para style="tr_center">X</para></td>
@@ -343,9 +348,9 @@
     <drawString x="19.2cm" y="5cm">порядковых номеров записей</drawString>
     <drawString x="11.5cm" y="4.5cm">Масса груза (нетто)</drawString>
 
-    <drawString x="7.0cm" y="4.6cm">{{ doc.tara|in_words }}</drawString>
-    <drawString x="16.5cm" y="4.6cm">{{ doc.netto|in_words }}</drawString>
-    <drawString x="16.5cm" y="4.1cm">{{ doc.brutto|in_words }}</drawString>
+    <drawCentredString x="8.25cm" y="4.6cm">{{ doc.tara|in_words }}</drawCentredString>
+    <drawCentredString x="19.5cm" y="4.6cm">{{ doc.netto|in_words }}</drawCentredString>
+    <drawCentredString x="19.5cm" y="4.1cm">{{ doc.brutto|in_words }}</drawCentredString>
 
     <drawString x="11.5cm" y="4cm">Масса груза (брутто)</drawString>
     <drawString x="1.5cm" y="3.5cm">Приложение (паспорта, сертификаты и т. д.) на</drawString>
@@ -353,7 +358,8 @@
     <drawString x="1.5cm" y="3cm">Всего отпущено на сумму</drawString>
 
 
-    <drawCentredString x="10cm" y="3cm"> {{ doc.in_total|rubles }} </drawCentredString>
+    <drawCentredString x="10.1cm" y="3cm"> {{ doc.rubles.f }} </drawCentredString>
+    <drawCentredString x="10.1cm" y="2.5cm"> {{ doc.rubles.s }} </drawCentredString>
 
 
 {#    <drawString x="5.0cm" y="3cm">{{ doc.in_total|rubles }}</drawString>#}
@@ -364,7 +370,7 @@
     <drawString x="5.3cm" y="0cm">{{ doc.date|date:'E' }}</drawString>
     <drawString x="6.9cm" y="0cm">{{ doc.date|date:'Y' }}</drawString>
     <drawString x="16cm" y="0cm">М. П. "___" _______________    ____ года</drawString>
-    <drawString x="16cm" y="3cm">По доверенности № __________ от " " _______________________    ____ года</drawString>
+    <drawString x="16cm" y="3cm">По доверенности № __________ от "___" _______________________    _____ года</drawString>
     <drawString x="16cm" y="2.5cm">выданной</drawString>
     <drawString x="16cm" y="1.5cm">Груз принял</drawString>
     <drawString x="16cm" y="1cm">Груз получил</drawString>
@@ -379,7 +385,7 @@
     <drawCentredString x="8.25cm" y="4.3cm">прописью</drawCentredString>
     <drawCentredString x="19.5cm" y="4.33cm">прописью</drawCentredString>
     <drawCentredString x="19.5cm" y="3.83cm">прописью</drawCentredString>
-    <drawCentredString x="8.9cm" y="2.2cm">прописью</drawCentredString>
+    <drawCentredString x="10.1cm" y="2.2cm">прописью</drawCentredString>
     <drawCentredString x="6.5cm" y="1.3cm">должность</drawCentredString>
     <drawCentredString x="10cm" y="1.3cm">подпись</drawCentredString>
     <drawCentredString x="13.5cm" y="1.3cm">расшифровка подписи</drawCentredString>
@@ -392,10 +398,10 @@
     <!---справа-->
     <drawCentredString x="19.25cm" y="1.3cm">должность</drawCentredString>
     <drawCentredString x="22.25cm" y="1.3cm">подпись</drawCentredString>
-    <drawCentredString x="25.25cm" y="1.3cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="26.25cm" y="1.3cm">расшифровка подписи</drawCentredString>
     <drawCentredString x="19.25cm" y="0.8cm">должность</drawCentredString>
     <drawCentredString x="22.25cm" y="0.8cm">подпись</drawCentredString>
-    <drawCentredString x="25.25cm" y="0.8cm">расшифровка подписи</drawCentredString>
+    <drawCentredString x="26.25cm" y="0.8cm">расшифровка подписи</drawCentredString>
     <drawCentredString x="22cm" y="2.3cm">кем, кому (организация, место работы, должность, фамилия, и. о.)</drawCentredString>
     <!---опять слева-->
 
@@ -413,7 +419,7 @@
         6.5cm 4.5cm 10cm 4.5cm
 {#        #}
         5.2cm 2.9cm 15cm 2.9cm
-        1.5cm 2.4cm 15cm 2.4cm
+        5.2cm 2.4cm 15cm 2.4cm
 {#        #}
         14.5cm 4cm 24.5cm 4cm
         7.8cm 3.5cm 10cm 3.5cm

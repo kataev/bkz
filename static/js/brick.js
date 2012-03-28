@@ -30,7 +30,6 @@ $(function () {
         }
         var tf = $('th', '#Bricks tfoot');
         if (tf) {
-//            $(tf[0]).html(nodes.length)
             $(tf[0]).html(names)
             _(tf.slice(1)).each(function (node, id) {
                 node.innerHTML = 0
@@ -38,7 +37,7 @@ $(function () {
 
             _(nodes).each(function (node, m) {
                 $('td', node).slice(1).each(function (id, td) {
-                    $(tf[id + 1]).html(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
+                    $(tf[id + 1]).text(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
                 })
             })
         }

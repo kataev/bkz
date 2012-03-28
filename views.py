@@ -6,6 +6,12 @@ def main(request):
     """ Главная страница """
     return render(request, 'index.html')
 
+
+def help(request):
+    """ Страница помощи """
+    return render(request, 'help.html')
+
+
 def flat_form(request,Form,id):
     """ Форма  """
 #    id = args[0]

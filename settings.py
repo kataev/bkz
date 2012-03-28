@@ -172,6 +172,7 @@ INSTALLED_APPS = (
     'pytils',
     'south',
     'trml2pdf',
+#    'piston',
 #    'error_pages',
 #    'test_utils',
 
@@ -183,6 +184,7 @@ INSTALLED_APPS = (
     'whs.bill',
     'whs.buh',
     'whs.manufacture',
+    'whs.api'
     )
 
 # A sample logging configuration. The only tangible logging

@@ -3,7 +3,6 @@ import django.forms as forms
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
-
 from whs.bill.models import *
 from whs.brick.models import *
 
@@ -32,17 +31,13 @@ class BillForm(forms.ModelForm):
             'info': forms.Textarea(attrs={'rows': 2}),
             }
 
-    class Media:
-        pass
-
 
 class SoldForm(forms.ModelForm):
     class Meta:
         name = 'Sold'
         verbose_name = Sold._meta.verbose_name
         verbose_name_plural = Sold._meta.verbose_name_plural
-        model = Sold #autocomplete="off"
-#        fields = ('brick', 'amount', 'info', 'price', 'delivery')
+        model = Sold
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
@@ -66,7 +61,6 @@ class TransferForm(forms.ModelForm):
         model = Transfer
         verbose_name = Transfer._meta.verbose_name
         verbose_name_plural = Transfer._meta.verbose_name_plural
-#        fields = ('brick_from', 'brick_to', 'amount', 'info', 'price', 'delivery')
         widgets = {
             'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
             'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
@@ -128,8 +122,7 @@ class TransferFactory(TransferFactory):
             return
         bricks = {}
         amounts = {}
-        for i in range(0, self.total_form_count()):
-            form = self.forms[i]
+        for form in self.forms:
             brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['amount']
             bricks[brick.pk] = brick
             amounts[brick.pk] = amounts.get(brick.pk,0) + amount

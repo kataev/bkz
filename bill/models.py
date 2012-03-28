@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
-from dateutil.relativedelta import relativedelta
 
 from whs.brick.models import *
 from whs.agent.models import Agent, Seller
 
+from bill.pdf import OperationsMixin, BillMixin, PalletMixin
+
 # Накладная
-class Bill(models.Model):
+class Bill(BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
     Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
@@ -37,107 +38,8 @@ class Bill(models.Model):
     def get_absolute_url(self):
         return u"/%s/%d/%d/" % (self._meta.verbose_name, self.date.year, self.number)
 
-    def opers(self):
-        return list(self.bill_sold_related.all()) + list(
-            self.bill_transfer_related.all()) + list(self.bill_pallet_related.all())
 
-    @property
-    def tara_return(self):
-        return self.date + relativedelta(months=+1)
-
-    @property
-    def total(self):
-        total = self.bill_sold_related.aggregate(models.Sum('amount')).get('amount__sum') or 0
-        total += self.bill_transfer_related.aggregate(models.Sum('amount')).get('amount__sum') or 0
-        return total
-
-    @property
-    def netto(self):
-        return sum([x.netto for x in self.opers()]) or 0
-
-    @property
-    def brutto(self):
-        return sum([x.brutto for x in self.opers()]) or 0
-
-    @property
-    def tara(self):
-        t = 0
-        for o in self.opers():
-            t+= getattr(o,'tara',0)
-        return t
-
-    @property
-    def items(self):
-        return sum([x.items for x in self.opers()])
-
-    @property
-    def money(self):
-        return sum([x.money for x in self.opers()])
-
-    @property
-    def nds(self):
-        return sum([x.nds for x in self.opers()])
-
-    @property
-    def in_total(self):
-        return sum([x.in_total for x in self.opers()])
-
-    @property
-    def pages(self):
-        return int(len(self.opers())/6 + 1)
-
-class BillMixin(object):
-    @property
-    def nomenclature(self):
-        return self.brick.nomenclature
-
-    @property
-    def money(self):
-        return self.amount * self.price
-
-    @property
-    def netto(self):
-        return int(round(self.amount * self.brick.mass))
-
-    @property
-    def brutto(self):
-        return self.netto + 20 * self.tara
-
-    @property
-    def okei(self):
-        return 796
-
-    @property
-    def package(self):
-        return u'поддон'
-
-    @property
-    def space(self):
-        return 288
-
-    @property
-    def items(self):
-        return self.space * self.tara
-
-    @property
-    def nds(self):
-        return round(self.doc.seller.nds * self.money,2)
-
-    @property
-    def get_nds_display(self):
-        nds = self.doc.seller.nds
-        if nds == 0:
-            return u'б/НДС'
-        else:
-            return str(float(nds))[2:]
-
-    @property
-    def in_total(self):
-        return self.money + self.nds
-
-
-
-class Sold(BillMixin,models.Model):
+class Sold(OperationsMixin,models.Model):
     """ Класс для операций отгруки, является аналогом строки в накладной.
 Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич")
@@ -159,7 +61,7 @@ class Sold(BillMixin,models.Model):
             return u'Новая отгрузка'
 
 
-class Transfer(BillMixin,models.Model):
+class Transfer(OperationsMixin,models.Model):
     """ Класс для операций перевода, представляет себя логическую операцию по продажи одной марки
     по цене другой, аналог скидки.
     Содержит только информацию о кол-ве и том кирпиче из которго совершается перевод, конечная
@@ -191,7 +93,7 @@ class Transfer(BillMixin,models.Model):
         return self.brick_to
 
 
-class Pallet(models.Model):
+class Pallet(PalletMixin, models.Model):
     """
     Поддоны при продаже
     """
@@ -209,35 +111,3 @@ class Pallet(models.Model):
             return u'Поддоны %d шт' % self.amount
         else:
             return u'Продажа поддонов'
-
-    @property
-    def nomenclature(self):
-        return dict(title=u'Поддоны - Возвратная тара',intcode=131)
-
-    @property
-    def netto(self):
-        return 0
-
-    @property
-    def brutto(self):
-        return 0
-
-    @property
-    def price(self):
-        return 200.00
-
-    @property
-    def money(self):
-        return self.amount * self.price
-
-    @property
-    def items(self):
-        return self.amount
-
-    @property
-    def nds(self):
-        return 0
-
-    @property
-    def in_total(self):
-        return self.money

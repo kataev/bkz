@@ -45,6 +45,7 @@ class Add(models.Model):
 
     def __unicode__(self):
         if self.pk:
+
             return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новая партия'
@@ -67,7 +68,8 @@ class Sorting(models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'от %s %s, %d шт' % (self.date, self.brick, self.amount)
+            date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
+            return u'%s от %s' % (self.brick,date)
         else:
             return u'Новая сортировка'
 

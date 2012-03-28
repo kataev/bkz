@@ -25,6 +25,8 @@ class Brick(models.Model):
 
     nomenclature = models.ForeignKey(Nomenclature, null=True, blank=True, verbose_name=u'Номенклатура')
 
+    order = ('begin','add','t_from','t_to','sold','m_from','m_to','m_rmv','inv','total')
+
     def __unicode__(self):
         if not self.pk: return u'Новый кирпич'
         else: return self.label

@@ -15,3 +15,10 @@ def model_verbose_name(obj):
 @register.filter(name='model_verbose_name_plural')
 def model_verbose_name_plural(obj):
     return obj._meta.verbose_name_plural
+
+@register.filter(name='hash')
+def hash(obj,key):
+    if type(obj).__name__ == 'dict':
+        return obj.get(key,'')
+    else:
+        return getattr(obj,key,'')

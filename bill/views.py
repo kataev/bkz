@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import logging
 
 from exceptions import ValueError
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -11,6 +12,8 @@ from django.utils.translation import ugettext as _
 from whs.bill.forms import BillFilter,Bill,DateForm
 from whs.views import CreateView, UpdateView, DeleteView
 from whs.bill.pdf import pdf_render_to_response
+
+logger = logging.getLogger(__name__)
 
 __author__ = 'bteam'
 
@@ -52,7 +55,6 @@ class DeleteView(BillSlugMixin,DeleteView):
 class CreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
-
         if self.request.method == 'GET':
             initial = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
             initial['number'] = (initial.get('number') or 0) + 1
@@ -62,8 +64,6 @@ class CreateView(CreateView):
         return context
 
 
-
-#@permission_required('bill.view_bill')
 def bill_print(request,year,number):
     doc = get_object_or_404(Bill.objects.select_related(),number=number,date__year=year)
     return pdf_render_to_response('torg-12.rml',{'doc':doc})
@@ -94,8 +94,8 @@ def bills(request):
         bills = paginator.page(page)
     except (EmptyPage, InvalidPage):
         bills = paginator.page(paginator.num_pages)
-    money = 0# reduce(lambda memo,b: memo+b.money,bills.object_list,0)
-    total = 0#reduce(lambda memo,b: memo+b.total,bills.object_list,0)
+    money = sum([b.money for b in bills.object_list])
+    total = sum([b.total for b in bills.object_list])
 
     url = QueryDict('',mutable=True)
     get = request.GET.copy()

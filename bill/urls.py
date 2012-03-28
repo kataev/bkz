@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 from whs.bill.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill
 from whs.bill.views import UpdateView, CreateView, DeleteView
