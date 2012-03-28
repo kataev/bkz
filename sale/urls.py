@@ -34,6 +34,6 @@ urlpatterns = patterns('whs.sale.views',
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
 
     url(ur'^Контрагенты$', 'agents', name='agents'),
-    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='agent'),
+#    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='agent'),
 
 )

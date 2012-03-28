@@ -2,7 +2,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
-from django.utils.encoding import smart_str
 
 admin.autodiscover()
 
@@ -20,7 +19,7 @@ urlpatterns += patterns('',
     url(r'^', include('whs.brick.urls')),
     url(r'^', include('whs.sale.urls')),
     url(r'^', include('whs.manufacture.urls')),
-    url(ur'^Показания/', include('whs.energy.urls', namespace='energy')),
+    url(ur'^Показания/', include('whs.energy.urls')),
 
 )
 

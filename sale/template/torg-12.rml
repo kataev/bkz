@@ -4,8 +4,8 @@
 <!DOCTYPE document SYSTEM "rml.dtd">
 <document filename="bill.pdf" debug="1">
 <docinit>
-    <registerFont fontName="Arial" fontFile="bill/fonts/Arial.ttf"/>
-    <registerFont fontName="Arial-Bold" fontFile="bill/fonts/Arial_Bold.ttf"/>
+    <registerFont fontName="Arial" fontFile="sale/fonts/Arial.ttf"/>
+    <registerFont fontName="Arial-Bold" fontFile="sale/fonts/Arial_Bold.ttf"/>
 </docinit>
 <template pageSize="(842.0,595.0)" title="Bill" author="Kataev Denis" allowSplitting="1">
     <pageTemplate id="first">

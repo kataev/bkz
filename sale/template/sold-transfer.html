@@ -10,15 +10,15 @@
     </tr>
     </thead>
     <tbody>
-    {% for t in doc.instance.bill_transfer_related.all %}
+    {% for t in doc.instance.sale_transfer_related.all %}
         <tr class='{{ t.brick.css }}'>
             <td>{{ t.pk }}</td>
             <td>
                 <label class='checkbox inline'>
-                    {% if form.instance.pk == t.bill_sold_related.get.pk %}
+                    {% if form.instance.pk == t.sale_sold_related.get.pk %}
                         <input type='checkbox' name='{{ f.html_name }}' checked="checked" value="{{ t.pk }}">
                     {% else %}
-                        {% if t.bill_sold_related.get.pk %}
+                        {% if t.sale_sold_related.get.pk %}
                             <input type='checkbox' name='{{ f.html_name }}' disabled="disabled" value="{{ t.pk }}">
                         {% else %}
                             <input type='checkbox' name='{{ f.html_name }}'  value="{{ t.pk }}">

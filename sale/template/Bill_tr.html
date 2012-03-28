@@ -14,10 +14,10 @@
     <td><span class='money'>{{ b.money }}</span></td>
 </tr>
 <tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
-{% for s in b.bill_sold_related.all %}
+{% for s in b.sale_sold_related.all %}
     {% include 'Sold_tr.html' %}
 {% endfor %}
-{% for t in b.bill_transfer_related.all %}
+{% for t in b.sale_transfer_related.all %}
     {% include 'Transfer_tr.html' %}
 {% endfor %}
 </tbody>

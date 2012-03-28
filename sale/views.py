@@ -81,7 +81,7 @@ def bills(request):
         d = dict([ [x,d[x]] for x in d if d[x]])
         print d
         if 'brick' in d.keys():
-            d['bill_sold_related__brick'] = d['brick']
+            d['sale_sold_related__brick'] = d['brick']
             del d['brick']
         Bills = Bills.filter(**d)
     paginator = Paginator(Bills, 20)

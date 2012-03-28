@@ -4,7 +4,7 @@
     </label>
 
     <div class='controls'>
-        {% with s=form.instance.bill_sold_related.get %}
+        {% with s=form.instance.sale_sold_related.get %}
             {% if s %}
                 <span style="overflow: hidden;" class='uneditable-input {{ s.brick.css }}'>{{ s }}</span>
             {% else %}

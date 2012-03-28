@@ -144,7 +144,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     'whs.context.bricks',
-    'whs.context.current_app',
     )
 
 ROOT_URLCONF = 'whs.urls'
