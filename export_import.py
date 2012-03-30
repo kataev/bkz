@@ -4,6 +4,8 @@ from old.models import Tovar,Jurnal,Sclad,Agent as OAgent
 from sale.models import *
 from manufacture.models import *
 
+from copy import deepcopy
+
 def nomenclature():
     f = file('bricks.txt','r').readlines()
     for l in f:
@@ -115,8 +117,13 @@ def old_agents():
     dne = 0
     mor = 0
     for o in OAgent.objects.filter():
-        name = o.name.split(' ')
-        q = Agent.objects.filter(name__iregex=name[0].strip('"'))
+
+        if o.name.split(' ')[0] == u'ООО':
+            name= o.name.split(' ')[1]
+        else:
+            name = o.name.split(' ')[0]
+        name = name.strip('"')
+        q = Agent.objects.filter(name__iregex=name)
         try:
             a = q.get()
 #            print 'ok',o.name
@@ -133,7 +140,11 @@ def old_agents():
             if r == 'e':
                 continue
             a = q[int(r)-1]
-
+        oa = OldAgent(agent_ptr_id=a.pk)
+        oa.old = o.pk
+        oa.agent = a
+        oa.save()
+        a.save()
 
     print dne
     print mor
@@ -150,7 +161,7 @@ def old_agents():
 
 if __name__ == '__main__':
 #    brick()
-    agents()
+#    agents()
 #    man()
 #    totals()
-#    old_agents()
+    old_agents()
