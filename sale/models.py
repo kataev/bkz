@@ -5,6 +5,7 @@ from whs.brick.models import *
 
 from sale.pdf import OperationsMixin, BillMixin, PalletMixin
 
+
 # Накладная
 class Bill(BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
@@ -12,8 +13,8 @@ class Bill(BillMixin, models.Model):
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    agent = models.ForeignKey('Agent', verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
-    seller = models.ForeignKey('Seller', verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
+    agent = models.ForeignKey('sale.Agent', verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
+    seller = models.ForeignKey('sale.Seller', verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
         help_text=u'', default=350)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
@@ -35,7 +36,7 @@ class Bill(BillMixin, models.Model):
             return u'Новая накладная'
 
     def get_absolute_url(self):
-        return u"/%s/%d/%d/" % (self._meta.verbose_name, self.date.year, self.number)
+        return reverse('sale:Bill-year',kwargs=dict(year=self.date.year, number=self.number))
 
 
 class Sold(OperationsMixin,models.Model):
@@ -131,6 +132,8 @@ class Agent(models.Model):
 
     rs=models.CharField(u"Расчетный счет",blank=True,max_length=200)
 
+    info = models.CharField(u'Примечание', max_length=600, blank=True, help_text=u'Любая полезная информация')
+
     class Meta:
         verbose_name=u'Контрагент'
         verbose_name_plural=u'Контрагенты'
@@ -144,7 +147,10 @@ class Agent(models.Model):
             return u'Новый контрагент'
 
     def get_absolute_url(self):
-        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+        return reverse('sale:Agent',kwargs=dict(id=self.pk))
+
+class OldAgent(Agent):
+    old = models.IntegerField('Старое ID')
 
 class People(models.Model):
     name = models.CharField(u"Имя",max_length=400)

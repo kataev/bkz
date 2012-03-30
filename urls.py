@@ -6,20 +6,18 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns(u'',
-    url(r'^$', 'whs.views.main', name='main'),
+    url(r'^$', 'whs.views.index', name='index'),
 
-    url(ur'^Статистика$', 'whs.views.stats', name='stats'),
 
-    url(ur'^Помошь$', 'whs.views.help', name='help'),
 )
 
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^', include('whs.brick.urls')),
-    url(r'^', include('whs.sale.urls')),
-    url(r'^', include('whs.manufacture.urls')),
-    url(ur'^Показания/', include('whs.energy.urls')),
+    url(ur'^Склад/', include('whs.brick.urls', namespace='brick')),
+    url(ur'^Склад/Реализация/', include('whs.sale.urls', namespace='sale')),
+    url(ur'^Склад/Производство/', include('whs.manufacture.urls', namespace='man')),
+    url(ur'^Энергоресурсы/', include('whs.energy.urls', namespace='energy')),
 
 )
 

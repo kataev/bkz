@@ -102,9 +102,16 @@ form {
 .icon-DELETE { background-position:-456px 0 }
 i.icon-zoom-in.zoom {background-position:-360px 0;}
 
+/* Energy */
+.icon-energy { background-position: -408px -120px; }
+.icon-Energy { background-position: -72px -120px; }
+.icon-Teplo { background-position: -72px -24px; }
+
+
 /* Sold */
 .icon-Sold, .icon-sold { background-position: -336px -96px }
 .icon-Transfer, .icon-transfer { background-position: -336px -120px }
+.icon-Brick { background-position:-240px 0 }
 .icon-brick { background-position:-240px 0 }
 .icon-amount { background-position:-240px 0 }
 .icon-tara { background-position: -216px 0 }
@@ -113,7 +120,8 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 .icon-delivery { background-position:-289px -96px }
 
 /*Bill*/
-.icon-Bill { background-position: -360px -120px }
+.icon-Bill,.icon-sale { background-position: -360px -120px }
+.icon-Agent { background-position: -168px 0 }
 .icon-date { background-position: -192px -120px }
 .icon-agent { background-position: -168px 0 }
 .icon-number { background-position: -24px -24px; }
@@ -121,7 +129,8 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 .icon-info { background-position: 0 -72px; }
 
 /* Man */
-.icon-Man { background-position: -408px -96px }
+.icon-Man, .icon-man { background-position: -408px -96px }
+.icon-jurnal { background-position: -360px -48px; }
 .icon-Add { background-position: -289px -96px }
 
 .icon-Sorting { background-position: -216px -24px}

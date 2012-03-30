@@ -4,7 +4,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 from whs.sale.models import *
-from whs.brick.models import *
+#from whs.brick.models import *
 
 
 class DateForm(forms.Form):

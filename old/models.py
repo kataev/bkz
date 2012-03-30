@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #     * Rearrange models' order
@@ -28,25 +29,25 @@ class Agent(models.Model):
 
 class Jurnal(models.Model):
     id = models.IntegerField(primary_key=True)
-    tov = models.ForeignKey('Tovar',db_column='tov')
-    plus = models.IntegerField()
-    minus = models.IntegerField()
-    poddon = models.IntegerField()
-    agent = models.ForeignKey('Agent',db_column='agent')
-    akt = models.IntegerField()
-    nakl = models.TextField()
-    makt = models.IntegerField()
-    pakt = models.IntegerField()
-    spis = models.IntegerField()
-    no_con = models.IntegerField()
-    workshop = models.IntegerField()
-    mws = models.IntegerField()
-    date = models.DateField()
-    time = models.DateTimeField()
-    prim = models.TextField()
-    money = models.FloatField()
-    price = models.FloatField()
-    trans = models.FloatField()
+    tov = models.ForeignKey('Tovar',db_column='tov',verbose_name=u'Товар')
+    plus = models.IntegerField(u'Приход')
+    minus = models.IntegerField(u'Отгрузка')
+    poddon = models.IntegerField(u'Кол-во поддонов')
+    agent = models.ForeignKey('Agent',db_column='agent',verbose_name=u'Контрагент')
+    akt = models.IntegerField(u'Номер акта при переводе')
+    nakl = models.TextField(u'Номер накладной')
+    makt = models.IntegerField(u'Перевод из')
+    pakt = models.IntegerField(u'Перевод в')
+    spis = models.IntegerField(u'Списание')
+    no_con = models.IntegerField(u'Не кнодиция')
+    workshop = models.IntegerField(u'После сортировки')
+    mws = models.IntegerField(u'В сортировку')
+    date = models.DateField(u'Дата')
+    time = models.DateTimeField(u'Время создания')
+    prim = models.TextField(u'Примичание')
+    money = models.FloatField(u'Деньги при продаже')
+    price = models.FloatField(u'Цена за кирпич')
+    trans = models.FloatField(u'Доставка')
     class Meta:
         db_table = u'jurnal'
         ordering = ('-date',)

@@ -6,38 +6,63 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="/">
+            <a class="brand" href="{% url index %}">
                 <i class="icon-logo"></i>
                 <abbr style="border: none" title="Березниковский кирпичный завод'">BKZ</abbr>
             </a>
 
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="/Накладные"> <i class="icon-book icon-white"></i> Накладные</a></li>
-{#                    <li class="divider-vertical"></li>#}
-
+                    <li class="divider-vertical"></li>
+                    {% if namespace == 'brick' %}
+                        <li><a href="{% url sale:main %}"> <i class="icon-sale icon-white"></i> Реализация</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url man:main %}"> <i class="icon-man icon-white"></i> Производство</a></li>
+                    {% elif namespace == 'energy' %}
+                        <li><a href="{% url energy:main %}"> <i class="icon-energy icon-white"></i> Энергоресурсы</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url energy:main %}"> <i class="icon-Energy icon-white"></i> Энергия</a></li>
+                        <li><a href="{% url energy:main %}"> <i class="icon-Teplo icon-white"></i> Тепло</a></li>
+                    {% elif namespace == 'sale' %}
+                        <li><a href="{% url brick:main %}"> <i class="icon-align-justify icon-white"></i> Склад</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url sale:main %}"> <i class="icon-sale icon-white"></i> Накладные</a></li>
+                        <li><a href="{% url sale:agents %}"> <i class="icon-Agent icon-white"></i> Контрагенты</a></li>
+                    {% elif namespace == 'man' %}
+                        <li><a href="{% url brick:main %}"> <i class="icon-align-justify icon-white"></i> Склад</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url man:main %}"> <i class="icon-jurnal icon-white"></i> Журнал</a></li>
+                    {% else %}
+                        <li><a href="{% url energy:main %}"> <i class="icon-energy icon-white"></i> Энергоресурсы</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url brick:main %}"> <i class="icon-align-justify icon-white"></i> Склад</a></li>
+                    {% endif %}
                 </ul>
                 {% block navbar-form %}
                 {% endblock %}
                 <ul class="nav pull-right">
                     {% include 'auth.html' %}
-
-                    <li class="divider-vertical"></li>
-                    <li><a href="/Статистика"><i class='icon-signal icon-white'></i> Статистика</a></li>
+                {% if namespace %}
                     <li class="divider-vertical"></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus icon-white'></i>
                             Создать <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/Накладная/"><i class='icon-Bill'></i> Накладную</a></li>
-                            <li><a href="/Производство/"><i class='icon-Man'></i> Производство</a></li>
-                            <li><a href="/Сортировка/"><i class='icon-Sorting'></i> Сортировку кирпича</a></li>
-                            <li><a href="/Инвентаризация/"><i class='icon-Inventory'></i> Инвентаризацию</a></li>
+                            {% if namespace == 'energy' %}
+                                <li><a href="{% url energy:main %}"><i class='icon-Energy'></i> Энергоресурсы</a></li>
+                                <li><a href="{% url energy:main %}"><i class='icon-Teplo'></i> Тепло</a></li>
+                            {% else %}
+                            <li><a href="{% url sale:Bill %}"><i class='icon-Bill'></i> Накладную</a></li>
+                            <li><a href="{% url man:Man %}"><i class='icon-Man'></i> Производство</a></li>
+                            <li><a href="{% url man:Sort %}"><i class='icon-Sorting'></i> Сортировку кирпича</a></li>
+                            <li><a href="{% url man:Inventory %}"><i class='icon-Inventory'></i> Инвентаризацию</a></li>
                             <li class="divider"></li>
-                            <li><a href="/Кирпич/"><i class='icon-brick'></i> Кирпич</a></li>
-                            <li><a href="/Контрагент/"><i class='icon-agent'></i> КонтрАгента</a></li>
+                            <li><a href="{% url brick:Brick id %}"><i class='icon-Brick'></i> Кирпич</a></li>
+                            <li><a href="{% url sale:Agent id %}"><i class='icon-Agent'></i> КонтрАгента</a></li>
+                            {% endif %}
                         </ul>
                     </li>
+                {% endif %}
                 </ul>
             </div>
 

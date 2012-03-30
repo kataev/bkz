@@ -1,0 +1,53 @@
+{% extends 'index.html' %}
+
+
+{% block container %}
+    <div class="row">
+        <div class="span5">
+            <table class="table table-bordered table-condensed">
+            <caption><h1>Производство</h1></caption>
+                <thead>
+                <tr>
+                    <th>Кирпич</th>
+                    <th>Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in man %}
+                    <tr>
+                        <td colspan="2">
+                            <h4>{{ m.date }}</h4>
+                        </td>
+                    </tr>
+                    {% for o in m.manufacture_add_related.all %}
+                    <tr class="{{ o.brick.css }}">
+                    <td>{{ o.brick }}</td>
+                    <td>{{ o.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="span7">
+            <table class="table table-bordered table-condensed">
+                <caption><h1>Сортировка</h1></caption>
+                <thead>
+                <tr>
+                    <th>Кирпич</th>
+                    <th>Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in sorting %}
+                    <tr>
+                    <td>
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

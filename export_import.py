@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
-from old.models import *
+from old.models import Tovar,Jurnal,Sclad,Agent as OAgent
 from sale.models import *
+from manufacture.models import *
 
 def nomenclature():
     f = file('bricks.txt','r').readlines()
@@ -67,6 +68,7 @@ def agents():
     f = file('agents.txt','r').readlines()
     for l in f:
         a = BuhAgent()
+        a.pk=1
         fields = l.split('\t')
         a.code = fields[0]
         a.fullname = fields[1]
@@ -81,7 +83,74 @@ def agents():
         a.bic = fields[12]
         a.full_clean()
         a.save()
+        break
+
+def man():
+    m = Man()
+    for j in Jurnal.objects.filter(plus__gt=0).order_by('date'):
+        try:
+            brick = OldBrick.objects.get(old=j.tov.pk)
+        except :
+            continue
+        if j.date != m.date:
+            m = Man(date=j.date)
+            m.save()
+        a = Add(brick=brick,amount=j.plus,doc=m)
+        a.save()
+
+def totals():
+    for b in OldBrick.objects.all():
+        try:
+            b.total = Sclad.objects.get(pk=b.old).total
+            b.save()
+        except Sclad.DoesNotExist:
+            print b.pk
+
+def bill():
+    b = Bill()
+    for j in Jurnal.objects.filter(minus__gt=0):
+        pass
+
+def old_agents():
+    dne = 0
+    mor = 0
+    for o in OAgent.objects.filter():
+        name = o.name.split(' ')
+        q = Agent.objects.filter(name__iregex=name[0].strip('"'))
+        try:
+            a = q.get()
+#            print 'ok',o.name
+        except Agent.DoesNotExist:
+            print 'DN',o.name
+            dne+=1
+            continue
+        except Agent.MultipleObjectsReturned:
+            mor+=1
+            print 'MOR',o.name
+            for i,e in enumerate(q):
+                print '\t',i+1,e.name
+            r = raw_input()
+            if r == 'e':
+                continue
+            a = q[int(r)-1]
+
+
+    print dne
+    print mor
+
+#        fullname,o.name
+#        address,address
+#        phone,phone
+#        inn,inn
+#        bank,bank
+#        ks,schet
+#        a.bic
+#        a.rc
+#        a.info
 
 if __name__ == '__main__':
 #    brick()
     agents()
+#    man()
+#    totals()
+#    old_agents()

@@ -2,10 +2,11 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-def main(request):
+from whs.manufacture.models import *
+
+def index(request):
     """ Главная страница """
     return render(request, 'index.html')
-
 
 def help(request):
     """ Страница помощи """

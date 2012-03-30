@@ -6,7 +6,13 @@ from whs.brick.handlers import BrickHandler
 from piston.resource import Resource
 
 urlpatterns = patterns('',
-    url(ur'^Кирпич/(?P<id>\d*)/?$', 'whs.brick.views.flat_form', {'Form':BrickForm}, name='brick'),
+    url(ur'^Кирпич/(?P<id>\d*)/?$', 'whs.brick.views.flat_form', {'Form':BrickForm}, name='Brick'),
+
+    url(r'^$', 'whs.brick.views.main', name='main'),
+
+    url(ur'^Статистика$', 'whs.views.stats', name='stats'),
+
+    url(ur'^Помошь$', 'whs.views.help', name='help'),
 )
 
 brick_handler = Resource(BrickHandler)

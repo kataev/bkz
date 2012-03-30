@@ -181,7 +181,7 @@ $(function () {
         var input = $(this).parent(".input-append")
         var a = $(input).find("a")
         var i = $(input).find("i")
-        var href = "/Контрагент/"
+        var href = "/Склад/Контрагент/"
         if (val) {
             $(a).attr('href', href + val + "/")
             $(a).attr('title', "Редактировать выбранного контрагента")
@@ -266,14 +266,14 @@ $(function () {
         var tr = $(this).parent('tr')
         var brick = $(tr).find('td:first').text()
         $(this).data('popover').$element.attr('data-original-title', brick + '<i class="close">&times;</i>')
-        $(this).data('popover').$element.attr('data-content', '<table class="table"><tr><td>test</td><td>test</td></tr></table>')
+        $(this).data('popover').$element.attr('data-content', '<table class="table"><tr><td></td><td></td></tr></table>')
 
         $(this).popover('show')
         $(this).data('popover').$tip.on('click.close', $.proxy(function (e) {
             $(this).popover('hide')
         }, this))
 
-        var url = '/brick/' + $(tr).data('pk') + '/' + name + '/2012/03/'
+        var url = 'brick/' + $(tr).data('pk') + '/' + name + '/2012/03/'
         $.ajax({url:url, context:this }).success(function (data) {
             var table = $('<table class="table table-condensed table-striped" style="margin-top:-14px"></table>')
                 .appendTo($(this).data('popover')

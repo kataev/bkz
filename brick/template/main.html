@@ -1,0 +1,47 @@
+{% extends 'index.html' %}
+{% load class_name %}
+{% block title %}Остатки{% endblock %}
+{% block container %}
+    {% include 'brick-select-buttons.html' %}
+    <table id='Bricks' class="table table-bordered table-condensed">
+        <colgroup>
+            <col span=1>
+            <col span="10" style='width:70px;'>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Начало</th>
+            <th>Приход</th>
+            <th>Пер-д из</th>
+            <th>Пер-д в</th>
+            <th>Продажи</th>
+            <th>В цех</th>
+            <th>Из цеха</th>
+            <th>Списанно</th>
+            <th>Инв</th>
+            <th>Остатки</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for b in Bricks %}
+            <tr data-pk="{{ b.pk }}" class="{{ b.css }} {% if b.opers %}zero{% endif %}">
+                <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
+                {% for o in b.order %}
+                    {#                        <td> {{ o }} </td>#}
+                    <td data-name="{{ o }}" rel="popover" data-placement='bottom'
+                        data-trigger='manual'> {{ b|hash:o }} </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th></th>
+            {% for o in totals %}
+                <th> {{ totals|hash:o }} </th>
+            {% endfor %}
+        </tr>
+        </tfoot>
+    </table>
+{% endblock %}

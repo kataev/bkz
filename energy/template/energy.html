@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+{% block script %}
+    <script type="text/javascript" src="/static/js/libs/d3.v2.min.js"></script>
+    <script type="text/javascript" src="/static/js/energy.js"></script>
+{% endblock %}
+{% block head %}
+    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/css/energy.css"/>
+{% endblock %}
+{% block container %}
+    <div id="chart"></div>
+    {% for o in opers %}
+        <table class="table">
+            {% for l in o %}
+                <tr>
+                    {% for v in l %}
+                        <td>{{ v }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}

@@ -144,6 +144,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     'whs.context.bricks',
+    'whs.context.namespace',
     )
 
 ROOT_URLCONF = 'whs.urls'
@@ -153,6 +154,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'sale/template/'),
     os.path.join(PROJECT_PATH, 'brick/template/'),
     os.path.join(PROJECT_PATH, 'manufacture/template/'),
+    os.path.join(PROJECT_PATH, 'energy/template/'),
     )
 
 INSTALLED_APPS = (

@@ -6,13 +6,14 @@ from whs.brick.models import *
 
 class Man(models.Model):
     """Класс документа для учета прихода кирпича с производства"""
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
     class Meta():
         verbose_name = u"Производство"
         verbose_name_plural = u"Производства"
         permissions = (("view_man", u"Может просматривать производсво"),)
+        ordering = ('-date', )
 
     def __unicode__(self):
         if self.pk:
@@ -34,9 +35,6 @@ class Add(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
-    poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
-    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     doc = models.ForeignKey(Man, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
 
     class Meta():
@@ -79,6 +77,7 @@ class Sorted(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
     doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
 
     class Meta():
@@ -97,6 +96,7 @@ class Removed(models.Model):
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
     doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
 
     class Meta():

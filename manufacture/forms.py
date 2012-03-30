@@ -15,7 +15,7 @@ class AddForm(forms.ModelForm):
     class Meta:
         name = 'Add'
         model = Add
-        fields = ('brick', 'amount', 'poddon', 'tara', 'info')
+        fields = ('brick', 'amount')
         verbose_name = Add._meta.verbose_name
         verbose_name_plural = Add._meta.verbose_name_plural
 

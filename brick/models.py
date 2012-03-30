@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.core.urlresolvers import reverse
 from constants import *
 
 class Brick(models.Model):
@@ -30,7 +31,7 @@ class Brick(models.Model):
         else: return self.label
 
     def get_absolute_url(self):
-        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+        return reverse('brick:Brick',kwargs=dict(id=self.pk))
 
     def make_label(self):
         return make_label(self)
