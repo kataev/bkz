@@ -67,10 +67,9 @@ def brick():
         b.save()
 
 def agents():
-    f = file('agents.txt','r').readlines()
+    f = file('../agents.txt','r').readlines()
     for l in f:
         a = BuhAgent()
-        a.pk=1
         fields = l.split('\t')
         a.code = fields[0]
         a.fullname = fields[1]
@@ -85,7 +84,6 @@ def agents():
         a.bic = fields[12]
         a.full_clean()
         a.save()
-        break
 
 def man():
     m = Man()
@@ -117,37 +115,53 @@ def old_agents():
     dne = 0
     mor = 0
     for o in OAgent.objects.filter():
-
-        if o.name.split(' ')[0] == u'ООО':
-            name= o.name.split(' ')[1]
-        else:
-            name = o.name.split(' ')[0]
-        name = name.strip('"')
-        q = Agent.objects.filter(name__iregex=name)
+        name= o.name.replace(u'ИП','').replace(u'ООО','').replace(',',' ').split(' ')
+        name = [x.strip('"').strip() for x in name]
+        q = Agent.objects.filter(name__icontains=name[0])
         try:
             a = q.get()
 #            print 'ok',o.name
         except Agent.DoesNotExist:
-            print 'DN',o.name
+#            print 'DN',o.name,o.pk
             dne+=1
             continue
         except Agent.MultipleObjectsReturned:
-            mor+=1
-            print 'MOR',o.name
-            for i,e in enumerate(q):
-                print '\t',i+1,e.name
-            r = raw_input()
-            if r == 'e':
-                continue
-            a = q[int(r)-1]
-        oa = OldAgent(agent_ptr_id=a.pk)
-        oa.old = o.pk
-        oa.agent = a
-        oa.save()
-        a.save()
+            q1 = q.filter(name__icontains=name[1])
+            try:
+                a = q1.get()
+            except Agent.DoesNotExist:
+                dne+=1
+            except Agent.MultipleObjectsReturned:
+                if len(name) > 2 and name[2] != ' ':
+                    q2 = q.filter(name__icontains=name[2])
+                    try:
+                        a = q2.get()
+                    except Agent.DoesNotExist:
+                        dne+=1
+#                        print 'DN',o.name,o.pk
+                    except Agent.MultipleObjectsReturned:
+                        mor+=1
+                        print 'MOR',name[0],name[1],name[2],o.pk
+                        for i,e in enumerate(q[:3]):
+                            print '\t',i+1,e.name,e.pk,e.buhagent.code
+                else:
+                    mor+=1
+                    print 'MOR',name[0],name[1],o.pk
+                    for i,e in enumerate(q[:3]):
+                        print '\t',i+1,e.name,e.pk,e.buhagent.code
+#            r = raw_input()
+#            if r == 'e':
+#                continue
+#            a = q[int(r)-1]
+#        oa = OldAgent(agent_ptr_id=a.pk)
+#        oa.old = o.pk
+#        oa.agent = a
+#        oa.save()
+#        a.save()
 
-    print dne
-    print mor
+    print 'DN',dne
+    print 'MOR',mor
+    print 'TOT',dne+mor
 
 #        fullname,o.name
 #        address,address
