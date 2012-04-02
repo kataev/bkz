@@ -181,7 +181,7 @@ $(function () {
         var input = $(this).parent(".input-append")
         var a = $(input).find("a")
         var i = $(input).find("i")
-        var href = "/Склад/Контрагент/"
+        var href = "/Склад/Реализация/Контрагент/"
         if (val) {
             $(a).attr('href', href + val + "/")
             $(a).attr('title', "Редактировать выбранного контрагента")

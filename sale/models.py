@@ -118,7 +118,7 @@ class Agent(models.Model):
     name = models.CharField(u"Имя",max_length=400,
         help_text=u'Название без юридической формы, без ООО, без ИП, без кавычек.')
     fullname = models.CharField(u"Полное имя",max_length=400,help_text=u'Название для накладных')
-    type = models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
+    form = models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
 
     address = models.CharField(u"Адрес",blank=True,max_length=200,help_text=u'Юридический адрес')
     phone = models.CharField(u"Телефон",blank=True,max_length=200)
@@ -133,6 +133,9 @@ class Agent(models.Model):
     rs=models.CharField(u"Расчетный счет",blank=True,max_length=200)
 
     info = models.CharField(u'Примечание', max_length=600, blank=True, help_text=u'Любая полезная информация')
+    type = models.CharField(u'Тип', max_length=600, blank=True, help_text=u'Тип контргаента')
+
+
 
     class Meta:
         verbose_name=u'Контрагент'

@@ -30,9 +30,9 @@
             <td>{{ a.pk }}</td>
             <td><a href="{{ a.get_absolute_url }}">{{ a }}</a>
                 {% if a.type %}
-                    <span class='label'>{{ a.get_type_display }}</span>
+                    <span class='label'>{{ a.get_form_display }}</span>
                 {% else %}
-                    <span class='label label-success'>{{ a.get_type_display }}</span>
+                    <span class='label label-success'>{{ a.get_form_display }}</span>
                 {% endif %}
             </td>
             <td>{{ a.address }}</td>
