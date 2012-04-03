@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
-from old.models import Tovar, Jurnal, Sclad, Agent as OAgent
+from old.models import *
 from sale.models import *
 from manufacture.models import *
 
@@ -19,7 +19,7 @@ def brick():
     """
     Импорт продукции из старой базы
     """
-    for t in Tovar.objects.all():
+    for t in DispTovar.objects.all():
         b = OldBrick()
         b.old = t.id
 
@@ -101,7 +101,7 @@ def man():
     Импорт "приходов" из старой базы
     """
     m = Man()
-    for j in Jurnal.objects.filter(plus__gt=0).order_by('date'):
+    for j in DispJurnal.objects.filter(plus__gt=0).order_by('date'):
         try:
             brick = OldBrick.objects.get(old=j.tov.pk)
         except:
@@ -119,86 +119,130 @@ def totals():
     """
     for b in OldBrick.objects.all():
         try:
-            b.total = Sclad.objects.get(pk=b.old).total
+            b.total = DispSclad.objects.get(pk=b.old).total
             b.save()
-        except Sclad.DoesNotExist:
+        except DispSclad.DoesNotExist:
             print b.pk
 
+def get_agent(name):
+    name = name.replace(u'ИП', '').replace(u'ООО', '').replace(u'"', '').replace(u'-', ' ')\
+    .replace(u'\\', ' ').replace(',', ' ').strip().split(' ')
+    name = filter(None, name)
+    q = Agent.objects.all()
+    for i, n in enumerate(name):
+        q = q.filter(name__icontains=n)
+        try:
+            a = q.get()
+        except Agent.DoesNotExist:
+#            print 'DNE','%s ' * len(name) % tuple(name)
+            return None
+        except Agent.MultipleObjectsReturned:
+            if i == len(name) -1:
+#                print 'MOR','%s ' * len(name) % tuple(name)
+                return None
 
 def sold():
     """
     Импорт накладных из старой базы данных
     """
+    zavod = Seller.objects.get(pk=1206)
+    sk = Seller.objects.get(pk=1175)
     b = Bill()
-    for j in Jurnal.objects.filter(minus__gt=0):
+    for j in DispJurnal.objects.filter(minus__gt=0).order_by('nakl','-date',):
         try:
             brick = OldBrick.objects.get(old=j.tov.pk)
-            agent = OldAgent.objects.get(old=j.agent.pk)
-        except OldAgent.DoesNotExist:
-            print j.agent.pk,'\tAgent DNE'
         except OldBrick.DoesNotExist:
             print j.tov.pk,'\tBrick DNE'
-        if j.date !=j.date:
-            b = Bill(date=j.date,number=j.nakl)
-            if j.agent == u'Северная керамика': # Сделать поиск по примичанию для опредления покупателя
-                b.agent
-                b.seller = u'Северная керамика'
+        n = int(j.nakl.split('/')[0])
+        if b.number != n:
+            b = Bill(date=j.date,number=n)
+            print n,j.date
+            if j.agent.pk == 1:
+                if '/' in j.prim:
+                    ag,prim = j.prim.split('/')
+                    agent = get_agent(ag)
+                    b.info = prim
+                elif '"' in j.prim:
+                    ag,prim = j.prim.split('"')[1:]
+                    agent = get_agent(ag)
+                    b.info = prim
+                else:
+                    agent = get_agent(j.prim) or sk
+                    b.info = j.prim
+#                print agent,b.info,j.prim
+                b.agent = agent or sk
+                b.seller = sk
             else:
-                b.agent = agent
-                b.seller = u'ЗОВОД'
+                b.agent = OldAgent.objects.get(old=j.agent.pk)
+                b.seller = zavod
+            b.full_clean()
             b.save()
 
         s = Sold()
+        s.doc = b
         s.brick = brick
         s.amount = j.minus
         s.tara = j.poddon
         s.price = j.price
         s.delivery = j.trans
         s.info = j.prim
-        s.doc = b
         s.full_clean()
-#        s.save()
+        s.save()
 
 def transfer():
-    for j in Jurnal.objects.filter(akt_gt=0,pakt_gt=0):
+    dne = 0
+    dl = 0
+    for j in DispJurnal.objects.filter(akt__gt=0,pakt__gt=0):
+        print j.pk
         try:
             brick_to = OldBrick.objects.get(old=j.tov.pk)
-            agent = OldAgent.objects.get(old=j.agent.pk)
         except OldBrick.DoesNotExist:
             print j.tov.pk,'\tBrick to DNE'
-        except OldAgent.DoesNotExist:
-            print j.agent.pk,'\tAgent to DNE'
-        s = Sold.objects.filter(brick=brick_to,doc__date=j.date,amount_gte=j.pakt,doc__agent=agent)
+        s = Sold.objects.filter(brick=brick_to,doc__date=j.date)
         if len(s):
-            s = s.get()
+            try:
+                s = s.get()
+            except Sold.MultipleObjectsReturned:
+                s = s[0]
             b = s.doc
             t = Transfer(doc=b,amount=j.pakt)
             try:
-                t.brick_from = OldBrick.objects.get(old=Jurnal.objects.get(akt=j.akt,makt_gt=0).tov.pk)
+                t.brick_from = OldBrick.objects.get(old=DispJurnal.objects.get(akt=j.akt,makt__gt=0).tov.pk)
             except OldBrick.DoesNotExist:
                 print j.tov.pk,'\tBrick DNE'
             t.brick_to = brick_to
-            t.tara = s.poddon
-            t.price = s.price
-            t.delivery = s.trans
+            t.tara = j.poddon
+            t.price = j.price
+            t.delivery = j.trans
             t.info = j.prim
 
             if s.amount > j.pakt:
-                s.mount-=j.pakt
+                s.amount-=j.pakt
+                s.full_clean()
                 s.save()
-            else:
+            elif s.amount == j.pakt:
                 t.info+=s.info
-                s.delete
+                s.full_clean()
+                dl+=1
+                s.delete()
+            else:
+                pass
             t.full_clean()
             t.save()
         else:
             print j.pk,'\tSold DNE'
+            dne += 1
+    print 'dne',dne
+    print 'del',dl
 
+ag  = [22L, 40L, 45L, 79L, 114L, 123L, 134L, 155L, 221L, 234L, 277L, 353L]
+ag1 = [74L, 86L, 117L, 136L, 161L, 234L, 297L, 328L, 331L, 356L, 393L, 388L]
 ft = dict(fullname = 'name', name = 'name',address = 'address',phone = 'phone',inn = 'inn',bank = 'bank',ks = 'schet')
 def old_agents():
     dne = 0
     mor = 0
-    for o in OAgent.objects.all():
+    ok = 0
+    for o in DispAgent.objects.all().filter(pk__in=ag1):
         name = o.name.replace(u'ИП', '').replace(u'ООО', '').replace(u'"', '').replace(u'-', ' ')\
         .replace(u'\\', ' ').replace(',', ' ').strip().split(' ')
         name = filter(None, name)
@@ -207,6 +251,22 @@ def old_agents():
             q = q.filter(name__icontains=n)
             try:
                 a = q.get()
+                ok+=1
+                try:
+                    a.oldagent
+                    if a.oldagent.old == o.pk:
+                        print '=='
+                    else:
+                        print '!='
+                        f = DispAgent.objects.get(pk=o.pk)
+                        t = DispAgent.objects.get(pk=a.oldagent.old)
+                        print DispJurnal.objects.filter(agent=f).update(agent=t),'updated'
+                        if not DispJurnal.objects.filter(agent=f).count():
+                            o.delete()
+                    break
+                except OldAgent.DoesNotExist:
+                    pass
+
                 b = OldAgent(agent_ptr=a)
                 b.old = o.pk
 #                b.save()
@@ -215,6 +275,7 @@ def old_agents():
                         if ft.get(n,False):
                             setattr(a,n,getattr(o,ft[n]))
 #                a.save()
+                print a.pk,b.pk,'ok',o.name
                 break
             except Agent.DoesNotExist:
                 dne += 1
@@ -233,6 +294,7 @@ def old_agents():
                 break
             except Agent.MultipleObjectsReturned:
                 if len(name) == i+1:
+                    dne+=1
                     try:
                         OldAgent.objects.get(old=o.pk)
                         break
@@ -252,22 +314,54 @@ def old_agents():
                         if getattr(a,n) == 'None' or not getattr(a,n):
                             if ft.get(n,False):
                                 setattr(a,n,getattr(o,ft[n]))
-                    a.save()
+#                    a.save()
                     break
                 continue
 
+    print 'OK ', ok
     print 'DNE', dne
     print 'MOR', mor
     print 'TOT', dne + mor
 
 def agent_test():
     w = []
-    for o in OAgent.objects.all():
+    for o in DispAgent.objects.all():
         try:
             OldAgent.objects.get(old=o.pk)
         except OldAgent.DoesNotExist:
+            print o.name,o.pk
             w.append(o.pk)
-    print w
+    print w,len(w)
+
+def agent_clear():
+    for a in Agent.objects.all():
+        for n in [f.name for f in Agent._meta.fields][1:]:
+            if getattr(a,n) == 'None':
+                setattr(a,n,'')
+                a.save()
+
+def sorting():
+    s = Sorting()
+    for j in DispJurnal.objects.filter(mws__gt=0).order_by('-date'):
+        if s.date != j.date:
+            s = Sorting()
+            s.date = j.date
+            s.brick = OldBrick.objects.get(old=j.tov.pk)
+            s.amount = j.mws
+            s.full_clean()
+            s.save()
+
+
+def srted():
+    s = Sorted()
+    for j in DispJurnal.objects.filter(workshop__gt=0).order_by('-date'):
+        if s.date != j.date:
+            s = Sorting()
+            s.date = j.date
+            s.brick = OldBrick.objects.get(old=j.tov.pk)
+            s.amount = j.mws
+            s.full_clean()
+            s.save()
 
 if __name__ == '__main__':
 #    brick()
@@ -275,4 +369,8 @@ if __name__ == '__main__':
 #    man()
 #    totals()
 #    old_agents()
-    agent_test()
+#    agent_test()
+#    agent_clear()
+#    sold()
+#    transfer()
+    sorting()

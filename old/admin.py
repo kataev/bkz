@@ -16,7 +16,7 @@ class ScladAdmin(admin.ModelAdmin):
 class AgentAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-admin.site.register(Tovar,TovarAdmin)
-admin.site.register(Sclad,ScladAdmin)
-admin.site.register(Jurnal,JurnalAdmin)
-admin.site.register(Agent,AgentAdmin)
+admin.site.register(DispTovar,TovarAdmin)
+admin.site.register(DispSclad,ScladAdmin)
+admin.site.register(DispJurnal,JurnalAdmin)
+admin.site.register(DispAgent,AgentAdmin)

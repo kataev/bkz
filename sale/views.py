@@ -82,7 +82,6 @@ def main(request):
     if form.is_valid() and request.GET:
         d = form.cleaned_data
         d = dict([[x, d[x]] for x in d if d[x]])
-        print d
         if 'brick' in d.keys():
             d['sale_sold_related__brick'] = d['brick']
             del d['brick']
@@ -97,15 +96,15 @@ def main(request):
         bills = paginator.page(page)
     except (EmptyPage, InvalidPage):
         bills = paginator.page(paginator.num_pages)
-    money = sum([b.money for b in bills.object_list])
-    total = sum([b.total for b in bills.object_list])
+#    money = sum([b.money for b in bills.object_list])
+#    total = sum([b.total for b in bills.object_list])
 
-    url = QueryDict('', mutable=True)
-    get = request.GET.copy()
-    get = dict([[x, get[x]] for x in get if get[x]])
-    if get.has_key('page'): del get['page']
-    url.update(get)
-    return render(request, 'bills.html', dict(Bills=bills, Filter=form, total=total, money=money, url=url.urlencode()))
+#    url = QueryDict('', mutable=True)
+#    get = request.GET.copy()
+#    get = dict([[x, get[x]] for x in get if get[x]])
+#    if get.has_key('page'): del get['page']
+#    url.update(get)
+    return render(request, 'bills.html', dict(Bills=bills, Filter=form,))# total=total, money=money, url=url.urlencode()))
 
 
 def agents(request):

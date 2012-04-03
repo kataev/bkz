@@ -164,9 +164,9 @@ class People(models.Model):
         verbose_name_plural=u'Люди'
 
 class Seller(Agent):
-    director = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_director_related", verbose_name=u'Директор')
-    buhgalter = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_buhgalter_related", verbose_name=u'Бухгалтер')
-    dispetcher = models.ForeignKey(People, related_name="%(app_label)s_%(class)s_dispetcher_related", verbose_name=u'Диспечер')
+    director = models.CharField(u'Директор',max_length=200)
+    buhgalter = models.CharField(u'Бухгалтер',max_length=200)
+    dispetcher = models.CharField(u'Диспечер',max_length=200)
 
     class Meta:
         verbose_name=u'Продавец'
