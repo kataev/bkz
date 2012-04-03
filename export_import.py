@@ -5,6 +5,9 @@ from sale.models import *
 from manufacture.models import *
 
 def nomenclature():
+    """
+    Импорт номенклатуры из бух-кой базы
+    """
     f = file('bricks.txt', 'r').readlines()
     for l in f:
         n = Nomenclature()
@@ -13,6 +16,9 @@ def nomenclature():
         n.save()
 
 def brick():
+    """
+    Импорт продукции из старой базы
+    """
     for t in Tovar.objects.all():
         b = OldBrick()
         b.old = t.id
@@ -64,6 +70,9 @@ def brick():
 
 
 def agents(path):
+    """
+    Ипортирование контрагентов из старой базы и споставление их с бух-кой базой
+    """
     f = file(path, 'r').readlines()
     for l in f:
         fields = l.split('\t')
@@ -88,6 +97,9 @@ def agents(path):
 
 
 def man():
+    """
+    Импорт "приходов" из старой базы
+    """
     m = Man()
     for j in Jurnal.objects.filter(plus__gt=0).order_by('date'):
         try:
@@ -102,6 +114,9 @@ def man():
 
 
 def totals():
+    """
+    Синхронизация остатков баз
+    """
     for b in OldBrick.objects.all():
         try:
             b.total = Sclad.objects.get(pk=b.old).total
@@ -110,12 +125,76 @@ def totals():
             print b.pk
 
 
-def bill():
+def sold():
+    """
+    Импорт накладных из старой базы данных
+    """
     b = Bill()
     for j in Jurnal.objects.filter(minus__gt=0):
-        pass
+        try:
+            brick = OldBrick.objects.get(old=j.tov.pk)
+            agent = OldAgent.objects.get(old=j.agent.pk)
+        except OldAgent.DoesNotExist:
+            print j.agent.pk,'\tAgent DNE'
+        except OldBrick.DoesNotExist:
+            print j.tov.pk,'\tBrick DNE'
+        if j.date !=j.date:
+            b = Bill(date=j.date,number=j.nakl)
+            if j.agent == u'Северная керамика': # Сделать поиск по примичанию для опредления покупателя
+                b.agent
+                b.seller = u'Северная керамика'
+            else:
+                b.agent = agent
+                b.seller = u'ЗОВОД'
+            b.save()
 
+        s = Sold()
+        s.brick = brick
+        s.amount = j.minus
+        s.tara = j.poddon
+        s.price = j.price
+        s.delivery = j.trans
+        s.info = j.prim
+        s.doc = b
+        s.full_clean()
+#        s.save()
 
+def transfer():
+    for j in Jurnal.objects.filter(akt_gt=0,pakt_gt=0):
+        try:
+            brick_to = OldBrick.objects.get(old=j.tov.pk)
+            agent = OldAgent.objects.get(old=j.agent.pk)
+        except OldBrick.DoesNotExist:
+            print j.tov.pk,'\tBrick to DNE'
+        except OldAgent.DoesNotExist:
+            print j.agent.pk,'\tAgent to DNE'
+        s = Sold.objects.filter(brick=brick_to,doc__date=j.date,amount_gte=j.pakt,doc__agent=agent)
+        if len(s):
+            s = s.get()
+            b = s.doc
+            t = Transfer(doc=b,amount=j.pakt)
+            try:
+                t.brick_from = OldBrick.objects.get(old=Jurnal.objects.get(akt=j.akt,makt_gt=0).tov.pk)
+            except OldBrick.DoesNotExist:
+                print j.tov.pk,'\tBrick DNE'
+            t.brick_to = brick_to
+            t.tara = s.poddon
+            t.price = s.price
+            t.delivery = s.trans
+            t.info = j.prim
+
+            if s.amount > j.pakt:
+                s.mount-=j.pakt
+                s.save()
+            else:
+                t.info+=s.info
+                s.delete
+            t.full_clean()
+            t.save()
+        else:
+            print j.pk,'\tSold DNE'
+
+ft = dict(fullname = 'name', name = 'name',address = 'address',phone = 'phone',inn = 'inn',bank = 'bank',ks = 'schet')
 def old_agents():
     dne = 0
     mor = 0
@@ -130,9 +209,12 @@ def old_agents():
                 a = q.get()
                 b = OldAgent(agent_ptr=a)
                 b.old = o.pk
-                b.save()
-                a.save()
-                print a
+#                b.save()
+                for n in [f.name for f in Agent._meta.fields][1:]:
+                    if getattr(a,n) == 'None' or not getattr(a,n):
+                        if ft.get(n,False):
+                            setattr(a,n,getattr(o,ft[n]))
+#                a.save()
                 break
             except Agent.DoesNotExist:
                 dne += 1
@@ -147,15 +229,31 @@ def old_agents():
                 a.ks = o.schet
                 a.old = o.pk
                 a.full_clean()
-
-                print a
 #                a.save()
                 break
             except Agent.MultipleObjectsReturned:
                 if len(name) == i+1:
-                    print '%s ' * len(name) % tuple(name), o.pk
+                    try:
+                        OldAgent.objects.get(old=o.pk)
+                        break
+                    except OldAgent.DoesNotExist:
+                        pass
+                    print '%s ' * len(name) % tuple(name), o.pk, o.name
                     for i,e in enumerate(q[:3]):
                         print '\t',i+1,e.name,e.pk,e.buhagent.code
+                    r = raw_input()
+                    if r == 'e':
+                        continue
+                    a = q[int(r)-1]
+                    b = OldAgent(agent_ptr=a)
+                    b.old = o.pk
+                    b.save()
+                    for n in [f.name for f in Agent._meta.fields][1:]:
+                        if getattr(a,n) == 'None' or not getattr(a,n):
+                            if ft.get(n,False):
+                                setattr(a,n,getattr(o,ft[n]))
+                    a.save()
+                    break
                 continue
 
     print 'DNE', dne
@@ -164,7 +262,6 @@ def old_agents():
 
 def agent_test():
     w = []
-
     for o in OAgent.objects.all():
         try:
             OldAgent.objects.get(old=o.pk)
@@ -175,8 +272,7 @@ def agent_test():
 if __name__ == '__main__':
 #    brick()
 #    agents('../agents.txt')
-    agents('../agents_post.txt')
 #    man()
 #    totals()
 #    old_agents()
-#    agent_test()
+    agent_test()
