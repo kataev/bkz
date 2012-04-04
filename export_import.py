@@ -218,11 +218,17 @@ def transfer():
 
             if s.amount > j.pakt:
                 s.amount-=j.pakt
+                t.tara = s.tara
+                t.price = s.price
+                t.delivery = s.delivery
                 s.full_clean()
                 s.save()
             elif s.amount == j.pakt:
                 t.info+=s.info
                 s.full_clean()
+                t.tara = s.tara
+                t.price = s.price
+                t.delivery = s.delivery
                 dl+=1
                 s.delete()
             else:
@@ -367,10 +373,10 @@ if __name__ == '__main__':
 #    brick()
 #    agents('../agents.txt')
 #    man()
-#    totals()
+    totals()
 #    old_agents()
 #    agent_test()
 #    agent_clear()
 #    sold()
 #    transfer()
-    sorting()
+#    sorting()

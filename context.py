@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from whs.brick.models import Brick
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 
 def bricks(request):
     Bricks = Brick.objects.all()
     return dict(Bricks=Bricks)
 
 def namespace(request):
-    return dict(namespace = resolve(request.path).namespace)
+    try:
+        url = resolve(request.path)
+        return dict(namespace = url.namespace)
+    except Resolver404:
+        return dict()

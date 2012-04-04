@@ -15,6 +15,13 @@ form legend + .control-group {
     margin-top: 18px;
     -webkit-margin-top-collapse: separate;
 }
+.popover-content p { text-align: center}
+.popover-content table {
+    margin-top:-14px;
+    margin-bottom: -10px
+}
+td[rel='popover'] {cursor: pointer}
+
 div.ctype div.controls, div.defect div.controls {padding-left: 20px;}
 
 .thumbnail > div {

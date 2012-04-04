@@ -1,6 +1,7 @@
 <tr class='{{ s.brick.css }}'>
-    <td></td>
-    <td colspan="2">{{ s.brick }}</td>
+    <td colspan="3">
+        <a href="?brick={{ s.brick.pk }}" class='{{ s.brick.css }}' title='Показать накладные с этим кирпичем'>{{ s.brick }}</a>
+    </td>
     <td>{{ s.amount }}</td>
     <td><span rel='tooltip' data-original-title='{{ s.price }} за шт' class='money'>{{ s.money }}</span></td>
 </tr>

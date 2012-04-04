@@ -29,6 +29,9 @@ class Bill(BillMixin, models.Model):
             ("view_bill", u"Может просматривать накладные"),
             )
 
+    solds = []
+    transfers = []
+
     def __unicode__(self):
         if self.pk:
             return u'№ %d, %d' % (self.number, self.date.year)

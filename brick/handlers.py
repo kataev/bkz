@@ -18,8 +18,9 @@ class BrickHandler(BaseHandler):
             objects = Add.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
             objects =objects.values_list('doc__date','amount')
         elif kwargs['model'] == 'sold':
-            objects = Sold.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
-            objects =objects.values_list('doc__date','amount')
+            objects1 = Transfer.objects.filter(doc__date__year=year, doc__date__month=month, brick_to__pk=pk)
+            objects2 = Sold.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
+            objects = list(objects1.values_list('doc__date','amount')) + list(objects2.values_list('doc__date','amount'))
         elif kwargs['model'] == 't_from':
             objects = Transfer.objects.filter(doc__date__year=year, doc__date__month=month, brick_from__pk=pk)
             objects =objects.values_list('doc__date','amount')

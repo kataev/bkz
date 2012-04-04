@@ -1,14 +1,33 @@
 # -*- coding: utf-8 -*-
+import datetime
+from dateutil.relativedelta import relativedelta
+
 import django.forms as forms
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 from whs.sale.models import *
-#from whs.brick.models import *
 
 
 class DateForm(forms.Form):
     date = forms.DateField()
+
+    @property
+    def value(self):
+        if self.is_valid():
+            return self.cleaned_data['date']
+        else:
+            return datetime.date.today()
+
+    def prev(self):
+        return self.value - datetime.timedelta(1)
+    def next(self):
+        return self.value + datetime.timedelta(1)
+
+    def prev_month(self):
+        return self.value - relativedelta(months=1)
+    def next_month(self):
+        return self.value + relativedelta(months=1)
 
 
 class NumberInput(forms.TextInput):

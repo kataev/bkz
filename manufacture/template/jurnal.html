@@ -1,11 +1,16 @@
 {% extends 'index.html' %}
 
-
+{% block title %}Журнал{% endblock %}
 {% block container %}
+    <ul class="pager">
+        <li class="previous"><a href="?date={{ form.prev_month.isoformat }}">← {{ form.prev_month|date:'F Y' }}</a></li>
+        <li><a>{{ form.value|date:'F Y' }}</a></li>
+        <li class="next"><a href="?date={{ form.next_month.isoformat }}">{{ form.next_month|date:'F Y' }} →</a></li>
+    </ul>
     <div class="row">
         <div class="span5">
             <table class="table table-bordered table-condensed">
-            <caption><h1>Производство</h1></caption>
+            <caption><h2>Производство</h2></caption>
                 <thead>
                 <tr>
                     <th>Кирпич</th>
@@ -31,7 +36,7 @@
         </div>
         <div class="span7">
             <table class="table table-bordered table-condensed">
-                <caption><h1>Сортировка</h1></caption>
+                <caption><h2>Сортировка</h2></caption>
                 <thead>
                 <tr>
                     <th>Кирпич</th>

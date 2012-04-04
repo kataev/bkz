@@ -1,11 +1,11 @@
 <tr class='Bill' data-opers='Bill_{{ b.pk }}'>
     <td>{{ b.number }}</td>
     <td>
-        {% ifchanged b.date %} <b>{% endifchanged %}
-        {{ b.date }}
-        {% ifchanged b.date %}</b> {% endifchanged %}
+        {% ifchanged b.date %}<b>{% endifchanged %}
+        {{ b.date|date:'j M Y' }}
+        {% ifchanged b.date %}</b>{% endifchanged %}
     </td>
-    <td>
+    <td colspan="3">
         <a href="{{ b.get_absolute_url }}">{{ b }}</a>
         {% if b.seller.pk == 1 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
         <i class="icon-zoom-in"></i>
@@ -15,14 +15,12 @@
                 class="icon-eye-open icon-white"></i></a>
     </span>
     </td>
-    <td>{{ b.total }}</td>
-    <td><span class='money'>{{ b.money }}</span></td>
 </tr>
 <tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
-{% for s in b.sale_sold_related.all %}
+{% for s in b.opers.Sold %}
     {% include 'Sold_tr.html' %}
 {% endfor %}
-{% for t in b.sale_transfer_related.all %}
+{% for t in b.opers.Transfer %}
     {% include 'Transfer_tr.html' %}
 {% endfor %}
 </tbody>

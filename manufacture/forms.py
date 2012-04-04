@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-date = datetime.date.today()
 __author__ = 'bteam'
 import django.forms as forms
 from whs.manufacture.models import *

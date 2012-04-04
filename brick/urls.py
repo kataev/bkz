@@ -18,5 +18,5 @@ urlpatterns = patterns('',
 brick_handler = Resource(BrickHandler)
 
 urlpatterns += patterns('',
-    url(r'^brick/(?P<pk>\d+)/(?P<model>.+)/(?P<year>\d{4})/(?P<month>\d+)/$', brick_handler),
+    url(ur'^Кирпич/(?P<pk>\d+)/(?P<model>.+)/(?P<year>\d{4})/(?P<month>\d+)/$', brick_handler),
 )
