@@ -39,3 +39,9 @@ class Teplo(models.Model):
         verbose_name = u"Тепло"
         verbose_name_plural = u'Тепло'
         ordering = ('-date',)
+    def __unicode__(self):
+        if self.pk:
+            date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
+            return u'%s' % date
+        else:
+            return u'Новые показания тепла'

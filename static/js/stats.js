@@ -1,62 +1,115 @@
 /*
  * User: bteam
- * Date: 05.03.12 #Вдовина Мария Николаевна Вконтакте
+ * Date: 05.03.12
  * Time: 19:53
  */
-"use strict";
-$(function () {
-    var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: '1',
-            type: 'line',
-            href:null
-        },
+var m = [30, 20, 20, 19], // top right bottom left margin
+    w = 180, // width
+    h = 160, // height
+    z = 18; // cell size
 
-        title: {
-            text: null,
-            x: -20 //center
-        },
-        xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        yAxis: {
-            title: {
-                text: 'Temperature (Â°C)'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
-        },
-        tooltip: {
-            formatter: function() {
-                return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'Â°C';
-            }
-        },
-        legend: {
-            enabled:false,
-            layout: 'vertical',
-            align: 'bottom',
-            verticalAlign: 'top',
-            x: -10,
-            y: 100,
-            borderWidth: 0
-        },
-        series: [{
-            name: 'Tokyo',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-        }, {
-            name: 'New York',
-            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-        }, {
-            name: 'Berlin',
-            data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-        }, {
-            name: 'London',
-            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-        }]
-    });
+
+sizes = {100:0, 125:1, 150:2, 175:3, 200:4, 250:5, 300:6, 9000:7}
+label = ['100', '125', '150', '175', '200', '250', '300', '>20']
+months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+
+function draw(data,param,node) {
+    var i = 0,j = 0;
+    var svg = d3.select(node || "#transfer").append("svg")
+        .attr("width",w)
+        .attr("height",h)
+
+    var mark = svg.append('svg')
+        .attr("class", "YlGn")
+        .attr("width",label.length*z+z)
+        .attr("height",label.length*z+z)
+        .attr("x", 20)
+        .attr("y", 30)
+
+    var hor = svg.append('svg')
+        .attr('preserveAspectRatio',"xMaxYMax meet")
+
+    var ver = svg.append('svg')
+        .attr('preserveAspectRatio',"xMaxYMax meet")
+        .attr("x", -10)
+        .attr("y", 10)
+
+    hor.selectAll("text")
+        .data(label)
+        .enter().append('text')
+        .attr('width', z)
+        .attr('height', 2 * z)
+        .attr('y', function (d) { return z * ++j + 32 })
+        .attr('x', 25)
+        .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
+        .attr("text-anchor", "left")
+        .text(String)
+
+    hor.append('text')
+        .attr('x',w/2)
+        .attr('y',10)
+        .attr("text-anchor", "middle")
+        .text( (param.date__year || new Date().getFullYear()) +' ' + (param.date__month ? months[param.date__month-1]:'') )
+
+    i = 0
+    j=0
+    ver.selectAll("text")
+        .data(label.slice(0,-1))
+        .enter().append('text')
+        .attr('width', z)
+        .attr('height', 2 * z)
+        .attr('y', function (d) { return 6+z+(z)*++i })
+        .attr('x', function (d) { return z * ++j})
+        .attr("text-anchor", "right")
+        .text(String)
+
+    var row = _(data).pluck('v')
+    var color = d3.scale.quantile()
+        .domain(row.reverse())
+        .range(d3.range(8));
+    var rect = mark.selectAll("rect.mark")
+        .data(data)
+        .enter().append('rect')
+        .attr("width", z)
+        .attr("height", z)
+        .attr("x", function (d) { return z * sizes[d.f]})
+        .attr("y", function (d) { return z * sizes[d.t]})
+        .attr("class", function (d) { return "mark q" + color(d.v).toFixed() + "-8"; })
+        .attr("transform", "translate(10,10)")
+        .append('title')
+        .text(function (d) { return 'Марка:' + d.f + ' > ' + d.t + ' Кол-во:' + d.v })
+        .datum(function (d) { return d.v })
+}
+
+$('#transfer_show').click(function(e){
+    e.preventDefault()
+    var year  = $('[name="date__year"]').val()
+    var month  = $('[name="date__month"]').val()
+    var param = {}
+    if (year){
+        param.date__year = year
+        if (month) param.date__month = month
+    }
+    url = "Статистика/Переводы/"
+    if (param) url += '?' + $.param(param);
+    $.ajax({url:url, context:this }).success(function(data){
+        $(this).button('Показать')
+        draw(data,param)
+    }).error(function(){$(this).button('Ошибка')})
+    $(this).button('loading')
 })
+
+
+function totals(data){
+    var svg = d3.select("totals").append("svg")
+        .attr("width",w)
+        .attr("height",h)
+
+    var mark = svg.append('svg')
+        .attr("class", "YlGn")
+        .attr("width",label.length*z+z)
+        .attr("height",label.length*z+z)
+        .attr("x", 20)
+        .attr("y", 30)
+
+}

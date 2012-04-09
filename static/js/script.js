@@ -299,3 +299,7 @@ $(function () {
             })
     })
 })
+$('[name="date__month"]').change(function(e){
+    var year = $(':selected',this).parent().attr('label')
+    $('[name="date__year"]').val(year)
+})

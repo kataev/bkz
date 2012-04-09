@@ -113,17 +113,6 @@ def main(request):
         for b in bills.object_list:
             b.opers = opers.get(b.pk,{})
 
-#    money = sum([b.money for b in bills.object_list])
-#    total = sum([b.total for b in bills.object_list])
-
-#    url = QueryDict('', mutable=True)
-#    get = request.GET.copy()
-#    get = dict([[x, get[x]] for x in get if get[x]])
-#    if get.has_key('page'): del get['page']
-#    url.update(get)
-
-
-
     return render(request, 'bills.html', dict(Bills=bills, Filter=form,))# total=total, money=money, url=url.urlencode()))
 
 alphabet = [u"А",u"Б",u"В",u"Г",u"Д",u"Е",u"Ё",u"Ж",u"З",u"И",u"К",u"Л",u"М",u"Н",u"О",u"П",u"Р",u"С",u"Т",u"Ф",u"Х",u"Ц",u"Ч",u"Ш",u"Щ",u"Ы",u"Ю",u"Я"]
@@ -134,3 +123,9 @@ def agents(request):
     if letter:
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
     return render(request, 'agents.html', dict(Agents=Agents,alphabet=alphabet))
+
+
+def stats(request):
+    form = BillFilter(request.GET or None)
+
+    return render(request, 'stats.html',dict(Filter=form))

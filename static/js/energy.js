@@ -10,9 +10,11 @@ var day = d3.time.format("%w"),
 days = function(d){
     return parseInt(d) == 0 ? 6 : d-1
 }
+var max = 4000
+var min = 400
 
 var color = d3.scale.quantize()
-    .domain([9, 1])
+    .domain([max,min])
     .range(d3.range(9));
 
 var svg = d3.select("#chart").selectAll("svg")
@@ -49,6 +51,10 @@ svg.selectAll("path.month")
     .attr("d", monthPath);
 
 d3.json("energy/", function(data) {
+    var m = _(data).map(function(e){return e.gaz})
+    max = _.max(m)
+    min = _.min(m)
+
     var data = d3.nest()
         .key(function(d) { return d.date; })
         .rollup(function(d) { return d[0].gaz; })

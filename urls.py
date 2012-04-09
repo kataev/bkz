@@ -18,7 +18,6 @@ urlpatterns += patterns('',
     url(ur'^Склад/Реализация/', include('whs.sale.urls', namespace='sale')),
     url(ur'^Склад/Производство/', include('whs.manufacture.urls', namespace='man')),
     url(ur'^Энергоресурсы/', include('whs.energy.urls', namespace='energy')),
-
 )
 
 urlpatterns += staticfiles_urlpatterns()

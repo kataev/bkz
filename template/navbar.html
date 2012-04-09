@@ -28,6 +28,7 @@
                         <li class="divider-vertical"></li>
                         <li><a href="{% url sale:main %}"> <i class="icon-sale icon-white"></i> Накладные</a></li>
                         <li><a href="{% url sale:agents %}"> <i class="icon-Agent icon-white"></i> Контрагенты</a></li>
+                        <li><a href="{% url sale:statistics %}"> <i class="icon-signal icon-white"></i> Статистика</a></li>
                     {% elif namespace == 'man' %}
                         <li><a href="{% url brick:main %}"> <i class="icon-align-justify icon-white"></i> Склад</a></li>
                         <li class="divider-vertical"></li>
@@ -49,8 +50,8 @@
                             Создать <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {% if namespace == 'energy' %}
-                                <li><a href="{% url energy:main %}"><i class='icon-Energy'></i> Энергоресурсы</a></li>
-                                <li><a href="{% url energy:main %}"><i class='icon-Teplo'></i> Тепло</a></li>
+                                <li><a href="{% url energy:Energy date %}"><i class='icon-Energy'></i> Энергоресурсы</a></li>
+                                <li><a href="{% url energy:Teplo date %}"><i class='icon-Teplo'></i> Тепло</a></li>
                             {% else %}
                             <li><a href="{% url sale:Bill %}"><i class='icon-Bill'></i> Накладную</a></li>
                             <li><a href="{% url man:Man %}"><i class='icon-Man'></i> Производство</a></li>

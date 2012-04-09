@@ -24,13 +24,6 @@ td[rel='popover'] {cursor: pointer}
 
 div.ctype div.controls, div.defect div.controls {padding-left: 20px;}
 
-.thumbnail > div {
-    display: block;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 table span.label a {color:white}
 
 /* http://www.artlebedev.ru/tools/technogrette/html/rouble/ */

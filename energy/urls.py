@@ -7,8 +7,8 @@ from piston.resource import Resource
 
 urlpatterns = patterns('',
     url(r'^$', 'whs.energy.views.main', name='main'),
-    url(ur'^Энергоресурсы/(?P<date>\d{4}-\d{2}-\d{2})/?$', 'whs.views.flat_form', {'Form':EnergyForm}, name='Energy'),
-    url(ur'^Тепло/(?P<date>\d{4}-\d{2}-\d{2})/?$', 'whs.views.flat_form', {'Form':TeploForm}, name='Teplo'),
+    url(ur'^Энергоресурсы/(?P<date>\d{4}-\d{2}-\d{2})?/?$', 'whs.views.flat_form', {'Form':EnergyForm}, name='Energy'),
+    url(ur'^Тепло/(?P<date>\d{4}-\d{2}-\d{2})?/?$', 'whs.views.flat_form', {'Form':TeploForm}, name='Teplo'),
 )
 
 energy_handler = Resource(EnergyHandler)

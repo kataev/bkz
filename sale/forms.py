@@ -151,6 +151,10 @@ class TransferFactory(TransferFactory):
             if b.total < amounts[pk]:
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте переводы по кирпичу %s' % b.label)
 
+class YearMonthFilter(forms.Form):
+    date__year = forms.IntegerField(required=True)
+    date__month = forms.IntegerField(required=False)
+
 class BillFilter(forms.Form):
     date__year = forms.IntegerField(required=False)
     date__month = forms.IntegerField(required=False)

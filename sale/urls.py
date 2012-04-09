@@ -3,10 +3,14 @@ from django.conf.urls import *
 
 from whs.sale.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill,AgentForm
 from whs.sale.views import UpdateView, CreateView, DeleteView
+from whs.sale.handlers import TransferMarkHandler
+
+from piston.resource import Resource
 
 urlpatterns = patterns('whs.sale.views',
 
     url(ur'^$', 'main', name='main'),
+    url(ur'^Статистика$', 'stats', name='statistics'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', DeleteView.as_view(
         model=Bill,
@@ -37,4 +41,11 @@ urlpatterns = patterns('whs.sale.views',
 
 urlpatterns += patterns('',
     url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent'),
+)
+
+
+transfer_mark_handler = Resource(TransferMarkHandler)
+
+urlpatterns += patterns('',
+    url(ur'^Статистика/Переводы/$', transfer_mark_handler),
 )

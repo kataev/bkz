@@ -34,10 +34,10 @@ class EnergyHandler(BaseHandler):
                 return rc.BAD_REQUEST
         else:
             queryset = self.queryset(request).filter(*args, **kwargs)
-            qss = qsstats.QuerySetStats(Add.objects.all(),'doc__date')
-            man = qss.time_series(datetime.date(2011,1,1),interval='months',aggregate = Sum('amount'))
-            man = dict([(x[0].date(),x[1]) for x in man])
+#            qss = qsstats.QuerySetStats(Add.objects.all(),'doc__date')
+#            man = qss.time_series(datetime.date(2011,1,1),interval='months',aggregate = Sum('amount'))
+#            man = dict([(x[0].date(),x[1]) for x in man])
             queryset = delta(queryset,self.fields)
-            for v in queryset:
-                v.gaz /= float(man.get(v.date.replace(day=1),1))/1000
+#            for v in queryset:
+#                v.gaz /= float(man.get(v.date.replace(day=1),1))/1000
             return queryset

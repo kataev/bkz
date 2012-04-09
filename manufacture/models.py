@@ -2,6 +2,8 @@
 import pytils
 import datetime
 
+from django.core.urlresolvers import reverse
+
 from whs.brick.models import *
 
 class Man(models.Model):
@@ -23,12 +25,7 @@ class Man(models.Model):
             return u'Новая партия с производства'
 
     def get_absolute_url(self):
-        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
-
-    @property
-    def total(self):
-        return sum([x['amount'] for a in self.manufacture_add_related.values('amount').all()])
-
+        return reverse('man:Man-view',kwargs=dict(pk=self.pk))
 
 class Add(models.Model):
     """Класс операций для документа"""
@@ -40,6 +37,7 @@ class Add(models.Model):
     class Meta():
         verbose_name = u"Партия"
         verbose_name_plural = u"Партия"
+        ordering = ('-doc__date', )
 
     def __unicode__(self):
         if self.pk:
@@ -62,7 +60,7 @@ class Sorting(models.Model):
         permissions = (("view_man", u"Может просматривать сортировку"),)
 
     def get_absolute_url(self):
-        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+        return reverse('man:Sort-view',kwargs=dict(pk=self.pk))
 
     def __unicode__(self):
         if self.pk:
@@ -120,7 +118,7 @@ class Inventory(models.Model):
         permissions = (("view_inventory", u"Может просматривать инвентаризацию"),)
 
     def get_absolute_url(self):
-        return u"/%s/%i/" % (self._meta.verbose_name,self.id)
+        return reverse('man:Inventory-view',kwargs=dict(pk=self.pk))
 
     def __unicode__(self):
         if self.pk:
