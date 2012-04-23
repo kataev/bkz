@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
-
-from whs.manufacture.models import *
+from django.contrib import messages
 
 def index(request):
     """ Главная страница """
@@ -55,6 +54,7 @@ class UpdateView(UpdateView):
             if factory.is_valid():
                 factory.save()
         if all([f.is_valid() for f in opers]):
+            messages.success(self.request,'Всё ок')
             return redirect(instance.get_absolute_url())
 
         return self.render_to_response(dict(form=form,opers=opers))

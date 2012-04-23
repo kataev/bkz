@@ -1,18 +1,34 @@
+{% load class_name %}
+{% spaceless %}
 <div class="input-append">
-{% if f.value == 'None' or not f.value %}
-        <span class="input uneditable-input {% if span %}span{{ span }}{% endif %}" id='{{ f.id_for_label }}_span'>Выберете кирпич</span>
-{% else %}
-    {% for b in Bricks %}
-        {# Выбиратор кирпича. Bug,Плохо стравнивает числа и строки  #}
-        {% if b.pk == f.value|add:0 %}
-            <span id='{{ f.id_for_label }}_span'
-                  class="input {% if span %}span{{ span }}{% endif %} uneditable-input {{ b.css }}"> {{ b.label }} </span>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-<span class="add-on"><a data-toggle="brick-select" data-backdrop='true' data-input='{{ f.id_for_label }}' data-animation='false' data-backdrop='false'
-                        href="#brick-select"> <i class="icon-search"></i></a></span>
+    {% if f.value == 'None' or not f.value %}
+        <span class="input uneditable-input span" id='{{ f.id_for_label }}_span'><span>Выберете кирпич</span>
+            {% if not f.field.required %}
+                <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
+            {% endif %}
+        </span>
+    {% else %}
+        {% for b in Bricks %}
+            {# Выбиратор кирпича. Bug,Плохо стравнивает числа и строки  #}
+            {% if b.pk == f.value|add:0 %}
+                <span id='{{ f.id_for_label }}_span' title='Остаток: {{ b.total }}'
+                      class="input {% if span %}span{{ span }}{% endif %} uneditable-input {{ b.css }}">
+                    <span>{{ b.label }}</span>
+                    {% if not f.field.required %}
+                        <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
+                    {% endif %}
+                </span>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <a class="btn btn-info add-on " data-toggle="brick-select" data-backdrop='true' data-input='{{ f.id_for_label }}'
+       data-animation='false' data-backdrop='false' title='Шелкните для выбора кирпича'
+       href="#brick-select"> <i class="icon-search icon-white"></i></a>
 </div>
 
 <input type='text' style='display: none' class='brick' name='{{ f.html_name }}' id='{{ f.id_for_label }}'
-       value="{{ f.value|default_if_none:'' }}">
+       value="{{ f.value|default_if_none:'' }}"
+       {% if form.brick_from and f.name != 'brick_from' %}data-brick_from="{{ form.brick_from.id_for_label }}"{% endif %}
+       data-model='{{ form.instance|to_class_name }}'
+        >
+{% endspaceless %}

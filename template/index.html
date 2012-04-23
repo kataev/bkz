@@ -39,10 +39,27 @@
 
 <body>
 {% include 'navbar.html' %}
-{% include 'messages.html' %}
 {% block brick-select %} {% endblock %}
 <div class="container">
     {% block container %}
+        <ul class="thumbnails">
+            <li class="span4">
+                <div class="thumbnail">
+                    <img src="/static/img/cargo/cargo3.png" alt="">
+                    <div class="caption">
+                        <h2 style='text-align: center'><a href='{% url brick:main %}'>Склад</a></h2>
+                    </div>
+                </div>
+            </li>
+            <li class="span4">
+                <div class="thumbnail">
+                    <img src="/static/img/energy.png" alt="">
+                    <div class="caption">
+                        <h2 style='text-align: center'><a href='{% url energy:main %}'>Энергоресурсы</a></h2>
+                    </div>
+                </div>
+            </li>
+        </ul>
     {% endblock %}
 </div>
 <div class="container" id="footer">

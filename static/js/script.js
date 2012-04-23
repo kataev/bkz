@@ -137,27 +137,17 @@ $(function () {
 })
 $(function () {
     $('[rel="tooltip"]').tooltip()
-//    $('[rel="popover"]').popover()
+    $('[rel="popover"]').popover()
     $(".collapse").collapse()
 })
 $(function () {
     var color_select = function (select, val) {
         $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
-        if (val == 0) {
-            $(select).addClass('bc-red')
-        }
-        if (val == 1) {
-            $(select).addClass('bc-yellow')
-        }
-        if (val == 2) {
-            $(select).addClass('bc-brown')
-        }
-        if (val == 3) {
-            $(select).addClass('bc-light')
-        }
-        if (val == 4) {
-            $(select).addClass('bc-white')
-        }
+        if (val == 0) { $(select).addClass('bc-red') }
+        if (val == 1) { $(select).addClass('bc-yellow') }
+        if (val == 2) { $(select).addClass('bc-brown') }
+        if (val == 3) { $(select).addClass('bc-light') }
+        if (val == 4) { $(select).addClass('bc-white') }
     }
     var select = $('#id_color')
     var val = parseInt($(select).val())

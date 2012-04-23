@@ -3,7 +3,7 @@ __author__ = 'bteam'
 from piston.handler import BaseHandler
 from piston.utils import rc
 
-from whs.sale.models import Sold,Transfer
+from whs.sale.models import Sold
 from whs.manufacture.models import Add,Sorted,Sorting,Removed
 
 class BrickHandler(BaseHandler):
@@ -14,30 +14,30 @@ class BrickHandler(BaseHandler):
         year = int(kwargs['year'])
         pk = int(kwargs['pk'])
 
+        date = dict(doc__date__year=year, doc__date__month=month)
+
         if kwargs['model'] == 'add':
-            objects = Add.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
+            objects = Add.objects.filter(**date).filter(brick__pk=pk)
             objects =objects.values_list('doc__date','amount')
         elif kwargs['model'] == 'sold':
-            objects1 = Transfer.objects.filter(doc__date__year=year, doc__date__month=month, brick_to__pk=pk)
-            objects2 = Sold.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
-            objects = list(objects1.values_list('doc__date','amount')) + list(objects2.values_list('doc__date','amount'))
+            objects = Sold.objects.filter(**date).filter(brick__pk=pk)
+            objects = objects.values_list('doc__date','amount')
         elif kwargs['model'] == 't_from':
-            objects = Transfer.objects.filter(doc__date__year=year, doc__date__month=month, brick_from__pk=pk)
-            objects =objects.values_list('doc__date','amount')
+            objects = Sold.objects.filter(**date).filter(brick_from__pk=pk)
+            objects = objects.values_list('doc__date','amount')
         elif kwargs['model'] == 't_to':
-            objects = Transfer.objects.filter(doc__date__year=year, doc__date__month=month, brick_to__pk=pk)
-            objects =objects.values_list('doc__date','amount')
+            objects = Sold.objects.filter(**date).filter(brick__pk=pk,brick_from__isnull=False)
+            objects = objects.values_list('doc__date','amount')
         elif kwargs['model'] == 'm_from':
-            objects = Sorting.objects.filter(date__year=year, date__month=month, brick__pk=pk)
-            objects =objects.values_list('date','amount')
+            objects = Sorting.objects.filter(**date).filter(brick__pk=pk)
+            objects = objects.values_list('date','amount')
         elif kwargs['model'] == 'm_to':
-            objects = Sorted.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
-            objects =objects.values_list('doc__date','amount')
+            objects = Sorted.objects.filter(**date).filter(brick__pk=pk)
+            objects = objects.values_list('doc__date','amount')
         elif kwargs['model'] == 'm_rmv':
-            objects = Removed.objects.filter(doc__date__year=year, doc__date__month=month, brick__pk=pk)
-            objects =objects.values_list('doc__date','amount')
+            objects = Removed.objects.filter(**date).filter(brick__pk=pk)
+            objects = objects.values_list('doc__date','amount')
         else:
             objects = []
-
 
         return objects

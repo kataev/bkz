@@ -9,27 +9,18 @@ from whs.sale.models import *
 def sold_pre_save(instance, *args, **kwargs):
     if instance.pk:
         instance = Sold.objects.get(pk=instance.pk)
-        brick = Brick.objects.get(pk=instance.brick.pk)
+        if instance.brick_from:
+            brick = Brick.objects.get(pk=instance.brick_from_id)
+        else:
+            brick = Brick.objects.get(pk=instance.brick.pk)
         brick.total += instance.amount
         brick.save()
 
 @receiver(post_save, sender=Sold)
 def sold_post_save(instance, *args, **kwargs):
-    brick = Brick.objects.get(pk=instance.brick.pk)
+    if instance.brick_from:
+        brick = Brick.objects.get(pk=instance.brick_from_id)
+    else:
+        brick = Brick.objects.get(pk=instance.brick_id)
     brick.total -= instance.amount
     brick.save()
-
-@receiver(pre_delete, sender=Transfer)
-@receiver(pre_save, sender=Transfer)
-def transfer_pre_save(instance, *args, **kwargs):
-    if instance.pk:
-        instance = Transfer.objects.get(pk=instance.pk)
-        brick_from = Brick.objects.get(pk=instance.brick_from.pk)
-        brick_from.total += instance.amount
-        brick_from.save()
-
-@receiver(post_save, sender=Transfer)
-def transfer_post_save(instance, *args, **kwargs):
-    brick_from = Brick.objects.get(pk=instance.brick_from.pk)
-    brick_from.total -= instance.amount
-    brick_from.save()

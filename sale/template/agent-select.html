@@ -1,3 +1,4 @@
+{% spaceless %}
 <div class="input-append">
     <select name='{{ f.html_name }}' href="{% url sale:Agent id %}" id='{{ f.id_for_label }}'>
         {% if not f.field.required %}
@@ -15,15 +16,15 @@
             {% endfor %}
             </optgroup>
     </select>
-<span class="add-on">
+
     {% if f.value %}
-        <a target="_blank" href="{% url sale:Agent id=f.value %}" title="Редактировать выбранного контрагента">
+        <a class="add-on btn" target="_blank" href="{% url sale:Agent id=f.value %}" title="Редактировать выбранного контрагента">
             <i class="icon-info-sign"></i>
         </a>
     {% else %}
-        <a target="_blank" href="{% url sale:Agent id %}" title="Создать контрагента">
+        <a class="add-on  btn" target="_blank" href="{% url sale:Agent id %}" title="Создать контрагента">
             <i class="icon-plus-sign"></i>
         </a>
     {% endif %}
-</span>
 </div>
+{% endspaceless %}

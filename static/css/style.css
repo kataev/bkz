@@ -1,10 +1,12 @@
 body { background-image: url('/static/img/whitediamond.png') }
+#brick-select {margin-top: -190px}
+div.control-group.DELETE label {color: #DA4F49}
 .icon-logo {
     background: url('/static/img/log.png') no-repeat;
     vertical-align: 0px;
     background-position: 4px 0px;
 }
-span.uneditable-input,a.btn {vertical-align: bottom;}
+.add-on input[type='checkbox'] { vertical-align:baseline}
 #Bricks a {color:#333}
 li.mark a { padding: 5px; }
 #Journal .name {padding-left: 10px;}
@@ -113,6 +115,7 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 .icon-Transfer, .icon-transfer { background-position: -336px -120px }
 .icon-Brick { background-position:-240px 0 }
 .icon-brick { background-position:-240px 0 }
+.icon-brick_from { background-position:-240px 0 }
 .icon-amount { background-position:-240px 0 }
 .icon-tara { background-position: -216px 0 }
 .icon-poddon { background-position:-240px 0 }

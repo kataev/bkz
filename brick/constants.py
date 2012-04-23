@@ -43,10 +43,10 @@ refuse_c = (
 
 css_dict = dict(
     color=[u'bc-red', u'bc-yellow', u'bc-brown', u'bc-light', u'bc-white'],
-    weight={1: u'single', 1.4: u'thickened', 0: u'double', 0.8: u'euro'},
-    view={u'Л': u'facial', u'Р': u'common'},
+    weight={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
+    view={u'Л': u'v-facial', u'Р': u'v-common'},
     ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
-    defect={u'': u'lux', u'<20': u'l20', u'>20': u'g20'},
+    defect={u'': u'd-lux', u'd-<20': u'd-l20', u'd->20': u'd-g20'},
     mark=0,
     features=0
 )

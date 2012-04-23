@@ -1,4 +1,5 @@
 {% load class_name %}
+{% spaceless %}
 <fieldset>
     {% for hidden in form.hidden_fields %}
         {{ hidden }}
@@ -6,7 +7,8 @@
 </fieldset>
 <fieldset class='{{ form.Meta.name }} {% if form.transfered.value %}transfered{% endif %}'>
     <legend>
-        {% if form.instance.get_absolute_url %}<h1>{% else %} <h2> {% endif %}
+        {% if form.instance.get_absolute_url %}
+            <h1>{% else %} <h2> {% endif %}
         {% if form.instance.pk %} {{ form.instance|model_verbose_name }} {% endif %}
         {{ form.instance }}
         {% if not form.instance.get_absolute_url %}</h2>{% else %}</h1>{% endif %}
@@ -19,38 +21,38 @@
     {% endfor %}
     {% for f in form.visible_fields %}
         <div class="control-group {% if f.errors %}error{% endif %} {{ f.name }}">
-            <label class="control-label" for="{{ f.id_for_label }}"><i class='icon-{{ f.name }}'></i>
+            <label title="{{ f.help_text }}" class="control-label" for="{{ f.id_for_label }}"><i
+                    class='icon-{{ f.name }}'></i>
                 {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
             </label>
 
             <div class='controls'>
                 {% if 'brick' in f.name %}
                     {% include 'brick-select-form.html' %}
-                    {% elif f.name == 'price' or f.name == 'delivery' %}
+                {% elif f.name == 'price' or f.name == 'delivery' %}
                     <div class="input-append">
                         {{ f }}
                         <span class="add-on">Руб</span>
                     </div>
-                    {% elif f.name == 'tara' %}
+                {% elif f.name == 'tara' %}
                     <div class="input-append">
                         {{ f }}
-                        <span class="add-on" title='Рассчитывать по поддонам кол-во кирпича'>
+                        <span class="add-on btn" title='Рассчитывать по поддонам кол-во кирпича'>
                             <input type="checkbox" id="{{ f.id_for_label }}_checkbox" checked="checked">
                         </span>
                     </div>
-                    {% elif f.name == 'transfer' %}
-                    {% include 'sold-transfer.html' %}
-                    {% elif f.name == 'agent' %}
+                {% elif f.name == 'agent' %}
                     {% include 'agent-select.html' %}
                 {% else %}
                     {{ f }}
                 {% endif %}
+
                 {% if f.errors %}
                     <span class="help-inline">
-                {% for q in f.errors %}
-                    {{ q }}
-                {% endfor %}
-                </span>
+                        {% for q in f.errors %}
+                            {{ q }}
+                        {% endfor %}
+                    </span>
                 {% endif %}
                 {% if f.help_text and not f.value %}
                     <p class="help-block">
@@ -61,3 +63,4 @@
         </div>
     {% endfor %}
 </fieldset>
+{% endspaceless %}

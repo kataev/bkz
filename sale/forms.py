@@ -74,33 +74,6 @@ class SoldForm(forms.ModelForm):
         return data
 
 
-class TransferForm(forms.ModelForm):
-    class Meta:
-        name = 'Transfer'
-        model = Transfer
-        verbose_name = Transfer._meta.verbose_name
-        verbose_name_plural = Transfer._meta.verbose_name_plural
-        widgets = {
-            'brick_from': forms.TextInput(attrs={'data-widget': 'brick-select'}),
-            'brick_to': forms.TextInput(attrs={'data-widget': 'brick-select'}),
-            'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-            'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-            'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
-            'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
-            'info': forms.Textarea(attrs={'rows': 2}),
-        }
-
-    def clean(self):
-        data = self.cleaned_data
-        brick_from, brick_to, amount = data['brick_from'],data['brick_to'],data['amount']
-        if brick_from.mark < brick_to.mark:
-            raise ValidationError(u'Нельзя делать перевод из меньшей марки в большую')
-        if brick_from.weight != brick_to.weight:
-            raise ValidationError(u'Нельзя в переводе менять размер кирпича')
-        if brick_from.total < amount:
-            raise ValidationError(u'На складе нету столько кирпича для перевода')
-        return data
-
 class PalletForm(forms.ModelForm):
     class Meta:
         name = 'Pallet'
@@ -115,7 +88,6 @@ class PalletForm(forms.ModelForm):
 
 
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm)
-TransferFactory = inlineformset_factory(Bill, Transfer, extra=0, form=TransferForm, )
 PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
 
 class SoldFactory(SoldFactory):
@@ -134,22 +106,6 @@ class SoldFactory(SoldFactory):
             b = bricks[pk]
             if b.total < amounts[pk]:
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
-
-class TransferFactory(TransferFactory):
-    def clean(self):
-        if any(self.errors):
-            return
-        bricks = {}
-        amounts = {}
-        for form in self.forms:
-            brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['amount']
-            bricks[brick.pk] = brick
-            amounts[brick.pk] = amounts.get(brick.pk,0) + amount
-
-        for pk in bricks:
-            b = bricks[pk]
-            if b.total < amounts[pk]:
-                raise ValidationError(u'Не хватает кирпича для накладной, проверьте переводы по кирпичу %s' % b.label)
 
 class YearMonthFilter(forms.Form):
     date__year = forms.IntegerField(required=True)

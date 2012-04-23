@@ -4,9 +4,3 @@
 {% else %}
     <li><a href="#"><i class='icon-flag icon-white'></i> Гость</a></li>
 {% endif %}
-{% if messages %}
-    <li><a href="#Messages" data-toggle="modal"><i class="icon-envelope icon-white"></i>
-        У вас {{ messages|length }}
-        {{ messages|length|choose_plural:'сообещние,сообщения,сообщений' }}
-    </a></li>
-{% endif %}

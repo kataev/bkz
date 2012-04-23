@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
 
-from whs.sale.forms import TransferFactory, SoldFactory, PalletFactory, BillForm, Bill,AgentForm
+from whs.sale.forms import SoldFactory, PalletFactory, BillForm, Bill,AgentForm
 from whs.sale.views import UpdateView, CreateView, DeleteView
-from whs.sale.handlers import TransferMarkHandler
+from whs.sale.handlers import TransferMarkHandler,TotalHandler
 
 from piston.resource import Resource
 
@@ -24,17 +24,17 @@ urlpatterns = patterns('whs.sale.views',
     url(ur'^Накладная/(?P<pk>\d+)/$', UpdateView.as_view(
         form_class=BillForm,
         model=Bill,
-        opers=[SoldFactory, TransferFactory, PalletFactory]
+        opers=[SoldFactory, PalletFactory]
     ), name='Bill-view'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/$', UpdateView.as_view(
         form_class=BillForm,
         model=Bill,
-        opers=[SoldFactory, TransferFactory, PalletFactory]
+        opers=[SoldFactory, PalletFactory]
     ), name='Bill-year'),
 
-    url(ur'^Накладная/(?P<id>\d*)/печать$', 'bill_print', name='print', ),
-    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/печать$', 'bill_print', name='print', ),
+    url(ur'^Накладная/(?P<id>\d*)/печать$', 'bill_print', name='print'),
+    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/печать$', 'bill_print', name='print'),
 
     url(ur'^Контрагенты$', 'agents', name='agents'),
 )
@@ -45,7 +45,9 @@ urlpatterns += patterns('',
 
 
 transfer_mark_handler = Resource(TransferMarkHandler)
+total_handler = Resource(TotalHandler)
 
 urlpatterns += patterns('',
     url(ur'^Статистика/Переводы/$', transfer_mark_handler),
+    url(ur'^Статистика/Кирпичи/$', total_handler),
 )

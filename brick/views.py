@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from brick.models import Brick
 from manufacture.models import Add, Sorting, Sorted, Removed, Write_off
-from sale.models import Sold, Transfer
+from sale.models import Sold
 from whs.brick.models import make_css,make_label
 
 def flat_form(request,Form,id):
@@ -20,7 +20,7 @@ def flat_form(request,Form,id):
             instance.label = make_label(instance)
             instance.css = make_css(instance)
             instance.save()
-            return redirect(instance.get_absolute_url()+'?success=True')
+            return redirect(instance.get_absolute_url())
     else:
         form = Form(instance=instance)
     return render(request, 'flat-form.html',dict(form=form,success=request.GET.get('success',False)))
@@ -32,10 +32,12 @@ def main(request, date=None):
     total = {}
     if date is None:
         date = datetime.date.today().replace(day=1)
-    sold = dict(Sold.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
+
+
     add = dict(Add.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
-    t_from = dict(Transfer.objects.filter(doc__date__gte=date).values_list('brick_from').annotate(Sum('amount')))
-    t_to = dict(Transfer.objects.filter(doc__date__gte=date).values_list('brick_to').annotate(Sum('amount')))
+    sold = dict(Sold.objects.filter(doc__date__gte=date).values_list('brick').annotate(Sum('amount')))
+    t_from = dict(Sold.objects.filter(doc__date__gte=date,brick_from__isnull=False).values_list('brick_from').annotate(Sum('amount')))
+    t_to = dict(Sold.objects.filter(doc__date__gte=date,brick_from__isnull=False).values_list('brick').annotate(Sum('amount')))
 
     m_from = dict(Sorting.objects.filter(date__gte=date).values_list('brick').annotate(Sum('amount')))
     m_to = dict(Sorted.objects.filter(date__gte=date).values_list('brick').annotate(Sum('amount')))

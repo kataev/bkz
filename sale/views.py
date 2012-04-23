@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from whs.sale.forms import BillFilter, Bill, Agent
 from whs.views import CreateView, UpdateView, DeleteView
 from whs.sale.pdf import pdf_render_to_response
-from whs.sale.models import Transfer,Sold,Bill
+from whs.sale.models import Sold
 
 logger = logging.getLogger(__name__)
 
@@ -101,14 +101,13 @@ def main(request):
 
     opers = {}
     if len(bills.object_list):
-        for m in (Transfer,Sold):
-            name = m._meta.object_name
-            for o in m.objects.select_related().filter(doc__in=bills.object_list):
-                d = opers.get(o.doc_id,{})
-                a = d.get(name,[])
-                a.append(o)
-                d[name] = a
-                opers[o.doc_id] = d
+        name = Sold._meta.object_name
+        for o in Sold.objects.select_related().filter(doc__in=bills.object_list):
+            d = opers.get(o.doc_id,{})
+            a = d.get(name,[])
+            a.append(o)
+            d[name] = a
+            opers[o.doc_id] = d
 
         for b in bills.object_list:
             b.opers = opers.get(b.pk,{})

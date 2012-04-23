@@ -12,44 +12,10 @@
 {% endblock %}
 {% block title %}Статистика{% endblock %}
 {% block container %}
-
     <ul class="thumbnails">
         <li class="span4">
             <div class="thumbnail">
-                <div id='transfer' style="text-align: center;background: white"></div>
-                <div class="caption">
-                    <h5>Переводы</h5>
-                        <select class="span1" name="{{ Filter.date__year.name }}">
-                            <option value="">--------</option>
-                            {% for d in Filter.Meta.dates %}
-                                {% ifchanged d.year %}
-                                    <option
-                                            {% if d.year == Filter.date__year.value|add:0 %}selected="selected" {% endif %}
-                                            value="{{ d.year }}">{{ d.year }}</option>
-                                {% endifchanged %}
-                            {% endfor %}
-                        </select>
-                        <select class="span2" name="{{ Filter.date__month.name }}">
-                            <optgroup label="Выберите месяц">
-                                <option value="">--------</option>
-                                {% for d in Filter.Meta.dates %}
-                                    {% ifchanged d.year %}
-                                        </optgroup>
-                                        <optgroup label="{{ d|date:'Y'  }}">
-                                    {% endifchanged %}
-                                    <option
-                                            {% if d.month == Filter.date__month.value|add:0 %}selected="selected" {% endif %}
-                                            value="{{ d.month }}">{{ d|date:'F' }}</option>
-                                {% endfor %}
-                                </optgroup>
-                        </select>
-                        <button id='transfer_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top' class="btn btn-primal">Показать</button>
-                </div>
-            </div>
-        </li>
-        <li class="span12">
-            <div class="thumbnail">
-                <div id='total' style="text-align: center;background: white"></div>
+                <div id='transfer' style="text-align: center;background: gray"></div>
                 <div class="caption">
                     <h5>Переводы</h5>
                     <select class="span1" name="{{ Filter.date__year.name }}">
@@ -76,7 +42,44 @@
                             {% endfor %}
                             </optgroup>
                     </select>
-                    <button id='show' type="submit" data-loading-text='Загрузка' style='vertical-align: top' class="btn btn-primal">Показать</button>
+                    <button id='transfer_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top'
+                            class="btn btn-primal">Показать
+                    </button>
+                </div>
+            </div>
+        </li>
+        <li class="span4">
+            <div class="thumbnail">
+                <div id='total' style="text-align: center;background: gray"></div>
+                <div class="caption">
+                    <h5>Кирпичи</h5>
+                    <select class="span1" name="{{ Filter.date__year.name }}">
+                        <option value="">--------</option>
+                        {% for d in Filter.Meta.dates %}
+                            {% ifchanged d.year %}
+                                <option
+                                        {% if d.year == Filter.date__year.value|add:0 %}selected="selected" {% endif %}
+                                        value="{{ d.year }}">{{ d.year }}</option>
+                            {% endifchanged %}
+                        {% endfor %}
+                    </select>
+                    <select class="span2" name="{{ Filter.date__month.name }}">
+                        <optgroup label="Выберите месяц">
+                            <option value="">--------</option>
+                            {% for d in Filter.Meta.dates %}
+                                {% ifchanged d.year %}
+                                    </optgroup>
+                                    <optgroup label="{{ d|date:'Y'  }}">
+                                {% endifchanged %}
+                                <option
+                                        {% if d.month == Filter.date__month.value|add:0 %}selected="selected" {% endif %}
+                                        value="{{ d.month }}">{{ d|date:'F' }}</option>
+                            {% endfor %}
+                            </optgroup>
+                    </select>
+                    <button id='total_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top'
+                            class="btn btn-primal">Показать
+                    </button>
                 </div>
             </div>
         </li>
