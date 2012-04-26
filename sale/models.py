@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from django.db.models.query import QuerySet
+
 from whs.brick.models import *
-
 from sale.pdf import OperationsMixin, BillMixin, PalletMixin
-
 
 # Накладная
 class Bill(BillMixin, models.Model):
@@ -20,6 +20,7 @@ class Bill(BillMixin, models.Model):
     reason = models.CharField(u'Основание', max_length=300, blank=True,
         help_text=u'Основание для выставления товарной накладной')
     type = models.CharField(u'Вид операции', max_length=300, blank=True, help_text=u'')
+
 
     class Meta():
         verbose_name = u"Накладная"
@@ -57,6 +58,7 @@ class Sold(OperationsMixin,models.Model):
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
+        ordering = ['-doc__date','-doc__number']
 
     def __unicode__(self):
         if self.pk:

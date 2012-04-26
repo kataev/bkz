@@ -13,7 +13,7 @@
             <strong>Сохранено!</strong> Вы успешно сохранили документ.
         </div>
     {% endif %}
-    <form method="POST" action="./" class='form-horizontal'>
+    <form method="POST" action="" class='form-horizontal'>
     {% csrf_token %}
         {% include 'fieldset.html' %}
         <div class="form-actions">
@@ -21,7 +21,7 @@
             </button>
             <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
             {% if form.instance|to_class_name == 'Brick' %}
-            <a href="/Кирпич/{{ form.instance.pk|add:1 }}/" class="btn"><i class="icon-chevron-right"></i> Следующий {{ form.instance|model_verbose_name }}</a>
+            <a href="{% url brick:Brick id=form.instance.pk|add:1 %}" class="btn"><i class="icon-chevron-right"></i> Следующий {{ form.instance|model_verbose_name }}</a>
             {% endif %}
         </div>
     </form>

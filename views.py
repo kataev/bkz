@@ -2,6 +2,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 def index(request):
     """ Главная страница """
@@ -33,7 +34,8 @@ def stats(request):
 
 class DeleteView(DeleteView):
     template_name = 'delete.html'
-    success_url = '/'
+    def get_success_url(self):
+        return reverse('%s:main' % self.object._meta.app_label)
 
 class CreateView(CreateView):
     template_name = 'doc.html'

@@ -10,13 +10,10 @@
                     </optgroup>
                     <optgroup label="{{ a.name|capfirst|first }}">
                 {% endifchanged %}
-                <option value="{{ a.pk }}" {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>
-                    {{ a }}
-                </option>
+                <option value="{{ a.pk }}" {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
             {% endfor %}
             </optgroup>
     </select>
-
     {% if f.value %}
         <a class="add-on btn" target="_blank" href="{% url sale:Agent id=f.value %}" title="Редактировать выбранного контрагента">
             <i class="icon-info-sign"></i>

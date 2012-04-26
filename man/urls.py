@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
-from whs.manufacture.forms import *
+from whs.man.forms import *
 from whs.views import UpdateView,CreateView
 
-urlpatterns = patterns('whs.manufacture.views',
+urlpatterns = patterns('whs.man.views',
     url(ur'^$', 'main', name='main'),
 
     url(ur'^Производство/$', CreateView.as_view(

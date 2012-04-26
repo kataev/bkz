@@ -28,7 +28,7 @@
 
             <div class='controls'>
                 {% if 'brick' in f.name %}
-                    {% include 'brick-select-form.html' %}
+                    {% include 'brick-select-field.html' %}
                 {% elif f.name == 'price' or f.name == 'delivery' %}
                     <div class="input-append">
                         {{ f }}

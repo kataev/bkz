@@ -7,7 +7,7 @@ import datetime
 
 from django.db.models import Sum
 
-from whs.manufacture.models import Add
+from whs.man.models import Add
 from whs.energy.models import Energy,Teplo
 from whs.energy.views import delta
 

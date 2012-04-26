@@ -167,9 +167,10 @@ $(function () {
 $(function () {
     $('[name=agent]').change(function (e) {
         var val = $(this).val()
-        var input = $(this).parent(".input-append")
-        var a = $(input).find("a")
-        var i = $(input).find("i")
+        var div = $(this).parent()
+        var a = $(div).children("a")
+        var i = $(a).children("i")
+        var href = $(this).attr('href')
         if (val) {
             $(a).attr('href', href + val + "/")
             $(a).attr('title', "Редактировать выбранного контрагента")
@@ -261,7 +262,7 @@ $(function () {
         $(this).data('popover').$tip.on('click.close', $.proxy(function (e) {
             $(this).popover('hide')
         }, this))
-        url += '/' + name + '/2012/04/'
+        url += '/' + name + '/' + window.location.search
         $.ajax({url:url, context:this }).success(
             function (data) {
                 var table = $('<table class="table table-condensed table-striped"></table>')

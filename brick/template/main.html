@@ -2,6 +2,21 @@
 {% load class_name %}
 {% block title %}Остатки{% endblock %}
 {% block container %}
+    <form method="GET" action="">
+
+    <div style='float:right;'>
+                {% with year=form.date__year month=form.date__month %}
+                    {% include 'year-month-select.html' %}
+                {% endwith %}
+    <input type="submit">
+    </div>
+        <h1 style="">
+            {{ begin|date:'Y F' }}
+            {% if begin.year != end.year or begin.month != end.month %}
+            - {{ end|date:'Y F' }}
+            {% endif %}
+        </h1>
+    </form>
     {% include 'brick-select-buttons.html' %}
     <table id='Bricks' class="table table-bordered table-condensed">
         <colgroup>

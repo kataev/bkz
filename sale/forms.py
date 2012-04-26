@@ -3,7 +3,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 import django.forms as forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory,BaseInlineFormSet
 from django.core.exceptions import ValidationError
 
 from whs.sale.models import *
@@ -85,8 +85,6 @@ class PalletForm(forms.ModelForm):
             'info': forms.Textarea(attrs={'rows': 2}),
             }
 
-
-
 SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm)
 PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
 
@@ -110,17 +108,19 @@ class SoldFactory(SoldFactory):
 class YearMonthFilter(forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
+    class Meta:
+        dates = Bill.objects.dates('date','month')
 
 class BillFilter(forms.Form):
-    date__year = forms.IntegerField(required=False)
-    date__month = forms.IntegerField(required=False)
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
+    doc__date__year = forms.IntegerField(required=False)
+    doc__date__month = forms.IntegerField(required=False)
+    doc__agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         """ Изменение пустой ичейки для подсказки. """
         super(BillFilter, self).__init__(*args, **kwargs)
-        self.fields['agent'].empty_label = u'Выберите контрагента'
+        self.fields['doc__agent'].empty_label = u'Выберите контрагента'
 
     class Meta:
         dates = Bill.objects.dates('date','month')

@@ -37,7 +37,6 @@ class Add(models.Model):
     class Meta():
         verbose_name = u"Партия"
         verbose_name_plural = u"Партия"
-        ordering = ('-doc__date', )
 
     def __unicode__(self):
         if self.pk:

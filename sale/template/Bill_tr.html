@@ -1,26 +1,18 @@
-<tr class='Bill' data-opers='Bill_{{ b.pk }}'>
-    <td>{{ b.number }}</td>
+<tr class='Bill' data-opers='Bill_{{ s.doc.pk }}'>
+    <td>{{ s.doc.number }}</td>
     <td>
-        {% ifchanged b.date %}<b>{% endifchanged %}
-        {{ b.date|date:'j M Y' }}
-        {% ifchanged b.date %}</b>{% endifchanged %}
+        {% ifchanged s.doc.date %}<b>{% endifchanged %}
+        {{ s.doc.date|date:'j M Y' }}
+        {% ifchanged s.doc.date %}</b>{% endifchanged %}
     </td>
     <td colspan="3">
-        <a href="{{ b.get_absolute_url }}">{{ b }}</a>
-        {% if b.seller.pk == 1 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
+        <a href="{{ s.doc.get_absolute_url }}">{{ s.doc }}</a>
+        {% if s.doc.seller.pk == 1 %}<i title='Продажа через {{ s.doc.seller }}' class="icon-asterisk"></i>{% endif %}
         <i class="icon-zoom-in"></i>
-    <span class='label'>
-        <a title='Посмотреть агента' href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
-        <a title='Показать накладные этого агента' href="?agent={{ b.agent.pk }}"><i
+    <span class='label {% if not s.doc.agent.form %}label-success{% endif %}'>
+        <a title='Посмотреть агента' href="{{ s.doc.agent.get_absolute_url }}">{{ s.doc.agent|truncatewords:3 }}</a>
+        <a title='Показать накладные этого агента' href="?agent={{ s.doc.agent.pk }}"><i
                 class="icon-eye-open icon-white"></i></a>
     </span>
     </td>
 </tr>
-<tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
-{% for s in b.opers.Sold %}
-    {% include 'Sold_tr.html' %}
-{% endfor %}
-{% for t in b.opers.Transfer %}
-    {% include 'Transfer_tr.html' %}
-{% endfor %}
-</tbody>

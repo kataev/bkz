@@ -12,15 +12,14 @@
     <div id="brick-select" class="modal hide fade">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
-
             <h3>Выбор кирпича</h3>
             {% include 'brick-select-buttons.html' %}
         </div>
         <div class="modal-body">
-            {% include 'brick-select.html' %}
+            {% include 'brick-select-table.html' %}
         </div>
         <div class="modal-footer">
-            <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
+            <button class="btn btn-primary" data-dismiss="modal">Сохранить</button>
             <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
         </div>
     </div>
@@ -45,16 +44,12 @@
             {% endwith %}
         {% endfor %}
     </div>
-
-
-
     {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
-    <form method="POST" action="./" class='form-horizontal'>
+    <form method="POST" action="" class='form-horizontal'>
         {% csrf_token %}
         {% for factory in opers %}
             {{ factory.management_form }}
         {% endfor %}
-
 
         <div class='row'>
             <div style='border-right: 1px solid #EEE;' class="span3">

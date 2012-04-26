@@ -46,7 +46,7 @@ css_dict = dict(
     weight={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
     view={u'Л': u'v-facial', u'Р': u'v-common'},
     ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
-    defect={u'': u'd-lux', u'd-<20': u'd-l20', u'd->20': u'd-g20'},
+    defect={u'': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'},
     mark=0,
     features=0
 )
@@ -86,6 +86,8 @@ def make_css(brick):
         if field == 'mark':
             css += u'mark-%d ' % val
         elif field == 'color':
+            css += u'%s ' % dict[val]
+        elif field == 'defect':
             css += u'%s ' % dict[val]
         elif field == 'features':
             if not brick.features and brick.mark <= 1000 and not brick.defect: css += u'nofeatures '

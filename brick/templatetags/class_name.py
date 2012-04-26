@@ -22,3 +22,7 @@ def hash(obj,key):
         return obj.get(key,'')
     else:
         return getattr(obj,key,'')
+
+@register.filter(name='sum_pluck')
+def sum_pluck(queryset,attr):
+    return sum([getattr(b,attr) for b in queryset])

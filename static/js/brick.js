@@ -41,69 +41,44 @@ $(function () {
     })
 })
 
+function filter(css){
+    var color = String(css.match(/bc-\w{3,}/))
+    var mark = parseInt(css.match(/mark-\d{3,}/)[0].replace('mark-',''))
+    var view = String(css.match(/v-\w+/))
+    var weight = String(css.match(/w-\w+/))
+    var base = color+'.'+view+'.'+weight
+    var defect = String(css.match(/d-\w+/))
+    if (defect != 'd-g20') base+='.d-lux';
+    return base
+}
 
 $(function () {
-    $('span a.close').click(function (e) {
-        var input = $(this).parent()
-        var span = $(input).children('span')
-
-        $(span).text('Выберете кирпич')
-        $(input).attr('class','uneditable-input span')
-        $(input).attr('title','')
-        $('#'+$(input).attr('id').replace('_span','')).val(null)
+    $('.brick-select').on('click','a.close',function (e) {
+        var target = e.delegateTarget
+        $('>span',target).attr('class','uneditable-input').removeAttr('title')
+            .children('span').text('Выберете кирпич')
+        $('input',target).val(null)
     })
 
-    $('body').on('click.modal.data-api', '[data-toggle="brick-select"]', function (e) {
-        var $this = $(this), href
-            , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
-            , option = $target.data('modal') ? 'toggle' : $.extend({}, $target.data(), $this.data())
-
-        e.preventDefault()
-        $($target).data('button', $(e.target).parent())
-        $target.modal(option)
+    $('.brick-select').on('click','a.btn',function(e){
+        var val = $('input', e.delegateTarget).val()
+        if (val) $('#brick-'+val+' input').attr('checked',true);
+        $('#brick-select').data('target',e.delegateTarget)
+        $('#brick-select').data('val',val)
     })
-    var modal = $('#brick-select')
-    $('tr', modal).click(function (e) {
-        var button = $(modal).data('button')
-        var input = $(button).data('input')
 
-        $('#' + input).val($('input', this).val())
-
-        $('#' + input + '_span span').html($('td.name', this).text().trim())
-        $('#' + input + '_span').attr('title','Остаток: '+$('td.total', this).text().trim())
-        $('#' + input + '_span').attr('class', 'input uneditable-input ' + $(this).attr('class'))
-        $('#' + input).change()
+    $('#brick-select').on('click','tr',function(e){
+        var target = $(e.delegateTarget).data('target')
+        $('input:radio',this).attr('checked',true)
+        $('>span',target).attr('class','uneditable-input '+$(this).attr('class'))
+            .attr('title','Остаток: '+$('.total',this).text().trim())
+            .children('span').text($('.name',this).text().trim())
+        $('input',target).val($('input:radio',this).val())
     })
-    var marks = [100,125,150,175,200,250,300,9000]
-    $(modal).on('show', function () {
-        var button = $(modal).data('button')
-        var input = $(button).data('input')
-        var val = $('#' + input).val()
-        var model = $('#'+ input).data('model')
+    $('#brick-select').on('shown',function(e){
+        var val = $(this).data('val')
         if (val) {
-            $('[value=' + val + ']', modal).attr('checked', 'checked')
+            window.location.hash = 'brick-'+val
         }
-        else {
-            $('[value]', modal).removeAttr('checked')
-        }
-        var from = $('#'+$('#'+input).data('brick_from'))
-        if (from.val()) {
-            var css = $('#'+from.attr('id')+'_span').attr('class')
-            var color = String(css.match(/bc-\w{3,}/))
-            var mark = parseInt(css.match(/mark-\d{3,}/)[0].replace('mark-',''))
-            var view = String(css.match(/v-\w+/))
-            var weight = String(css.match(/w-\w+/))
-            var base = color+'.'+view+'.'+weight
-            var defect = String(css.match(/d-\w+/))
-//            defect={u'': u'd-lux', u'd-<20': u'd-l20', u'd->20': u'd-g20'},
-            if (defect != 'd-g20') base+='.d-lux';
-            if (model == 'Sold') {
-                var sel = _(marks).chain().filter(function(i){ return defect == 'd-lux' ? i < mark : i <= mark })
-                    .reduce(function(memo,num){ return memo += ', tr.'+base+'.mark-'+num; }, '').value().slice(2)
-            }
-            $('tr',modal).not(sel).hide()
-            console.log(sel)
-        }
-        else $('tr',modal).show()
     })
 })

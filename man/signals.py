@@ -3,7 +3,7 @@ from django.db.models.signals import *
 from django.dispatch import receiver
 
 from whs.brick.models import *
-from whs.manufacture.models import *
+from whs.man.models import *
 
 @receiver(pre_delete, sender=Add)
 @receiver(pre_save, sender=Add)

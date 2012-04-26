@@ -2,7 +2,7 @@
 __author__ = 'bteam'
 from old.models import *
 from sale.models import *
-from manufacture.models import *
+from man.models import *
 
 def nomenclature():
     """
@@ -19,14 +19,12 @@ def brick():
     """
     Импорт продукции из старой базы
     """
-    for t in DispTovar.objects.all():
+    for t in DispTovar.objects.all().filter(pk=281):
         b = OldBrick()
         b.old = t.id
-
         b.name = t.name
-
         b.mark = t.mark
-
+        b.prim = t.prim
         if t.vid == u'Строительный':
             b.view = u'Р'
         else:
@@ -173,7 +171,22 @@ def sold():
                 b.agent = agent or sk
                 b.seller = sk
             else:
-                b.agent = OldAgent.objects.get(old=j.agent.pk)
+                try:
+                    b.agent = OldAgent.objects.get(old=j.agent.pk)
+                except OldAgent.DoesNotExist:
+                    a = OldAgent()
+                    o = j.agent
+                    a.fullname = o.name
+                    a.name = o.name
+                    a.address = o.address
+                    a.phone = o.phone
+                    a.inn = o.inn
+                    a.bank = o.bank
+                    a.ks = o.schet
+                    a.old = o.pk
+                    a.full_clean()
+                    a.save()
+                    b.agent = a
                 b.seller = zavod
             b.full_clean()
             b.save()
@@ -205,12 +218,12 @@ def transfer():
             except Sold.MultipleObjectsReturned:
                 s = s[0]
             b = s.doc
-            t = Transfer(doc=b,amount=j.pakt)
+            t = Sold(doc=b,amount=j.pakt)
             try:
                 t.brick_from = OldBrick.objects.get(old=DispJurnal.objects.get(akt=j.akt,makt__gt=0).tov.pk)
             except OldBrick.DoesNotExist:
                 print j.tov.pk,'\tBrick DNE'
-            t.brick_to = brick_to
+            t.brick = brick_to
             t.tara = j.poddon
             t.price = j.price
             t.delivery = j.trans
@@ -370,10 +383,10 @@ def srted():
             s.save()
 
 if __name__ == '__main__':
-#    brick()
+    brick()
 #    agents('../agents.txt')
 #    man()
-    totals()
+#    totals()
 #    old_agents()
 #    agent_test()
 #    agent_clear()

@@ -1,9 +1,0 @@
-<tr class="{{ t.brick_from.css }}">
-    <td colspan="3">
-        <a href="?brick={{ t.brick_to.pk }}" class='{{ t.brick_to.css }}' title='Показать накладные с этим кирпичем'>{{ t.brick_to }}</a>
-        <i class="icon-chevron-left" title="Перевод"></i>
-        <a href="?brick={{ t.brick_from.pk }}" class='{{ t.brick_from.css }}' title='Показать накладные с этим кирпичем'>{{ t.brick_from }}</a>
-    </td>
-    <td>{{ t.amount }}</td>
-    <td><span rel='tooltip' data-original-title='{{ t.price }} за шт' class='money'>{{ t.money }}</span></td>
-</tr>

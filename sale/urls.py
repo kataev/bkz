@@ -48,6 +48,6 @@ transfer_mark_handler = Resource(TransferMarkHandler)
 total_handler = Resource(TotalHandler)
 
 urlpatterns += patterns('',
-    url(ur'^Статистика/Переводы/$', transfer_mark_handler),
-    url(ur'^Статистика/Кирпичи/$', total_handler),
+    url(ur'^Статистика/Переводы/$', transfer_mark_handler, name='transfer_mark_handler'),
+    url(ur'^Статистика/Кирпичи/$', total_handler, name='total_handler'),
 )

@@ -7,45 +7,95 @@
 
 @increment: 4;
 
-@brick-color-red-dark: darken(@brick-color-red,3%);
-@brick-color-yellow-dark: darken(@brick-color-yellow,3%);
+@brick-color-red-dark: darken(@brick-color-red, 3%);
+@brick-color-yellow-dark: darken(@brick-color-yellow, 3%);
 
-.bc-red { background-color: @brick-color-red; color:inherit; }
+.brick:target {background: gray}
 
-tr.bc-red:hover { background-color: @brick-color-red; }
+.bc-red {
+    background-color: @brick-color-red;
+    color: inherit;
+    fill:@brick-color-red;
+}
+
+tr.bc-red:hover {
+    background-color: @brick-color-red;
+}
+
 a.btn.bc-red {
-    color:#ffffff;
+    color: #ffffff;
     text-shadow: 0 -1px 0 @brick-color-red-dark;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-red), to(@brick-color-red-dark));
 }
+
 a.btn.bc-red:hover {
     background-color: @brick-color-red-dark;
 }
+
 a.btn.bc-red.active {
     background-color: @brick-color-red-dark;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-red), to(@brick-color-red-dark));
 }
- .bc-red.facial { background-color: @brick-color-red-dark; }
 
-.bc-yellow { background-color: @brick-color-yellow; color:inherit;  }
+.bc-red.facial {
+    background-color: @brick-color-red-dark;
+}
+
+.bc-yellow {
+    background-color: @brick-color-yellow;
+    color: inherit;
+    fill:@brick-color-yellow;
+}
+
 a.btn.bc-yellow {
-    color:#ffffff;
+    color: #ffffff;
     text-shadow: 0 -1px 0 @brick-color-yellow-dark;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-yellow), to(@brick-color-yellow-dark));  }
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-yellow), to(@brick-color-yellow-dark));
+}
+
 a.bc-yellow:hover {
     background-color: @brick-color-yellow-dark
 }
+
 a.bc-yellow.active {
     background-color: @brick-color-yellow-dark;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-yellow), to(@brick-color-yellow-dark));  }
-.bc-yellow.facial { background-color: @brick-color-yellow-dark; }
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-yellow), to(@brick-color-yellow-dark));
+}
 
-.bc-brown { background-color: @brick-color-brown; color:inherit;  }
-a.bc-brown { background: @brick-color-brown }
-.bc-brown.facial { background-color: darken(@brick-color-brown,@increment * 1%); }
+.bc-yellow.facial {
+    background-color: @brick-color-yellow-dark;
+}
 
-.bc-light { background-color: @brick-color-light; color:inherit;  }
-.bc-light.facial { background-color: darken(@brick-color-light,@increment * 1%); }
+.bc-brown {
+    background-color: @brick-color-brown;
+    color: inherit;
+    fill:@brick-color-brown;
+}
 
-.bc-white { background-color: @brick-color-white; color:inherit;  }
-.bc-white.facial { background-color: darken(@brick-color-white,@increment * 1%); }
+a.bc-brown {
+    background: @brick-color-brown
+}
+
+.bc-brown.facial {
+    background-color: darken(@brick-color-brown,@increment * 1%);
+}
+
+.bc-light {
+    background-color: @brick-color-light;
+    color: inherit;
+    fill:@brick-color-light;
+}
+
+.bc-light.facial {
+    background-color: darken(@brick-color-light,@increment * 1%);
+}
+
+.bc-white {
+    background-color: @brick-color-white;
+    color: inherit;
+    fill:@brick-color-white;
+}
+
+.bc-white.facial {
+    background-color: darken(@brick-color-white,@increment * 1%);
+}

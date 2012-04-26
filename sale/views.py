@@ -10,7 +10,7 @@ from django.http import QueryDict, Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
 
-from whs.sale.forms import BillFilter, Bill, Agent
+from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter
 from whs.views import CreateView, UpdateView, DeleteView
 from whs.sale.pdf import pdf_render_to_response
 from whs.sale.models import Sold
@@ -75,48 +75,26 @@ def bill_print(request, year, number):
 
 
 def main(request):
-    Bills = Bill.objects.select_related().all()
+    queryset = Sold.objects.select_related().all()
     form = BillFilter(request.GET or None)
-    order = request.GET.get('order')
-    if order in map(lambda x: x.name, Bill._meta.fields):
-        Bills = Bills.order_by(order)
-
     if form.is_valid() and request.GET:
-        d = form.cleaned_data
-        d = dict([[x, d[x]] for x in d if d[x]])
-        if 'brick' in d.keys():
-            d['sale_sold_related__brick'] = d['brick']
-            del d['brick']
-        Bills = Bills.filter(**d)
-    paginator = Paginator(Bills, 20)
+        data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
+        queryset = queryset.filter(**data)
+    paginator = Paginator(queryset, 20)
 
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
     try:
-        bills = paginator.page(page)
+        paginated = paginator.page(page)
     except (EmptyPage, InvalidPage):
-        bills = paginator.page(paginator.num_pages)
+        paginated = paginator.page(paginator.num_pages)
+    return render(request, 'bills.html', dict(paginator=paginated, form=form,))
 
-    opers = {}
-    if len(bills.object_list):
-        name = Sold._meta.object_name
-        for o in Sold.objects.select_related().filter(doc__in=bills.object_list):
-            d = opers.get(o.doc_id,{})
-            a = d.get(name,[])
-            a.append(o)
-            d[name] = a
-            opers[o.doc_id] = d
-
-        for b in bills.object_list:
-            b.opers = opers.get(b.pk,{})
-
-    return render(request, 'bills.html', dict(Bills=bills, Filter=form,))# total=total, money=money, url=url.urlencode()))
-
-alphabet = [u"А",u"Б",u"В",u"Г",u"Д",u"Е",u"Ё",u"Ж",u"З",u"И",u"К",u"Л",u"М",u"Н",u"О",u"П",u"Р",u"С",u"Т",u"Ф",u"Х",u"Ц",u"Ч",u"Ш",u"Щ",u"Ы",u"Ю",u"Я"]
 
 def agents(request):
+    alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"
     Agents = Agent.objects.all()
     letter = request.GET.get('b','')
     if letter:
@@ -125,6 +103,5 @@ def agents(request):
 
 
 def stats(request):
-    form = BillFilter(request.GET or None)
-
-    return render(request, 'stats.html',dict(Filter=form))
+    form = YearMonthFilter(request.GET or None)
+    return render(request, 'stats.html',dict(form=form))
