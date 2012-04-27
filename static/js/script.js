@@ -140,6 +140,8 @@ $(function () {
     $('[rel="popover"]').popover()
     $(".collapse").collapse()
 })
+
+//Подсветка цветов селекта в редактировании кирпича
 $(function () {
     var color_select = function (select, val) {
         $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')

@@ -5,33 +5,19 @@
  */
 "use strict";
 $(function () {
-    $('a', '#brick-select-buttons').on('toggle', function (e) {
-        if (!$(this).attr('href')) {
-            $(this).parents('.subnav').find('a.active').removeClass('active')
-        }
-        if ($(this).attr('rel')) {
-            $(this).parents('.subnav').find('[rel='+$(this).attr('rel')+']').not(this).removeClass('active')
-        }
-        var active = $('a.active', '#brick-select-buttons')
-        var names = _(active).reduce(function (m, n) {
-            return m + ' ' + $(n).html()
-        }, '')
-        var filter = _(active).reduce( function (m, n) { return m + $(n).attr('href').replace('#', '.') }, '').replace('#', '.');
-        var nodes
-        if (filter.length == 0) {
-            nodes = $('tr', '#Bricks tbody').show()
-            $('a', '#brick-select-buttons').removeClass('active')
-        } else {
-            $('tr', '#Bricks tbody').hide()
-            nodes = $(filter, '#Bricks tbody').show()
-        }
-        var tf = $('th', '#Bricks tfoot');
+    $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
+    $('#brick-select-buttons').on('toggle','a', function (e) {
+        console.log(e,this)
+        $('input',this).trigger('click')
+        var data = $(e.delegateTarget).serializeArray()
+        var filter = _(data).chain().pluck('value').reduce(function(m,n){ return m+'.'+n},' ').value()
+        var nodes = $('#Bricks tbody tr').hide().filter(filter).show()
+        if (filter==' ') $('a', e.delegateTarget).removeClass('active');
+        var tf = $('#Bricks tfoot th');
+        var names = $('a.active', e.delegateTarget).text().trim()
         if (tf) {
             $(tf[0]).html(names)
-            _(tf.slice(1)).each(function (node, id) {
-                node.innerHTML = 0
-            })
-
+            _(tf.slice(1)).each(function (node) { node.innerHTML = 0 })
             _(nodes).each(function (node, m) {
                 $('td', node).slice(1).each(function (id, td) {
                     $(tf[id + 1]).text(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
@@ -41,12 +27,13 @@ $(function () {
     })
 })
 
-function filter(css){
+function Filter(css){
+    if (!css) return ' ';
     var color = String(css.match(/bc-\w{3,}/))
     var mark = parseInt(css.match(/mark-\d{3,}/)[0].replace('mark-',''))
     var view = String(css.match(/v-\w+/))
     var weight = String(css.match(/w-\w+/))
-    var base = color+'.'+view+'.'+weight
+    var base = '.'+color+'.'+view+'.'+weight
     var defect = String(css.match(/d-\w+/))
     if (defect != 'd-g20') base+='.d-lux';
     return base
@@ -61,10 +48,14 @@ $(function () {
     })
 
     $('.brick-select').on('click','a.btn',function(e){
-        var val = $('input', e.delegateTarget).val()
+        var input = $('input', e.delegateTarget)
+        var val = $(input).val()
         if (val) $('#brick-'+val+' input').attr('checked',true);
         $('#brick-select').data('target',e.delegateTarget)
         $('#brick-select').data('val',val)
+        val = $('#'+input.attr('id')+'_from').val()
+        var filter = Filter($('#brick-'+val).attr('class'))
+        $('#Bricks tbody tr').hide().filter(filter).show()
     })
 
     $('#brick-select').on('click','tr',function(e){

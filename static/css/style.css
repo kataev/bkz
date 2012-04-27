@@ -1,4 +1,5 @@
 body { background-image: url('/static/img/whitediamond.png') }
+#brick-select-buttons input {vertical-align: top}
 div.control-group.DELETE label {color: #DA4F49}
 .icon-logo {
     background: url('/static/img/log.png') no-repeat;

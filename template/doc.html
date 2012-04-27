@@ -63,8 +63,6 @@
                         <a href="#{{ form.prefix }}" data-toggle="tab">
                             {% if form.errors %}
                                 <i class="icon-warning-sign"></i>
-                            {% else %}
-                                <i class="icon-"></i>
                             {% endif %}
                             {{ form.instance|truncatewords:10 }}
                         </a>
@@ -82,8 +80,6 @@
                                    href="#{{ form.prefix }}" data-toggle="tab">
                                     {% if form.errors %}
                                         <i class="icon-warning-sign"></i>
-                                    {% else %}
-                                        <i class="icon-"></i>
                                     {% endif %}
                                     {{ form.instance }}
                                 </a>

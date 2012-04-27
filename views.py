@@ -74,5 +74,5 @@ class UpdateView(UpdateView):
                 context['opers'].append(factory(self.request.POST,instance=instance,prefix=factory.form.Meta.name))
         else:
             for factory in self.opers:
-                context['opers'].append(factory(instance=instance,prefix=factory.form.Meta.name))
+                context['opers'].append(factory(instance=instance,prefix=factory.form.Meta.name,queryset=factory.model.objects.select_related('brick','brick_from')))
         return context

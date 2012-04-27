@@ -21,7 +21,7 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    <input type='text' style='display: none' name='{{ f.html_name }}' value="{{ f.value|default_if_none:'' }}">
+    <input type='text' style='display: none' name='{{ f.html_name }}' id='{{ f.id_for_label }}' value="{{ f.value|default_if_none:'' }}">
     <a class="btn btn-info add-on" data-toggle="modal" data-backdrop='false'
        title='Шелкните для выбора кирпича' href="#brick-select"> <i class="icon-search icon-white"></i></a>
 </div>

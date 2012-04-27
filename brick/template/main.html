@@ -13,7 +13,7 @@
         <h1 style="">
             {{ begin|date:'Y F' }}
             {% if begin.year != end.year or begin.month != end.month %}
-            - {{ end|date:'Y F' }}
+                &mdash; {{ end|date:'Y F' }}
             {% endif %}
         </h1>
     </form>
