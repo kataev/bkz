@@ -9,6 +9,7 @@
 
 @brick-color-red-dark: darken(@brick-color-red, 3%);
 @brick-color-yellow-dark: darken(@brick-color-yellow, 3%);
+@brick-color-brown-dark: darken(@brick-color-brown, 3%);
 
 .brick:target {background: gray}
 
@@ -76,6 +77,21 @@ a.bc-brown {
     background: @brick-color-brown
 }
 
+a.btn.bc-brown {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 @brick-color-brown-dark;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-brown), to(@brick-color-brown-dark));
+}
+
+a.btn.bc-brown:hover {
+    background-color: @brick-color-brown-dark;
+}
+
+a.btn.bc-brown.active {
+    background-color: @brick-color-brown-dark;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@brick-color-brown), to(@brick-color-brown-dark));
+}
+
 .bc-brown.facial {
     background-color: darken(@brick-color-brown,@increment * 1%);
 }
@@ -99,3 +115,7 @@ a.bc-brown {
 .bc-white.facial {
     background-color: darken(@brick-color-white,@increment * 1%);
 }
+
+.v-facial {font-style: italic}
+table tr.v-facial td.name {font-style: italic}
+//.w-euro {font-variant: small-caps}

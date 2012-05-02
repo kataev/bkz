@@ -7,7 +7,7 @@ div.control-group.DELETE label {color: #DA4F49}
     background-position: 4px 0px;
 }
 .add-on input[type='checkbox'] { vertical-align:baseline}
-#Bricks a {color:#333}
+#Bricks a, #Jurnal a {color:#333}
 li.mark a { padding: 5px; }
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}

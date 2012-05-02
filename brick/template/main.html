@@ -52,8 +52,8 @@
         <tfoot>
         <tr>
             <th></th>
-            {% for o in totals %}
-                <th> {{ totals|hash:o }} </th>
+            {% for o in order %}
+                <th> {{ Bricks|sum_pluck:o }} </th>
             {% endfor %}
         </tr>
         </tfoot>

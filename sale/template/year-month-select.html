@@ -16,8 +16,7 @@
                 </optgroup>
                 <optgroup label="{{ d|date:'Y'  }}">
             {% endifchanged %}
-            <option
-                    {% if d.month == month.value|add:0 %}selected="selected" {% endif %}
+            <option {% if d.month == month.value|add:0 and d.year == year.value|add:0 %}selected="selected"{% endif %}
                     value="{{ d.month }}">{{ d|date:'F' }}</option>
         {% endfor %}
         </optgroup>

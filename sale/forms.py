@@ -67,10 +67,17 @@ class SoldForm(forms.ModelForm):
 
     def clean(self):
         data = self.cleaned_data
-        brick, amount = data['brick'],data['amount']
-        print brick.total
-        if brick.total < amount:
-            raise ValidationError(u'На складе нету столько кирпича')
+        brick_from, brick, amount = data['brick_from'],data['brick'],data['amount']
+        if brick_from:
+            if brick_from.mark < brick.mark:
+                raise ValidationError(u'Нельзя делать перевод из меньшей марки в большую')
+            if brick_from.weight != brick.weight:
+                raise ValidationError(u'Нельзя в переводе менять размер кирпича')
+            if brick_from.total < amount:
+                raise ValidationError(u'На складе нету столько кирпича для перевода')
+        else:
+            if brick.total < amount:
+                raise ValidationError(u'На складе нету столько кирпича')
         return data
 
 
@@ -94,12 +101,14 @@ class SoldFactory(SoldFactory):
             return
         bricks = {}
         amounts = {}
-        for i in range(0, self.total_form_count()):
-            form = self.forms[i]
-            brick, amount = form.cleaned_data['brick'],form.cleaned_data['amount']
-            bricks[brick.pk] = brick
-            amounts[brick.pk] = amounts.get(brick.pk,0) + amount
-
+        for form in self.forms:
+            brick_from, brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['brick'],form.cleaned_data['amount']
+            if brick_from:
+                bricks[brick_from.pk] = brick_from
+                amounts[brick_from.pk] = amounts.get(brick_from.pk,0) + amount
+            else:
+                bricks[brick.pk] = brick
+                amounts[brick.pk] = amounts.get(brick.pk,0) + amount
         for pk in bricks:
             b = bricks[pk]
             if b.total < amounts[pk]:
@@ -109,7 +118,7 @@ class YearMonthFilter(forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
     class Meta:
-        dates = Bill.objects.dates('date','month')
+        dates = Bill.objects.dates('date','month')[::-1]
 
 class BillFilter(forms.Form):
     doc__date__year = forms.IntegerField(required=False)

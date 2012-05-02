@@ -98,7 +98,4 @@ def main(request):
             )
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
 
-    total = {}
-    for f in Brick.order:
-        total[f] = sum([getattr(b, f) for b in Bricks])
-    return render(request, 'main.html', dict(Bricks=Bricks, totals=total,form=form,begin=begin,end=end - datetime.timedelta(1)))
+    return render(request, 'main.html', dict(Bricks=Bricks, order=Brick.order,form=form,begin=begin,end=end - datetime.timedelta(1)))

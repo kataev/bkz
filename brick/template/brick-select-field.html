@@ -1,6 +1,6 @@
 {% load class_name %}
 {% spaceless %}
-<div class="input-append brick-select">
+<div class="input-append brick-select {{ f.name }}">
     {% if f.value == 'None' or not f.value %}
         <span class="uneditable-input"><span>Выберете кирпич</span>
             {% if not f.field.required %}

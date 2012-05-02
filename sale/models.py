@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from django.db.models.query import QuerySet
-
 from whs.brick.models import *
 from sale.pdf import OperationsMixin, BillMixin, PalletMixin
 

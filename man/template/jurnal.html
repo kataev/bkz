@@ -9,34 +9,38 @@
     </ul>
     <div class="row">
         <div class="span5">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-bordered table-condensed" id='Jurnal'>
                 <caption><h2>Производство</h2></caption>
                 <thead>
                 <tr>
+                    <th>Дата</th>
                     <th>Кирпич</th>
                     <th width="50px">Кол-во</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for m in man %}
-                    {% ifchanged m.doc.date %}
-                        <tr>
-                            <td colspan="2">
-                                <h4><a href="{{ m.doc.get_absolute_url }}">{{ m.doc.date }}</a></h4>
-                            </td>
-                        </tr>
-                    {% endifchanged %}
                     <tr class="{{ m.brick.css }}">
+                        <td {% ifchanged m.doc.date %}style='font-weight: bold;'{% endifchanged %}>
+                            <a href="{{ m.doc.get_absolute_url }}">{{ m.doc.date }}</a>
+                        </td>
                         <td>{{ m.brick }}</td>
                         <td>{{ m.amount }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th style="text-align: right">Итого:</th>
+                    <th>{{ man|sum_pluck:'amount' }}</th>
+                </tr>
+                </tfoot>
             </table>
         </div>
         <div class="span7">
-                {% for s in sorting %}
-                    <table class="table table-bordered table-condensed">
+            {% for s in sorting %}
+                <table class="table table-bordered table-condensed">
                     {% if forloop.counter == 1 %}
                         <caption><h2>Сортировка</h2></caption>
                     {% endif %}
@@ -86,8 +90,8 @@
                         </tr>
                     {% endif %}
                     </tbody>
-                    </table>
-                {% endfor %}
+                </table>
+            {% endfor %}
 
         </div>
     </div>

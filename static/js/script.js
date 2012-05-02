@@ -63,13 +63,17 @@ $(function () {
 $(function () {
     $('.form-add').click(function (e) {
         var prefix = $(this).data('prefix')
-        var node = $('#' + prefix + '-__prefix__').clone()
+        var node = $('#' + prefix + '-__prefix__').clone(true).appendTo('.tabbable .tab-content')
         var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
         var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
-        $(node).attr('id', id).html($(node).html().replace(/__prefix__/g, total.attr('value')))
-        $('div.DELETE', node).remove()
+        var v = total.attr('value')
+        var rep = function(index,value){if (value) return value.replace(/__prefix__/g, v)}
+        $(node).attr('id',rep)
+        $('input, select',node).attr('name',rep).attr('id',rep)
+        $('label[for]',node).attr('for',rep)
 
+        $('div.DELETE', node).remove()
         var menu = $('<li><a href="#__prefix__" data-toggle="tab"><i class="icon-"></i><span></span></a></li>'
             .replace(/__prefix__/g, total.attr('value')))
         $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
@@ -79,7 +83,6 @@ $(function () {
         $('span', menu).after(del)
 
         $('li.' + prefix[0].toUpperCase() + prefix.slice(1)).last().after(menu)
-        $(node).appendTo('.tabbable .tab-content')
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
             .data('toggle', 'tab').tab('show')
             .click(function (e) {
@@ -186,7 +189,7 @@ $(function () {
     })
 })
 
-function tara(cl) {
+function bricks_per_tara(cl) {
     var f = function (str) {
         return cl.indexOf(str) >= 0
     }
@@ -229,17 +232,15 @@ function tara(cl) {
 }
 
 function tara_amount() {
-    $('input[name*="tara"],input[name*="brick"],input[name*="brick_to"]').change(function (e) {
-        var id = $(this).attr('id')
-        var s = id.split('-')
-        var form = id.split(s[s.length - 1])[0]
-        var val = parseInt($('#' + form + 'tara').val())
-        var brick = $('#' + form + 'brick').length ? $('#' + form + 'brick') : $('#' + form + 'brick_to')
-        var checkbox = $('#' + form + 'tara_checkbox')
-        if ($(checkbox).attr('checked') && $(brick).val() && val) {
-            var factor = tara($('#' + $(brick).attr('id') + '_span').attr('class'))
-            var amount = $('#' + form + 'amount')
-            $(amount).val(factor * val)
+    $('fieldset').on('change','input[name*="tara"],input[name*="brick"]',function(e){
+        var fieldset = $(e.delegateTarget)
+        var brick = $('.brick-select.brick input',fieldset)
+        var tara = $('input[name*="tara"]',fieldset)
+        var checkbox = $('input[name="tara-calculate"]',fieldset)
+        if (checkbox.val() && brick.val() && tara.val()) {
+            var css = $('.brick-select.brick > span',fieldset).attr('class')
+            var factor = bricks_per_tara(css)
+            $('input[name*="amount"]',fieldset).val(factor * tara.val())
         }
     })
 }
