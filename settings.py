@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.flatpages',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
@@ -169,7 +170,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
-#    'south',
+    'south',
     'trml2pdf',
 #    'piston',
 

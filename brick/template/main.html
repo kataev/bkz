@@ -41,7 +41,7 @@
         <tbody>
         {% for b in Bricks %}
             <tr data-pk="{{ b.pk }}" class="{{ b.css }} {% if b.opers %}zero{% endif %}">
-                <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label }}</a></td>
+                <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
                 {% for o in b.order %}
                     <td {% if b|hash:o %}data-name="{{ o }}" rel="popover" data-placement='bottom'
                         data-trigger='manual'{% endif %}> {{ b|hash:o }} </td>

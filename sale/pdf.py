@@ -42,7 +42,7 @@ def pdf_render_to_response(template, context, filename=None, prompt=False):
 
 class BillMixin(object):
     def opers(self):
-        return list(self.sale_sold_related.all()) + list(self.sale_pallet_related.all())
+        return list(self.solds.all()) + list(self.pallets.all())
 
     @property
     def tara_return(self):
@@ -50,20 +50,22 @@ class BillMixin(object):
 
     @property
     def total(self):
-        return self.sale_sold_related.aggregate(models.Sum('amount')).get('amount__sum') or 0
+        return sum([s.amount for s in self.solds.all()])
 
     @property
     def netto(self):
-        return sum([x.netto for x in self.opers()]) or 0
+        return sum([x.netto for x in self.solds.all()]) + sum([x.netto for x in self.pallets.all()])
 
     @property
     def brutto(self):
-        return sum([x.brutto for x in self.opers()]) or 0
+        return sum([x.brutto for x in self.solds.all()]) + sum([x.brutto for x in self.pallets.all()])
 
     @property
     def tara(self):
         t = 0
-        for o in self.opers():
+        for o in self.solds.all():
+            t+= getattr(o,'tara',0)
+        for o in self.pallets.all():
             t+= getattr(o,'tara',0)
         return t
 

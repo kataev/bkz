@@ -24,7 +24,7 @@
                         <td {% ifchanged m.doc.date %}style='font-weight: bold;'{% endifchanged %}>
                             <a href="{{ m.doc.get_absolute_url }}">{{ m.doc.date }}</a>
                         </td>
-                        <td>{{ m.brick }}</td>
+                        <td>{{ m.brick|safe }}</td>
                         <td>{{ m.amount }}</td>
                     </tr>
                 {% endfor %}
@@ -57,7 +57,7 @@
                             {{ s.date|date:'j M Y' }}
                         </a>
                         </th>
-                        <td class="{{ s.brick.css }}">{{ s.brick }}</td>
+                        <td class="{{ s.brick.css }}">{{ s.brick|safe }}</td>
                         <td>{{ s.amount }}</td>
                     </tr>
                     {% if s.opers.Sorted %}
@@ -67,7 +67,7 @@
                         {% for q in s.opers.Sorted %}
                             <tr>
                                 <td>{{ q.date|date:'j M Y' }}</td>
-                                <td class="{{ q.brick.css }}">{{ q.brick }}</td>
+                                <td class="{{ q.brick.css }}">{{ q.brick|safe }}</td>
                                 <td>{{ q.amount }}</td>
                             </tr>
                         {% endfor %}
@@ -79,7 +79,7 @@
                         {% for q in s.opers.Removed %}
                             <tr>
                                 <td>{{ q.date|date:'j M Y' }}</td>
-                                <td class="{{ q.brick.css }}">{{ q.brick }}</td>
+                                <td class="{{ q.brick.css }}">{{ q.brick|safe }}</td>
                                 <td>{{ q.amount }}</td>
                             </tr>
                         {% endfor %}

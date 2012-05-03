@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% load class_name %}
-{% block title %}{{ form.instance }}{% endblock %}
+{% block title %}{{ form.instance|striptags }}{% endblock %}
 {% block container %}
     {% if form.Meta.message %}
         <div class="alert alert-warning">

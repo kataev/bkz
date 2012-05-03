@@ -10,7 +10,7 @@
         {% if form.instance.get_absolute_url %}
             <h1>{% else %} <h2> {% endif %}
         {% if form.instance.pk %} {{ form.instance|model_verbose_name }} {% endif %}
-        {{ form.instance }}
+        {{ form.instance|safe }}
         {% if not form.instance.get_absolute_url %}</h2>{% else %}</h1>{% endif %}
     </legend>
     {% for e in form.non_field_errors %}
@@ -41,7 +41,7 @@
                             <input type="checkbox" name='tara-calculate' checked="checked">
                         </span>
                     </div>
-                {% elif f.name == 'agent' %}
+                {% elif f.name == 'agent' or f.name == 'seller' %}
                     {% include 'agent-select.html' %}
                 {% else %}
                     {{ f }}

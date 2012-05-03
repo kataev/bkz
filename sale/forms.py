@@ -120,19 +120,39 @@ class YearMonthFilter(forms.Form):
     class Meta:
         dates = Bill.objects.dates('date','month')[::-1]
 
+records_per_page = (
+    (10,'10 записей на странице'),
+    ('','20 записей на странице'),
+    (50,'50 записей на странице'),
+    (100,'100 записей на странице'),
+)
+
 class BillFilter(forms.Form):
-    doc__date__year = forms.IntegerField(required=False)
-    doc__date__month = forms.IntegerField(required=False)
-    doc__agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
+    year = forms.IntegerField(required=False)
+    month = forms.IntegerField(required=False)
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
+    rpp = forms.ChoiceField(choices=records_per_page,initial='')
 
     def __init__(self, *args, **kwargs):
         """ Изменение пустой ичейки для подсказки. """
         super(BillFilter, self).__init__(*args, **kwargs)
-        self.fields['doc__agent'].empty_label = u'Выберите контрагента'
+        self.fields['agent'].empty_label = u'Выберите контрагента'
 
     class Meta:
-        dates = Bill.objects.dates('date','month')
+        dates = Bill.objects.dates('date','month').reverse()
+
+bill_group_by = (
+    ('seller',u'Продавцу'),
+    ('agent',u'Покупателю'),
+    ('brick',u'Кирпичу'),
+    ('brick_from',u'Кирпичу перевода'),
+)
+
+
+class BillAggregateFilter(BillFilter):
+    seller = forms.ModelChoiceField(queryset=Seller.objects.all(), required=False)
+    group_by = forms.MultipleChoiceField(choices=bill_group_by)
 
 
 class AgentForm(forms.ModelForm):
@@ -145,3 +165,12 @@ class AgentForm(forms.ModelForm):
             'address': forms.Textarea(attrs=dict(rows=2)),
             }
 
+class SellerForm(forms.ModelForm):
+    class Meta:
+        message = 'Внимательно заполняйте значения имя и полное имя.'
+        model=Seller
+        widgets = {
+            'name': forms.Textarea(attrs=dict(rows=2)),
+            'bank': forms.Textarea(attrs=dict(rows=2)),
+            'address': forms.Textarea(attrs=dict(rows=2)),
+            }

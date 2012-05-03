@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
 
-from whs.sale.forms import SoldFactory, PalletFactory, BillForm, Bill,AgentForm
-from whs.sale.views import UpdateView, CreateView, DeleteView
+from whs.sale.forms import SoldFactory, PalletFactory, BillForm, Bill, AgentForm, SellerForm
+from whs.sale.views import UpdateView, CreateView, DeleteView,BillListView
 from whs.sale.handlers import TransferMarkHandler,TotalHandler
 
 from piston.resource import Resource
 
 urlpatterns = patterns('whs.sale.views',
 
-    url(ur'^$', 'main', name='main'),
+    url(ur'^$', BillListView.as_view(), name='main'),
     url(ur'^Статистика$', 'stats', name='statistics'),
+    url(ur'^Срез', 'aggregation', name='aggregation'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', DeleteView.as_view(
         model=Bill,
@@ -21,11 +22,7 @@ urlpatterns = patterns('whs.sale.views',
         model=Bill
     ), name='Bill'),
 
-    url(ur'^Накладная/(?P<pk>\d+)/$', UpdateView.as_view(
-        form_class=BillForm,
-        model=Bill,
-        opers=[SoldFactory, PalletFactory]
-    ), name='Bill-view'),
+    url(ur'^Накладная/(?P<pk>\d+)/$', 'bill_pk_redirect', name='Bill-view-pk'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/$', UpdateView.as_view(
         form_class=BillForm,
@@ -41,6 +38,7 @@ urlpatterns = patterns('whs.sale.views',
 
 urlpatterns += patterns('',
     url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent'),
+    url(ur'^Продавец/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller'),
 )
 
 

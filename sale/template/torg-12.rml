@@ -188,15 +188,15 @@
     <setFont name="Arial" size="8"/>
 
     {# Грузоотправитель #}
-    <drawCentredString x="14cm" y="6.4cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }}, к/с {{ doc.seller.ks }}</drawCentredString>
-    <drawCentredString x="14cm" y="6.1cm"> {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
+    <drawCentredString x="14cm" y="6.4cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }},</drawCentredString>
+    <drawCentredString x="14cm" y="6.1cm">к/с {{ doc.seller.ks }}, {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
     <setFont name="Arial" size="8"/>
     {# С\П ъх что такое #}
 {#    <drawString x="4cm" y="5.5cm">С\П</drawString>#}
 
     <drawCentredString x="14cm" y="4.5cm">{{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }} </drawCentredString>
-    <drawCentredString x="14cm" y="3.9cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }}, к/с {{ doc.seller.ks }}</drawCentredString>
-    <drawCentredString x="14cm" y="3.6cm"> {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
+    <drawCentredString x="14cm" y="3.9cm">{{ doc.seller.fullname }} {{ doc.seller.address }}, {{ doc.seller.phone }} р/с {{ doc.seller.rs }},</drawCentredString>
+    <drawCentredString x="14cm" y="3.6cm">к/с {{ doc.seller.ks }}, {{ doc.seller.bank }}, БИК {{ doc.seller.bic }}, ИНН/КПП {{ doc.seller.inn }}/{{ doc.seller.kpp }} </drawCentredString>
 
     <drawCentredString x="14cm" y="2.6cm">{{ doc.agent.fullname }} {{ doc.agent.address }}, {{ doc.agent.phone }} </drawCentredString>
 

@@ -60,7 +60,7 @@ def get_name(brick):
     elif brick.weight == 0:
         return u'КР'
     else:
-        return u'К%s%sПу' % (brick.get_weight_display()[0], brick.view)
+        return u'К<b>%s</b>%sПу' % (brick.get_weight_display()[0], brick.view)
 
 
 def make_label(brick): # Код для вывода имени

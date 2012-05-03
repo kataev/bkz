@@ -3,9 +3,9 @@
 
 {% block title %}
     {% if form.instance.pk %}
-        {{ form.instance|model_verbose_name }}
+        {{ form.instance|model_verbose_name|safe }}
     {% endif %}
-    {{ form.instance }}
+    {{ form.instance|safe }}
 {% endblock %}
 
 {% block brick-select %}
@@ -81,7 +81,7 @@
                                     {% if form.errors %}
                                         <i class="icon-warning-sign"></i>
                                     {% endif %}
-                                    {{ form.instance }}
+                                    {{ form.instance|safe }}
                                 </a>
                             </li>
                         {% endfor %}

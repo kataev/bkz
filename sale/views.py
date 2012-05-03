@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import datetime
 import logging
-import re
+from qsstats import QuerySetStats,DateFieldMissing,QuerySetMissing
+from qsstats.utils import get_interval_sql
 
 from exceptions import ValueError
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.db.models import Max
-from django.http import QueryDict, Http404
-from django.shortcuts import get_object_or_404, render
+from django.db.models import Max,Sum
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext as _
 
-from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter
-from whs.views import CreateView, UpdateView, DeleteView
+from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter, BillAggregateFilter
+from whs.views import CreateView, UpdateView, DeleteView, ListView
 from whs.sale.pdf import pdf_render_to_response
-from whs.sale.models import Sold
+from whs.sale.models import Sold,Pallet
 
 logger = logging.getLogger(__name__)
 
@@ -68,30 +68,90 @@ class CreateView(CreateView):
         print context['form'].initial
         return context
 
+def bill_pk_redirect(request,pk):
+    b = get_object_or_404(Bill,pk=pk)
+    return redirect(b.get_absolute_url())
+
 
 def bill_print(request, year, number):
     doc = get_object_or_404(Bill.objects.select_related(), number=number, date__year=year)
     return pdf_render_to_response('torg-12.rml', {'doc': doc})
 
+class BillListView(ListView):
+    queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from').select_related()
+    template_name = 'bills.html'
+    paginate_by = 20
+    context_object_name = 'bills'
 
-def main(request):
-    queryset = Sold.objects.select_related().all()
-    form = BillFilter(request.GET or None)
-    if form.is_valid() and request.GET:
-        data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
-        queryset = queryset.filter(**data)
-    paginator = Paginator(queryset, 20)
+    def get_paginate_by(self, queryset):
+        try:
+            p = int(self.request.GET.get('rpp',''))
+        except ValueError:
+            p = self.paginate_by
+        return p
 
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        paginated = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        paginated = paginator.page(paginator.num_pages)
-    return render(request, 'bills.html', dict(paginator=paginated, form=form,))
+    def get_queryset(self):
+        form = BillFilter(self.request.GET or None)
+        if form.is_valid():
+            data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
+            if data.has_key('year'):
+                data['date__year']=data.pop('year')
+            if data.has_key('month'):
+                data['date__month']=data.pop('month')
+            if data.has_key('brick'):
+                data['solds__brick']=data.pop('brick')
+            if data.has_key('rpp'):
+                data.pop('rpp')
+            return self.queryset.filter(**data)
+        return self.queryset
 
+
+    def get_context_data(self, **kwargs):
+        context = super(BillListView, self).get_context_data(**kwargs)
+        context['form'] = BillFilter(self.request.GET or None)
+        return context
+
+class ValueQuerySetStats(QuerySetStats):
+    def _aggregate(self, date_field=None, aggregate=None, filter=None):
+        date_field = date_field or self.date_field
+        aggregate = aggregate or self.aggregate
+
+        if not date_field:
+            raise DateFieldMissing("Please provide a date_field.")
+
+        if self.qs is None:
+            raise QuerySetMissing("Please provide a queryset.")
+
+        agg = self.qs.filter(**filter).aggregate(agg=aggregate)
+        return agg['agg']
+
+
+def aggregation(request):
+    form = BillAggregateFilter(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
+            filter = {}
+            if data.has_key('year'):
+                filter['date__year']=data.get('year')
+                aggregate = 'for_year'
+            if data.has_key('month'):
+                filter['date__month']=data.get('month')
+                aggregate = 'for_month'
+            if data.has_key('brick'):
+                group_by['solds__brick']=data.get('brick')
+            if data.has_key('agent'):
+                filter['agent']=data.get('agent')
+            if data.has_key('seller'):
+                filter['agent']=data.get('seller')
+            group_by = data.get('group_by',[])
+
+            return self.queryset.filter(**data)
+        qss = ValueQuerySetStats()
+    else:
+        sql = get_interval_sql('"sale_bill"."date"','months','postgresql')
+        object_list = Sold.objects.extra(select=dict(dates=sql)).select_related('doc__date').order_by().values('dates').annotate(Sum('amount'))
+    return render(request, 'aggregation.html', dict(form=form,object_list=object_list))
 
 def agents(request):
     alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"

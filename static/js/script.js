@@ -170,12 +170,12 @@ $(function () {
 })
 
 $(function () {
-    $('[name=agent]').change(function (e) {
+    $('[name=agent],[name=seller]').change(function (e) {
         var val = $(this).val()
         var div = $(this).parent()
         var a = $(div).children("a")
         var i = $(a).children("i")
-        var href = $(this).attr('href')
+        var href = $(div).attr('href')
         if (val) {
             $(a).attr('href', href + val + "/")
             $(a).attr('title', "Редактировать выбранного контрагента")
@@ -293,7 +293,15 @@ $(function () {
             })
     })
 })
-$('[name="date__month"]').change(function(e){
+$('[name="month"],[name*="month"]').change(function(e){
     var year = $(':selected',this).parent().attr('label')
-    $('[name="date__year"]').val(year)
+    $(this).parents('form').find('[name="year"]').val(year)
+})
+
+$('form.filter').submit(function(e){
+    e.preventDefault()
+    var param = jQuery.param($(this).serializeArray().filter(function(e){ return e.value}))
+    console.log(param)
+    window.location.search='?'+param
+
 })

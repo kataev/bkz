@@ -11,13 +11,12 @@ class Bill(BillMixin, models.Model):
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    agent = models.ForeignKey('sale.Agent', verbose_name=u'Покупатель', related_name="%(app_label)s_%(class)s_related")
-    seller = models.ForeignKey('sale.Seller', verbose_name=u'Продавец', related_name="proxy_%(app_label)s_%(class)s_related",
-        help_text=u'', default=350)
+    agent = models.ForeignKey('sale.Agent', verbose_name=u'Покупатель',related_name=u'bill_agents')
+    seller = models.ForeignKey('sale.Seller', verbose_name=u'Продавец', help_text=u'', default=350,related_name='bill_sallers')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
         help_text=u'Основание для выставления товарной накладной')
-    type = models.CharField(u'Вид операции', max_length=300, blank=True, help_text=u'')
+    type = models.CharField(u'Вид операции', max_length=300, blank=True)
 
 
     class Meta():
@@ -43,15 +42,15 @@ class Bill(BillMixin, models.Model):
 class Sold(OperationsMixin,models.Model):
     """ Класс для операций отгруки, является аналогом строки в накладной.
 Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
-    brick_from = models.ForeignKey(Brick, related_name="brick_from_%(app_label)s_%(class)s_related",
+    brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич")
+    brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
     delivery = models.FloatField(u"Цена доставки", default=0, help_text=u'0 если доставки нет')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-    doc = models.ForeignKey(Bill, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Накладная')
+    doc = models.ForeignKey(Bill, related_name="solds", verbose_name=u'Накладная')
 
     class Meta():
         verbose_name = u"Отгрузка"
@@ -74,7 +73,7 @@ class Pallet(PalletMixin, models.Model):
     amount = models.PositiveIntegerField(u"Кол-во поддоннов")
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-    doc = models.ForeignKey(Bill, related_name="%(app_label)s_%(class)s_related", verbose_name=u'Накладная')
+    doc = models.ForeignKey(Bill, related_name="pallets", verbose_name=u'Накладная')
 
     class Meta():
         verbose_name = u"Поддон"
@@ -133,16 +132,16 @@ class Seller(Agent):
     director = models.CharField(u'Директор',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
     dispetcher = models.CharField(u'Диспечер',max_length=200)
+    nds = models.FloatField(u'НДС',default=0.18)
+
+    def get_absolute_url(self):
+        return reverse('sale:Seller',kwargs=dict(id=self.pk))
 
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
 
         ordering = ('name', )
-
-    @property
-    def nds(self):
-        return 0.18
 
 class Nomenclature(models.Model):
     title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)

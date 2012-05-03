@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% load class_name %}
-{% block title %}Накладные{% endblock %}
+{% block title %}Накладные срез{% endblock %}
 {% block brick-select %}
     <div id="brick-select" class="modal hide fade">
         <div class="modal-header">
@@ -21,32 +21,27 @@
 {% block container %}
     <div class="row">
         <div class="span8">
-            <table id='Bills' class="table table-bordered table-condensed">
-                <thead>
-                <tr>
-                    <th width=15px>#</th>
-                    <th width="80px">Дата</th>
-                    <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in"></i></th>
-                    <th style='width:60px;'>Кол-во</th>
-                    <th style='width:100px;'>Цена</th>
-                </tr>
-                </thead>
+            <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                {% for s in object_list|first %}
+                    <th>{{ s }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
                 <tbody>
                 {% for b in object_list %}
-                        {% include 'Bill_tr.html' %}
+                    <tr>
+                        {% for s in b.values %}
+                            <td>{{ s }}</td>
+                        {% endfor %}
+                    </tr>
                 {% endfor %}
                 </tbody>
-                <tfoot>
-                <tr>
-                    <th colspan="3">Показанно {{ object_list|length }} из {{ page_obj.paginator.count }}</th>
-                    <th>{{ object_list|sum_pluck:'items' }}</th>
-                    <th><span class="money"> {{ object_list|sum_pluck:'money' }} </span></th>
-                </tr>
-                </tfoot>
             </table>
         </div>
         <div class="span4">
-            <form class="form-vertical filter" action="" method="GET">
+            <form class="form-vertical filter" action="" method="POST">
                 <fieldset>
                     <legend><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр для поиска накладных
                     </legend>
@@ -66,6 +61,11 @@
                     </div>
                     <div class="control-group">
                         <div class="controls">
+                            {{ form.seller.as_widget }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
                             {% with f=form.brick %}
                                 {% include 'brick-select-field.html' %}
                             {% endwith %}
@@ -73,7 +73,7 @@
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                                {{ form.rpp.as_widget }}
+                            {{ form.group_by.as_widget }}
                         </div>
                     </div>
                     <div class="form-actions">
@@ -83,7 +83,6 @@
                         <button type="reset" class="small btn">
                             Сбросить
                         </button>
-                        <a class="btn " href="{% url sale:aggregation %}">Срезы</a>
                     </div>
                 </fieldset>
             </form>
