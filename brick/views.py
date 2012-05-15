@@ -5,7 +5,7 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
 from brick.models import Brick
-from man.models import Add, Sorting, Sorted, Removed, Write_off
+from man.models import Add, Sorting, Sorted, Write_off
 from sale.models import Sold
 from sale.forms import YearMonthFilter
 from whs.brick.models import make_css, make_label
@@ -30,13 +30,13 @@ def flat_form(request, Form, id):
 
 def operations(filter):
     m_from = Sorting.objects.filter(**filter)
+    m_to = Sorted.objectsf.filter(type=0).filter(**filter)
+    m_rmv = Sorted.objects.filter(type=1).filter(**filter)
     filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
     add = Add.objects.filter(**filter)
     sold = Sold.objects.filter(**filter)
     t_from = Sold.objects.filter(**filter).filter(brick_from__isnull=False)
     t_to = Sold.objects.filter(**filter).filter(brick_from__isnull=False)
-    m_to = Sorted.objects.filter(**filter)
-    m_rmv = Removed.objects.filter(**filter)
     inv = Write_off.objects.filter(**filter)
 
     return dict(add=dict(add.values_list('brick__id').annotate(Sum('amount')).order_by()),

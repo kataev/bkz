@@ -33,8 +33,8 @@ DATABASES = {
     'old': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'disp', # Or path to database file if using sqlite3.
-        'USER': 'disp', # Not used with sqlite3.
-        'PASSWORD': 'disp', # Not used with sqlite3.
+        'USER': 'root', # Not used with sqlite3.
+        'PASSWORD': '89026441284', # Not used with sqlite3.
         'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
@@ -153,6 +153,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'brick/template/'),
     os.path.join(PROJECT_PATH, 'man/template/'),
     os.path.join(PROJECT_PATH, 'energy/template/'),
+    os.path.join(PROJECT_PATH, 'cpu/template/'),
     )
 
 INSTALLED_APPS = (
@@ -172,6 +173,7 @@ INSTALLED_APPS = (
     'pytils',
     'south',
     'trml2pdf',
+    'gunicorn',
 #    'piston',
 
     'whs.ipaccess',

@@ -19,7 +19,7 @@ def brick():
     """
     Импорт продукции из старой базы
     """
-    for t in DispTovar.objects.all().filter(pk__gt=281):
+    for t in DispTovar.objects.all().filter(pk=291):
         b = OldBrick()
         b.old = t.id
         b.name = t.name
@@ -383,7 +383,7 @@ def srted():
             s.save()
 
 if __name__ == '__main__':
-#    brick()
+    brick()
 #    agents('../agents.txt')
 #    man()
     totals()

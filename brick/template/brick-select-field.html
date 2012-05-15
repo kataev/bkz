@@ -13,7 +13,7 @@
             {% if b.pk == f.value|add:0 %}
                 <span title='Остаток: {{ b.total }}'
                       class="uneditable-input {{ b.css }}">
-                    <span>{{ b.label }}</span>
+                    <span>{{ b.label|safe }}</span>
                     {% if not f.field.required %}
                         <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
                     {% endif %}

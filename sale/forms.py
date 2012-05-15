@@ -3,6 +3,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 import django.forms as forms
+from django.http import QueryDict
 from django.forms.models import inlineformset_factory,BaseInlineFormSet
 from django.core.exceptions import ValidationError
 
@@ -128,11 +129,24 @@ records_per_page = (
 )
 
 class BillFilter(forms.Form):
+    page = forms.IntegerField(required=False)
     year = forms.IntegerField(required=False)
     month = forms.IntegerField(required=False)
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
     rpp = forms.ChoiceField(choices=records_per_page,initial='')
+
+    def url_next(self):
+        q = QueryDict('',mutable=True)
+        if self.is_valid():
+            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',1)+1))
+        return q.urlencode()
+
+    def url_prev(self):
+        q = QueryDict('',mutable=True)
+        if self.is_valid():
+            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',2)-1))
+        return q.urlencode()
 
     def __init__(self, *args, **kwargs):
         """ Изменение пустой ичейки для подсказки. """

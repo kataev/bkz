@@ -46,18 +46,19 @@ class Add(models.Model):
         else:
             return u'Новая партия'
 
+sorting_c = ((0,u'Отсортированно'),(1,u'Списанно'))
 
 class Sorting(models.Model):
     """ Класс документа для учета перебора кипича из одного товара в другой """
+    type = models.IntegerField(u'Тип',choices=sorting_c,help_text=u'Выберите кирпич после сортировки')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
 
     class Meta():
-        verbose_name = u"Сортировка"
-        verbose_name_plural = u"Сортировки"
-        permissions = (("view_man", u"Может просматривать сортировку"),)
+        verbose_name = u"Из цеха"
+        permissions = (("view_man", u"Может просматривать операции из цеха"),)
 
     def get_absolute_url(self):
         return reverse('man:Sort-view',kwargs=dict(pk=self.pk))
@@ -71,12 +72,13 @@ class Sorting(models.Model):
 
 
 class Sorted(models.Model):
-    """ Кирпич принятый из сортировки """
+    """ Кирпич после сортировки """
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
     doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
     class Meta():
         verbose_name = u"Сортированый кирпич"
@@ -89,23 +91,6 @@ class Sorted(models.Model):
             return u'Новый сортированый кирпич'
 
 
-class Removed(models.Model):
-    """ Списание при сортировке """
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
-        help_text=u'Выберите кирпич')
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
-    doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
-
-    class Meta():
-        verbose_name = u"Списанный кирпич"
-        verbose_name_plural = u"Списанные"
-
-    def __unicode__(self):
-        if self.pk:
-            return u'%s, %d шт' % (self.brick, self.amount)
-        else:
-            return u'Списание'
 
 
 class Inventory(models.Model):

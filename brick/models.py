@@ -7,6 +7,7 @@ class Brick(models.Model):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
 
+    cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
     weight = models.FloatField(u"Ширина", choices=weight_c, default=weight_c[0][0])

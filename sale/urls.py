@@ -11,7 +11,6 @@ urlpatterns = patterns('whs.sale.views',
 
     url(ur'^$', BillListView.as_view(), name='main'),
     url(ur'^Статистика$', 'stats', name='statistics'),
-    url(ur'^Срез', 'aggregation', name='aggregation'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', DeleteView.as_view(
         model=Bill,

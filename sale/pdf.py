@@ -9,7 +9,6 @@ from django.template import loader, Context
 import trml2pdf
 from pytils.numeral import rubles
 
-
 # from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
 RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' +\
                  u'|' +\
@@ -41,6 +40,7 @@ def pdf_render_to_response(template, context, filename=None, prompt=False):
 
 
 class BillMixin(object):
+
     def opers(self):
         return list(self.solds.all()) + list(self.pallets.all())
 

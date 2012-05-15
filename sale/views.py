@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 import logging
-from qsstats import QuerySetStats,DateFieldMissing,QuerySetMissing
-from qsstats.utils import get_interval_sql
 
 from exceptions import ValueError
 from django.db.models import Max,Sum
@@ -13,7 +11,6 @@ from django.utils.translation import ugettext as _
 from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter, BillAggregateFilter
 from whs.views import CreateView, UpdateView, DeleteView, ListView
 from whs.sale.pdf import pdf_render_to_response
-from whs.sale.models import Sold,Pallet
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +91,8 @@ class BillListView(ListView):
         form = BillFilter(self.request.GET or None)
         if form.is_valid():
             data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
+            if data.has_key('page'):
+                data.pop('page')
             if data.has_key('year'):
                 data['date__year']=data.pop('year')
             if data.has_key('month'):
@@ -110,48 +109,6 @@ class BillListView(ListView):
         context = super(BillListView, self).get_context_data(**kwargs)
         context['form'] = BillFilter(self.request.GET or None)
         return context
-
-class ValueQuerySetStats(QuerySetStats):
-    def _aggregate(self, date_field=None, aggregate=None, filter=None):
-        date_field = date_field or self.date_field
-        aggregate = aggregate or self.aggregate
-
-        if not date_field:
-            raise DateFieldMissing("Please provide a date_field.")
-
-        if self.qs is None:
-            raise QuerySetMissing("Please provide a queryset.")
-
-        agg = self.qs.filter(**filter).aggregate(agg=aggregate)
-        return agg['agg']
-
-
-def aggregation(request):
-    form = BillAggregateFilter(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
-            filter = {}
-            if data.has_key('year'):
-                filter['date__year']=data.get('year')
-                aggregate = 'for_year'
-            if data.has_key('month'):
-                filter['date__month']=data.get('month')
-                aggregate = 'for_month'
-            if data.has_key('brick'):
-                group_by['solds__brick']=data.get('brick')
-            if data.has_key('agent'):
-                filter['agent']=data.get('agent')
-            if data.has_key('seller'):
-                filter['agent']=data.get('seller')
-            group_by = data.get('group_by',[])
-
-            return self.queryset.filter(**data)
-        qss = ValueQuerySetStats()
-    else:
-        sql = get_interval_sql('"sale_bill"."date"','months','postgresql')
-        object_list = Sold.objects.extra(select=dict(dates=sql)).select_related('doc__date').order_by().values('dates').annotate(Sum('amount'))
-    return render(request, 'aggregation.html', dict(form=form,object_list=object_list))
 
 def agents(request):
     alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"

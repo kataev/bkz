@@ -78,28 +78,3 @@ def sorted_post_save(instance, *args, **kwargs):
     brick = Brick.objects.get(pk=instance.brick.pk)
     brick.total += instance.amount
     brick.save()
-
-
-@receiver(pre_delete, sender=Removed)
-@receiver(pre_save, sender=Removed)
-def removed_pre_save(instance, *args, **kwargs):
-    """
-    Сигнал для списанного кирпича в процессе переборки
-    Отменяет изменения от операции
-    """
-    if instance.pk:
-        origin = Removed.objects.get(pk=instance.pk)
-        brick = Brick.objects.get(pk=origin.brick.pk)
-        brick.total += origin.amount
-        brick.save()
-
-
-@receiver(post_save, sender=Removed)
-def removed_post_save(instance, *args, **kwargs):
-    """
-    Сигнал для списанного кирпича в процессе переборки
-    Создаёт изменение операции
-    """
-    brick = Brick.objects.get(pk=instance.brick.pk)
-    brick.total -= instance.amount
-    brick.save()

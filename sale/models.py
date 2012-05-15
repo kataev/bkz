@@ -18,6 +18,10 @@ class Bill(BillMixin, models.Model):
         help_text=u'Основание для выставления товарной накладной')
     type = models.CharField(u'Вид операции', max_length=300, blank=True)
 
+    @property
+    def bkz(self):
+        return Seller.objects.get(pk=1206)
+
 
     class Meta():
         verbose_name = u"Накладная"
@@ -129,8 +133,11 @@ class OldAgent(Agent):
     old = models.IntegerField('Старое ID')
 
 class Seller(Agent):
+    director_name = models.CharField(u'Должность директора',max_length=200)
     director = models.CharField(u'Директор',max_length=200)
+    buhgalter_name = models.CharField(u'Должность бухгалтер',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
+    dispetcher_name = models.CharField(u'Должность диспечера',max_length=200)
     dispetcher = models.CharField(u'Диспечер',max_length=200)
     nds = models.FloatField(u'НДС',default=0.18)
 

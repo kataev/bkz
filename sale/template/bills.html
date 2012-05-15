@@ -83,7 +83,6 @@
                         <button type="reset" class="small btn">
                             Сбросить
                         </button>
-                        <a class="btn " href="{% url sale:aggregation %}">Срезы</a>
                     </div>
                 </fieldset>
             </form>
@@ -93,14 +92,14 @@
         <div class="pagination pagination-centered">
             <ul id='navigation'>
                 {% if page_obj.has_previous %}
-                    <li class="prev"><a href="?{{ url }}&page={{ page_obj.previous_page_number }}">&larr; Предыдущая</a>
+                    <li class="prev"><a href="?{{ form.url_pref }}">&larr; Предыдущая</a>
                     </li>
                 {% else %}
                     <li class="prev disabled"><a>&larr; Предыдущая</a></li>
                 {% endif %}
                 <li class="active"><a>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</a></li>
                 {% if page_obj.has_next %}
-                    <li class="next"><a href="?{{ url }}&page={{ page_obj.next_page_number }}">Следующая &rarr;</a></li>
+                    <li class="next"><a href="?{{ form.url_next }}">Следующая &rarr;</a></li>
                 {% else %}
                     <li class="next disabled"><a>Следующая &rarr;</a></li>
                 {% endif %}

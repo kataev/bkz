@@ -20,6 +20,10 @@ mass_c = {1.4: 3.5,
          0.0: 5.0
 }
 
+cavitation_c = ((0, u'Пустотелый'),
+           (1, u'Полнотелый'),
+)
+
 color_c = ((0, u'Красный'),
          (1, u'Желтый'),
          (2, u'Коричневый'),
@@ -60,7 +64,11 @@ def get_name(brick):
     elif brick.weight == 0:
         return u'КР'
     else:
-        return u'К<b>%s</b>%sПу' % (brick.get_weight_display()[0], brick.view)
+        if brick.cavitation:
+            c = u'о'
+        else:
+            c = u'у'
+        return u'К<b>%s</b>%sП%s' % (brick.get_weight_display()[0], brick.view,c)
 
 
 def make_label(brick): # Код для вывода имени
