@@ -4,7 +4,7 @@ from copy import deepcopy
 
 from django.shortcuts import render, get_object_or_404,redirect
 
-from whs.energy.models import Energy, Teplo
+from whs.energy.models import Energy, Teplo, reverse
 
 
 def delta(queryset,fields):
@@ -16,7 +16,7 @@ def delta(queryset,fields):
             continue
         o = deepcopy(v)
         for f in fields[1:]:
-            setattr(o,f,abs(getattr(v,f) - getattr(prev,f)) / (v.date-prev.date).days )
+            setattr(o,f,abs(getattr(v,f) - getattr(prev,f)) / ((v.date-prev.date).days or 1))
         energy.append(o)
         prev = v
     return energy
@@ -31,8 +31,32 @@ def main(request,year=None,month=None):
             prev = Energy.objects.filter(date__lt=v.date)[:1][0]
         o = [v.date,]
         for f in fields:
-            o.append( (getattr(v,f) - getattr(prev,f)) / (v.date-prev.date).days )
+            o.append( (getattr(v,f) - getattr(prev,f)) / ((v.date-prev.date).days or 1))
         energy.append(o)
         prev = v
 
-    return render(request,'energy.html',dict(opers=[energy]))
+    return render(request,'chart.html',dict(opers=[energy]))
+
+def data(request,Form,id=None,date=None):
+    """ Форма  """
+    #    id = args[0]
+    if id:
+        model = get_object_or_404(Form._meta.model,pk=id)
+        if request.method == 'POST':
+            form = Form(request.POST,instance=model)
+            if form.is_valid():
+                model = form.save()
+                return redirect(model.get_absolute_url())
+        else:
+            form = Form(initial=request.GET.dict() or {'date':datetime.date.today()},instance=model)
+            return render(request, 'flat-form.html',dict(form=form))
+    else:
+        if request.method == 'POST':
+            form = Form(request.POST)
+            if form.is_valid():
+                model = form.save()
+                return redirect(reverse('energy:%s' % Form._meta.model.__name__))
+        else:
+            form = Form(initial=request.GET.dict() or {'date':datetime.date.today()})
+    data = Form._meta.model.objects.all()[:31]
+    return render(request, 'energy.html',dict(form=form,data=data))

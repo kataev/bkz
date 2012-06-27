@@ -12,9 +12,9 @@ from whs.energy.models import Energy,Teplo
 from whs.energy.views import delta
 
 class EnergyHandler(BaseHandler):
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET','PUT')
     model = Energy
-    fields = ('date','gaz')
+    fields = ('date','elec4','elec16','iwater','uwater','gaz')
 
     def read(self, request, *args, **kwargs):
         """
@@ -24,7 +24,6 @@ class EnergyHandler(BaseHandler):
             return rc.NOT_IMPLEMENTED
 
         pkfield = self.model._meta.pk.name
-
         if pkfield in kwargs:
             try:
                 return self.queryset(request).get(pk=kwargs.get(pkfield))
@@ -34,10 +33,5 @@ class EnergyHandler(BaseHandler):
                 return rc.BAD_REQUEST
         else:
             queryset = self.queryset(request).filter(*args, **kwargs)
-#            qss = qsstats.QuerySetStats(Add.objects.all(),'doc__date')
-#            man = qss.time_series(datetime.date(2011,1,1),interval='months',aggregate = Sum('amount'))
-#            man = dict([(x[0].date(),x[1]) for x in man])
             queryset = delta(queryset,self.fields)
-#            for v in queryset:
-#                v.gaz /= float(man.get(v.date.replace(day=1),1))/1000
             return queryset

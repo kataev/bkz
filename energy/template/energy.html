@@ -1,25 +1,50 @@
 {% extends 'index.html' %}
-{% block script %}
-    <script type="text/javascript" src="/static/js/libs/d3.v2.min.js"></script>
-    <script type="text/javascript" src="/static/js/energy.js"></script>
-{% endblock %}
-{% block head %}
-    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/css/energy.css"/>
-{% endblock %}
-{% block title %}Энергоресурсы{% endblock %}
+{% load class_name %}
+{% block title %}{{ data.model|model_verbose_name }}{% endblock %}
 {% block container %}
-    <h1>Интенсивность потребления Газа</h1>
-    <div id="chart"></div>
-    {% for o in opers %}
-        <table class="table">
-            {% for l in o %}
-                <tr>
-                    {% for v in l %}
-                        <td>{{ v }}</td>
+    <h1>{{ data.model|model_verbose_name }}</h1>
+    <form method="POST" action="{{ data.model.get_absolute_url }}" class='form-inline'>
+        {% csrf_token %}
+        <table class="table table-bordered" id='Energy'>
+            <thead>
+            <tr>
+                {% for f in form %}
+                    <th {% if forloop.first %}width='100px'{% endif %}>{{ f.label }}</th>
+                {% endfor %}
+                <th width="20px;"></th>
+            </tr>
+            <tr class="form">
+                {% for f in form %}
+                    <th>{{ f }}
+                        {% if f.errors %}
+                            <span class="help-inline">
+                        {% for q in f.errors %}
+                            {{ q }}
+                        {% endfor %}
+                    </span>
+                        {% endif %}
+                    </th>
+                    {% if forloop.last %}
+                        <th>
+                            <button type="submit" title='Сохранить' class="btn btn-primary btn-small"><i
+                                    class="icon-ok icon-white"></i></button>
+                        </th>
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in data %}
+                <tr data-pk='{{ d.pk }}'>
+                    {% for f in form %}
+                        <td {% if f.name == 'date' %}data-value="{{ d.date.isoformat }}"{% endif %}>{{ d|hash:f.name }}</td>
                     {% endfor %}
+                    <td class="for-button"><a href="{{ d.get_absolute_url }}" class="btn btn-info btn-mini"><i
+                            class="icon-pencil icon-white"></i></a></td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
-    {% endfor %}
+    </form>
 {% endblock %}

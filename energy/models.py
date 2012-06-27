@@ -2,7 +2,7 @@
 import pytils
 
 from django.db import models
-
+from django.core.urlresolvers import reverse
 
 class Energy(models.Model):
     date_time=models.DateTimeField(u"Дата и время",auto_now=True)
@@ -25,6 +25,10 @@ class Energy(models.Model):
         else:
             return u'Новые показания энергоресурсов'
 
+    def get_absolute_url(self):
+        return reverse('energy:Energy-pk',kwargs=dict(id=self.pk or ''))
+
+
 class Teplo(models.Model):
     date_time=models.DateTimeField(u"Дата и время",auto_now=True)
     date=models.DateField(u"Дата")
@@ -45,3 +49,6 @@ class Teplo(models.Model):
             return u'%s' % date
         else:
             return u'Новые показания тепла'
+
+    def get_absolute_url(self):
+        return reverse('energy:Teplo-pk',kwargs=dict(id=self.pk or ''))

@@ -74,8 +74,11 @@ class Pallet(PalletMixin, models.Model):
     """
     Поддоны при продаже
     """
+    number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
+        help_text=u'Число уникальное в этом году')
     amount = models.PositiveIntegerField(u"Кол-во поддоннов")
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
+    price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=200)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     doc = models.ForeignKey(Bill, related_name="pallets", verbose_name=u'Накладная')
 
