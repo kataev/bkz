@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
+import csv
+from collections import Counter
+
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
 from brick.models import Brick
+from brick.forms import VerificationForm
 from man.models import Add, Sorting, Sorted, Write_off
 from sale.models import Sold
 from sale.forms import YearMonthFilter
@@ -30,7 +34,7 @@ def flat_form(request, Form, id):
 
 def operations(filter):
     m_from = Sorting.objects.filter(**filter)
-    m_to = Sorted.objectsf.filter(type=0).filter(**filter)
+    m_to = Sorted.objects.filter(type=0).filter(**filter)
     m_rmv = Sorted.objects.filter(type=1).filter(**filter)
     filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
     add = Add.objects.filter(**filter)
@@ -99,3 +103,24 @@ def main(request):
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
 
     return render(request, 'main.html', dict(Bricks=Bricks, order=Brick.order,form=form,begin=begin,end=end - datetime.timedelta(1)))
+
+
+def verification(request):
+    form = VerificationForm(request.POST or None,request.FILES or None)
+    deriv,total,c = [],{},{}
+    if form.is_valid():
+        id,f = form.cleaned_data['id'],form.cleaned_data['field']
+        oborot = csv.reader(form.cleaned_data['csv'],delimiter=';')
+        oborot = filter(lambda r:r and isinstance(r,list) and r[0],oborot)
+        c = Counter([int(r[id]) for r in oborot if r[id]])
+        c = [k for k,v in c.iteritems() if v>1]
+        try:
+            for r in oborot:
+                pk,total =  r[id],int(r[f])
+                b = Brick.objects.get(pk=pk)
+                if b.total != total:
+                    deriv.append(dict(brick=b,field=total,name=r[0],deriv=b.total-total))
+            total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'],csv=sum([int(r[f]) for r in oborot]))
+        except :
+            pass
+    return render(request,'verification.html',dict(form=form,deriv=deriv,total=total,counter=c))

@@ -3,7 +3,7 @@ import datetime
 
 from django.shortcuts import get_object_or_404, render
 
-from whs.man.models import Add,Sorting,Sorted,Removed
+from whs.man.models import Add,Sorting,Sorted
 from whs.sale.forms import DateForm
 
 def main(request):

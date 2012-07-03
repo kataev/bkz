@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-import os
+import os, sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+
+sys.path.insert(0,'/opt/graphite/webapp/')
+from cpu.graphite_settings_defaults import *
+from cpu.graphite_settings import *
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -8,10 +12,11 @@ TEMPLATE_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
 DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
 
-
 ADMINS = (
     ('Kataev Denis', 'bteamko@gmail.com'),
     )
+
+
 
 DATABASES = {
 #    'default': {
@@ -39,6 +44,11 @@ DATABASES = {
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+    DATABASES['old']['ENGINE'] = 'django.db.backends.sqlite3'
+SOUTH_TESTS_MIGRATE = False
 
 DATABASE_ROUTERS = ('routes.WHSRouter',)
 
@@ -78,7 +88,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -154,6 +164,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'man/template/'),
     os.path.join(PROJECT_PATH, 'energy/template/'),
     os.path.join(PROJECT_PATH, 'cpu/template/'),
+    os.path.join(PROJECT_PATH, 'it/template/'),
     )
 
 INSTALLED_APPS = (
@@ -175,6 +186,7 @@ INSTALLED_APPS = (
     'trml2pdf',
     'gunicorn',
 #    'piston',
+    'selenium',
 
     'whs.ipaccess',
 
@@ -183,8 +195,16 @@ INSTALLED_APPS = (
     'whs.brick',
     'whs.sale',
     'whs.man',
+    'whs.cpu',
 
     'whs.energy',
+    'whs.it',
+
+#    graphite
+    'tagging',
+#    'graphite',
+    'graphite.render',
+    'graphite.account',
     )
 
 # A sample logging configuration. The only tangible logging

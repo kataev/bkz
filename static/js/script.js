@@ -68,10 +68,12 @@ $(function () {
         var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
         var v = total.attr('value')
-        var rep = function(index,value){if (value) return value.replace(/__prefix__/g, v)}
-        $(node).attr('id',rep)
-        $('input, select',node).attr('name',rep).attr('id',rep)
-        $('label[for]',node).attr('for',rep)
+        var rep = function (index, value) {
+            if (value) return value.replace(/__prefix__/g, v)
+        }
+        $(node).attr('id', rep)
+        $('input, select', node).attr('name', rep).attr('id', rep)
+        $('label[for]', node).attr('for', rep)
 
         $('div.DELETE', node).remove()
         var menu = $('<li><a href="#__prefix__" data-toggle="tab"><i class="icon-"></i><span></span></a></li>'
@@ -148,11 +150,21 @@ $(function () {
 $(function () {
     var color_select = function (select, val) {
         $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
-        if (val == 0) { $(select).addClass('bc-red') }
-        if (val == 1) { $(select).addClass('bc-yellow') }
-        if (val == 2) { $(select).addClass('bc-brown') }
-        if (val == 3) { $(select).addClass('bc-light') }
-        if (val == 4) { $(select).addClass('bc-white') }
+        if (val == 0) {
+            $(select).addClass('bc-red')
+        }
+        if (val == 1) {
+            $(select).addClass('bc-yellow')
+        }
+        if (val == 2) {
+            $(select).addClass('bc-brown')
+        }
+        if (val == 3) {
+            $(select).addClass('bc-light')
+        }
+        if (val == 4) {
+            $(select).addClass('bc-white')
+        }
     }
     var select = $('#id_color')
     var val = parseInt($(select).val())
@@ -232,15 +244,15 @@ function bricks_per_tara(cl) {
 }
 
 function tara_amount() {
-    $('fieldset').on('change','input[name*="tara"],input[name*="brick"]',function(e){
+    $('fieldset').on('change', 'input[name*="tara"],input[name*="brick"]', function (e) {
         var fieldset = $(e.delegateTarget)
-        var brick = $('.brick-select.brick input',fieldset)
-        var tara = $('input[name*="tara"]',fieldset)
-        var checkbox = $('input[name="tara-calculate"]',fieldset)
+        var brick = $('.brick-select.brick input', fieldset)
+        var tara = $('input[name*="tara"]', fieldset)
+        var checkbox = $('input[name="tara-calculate"]', fieldset)
         if (checkbox.val() && brick.val() && tara.val()) {
-            var css = $('.brick-select.brick > span',fieldset).attr('class')
+            var css = $('.brick-select.brick > span', fieldset).attr('class')
             var factor = bricks_per_tara(css)
-            $('input[name*="amount"]',fieldset).val(factor * tara.val())
+            $('input[name*="amount"]', fieldset).val(factor * tara.val())
         }
     })
 }
@@ -293,15 +305,16 @@ $(function () {
             })
     })
 })
-$('[name="month"],[name*="month"]').change(function(e){
-    var year = $(':selected',this).parent().attr('label')
+$('[name="month"],[name*="month"]').change(function (e) {
+    var year = $(':selected', this).parent().attr('label')
     $(this).parents('form').find('[name="year"]').val(year)
 })
 
-$('form.filter').submit(function(e){
+$('form.filter').submit(function (e) {
     e.preventDefault()
-    var param = jQuery.param($(this).serializeArray().filter(function(e){ return e.value}))
+    var param = jQuery.param($(this).serializeArray().filter(function (e) {
+        return e.value
+    }))
     console.log(param)
-    window.location.search='?'+param
-
+    window.location.search = '?' + param
 })

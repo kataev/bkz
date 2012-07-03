@@ -17,9 +17,9 @@
             </thead>
             <tbody>
             {% for b in Journal %}
-                <tr class="doc" data-opers='{{ b|to_class_name }}_{{ b.pk }}'>
+                <tr class="doc" data-opers='{{ b|class_name }}_{{ b.pk }}'>
                     <td>{{ b.number|default:b.pk }}</td>
-                    <td class="name"><i class="icon-{{ b|to_class_name }}"></i>
+                    <td class="name"><i class="icon-{{ b|class_name }}"></i>
                         <a href="{{ b.get_absolute_url }}">{{ b }}</a>,
                         <a href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
                         {% if b.proxy %}
@@ -33,11 +33,11 @@
                     <td><b>{{ b.total }}</b></td>
                     <td><span class="money">{{ b.money }}</span></td>
                 </tr>
-                <tbody class="opers" style='display: none' id='{{ b|to_class_name }}_{{ b.pk }}'>
+                <tbody class="opers" style='display: none' id='{{ b|class_name }}_{{ b.pk }}'>
                 {% for o in b.opers %}
-                    <tr class="{{ o|to_class_name }} {{ o.brick.css }}">
+                    <tr class="{{ o|class_name }} {{ o.brick.css }}">
                         <td class="name" colspan="2">
-                            <i class="icon-{{ o|to_class_name }}"></i> {{ o }}
+                            <i class="icon-{{ o|class_name }}"></i> {{ o }}
                         </td>
                         <td class="amount">{{ o.amount }}</td>
                         <td>

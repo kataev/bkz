@@ -25,7 +25,7 @@ def flat_form(request,Form,id=None,date=None):
             model = form.save()
             return redirect(model.get_absolute_url())
     else:
-        form = Form(instance=model)
+        form = Form(initial=request.GET.dict() or None,instance=model)
     return render(request, 'flat-form.html',dict(form=form))
 
 

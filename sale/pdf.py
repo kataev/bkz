@@ -113,9 +113,9 @@ class PalletMixin(object):
     def brutto(self):
         return 0
 
-    @property
-    def price(self):
-        return 200.00
+#    @property
+#    def price(self):
+#        return 200.00
 
     @property
     def money(self):

@@ -1,12 +1,24 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 from django import template
+from django.forms import ModelForm
+from django.db.models import Model
 
 register = template.Library()
 
-@register.filter(name='to_class_name')
-def to_class_name(value):
-    return value.__class__.__name__
+
+@register.filter(name='class_name')
+def class_name(value):
+    if isinstance(value,Model):
+        return value._meta.object_name
+    if isinstance(value,ModelForm):
+        return value._meta.model.__name__
+    elif issubclass(value,ModelForm):
+        return value._meta.model.__name__
+    elif issubclass(value,Model):
+        return value.__name__
+    else:
+        return 'unknow'
 
 @register.filter(name='model_verbose_name')
 def model_verbose_name(obj):
@@ -25,4 +37,10 @@ def hash(obj,key):
 
 @register.filter(name='sum_pluck')
 def sum_pluck(queryset,attr):
-    return sum([getattr(b,attr) for b in queryset])
+    try:
+        if isinstance(queryset[0],dict):
+            return sum([b.get(attr,0) for b in queryset])
+        else:
+            return sum([getattr(b,attr) for b in queryset])
+    except :
+        pass

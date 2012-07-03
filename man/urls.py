@@ -25,7 +25,7 @@ urlpatterns = patterns('whs.man.views',
     url(ur'^Сортировка/(?P<pk>\d+)/$', UpdateView.as_view(
         form_class=SortingForm,
         model=Sorting,
-        opers=[SortedFactoryб]
+        opers=[SortedFactory,]
     ), name='Sort-view'),
 
     url(ur'^Инвентаризация/$', CreateView.as_view(

@@ -2,7 +2,7 @@
 {% spaceless %}
 <div class="input-append brick-select {{ f.name }}">
     {% if f.value == 'None' or not f.value %}
-        <span class="uneditable-input"><span>Выберете кирпич</span>
+        <span class="uneditable-input input-large"><span>Выберете кирпич</span>
             {% if not f.field.required %}
                 <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
             {% endif %}
@@ -12,7 +12,7 @@
             {# Выбор кирпича. Bug,Плохо стравнивает числа и строки  #}
             {% if b.pk == f.value|add:0 %}
                 <span title='Остаток: {{ b.total }}'
-                      class="uneditable-input {{ b.css }}">
+                      class="uneditable-input input-large {{ b.css }}">
                     <span>{{ b.label|safe }}</span>
                     {% if not f.field.required %}
                         <a class="close" title="Очистить значение" style='float:right;'>&times;</a>

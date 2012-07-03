@@ -115,12 +115,13 @@ def totals():
     """
     Синхронизация остатков баз
     """
-    for b in OldBrick.objects.all():
+    for b in DispTovar.objects.select_related().all():
         try:
-            b.total = DispSclad.objects.get(pk=b.old).total
-            b.save()
-        except DispSclad.DoesNotExist:
-            print b.pk
+            o = OldBrick.objects.get(old=b.pk)
+            o.total = b.total.total
+            o.save()
+        except OldBrick.DoesNotExist:
+            print b.pk,b.prim
 
 def get_agent(name):
     name = name.replace(u'ИП', '').replace(u'ООО', '').replace(u'"', '').replace(u'-', ' ')\
@@ -382,11 +383,31 @@ def srted():
             s.full_clean()
             s.save()
 
+
+def excell():
+    import csv
+    from collections import Counter
+    oborot = tuple(csv.reader(open('/home/bteam/Dropbox/Оборотная ведомость БКЗ 2012.csv','rb')))
+    c = Counter([int(r[0]) for r in oborot if r[0]])
+    print [k for k,v in c.iteritems() if v>1]
+    for r in filter(lambda r:r[0],oborot):
+        pk,total =  r[0],int(r[10])
+        b = Brick.objects.get(pk=pk)
+        if b.total != total:
+            print b.pk,'\t------------------------------------'
+            print 'base\t%d\t%s' % (b.total,b.name)
+            print 'csv\t%d\t%s' % (total,r[1])
+            print 'total:',b.total - total
+    print 'base\t',sum([b.total for b in Brick.objects.all()])
+    print 'csv\t',sum([int(r[10]) for r in oborot if r[0]])
+
+
 if __name__ == '__main__':
-    brick()
+#    brick()
 #    agents('../agents.txt')
 #    man()
     totals()
+#    excell()
 #    old_agents()
 #    agent_test()
 #    agent_clear()

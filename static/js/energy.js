@@ -18,7 +18,7 @@ var color = d3.scale.quantize()
     .range(d3.range(9));
 
 var svg = d3.select("#chart").selectAll("svg")
-    .data(d3.range(2011, 2013))
+    .data(d3.range(2011, (new Date).getFullYear()+1))
     .enter().append("svg")
     .attr("width", w + m[1] + m[3])
     .attr("height", h + m[0] + m[2])
@@ -76,3 +76,8 @@ function monthPath(t0) {
         + "H" + (w1 + 1) * z + "V" + 0
         + "H" + (w0 + 1) * z + "Z";
 }
+
+
+$(function(){
+
+})

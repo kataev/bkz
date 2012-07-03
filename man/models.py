@@ -46,11 +46,8 @@ class Add(models.Model):
         else:
             return u'Новая партия'
 
-sorting_c = ((0,u'Отсортированно'),(1,u'Списанно'))
-
 class Sorting(models.Model):
     """ Класс документа для учета перебора кипича из одного товара в другой """
-    type = models.IntegerField(u'Тип',choices=sorting_c,help_text=u'Выберите кирпич после сортировки')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
@@ -70,9 +67,11 @@ class Sorting(models.Model):
         else:
             return u'Новая сортировка'
 
+sorting_c = ((0,u'Отсортированно'),(1,u'Списанно'))
 
 class Sorted(models.Model):
     """ Кирпич после сортировки """
+    type = models.IntegerField(u'Тип',choices=sorting_c,help_text=u'Выберите кирпич после сортировки')
     brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
         verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')

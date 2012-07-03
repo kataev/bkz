@@ -10,6 +10,8 @@ urlpatterns = patterns('',
 
     url(r'^$', 'whs.brick.views.main', name='main'),
 
+    url(ur'^Сверка$', 'whs.brick.views.verification', name='verification'),
+
     url(ur'^Статистика$', 'whs.views.stats', name='stats'),
 
     url(ur'^Помошь$', 'whs.views.help', name='help'),

@@ -42,7 +42,7 @@ function Filter(css){
 $(function () {
     $('.brick-select').on('click','a.close',function (e) {
         var target = e.delegateTarget
-        $('>span',target).attr('class','uneditable-input').removeAttr('title')
+        $('>span',target).attr('class','uneditable-input input-large').removeAttr('title')
             .children('span').text('Выберете кирпич')
         $('input',target).val(null)
     })
@@ -61,7 +61,7 @@ $(function () {
     $('#brick-select').on('click','tr',function(e){
         var target = $(e.delegateTarget).data('target')
         $('input:radio',this).attr('checked',true)
-        $('>span',target).attr('class','uneditable-input '+$(this).attr('class'))
+        $('>span',target).attr('class','uneditable-input input-large '+$(this).attr('class'))
             .attr('title','Остаток: '+$('.total',this).text().trim())
             .children('span').text($('.name',this).text().trim())
         $('input',target).val($('input:radio',this).val())

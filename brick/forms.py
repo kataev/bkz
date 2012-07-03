@@ -16,6 +16,16 @@ class BrickForm(forms.ModelForm):
 
     def clean(self):
         b = self.save(commit=False)
-        if Brick.objects.filter(label=make_label(b)).count():
-            raise ValidationError(u'Такой кирпич вроде уже есть!')
+        try:
+            b = Brick.objects.exclude(pk=b.pk).get(label=make_label(b))
+        except Brick.DoesNotExist:
+            pass
+        else:
+            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
         return self.cleaned_data
+
+
+class VerificationForm(forms.Form):
+    csv = forms.FileField(label=u'Файл в формате csv')
+    id = forms.IntegerField(initial=2,label=u'Номер столбца с УИД')
+    field = forms.IntegerField(initial=10,label=u'Номер столбца для сверки')

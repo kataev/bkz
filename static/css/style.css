@@ -1,13 +1,18 @@
 body { background-image: url('/static/img/whitediamond.png') }
 #brick-select-buttons input {vertical-align: top}
 div.control-group.DELETE label {color: #DA4F49}
+div.controls ul {list-style: none}
 .icon-logo {
     background: url('/static/img/log.png') no-repeat;
     vertical-align: 0px;
     background-position: 4px 0px;
 }
 .add-on input[type='checkbox'] { vertical-align:baseline}
-#Bricks a, #Jurnal a {color:#333}
+#Bricks a, #Jurnal a, #Verification a {color:#333}
+#Energy thead tr th {vertical-align: top !important;}
+#Energy tbody a {display: none}
+#Energy tbody tr:hover a {display: inline-block;}
+#Energy tbody tr td.for-button {padding-top: 5px}
 li.mark a { padding: 5px; }
 #Journal .name {padding-left: 10px;}
 #Journal .amount {padding-left: 10px;}
@@ -105,7 +110,7 @@ form {
 i.icon-zoom-in.zoom {background-position:-360px 0;}
 
 /* Energy */
-.icon-energy { background-position: -408px -120px; }
+.icon-energy { background-position: -432px -144px; }
 .icon-Energy { background-position: -72px -120px; }
 .icon-Teplo { background-position: -72px -24px; }
 

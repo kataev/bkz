@@ -48,6 +48,24 @@ class DispJurnal(models.Model):
     money = models.FloatField(u'Деньги при продаже')
     price = models.FloatField(u'Цена за кирпич')
     trans = models.FloatField(u'Доставка')
+
+    def __unicode__(self):
+        if self.minus:
+            return u'minus %d' % self.minus
+        elif self.plus:
+            return u'plus %d' % self.minus
+        elif self.akt:
+            return u'akt %d' % self.minus
+        elif self.spis:
+            return u'spis %d' % self.minus
+        elif self.no_con:
+            return u'no_con %d' % self.minus
+        elif self.workshop:
+            return u'workshop %d' % self.workshop
+        else:
+            return u'x3'
+
+
     class Meta:
         db_table = u'jurnal'
         ordering = ('-date',)

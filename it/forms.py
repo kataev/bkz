@@ -43,7 +43,7 @@ class WorkForm(forms.ModelForm):
 class PlugForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
-        self.fields['cartridge'].queryset = Device.objects.filter(type__name=u'Картриджи')
+        self.fields['cartridge'].queryset = Buy.objects.filter(cartridge__type__name=u'Картриджи')
         self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
 
     class Meta:

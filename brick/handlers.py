@@ -8,7 +8,7 @@ from piston.utils import rc
 
 from whs.sale.models import Sold
 from whs.sale.forms import YearMonthFilter
-from whs.man.models import Add,Sorted,Sorting,Removed
+from whs.man.models import Add,Sorted,Sorting
 
 class BrickHandler(BaseHandler):
     allowed_methods = ('GET',)

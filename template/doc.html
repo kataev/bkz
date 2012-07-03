@@ -5,7 +5,7 @@
     {% if form.instance.pk %}
         {{ form.instance|model_verbose_name|safe }}
     {% endif %}
-    {{ form.instance|safe }}
+    {{ form.instance|striptags }}
 {% endblock %}
 
 {% block brick-select %}
@@ -56,7 +56,7 @@
                 <ul class="nav nav-list form-nav">
                     {#  Документ  #}
                     <li class="nav-header">
-                        <i class="icon-{{ form.instance|to_class_name }}"></i> Документ
+                        <i class="icon-{{ form.instance|class_name }}"></i> Документ
                         {% if form.instance.pk %}id:{{ form.instance.pk }}{% endif %}
                     </li>
                     <li class="active">
@@ -64,13 +64,13 @@
                             {% if form.errors %}
                                 <i class="icon-warning-sign"></i>
                             {% endif %}
-                            {{ form.instance|truncatewords:10 }}
+                            {{ form.instance|safe|truncatewords:10 }}
                         </a>
                     </li>
                     {#  Операции  #}
                     {% for factory in opers %}
-                        <li class="nav-header {{ factory.form.Meta.model|to_class_name }}">
-                            <i class='icon-{{ factory.form.Meta.model|to_class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }}
+                        <li class="nav-header {{ factory.form|class_name }}">
+                            <i class='icon-{{ factory.form|class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }}
                             <i title='{{ factory.model }}' data-prefix="{{ factory.prefix }}"
                                class="icon-plus form-add "></i>
                         </li>
@@ -121,7 +121,7 @@
             <button type="submit" class="btn btn-primary btn-large">
                 <i class="icon-ok icon-white"></i> Сохранить
             </button>
-            {% if form.instance|to_class_name == 'Bill' and form.instance.pk %}
+            {% if form.instance|class_name == 'Bill' and form.instance.pk %}
                 <a href="печать" target="_blank" class="btn btn-info">
                     <i class='icon-print icon-white'></i> Печать
                 </a>

@@ -1,28 +1,38 @@
 {% extends 'index.html' %}
 {% load class_name %}
+{% load url from future %}
 {% block title %}{{ form.instance|striptags }}{% endblock %}
 {% block container %}
-    {% if form.Meta.message %}
-        <div class="alert alert-warning">
-            <strong>Внимание!</strong> {{ form.Meta.message }}
-        </div>
-    {% endif %}
-    {% if success %}
-        <div class="alert alert-success">
-            <a class="close" data-dismiss="alert">×</a>
-            <strong>Сохранено!</strong> Вы успешно сохранили документ.
-        </div>
-    {% endif %}
-    <form method="POST" action="" class='form-horizontal'>
+{% if form.Meta.message %}
+    <div class="alert alert-warning">
+        <strong>Внимание!</strong> {{ form.Meta.message }}
+    </div>
+{% endif %}
+{% if success %}
+    <div class="alert alert-success">
+        <a class="close" data-dismiss="alert">×</a>
+        <strong>Сохранено!</strong> Вы успешно сохранили документ.
+    </div>
+{% endif %}
+<form method="POST" action="" class='form-horizontal'>
     {% csrf_token %}
-        {% include 'fieldset.html' %}
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-            {% if form.instance|to_class_name == 'Brick' %}
-            <a href="{% url brick:Brick id=form.instance.pk|add:1 %}" class="btn"><i class="icon-chevron-right"></i> Следующий {{ form.instance|model_verbose_name }}</a>
-            {% endif %}
-        </div>
-    </form>
+    {% include 'fieldset.html' %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
+        <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+        {% if form.instance|class_name == 'Brick' %}
+            <a href="{% url 'brick:Brick' id=form.instance.pk|add:1 %}" class="btn"><i class="icon-chevron-right"></i>
+                Следующий {{ form.instance|model_verbose_name }}</a>
+        {% endif %}
+        {% if form.Meta.buttons and form.instance.pk %}
+            {% for k,v in form.Meta.buttons.items %}
+                {% for b in v %}
+                    <a href="{% url b.0 pk=form.instance.pk %}" style='float:{{ k }}' class="{{ b.1 }}"> {{ b.2 }} </a>
+                    {% endfor %}
+
+            {% endfor %}
+        {% endif %}
+    </div>
+</form>
 {% endblock %}

@@ -4,15 +4,20 @@
     {% endif %}
     <optgroup label="Выберите девайс:">
         {% for a in f.field.queryset %}
-            {% if a.type %}
+            {% if a.cartridge.type %}
+            {% ifchanged a.cartridge.type %}
+                </optgroup>
+                <optgroup label="{{ a.cartridge.type }}">
+            {% endifchanged %}
+                {% else %}
             {% ifchanged a.type %}
                 </optgroup>
                 <optgroup label="{{ a.type }}">
             {% endifchanged %}
-
+            {% endif %}
             <option value="{{ a.pk }}"
                     {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
-            {% endif %}
+
         {% endfor %}
         </optgroup>
 </select>
