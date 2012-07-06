@@ -16,7 +16,7 @@ def main(request):
     sorting = Sorting.objects.select_related().filter(date__year=date.year,date__month=date.month)
     opers = {}
     if len(sorting):
-        for m in (Sorted,Removed):
+        for m in (Sorted,):
             name = m._meta.object_name
             for o in m.objects.select_related().filter(doc__in=sorting):
                 d = opers.get(o.doc_id,{})

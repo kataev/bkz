@@ -142,6 +142,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'whs.ipaccess.middleware.IPAccessMiddleware',
+    'whs.middleware.Access',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

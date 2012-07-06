@@ -36,8 +36,10 @@ urlpatterns = patterns('whs.sale.views',
 )
 
 urlpatterns += patterns('',
-    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent'),
-    url(ur'^Продавец/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller'),
+    url(ur'^Контрагент/$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent'),
+    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent-view'),
+    url(ur'^Продавец/$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller'),
+    url(ur'^Продавец/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller-view'),
 )
 
 

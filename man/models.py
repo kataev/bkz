@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from whs.brick.models import *
 
+
 class Man(models.Model):
     """Класс документа для учета прихода кирпича с производства"""
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
@@ -29,10 +30,10 @@ class Man(models.Model):
 
 class Add(models.Model):
     """Класс операций для документа"""
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
+    brick = models.ForeignKey(Brick, related_name="add", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Man, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+    doc = models.ForeignKey(Man, blank=False, related_name="add", null=False)
 
     class Meta():
         verbose_name = u"Партия"
@@ -49,7 +50,7 @@ class Add(models.Model):
 class Sorting(models.Model):
     """ Класс документа для учета перебора кипича из одного товара в другой """
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
+    brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
 
@@ -72,11 +73,11 @@ sorting_c = ((0,u'Отсортированно'),(1,u'Списанно'))
 class Sorted(models.Model):
     """ Кирпич после сортировки """
     type = models.IntegerField(u'Тип',choices=sorting_c,help_text=u'Выберите кирпич после сортировки')
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related",
+    brick = models.ForeignKey(Brick, related_name="sorted",
         verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
-    doc = models.ForeignKey(Sorting, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+    doc = models.ForeignKey(Sorting, blank=False, related_name="sorted", null=False)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
     class Meta():
@@ -112,10 +113,10 @@ class Inventory(models.Model):
 
 
 class Write_off(models.Model):
-    brick = models.ForeignKey(Brick, related_name="%(app_label)s_%(class)s_related", verbose_name=u"Кирпич",
+    brick = models.ForeignKey(Brick, related_name="write_off", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Inventory, blank=False, related_name="%(app_label)s_%(class)s_related", null=False)
+    doc = models.ForeignKey(Inventory, blank=False, related_name="write_off", null=False)
 
     class Meta():
         verbose_name = u"Списанние"

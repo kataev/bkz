@@ -76,29 +76,31 @@ $(function () {
         $('label[for]', node).attr('for', rep)
 
         $('div.DELETE', node).remove()
-        var menu = $('<li><a href="#__prefix__" data-toggle="tab"><i class="icon-"></i><span></span></a></li>'
+        var menu = $('<li><a href="#__prefix__" data-toggle="tab"><span></span></a></li>'
             .replace(/__prefix__/g, total.attr('value')))
         $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
         $('span', menu).text($(this).attr('title'))
 
-        var del = $('<i title="Удалить" class="icon-trash"></i>')
+        var del = $(' <i title="Удалить" class="icon-trash"></i>')
         $('span', menu).after(del)
 
         $('li.' + prefix[0].toUpperCase() + prefix.slice(1)).last().after(menu)
-        $('a', menu).attr('href', '#' + id).removeClass('form-add')
-            .data('toggle', 'tab').tab('show')
-            .click(function (e) {
-                $(this).tab('show')
-            });
+
         $(del).click(function (e) {
             $(menu).remove()
             $(node).remove()
-            $('.tabbable ul.nav li:first a').tab('show')
+            $('.form-nav li:first a').tab('show')
             $(total).val(parseInt($(total).val()) - 1)
         })
         $(total).val(parseInt($(total).val()) + 1)
         tara_amount()
+        $('a', menu).attr('href', '#' + id).removeClass('form-add')
     })
+
+//    $('nav.nav-list.form-nav').on('click.tab.data-api','[data-toggle="tab"',function(e){
+//        e.preventDefault()
+//        $(this).tab('show')
+//    })
 })
 
 $(function () {
@@ -205,7 +207,7 @@ function bricks_per_tara(cl) {
     var f = function (str) {
         return cl.indexOf(str) >= 0
     }
-//  weight={1: u'single', 1.4: u'thickened', 0: u'double', 0.8: u'euro'},
+//  width={1: u'single', 1.4: u'thickened', 0: u'double', 0.8: u'euro'},
 //  view={u'Л': u'facial', u'Р': u'common'},
     if (f('double')) {
         return 160
@@ -307,14 +309,11 @@ $(function () {
 })
 $('[name="month"],[name*="month"]').change(function (e) {
     var year = $(':selected', this).parent().attr('label')
-    $(this).parents('form').find('[name="year"]').val(year)
+    $(this).parents('form').find('[name="'+($(this).attr('name').replace('month','year'))+'"]').val(year)
 })
 
 $('form.filter').submit(function (e) {
     e.preventDefault()
-    var param = jQuery.param($(this).serializeArray().filter(function (e) {
-        return e.value
-    }))
-    console.log(param)
+    var param = jQuery.param($(this).serializeArray().filter(function (e) { return e.value }))
     window.location.search = '?' + param
 })

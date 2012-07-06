@@ -4,6 +4,8 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
+from whs.brick.templatetags.class_name import class_name
+
 def index(request):
     """ Главная страница """
     return render(request, 'index.html')
@@ -71,8 +73,8 @@ class UpdateView(UpdateView):
         context['opers'] = []
         if self.request.POST:
             for factory in self.opers:
-                context['opers'].append(factory(self.request.POST,instance=instance,prefix=factory.form.Meta.name))
+                context['opers'].append(factory(self.request.POST,instance=instance,prefix=class_name(factory.form)))
         else:
             for factory in self.opers:
-                context['opers'].append(factory(instance=instance,prefix=factory.form.Meta.name,queryset=factory.model.objects.select_related('brick','brick_from')))
+                context['opers'].append(factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related('brick','brick_from')))
         return context

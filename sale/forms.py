@@ -8,6 +8,7 @@ from django.forms.models import inlineformset_factory,BaseInlineFormSet
 from django.core.exceptions import ValidationError
 
 from whs.sale.models import *
+from whs.brick.validation import validate_transfer
 
 
 class DateForm(forms.Form):
@@ -42,8 +43,8 @@ class BillForm(forms.ModelForm):
         self.auto_id = 'doc_%s'
 
     class Meta:
-        name = 'Bill'
         model = Bill
+        verbose_name_accusative = u"Накладную"
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
         widgets = {
             'number': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
@@ -54,12 +55,13 @@ class BillForm(forms.ModelForm):
 
 class SoldForm(forms.ModelForm):
     class Meta:
-        name = 'Sold'
         verbose_name = Sold._meta.verbose_name
         verbose_name_plural = Sold._meta.verbose_name_plural
+        verbose_name_accusative = u"Отгрузку"
         model = Sold
         widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
                    'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
+                   'batch': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
                    'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
                    'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
@@ -69,39 +71,37 @@ class SoldForm(forms.ModelForm):
     def clean(self):
         data = self.cleaned_data
         brick_from, brick, amount = data['brick_from'],data['brick'],data['amount']
+        total = brick.total
         if brick_from:
-            if brick_from.mark < brick.mark:
-                raise ValidationError(u'Нельзя делать перевод из меньшей марки в большую')
-            if brick_from.weight != brick.weight:
-                raise ValidationError(u'Нельзя в переводе менять размер кирпича')
-            if brick_from.total < amount:
-                raise ValidationError(u'На складе нету столько кирпича для перевода')
-        else:
-            if brick.total < amount:
-                raise ValidationError(u'На складе нету столько кирпича')
+            validate_transfer(brick_from,brick)
+            total = brick_from.total
+        if self.instance.pk:
+            total +=self.instance.amount
+        if total < amount:
+            raise ValidationError(u'На складе нету столько кирпича')
         return data
 
 
 class PalletForm(forms.ModelForm):
     class Meta:
-        name = 'Pallet'
         model = Pallet
         verbose_name = Pallet._meta.verbose_name
         verbose_name_plural = Pallet._meta.verbose_name_plural
+        verbose_name_accusative = u"Поддон"
+
         widgets = {
             'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
             'info': forms.Textarea(attrs={'rows': 2}),
             }
 
-SoldFactory = inlineformset_factory(Bill, Sold, extra=0, form=SoldForm)
-PalletFactory = inlineformset_factory(Bill, Pallet, extra=0, form=PalletForm, )
+SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=0)
+PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
     def clean(self):
         if any(self.errors):
             return
-        bricks = {}
-        amounts = {}
+        bricks, amounts = {},{}
         for form in self.forms:
             brick_from, brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['brick'],form.cleaned_data['amount']
             if brick_from:
@@ -110,6 +110,8 @@ class SoldFactory(SoldFactory):
             else:
                 bricks[brick.pk] = brick
                 amounts[brick.pk] = amounts.get(brick.pk,0) + amount
+            if form.instance.pk:
+                amounts[brick.pk] -= form.instance.amount
         for pk in bricks:
             b = bricks[pk]
             if b.total < amounts[pk]:
@@ -173,6 +175,7 @@ class AgentForm(forms.ModelForm):
     class Meta:
         message = 'Внимательно заполняйте значения имя и полное имя.'
         model=Agent
+        verbose_name_accusative =u'Контрагента'
         widgets = {
             'name': forms.Textarea(attrs=dict(rows=2)),
             'bank': forms.Textarea(attrs=dict(rows=2)),
@@ -183,6 +186,7 @@ class SellerForm(forms.ModelForm):
     class Meta:
         message = 'Внимательно заполняйте значения имя и полное имя.'
         model=Seller
+        verbose_name__accusative = u'Продавца'
         widgets = {
             'name': forms.Textarea(attrs=dict(rows=2)),
             'bank': forms.Textarea(attrs=dict(rows=2)),

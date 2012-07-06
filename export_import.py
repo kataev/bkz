@@ -31,13 +31,13 @@ def brick():
             b.view = u'Л'
 
         if t.mas == u'Полуторный':
-            b.weight = 1.4
+            b.width = 1.4
         if t.mas == u'Одинарный':
-            b.weight = 1.0
+            b.width = 1.0
         if t.color == u'КЕ':
-            b.weight == 0.8
+            b.width == 0.8
         if t.color == u'Двойной':
-            b.weight == 0.0
+            b.width == 0.0
 
         if u'жел' in t.prim:
             b.color = 1

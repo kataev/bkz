@@ -30,7 +30,7 @@
         {% for e in factory.non_form_errors %}
             <div class="alert alert-error">
                 <i class="icon-warning-sign"></i>
-                <strong>{{ e }}</strong>
+                <strong>{{ e|safe }}</strong>
             </div>
         {% endfor %}
     {% endfor %}
@@ -56,8 +56,9 @@
                 <ul class="nav nav-list form-nav">
                     {#  Документ  #}
                     <li class="nav-header">
+                    <h4 {% if form.instance.pk %}title="id:{{ form.instance.pk }}"{% endif %}>
                         <i class="icon-{{ form.instance|class_name }}"></i> Документ
-                        {% if form.instance.pk %}id:{{ form.instance.pk }}{% endif %}
+                    </h4>
                     </li>
                     <li class="active">
                         <a href="#{{ form.prefix }}" data-toggle="tab">
@@ -70,12 +71,12 @@
                     {#  Операции  #}
                     {% for factory in opers %}
                         <li class="nav-header {{ factory.form|class_name }}">
+                            <h5 >
                             <i class='icon-{{ factory.form|class_name }}'></i> {{ factory.form.Meta.verbose_name_plural }}
-                            <i title='{{ factory.model }}' data-prefix="{{ factory.prefix }}"
-                               class="icon-plus form-add "></i>
+                            </h5>
                         </li>
                         {% for form in factory %}
-                            <li class="{{ form.Meta.name }}">
+                            <li class="{{ form|class_name }}" {% if form.instance.pk %}title="id:{{ form.instance.pk }}"{% endif %}>
                                 <a class='{{ form.instance.brick.css }}{{ form.instance.brick_from.css }}'
                                    href="#{{ form.prefix }}" data-toggle="tab">
                                     {% if form.errors %}
@@ -85,6 +86,11 @@
                                 </a>
                             </li>
                         {% endfor %}
+                        <li class="create">
+                            <a class='form-add' data-prefix='{{ factory.form|class_name }}' title='{{ factory.model|safe }}' href="#" data-toggle="tab">
+                                <i class="icon-plus form-add icon-white"></i> Добавить {{ factory.form.Meta.verbose_name_accusative|lower }}
+                            </a>
+                        </li>
                     {% endfor %}
                 </ul>
                 {% include 'log.html' %}

@@ -1,5 +1,5 @@
 {% spaceless %}
-    <div class="input-append" href="{% if f.name == 'seller' %}{% url sale:Seller id %}{% else %}{% url sale:Agent id %}{% endif %}">
+    <div class="input-append" href="{% if f.name == 'seller' %}{% url sale:Seller %}{% else %}{% url sale:Agent %}{% endif %}">
         {% if 'agent' in f.name %}
             <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
                 {% if not f.field.required %}
@@ -24,7 +24,7 @@
                 <i class="icon-info-sign"></i>
             </a>
         {% else %}
-            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url sale:Seller id %}{% else %}{% url sale:Agent id %}{% endif %}" title="Создать контрагента">
+            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url sale:Seller %}{% else %}{% url sale:Agent %}{% endif %}" title="Создать контрагента">
                 <i class="icon-plus-sign"></i>
             </a>
         {% endif %}

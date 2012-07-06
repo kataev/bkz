@@ -48,7 +48,9 @@ class Sold(OperationsMixin,models.Model):
 Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
+    batch_from = models.CommaSeparatedIntegerField(u'Номера партий до перевода', blank=True, null=True,max_length=600)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
+    batch = models.IntegerField(u'Номер партии',null=True, blank=True)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
@@ -59,6 +61,7 @@ class Sold(OperationsMixin,models.Model):
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
+
         ordering = ['-doc__date','-doc__number']
 
     def __unicode__(self):
@@ -118,8 +121,9 @@ class Agent(models.Model):
 
 
     class Meta:
-        verbose_name=u'Контрагент'
-        verbose_name_plural=u'Контрагенты'
+        verbose_name = u'Контрагент'
+        verbose_name_plural = u'Контрагенты'
+
         permissions = (("view_agent", u"Может просматривать контрагентa"),)
         ordering = ('name', )
 
@@ -150,6 +154,7 @@ class Seller(Agent):
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
+
 
         ordering = ('name', )
 

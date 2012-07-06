@@ -5,7 +5,7 @@
         {{ hidden }}
     {% endfor %}
 </fieldset>
-<fieldset class='{{ form.Meta.name }} {% if form.transfered.value %}transfered{% endif %}'>
+<fieldset class='{{ form|class_name }} {% if form.transfered.value %}transfered{% endif %}'>
     <legend>
         {% if form.instance.get_absolute_url %}
             <h1>{% else %} <h2> {% endif %}
