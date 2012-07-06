@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.utils import datetime_safe as datetime
 from django.db import models
 from django.core.urlresolvers import reverse
 from constants import *
@@ -10,7 +11,7 @@ class Brick(models.Model):
     cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
-    weight = models.FloatField(u"Ширина", choices=weight_c, default=weight_c[0][0])
+    width = models.FloatField(u"Ширина", choices=weight_c, default=weight_c[0][0])
     view = models.CharField(u"Вид", max_length=60, choices=view_c, default=view_c[0][0])
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=color_type_c, default=color_type_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
@@ -42,7 +43,7 @@ class Brick(models.Model):
 
     @property
     def mass(self):
-        return mass_c[self.weight]
+        return mass_c[self.width]
 
     class Meta():
         ordering = BrickOrder

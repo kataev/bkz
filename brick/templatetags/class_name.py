@@ -26,7 +26,18 @@ def model_verbose_name(obj):
 
 @register.filter(name='model_verbose_name_plural')
 def model_verbose_name_plural(obj):
-    return obj._meta.verbose_name_plural
+    if hasattr(obj._meta,'verbose_name_plural'):
+        return obj._meta.verbose_name_plural
+    else:
+        return obj._meta.verbose_name_plural
+
+@register.filter(name='model_verbose_name_accusative')
+def model_verbose_name_plural(obj):
+    if hasattr(obj._meta,'verbose_name_accusative'):
+        return obj._meta.verbose_name_accusative
+    else:
+        return obj._meta.verbose_name
+
 
 @register.filter(name='hash')
 def hash(obj,key):
