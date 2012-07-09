@@ -2,7 +2,7 @@
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from whs.brick.constants import mark_c,defect_c,color_c
+from whs.brick.constants import defect_c,color_c
 
 class Clay(models.Model):
     datetime = models.DateTimeField(u'Дата', default=datetime.time.now())
@@ -47,6 +47,7 @@ class Bar(models.Model):
     poke_right = models.CommaSeparatedIntegerField(u'Тычок правый',max_length=300)
     stratcher_left = models.CommaSeparatedIntegerField(u'Ложок левый',max_length=300)
     stratcher_right = models.CommaSeparatedIntegerField(u'Ложок правый',max_length=300)
+    cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     humidity_transporter = models.FloatField(u'Влажность с конвейера')
     info = models.TextField(u'Примечание',max_length=3000)
 

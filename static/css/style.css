@@ -7,6 +7,10 @@ div.controls ul {list-style: none}
     vertical-align: 0px;
     background-position: 4px 0px;
 }
+
+.nav.nav-list .create {margin-top: 2px;}
+.nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
+
 .add-on input[type='checkbox'] { vertical-align:baseline}
 #Bricks a, #Jurnal a, #Verification a {color:#333}
 #Energy thead tr th {vertical-align: top !important;}
