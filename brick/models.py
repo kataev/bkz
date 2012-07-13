@@ -11,7 +11,7 @@ class Brick(models.Model):
     cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
-    width = models.FloatField(u"Ширина", choices=weight_c, default=weight_c[0][0])
+    width = models.FloatField(u"Ширина", choices=width_c, default=width_c[0][0])
     view = models.CharField(u"Вид", max_length=60, choices=view_c, default=view_c[0][0])
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=color_type_c, default=color_type_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
@@ -33,7 +33,7 @@ class Brick(models.Model):
         else: return self.label
 
     def get_absolute_url(self):
-        return reverse('brick:Brick',kwargs=dict(id=self.pk))
+        return reverse('brick:Brick-view',kwargs=dict(id=self.pk))
 
     def make_label(self):
         return make_label(self)

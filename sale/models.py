@@ -170,3 +170,10 @@ class Nomenclature(models.Model):
 
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
+
+
+
+class Price(models.Model):
+    date = models.DateField(u'Дата')
+    brick = models.ForeignKey(Brick,verbose_name=u'Кирпич')
+    price = models.FloatField(u'Цена')

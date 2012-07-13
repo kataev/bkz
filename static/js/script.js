@@ -317,3 +317,14 @@ $('form.filter').submit(function (e) {
     var param = jQuery.param($(this).serializeArray().filter(function (e) { return e.value }))
     window.location.search = '?' + param
 })
+
+function avg_on_input(input,to_fixed){
+    var v = $(input).val().split('/').map(function(v){return v.replace(',','.')})
+    return (v.reduce(function(m,v){return m+parseFloat(v) },0)/v.length).toFixed(to_fixed || 2)
+}
+
+$('.SlashSeparatedFloatField').each(function(e){
+    $(this).wrap($('<div>').addClass('input-append').attr('title','Среднее арифметическое'))
+    var addon = $('<span>').addClass('add-on').text(avg_on_input(this)).insertAfter(this)
+    $(this).change(function(e){ $(addon).text(avg_on_input(this)) })
+})

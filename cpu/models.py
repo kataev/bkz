@@ -15,33 +15,53 @@ unit_c = (
     (u'dep',u'разряжение'),
 )
 
-class Devices(models.Model):
+class Device(models.Model):
     name = models.CharField(u'Имя устройства',max_length=100)
     code = models.CharField(u'Код устройства',max_length=100)
 
     def __unicode__(self):
-        return self.name
+        return self.name + self.code
 
-class Positions(models.Model):
-    name = models.ForeignKey(Devices,verbose_name=u'Имя устройства')
+pos = {
+    101:4,
+    102:4.66,
+    103:5.33,
+    201:6.66,
+    202:7.33,
+    203:8,
+    204:8.66,
+    205:9.33,
+    206:10,
+    207:10.66,
+    208:11.33,
+    303:12.66,
+    304:13.66,
+    305:14.66
+}
+
+line = {101: 19,
+        102: 20,
+        103: 21,
+        201: 10,
+        202: 11,
+        203: 12,
+        204: 13,
+        205: 14,
+        206: 15,
+        207: 16,
+        208: 17,
+        303: 22,
+        304: 23,
+        305: 24}
+
+class Position(models.Model):
+    name = models.ForeignKey(Device,verbose_name=u'Имя устройства')
     field = models.CharField(u'Канал устойства',max_length=100,null=True,blank=True)
     place = models.CharField(u'Раположение',max_length=50,choices=places,null=True,blank=True)
     unit = models.CharField(u'Еденицы измерения',max_length=50,null=True,blank=True,choices=unit_c)
-    position = models.CharField(u'Позиция',max_length=100)
-
-    def show(self):
-        return dict(field=self.field,place=self.get_place_display(),position=self.position)
+    label = models.CharField(u'Имя',max_length=50)
+    position = models.FloatField(u'Позиция',max_length=100)
 
     class Meta:
         verbose_name=u'позиция точек и датчиков'
         verbose_name_plural=u'позиции точек и датчиков'
-
-    def __unicode__(self):
-        if self.field:
-            name = u'%s %s' % (self.name,self.field)
-        else:
-            name = self.name.name
-        if self.place:
-            return u'%s в %s %s' % (name,self.get_place_display(),self.position)
-        else:
-            return u'%s %s' % (name,self.position)

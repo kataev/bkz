@@ -136,7 +136,7 @@ class BillFilter(forms.Form):
     month = forms.IntegerField(required=False)
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
-    rpp = forms.ChoiceField(choices=records_per_page,initial='')
+    rpp = forms.ChoiceField(choices=records_per_page,initial='',required=False)
 
     def url_next(self):
         q = QueryDict('',mutable=True)

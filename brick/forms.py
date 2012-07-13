@@ -27,5 +27,5 @@ class BrickForm(forms.ModelForm):
 
 class VerificationForm(forms.Form):
     csv = forms.FileField(label=u'Файл в формате csv')
-    id = forms.IntegerField(initial=2,label=u'Номер столбца с УИД')
+    id = forms.IntegerField(initial=1,label=u'Номер столбца с УИД')
     field = forms.IntegerField(initial=10,label=u'Номер столбца для сверки')

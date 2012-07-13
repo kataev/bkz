@@ -1,33 +1,30 @@
-var context = cubism.context()
-    .step(3e4)
-    .size(3e6)
-//    .size(1440)
-//    .clientDelay(60*1000*170)
-//    .serverDelay(-60*1000*155)
-var graphite = context.graphite('Датчики');
-
-//context.scale = d3.time.scale
-var foo = graphite.metric("cpu.22.34")
+var b = 10,
+    m = 25,
+    color = d3.interpolateRgb('#aad','#556');
 
 
-//var foo = graphite.metric(function(start, stop, step, callback){
-//    console.log(graphite.toString())
-//    $.ajax({dataType:'jsonp',jsonp:'jsonp',url:graphite.toString(),data:{format:'jsonp',target:'cpu.termodat22m.1',from:start,unlit:stop}}).success(callback)
-//});
+data = _(positions).map(function(v,k){return {x:v,y:parseInt(k)}})
+//data = _(_.range(25)).map(function(d){ return {x:d,y:d} })
 
+var margin = 20,
+    padding = 10,
+    width = 960,
+    height = 500 - .5 - margin,
+    x = function(d) {return d.x * width / mx;},
+    y0 = function(d) {return height - d.y * height / my};
 
-d3.select('#firing').call(function (div) {
-    div.append('div')
-        .attr('class', 'axis')
-        .call(context.axis().orient('top'));
+var vis = d3.select('#firing')
+    .append('svg')
+    .attr('width',width)
+    .attr('height',height + margin);
 
-    div.selectAll('.horizon')
-        .data([foo, ])
-        .enter().append('div')
-        .attr('class', 'horizon')
-        .call(context.horizon().extent([0, 100]))
+var layers = vis.selectAll('rect.bar')
+    .data(data)
+    .enter().append('rect')
+    .style('fill','#0f4')
+    .attr('class','bar')
+    .attr('x',function(d){return ( b + padding ) * d.x})
+    .attr('y',function(d){return height - margin - d.y })
+    .attr('height',function(d){return d.y })
+    .attr('width',b)
 
-    div.append('div')
-        .attr('class', 'rule')
-        .call(context.rule())
-})

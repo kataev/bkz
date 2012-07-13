@@ -20,7 +20,7 @@
             {{ f }}
         {% endif %}
         {% if f.value %}
-            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url sale:Seller id=f.value %}{% else %}{% url sale:Agent id=f.value %}{% endif %}" title="Редактировать выбранного контрагента">
+            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url sale:Seller-view id=f.value %}{% else %}{% url sale:Agent-view id=f.value %}{% endif %}" title="Редактировать выбранного контрагента">
                 <i class="icon-info-sign"></i>
             </a>
         {% else %}

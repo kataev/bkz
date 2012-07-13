@@ -25,7 +25,8 @@ def flat_form(request,Form,id=None,date=None):
         form = Form(request.POST,instance=model)
         if form.is_valid():
             model = form.save()
-            return redirect(model.get_absolute_url())
+            if hasattr(model,'get_absolute_url'):
+                return redirect(model.get_absolute_url())
     else:
         form = Form(initial=request.GET.dict() or None,instance=model)
     return render(request, 'flat-form.html',dict(form=form))
@@ -33,6 +34,10 @@ def flat_form(request,Form,id=None,date=None):
 
 def stats(request):
     return render(request,'stats.html',dict(charts=[1,2,3,4]))
+
+def price(request):
+    return render(request,'price.html')
+
 
 class DeleteView(DeleteView):
     template_name = 'delete.html'

@@ -2,12 +2,14 @@
 from django.conf.urls import *
 
 from whs.sale.forms import SoldFactory, PalletFactory, BillForm, Bill, AgentForm, SellerForm
-from whs.sale.views import UpdateView, CreateView, DeleteView,BillListView
+from whs.sale.views import UpdateView, CreateView, DeleteView,BillListView,BillWizard
 from whs.sale.handlers import TransferMarkHandler,TotalHandler
 
 from piston.resource import Resource
 
 urlpatterns = patterns('whs.sale.views',
+
+    url(ur'^Мастер$', BillWizard.as_view([AgentForm,BillForm]), name='wizard'),
 
     url(ur'^$', BillListView.as_view(), name='main'),
     url(ur'^Статистика$', 'stats', name='statistics'),

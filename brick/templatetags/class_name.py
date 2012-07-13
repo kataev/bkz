@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 from django import template
-from django.forms import ModelForm
+from django.forms import ModelForm,Form
 from django.db.models import Model
 
 register = template.Library()
@@ -11,6 +11,8 @@ register = template.Library()
 def class_name(value):
     if isinstance(value,Model):
         return value._meta.object_name
+    if isinstance(value,Form):
+        return ''
     if isinstance(value,ModelForm):
         return value._meta.model.__name__
     elif issubclass(value,ModelForm):

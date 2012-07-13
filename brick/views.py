@@ -111,16 +111,14 @@ def verification(request):
     if form.is_valid():
         id,f = form.cleaned_data['id'],form.cleaned_data['field']
         oborot = csv.reader(form.cleaned_data['csv'],delimiter=';')
-        oborot = filter(lambda r:r and isinstance(r,list) and r[0],oborot)
+        oborot = filter(lambda r:r and isinstance(r,list) and r[0] and r[1] and r[f],oborot)
         c = Counter([int(r[id]) for r in oborot if r[id]])
         c = [k for k,v in c.iteritems() if v>1]
-        try:
-            for r in oborot:
-                pk,total =  r[id],int(r[f])
-                b = Brick.objects.get(pk=pk)
-                if b.total != total:
-                    deriv.append(dict(brick=b,field=total,name=r[0],deriv=b.total-total))
-            total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'],csv=sum([int(r[f]) for r in oborot]))
-        except :
-            pass
+        for r in oborot:
+            pk,total =  r[id],int(r[f])
+            b = Brick.objects.get(pk=pk)
+            if b.total != total:
+                deriv.append(dict(brick=b,field=total,name=r[0],deriv=b.total-total))
+        total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'],csv=sum([int(r[f]) for r in oborot]))
+    print total,deriv,c
     return render(request,'verification.html',dict(form=form,deriv=deriv,total=total,counter=c))

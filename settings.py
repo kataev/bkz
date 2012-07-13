@@ -85,7 +85,7 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-
+DECIMAL_SEPARATOR = ','
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media/')
@@ -166,6 +166,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'energy/template/'),
     os.path.join(PROJECT_PATH, 'cpu/template/'),
     os.path.join(PROJECT_PATH, 'it/template/'),
+    os.path.join(PROJECT_PATH, 'lab/template/'),
     )
 
 INSTALLED_APPS = (
@@ -179,6 +180,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
+    'django.contrib.formtools',
 
     'django_extensions',
     'debug_toolbar',
@@ -200,6 +202,7 @@ INSTALLED_APPS = (
 
     'whs.energy',
     'whs.it',
+    'whs.lab',
 
 #    graphite
     'tagging',

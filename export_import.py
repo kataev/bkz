@@ -19,7 +19,11 @@ def brick():
     """
     Импорт продукции из старой базы
     """
-    for t in DispTovar.objects.all().filter(pk=291):
+    for t in DispTovar.objects.all().filter(pk=295):
+        try:
+            OldBrick.objects.get(old=t.id)
+        except OldBrick.DoesNotExist:
+            print 'not found, processing...'
         b = OldBrick()
         b.old = t.id
         b.name = t.name
@@ -65,6 +69,7 @@ def brick():
 
         b.full_clean()
         b.save()
+        print 'new pk %d' % b.pk
 
 
 def agents(path):

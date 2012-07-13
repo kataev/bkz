@@ -7,7 +7,7 @@ BrickOrder = ('-width', 'color', '-view', 'ctype', 'defect', 'features', 'mark',
 
 view_c = ((u'Л', u'Лицевой'), (u'Р', u'Рядовой'))
 
-weight_c = (
+width_c = (
     (1.4, u'Утолщенный'),
     (1.0, u'Одинарный'),
     (0.8, u'Евро'),
@@ -47,7 +47,7 @@ refuse_c = (
 
 css_dict = dict(
     color=[u'bc-red', u'bc-yellow', u'bc-brown', u'bc-light', u'bc-white'],
-    weight={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
+    width={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
     view={u'Л': u'v-facial', u'Р': u'v-common'},
     ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
     defect={u'': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'},
@@ -56,19 +56,19 @@ css_dict = dict(
 )
 
 def get_name(brick):
-    if brick.weight == 0.8:
+    if brick.width == 0.8:
         if brick.view == u'Л':
             return u'КЕ УЛ'
         if brick.view == u'Р':
             return u'КЕ'
-    elif brick.weight == 0:
+    elif brick.width == 0:
         return u'КР'
     else:
         if brick.cavitation:
             c = u'о'
         else:
             c = u'у'
-        return u'К<b>%s</b>%sП%s' % (brick.get_weight_display()[0], brick.view,c)
+        return u'К<b>%s</b>%sП%s' % (brick.get_width_display()[0], brick.view,c)
 
 
 def make_label(brick): # Код для вывода имени

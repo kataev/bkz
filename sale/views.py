@@ -11,10 +11,17 @@ from django.utils.translation import ugettext as _
 from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter, BillAggregateFilter
 from whs.views import CreateView, UpdateView, DeleteView, ListView
 from whs.sale.pdf import pdf_render_to_response
+from django.contrib.formtools.wizard.views import SessionWizardView
 
 logger = logging.getLogger(__name__)
 
 __author__ = 'bteam'
+
+
+class BillWizard(SessionWizardView):
+    def done(self,form_list,**kwargs):
+        return redirect('/')
+
 
 class BillSlugMixin(object):
     def get_object(self, queryset=None):
@@ -87,22 +94,23 @@ class BillListView(ListView):
             p = self.paginate_by
         return p
 
-#    def get_queryset(self):
-#        form = BillFilter(self.request.GET or None)
-#        if form.is_valid():
-#            data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
-#            if data.has_key('page'):
-#                data.pop('page')
-#            if data.has_key('year'):
-#                data['date__year']=data.pop('year')
-#            if data.has_key('month'):
-#                data['date__month']=data.pop('month')
-#            if data.has_key('brick'):
-#                data['solds__brick']=data.pop('brick')
-#            if data.has_key('rpp'):
-#                data.pop('rpp')
-#            return self.queryset.filter(**data)
-#        return self.queryset
+    def get_queryset(self):
+        form = BillFilter(self.request.GET or None)
+        print form.is_valid()
+        if form.is_valid():
+            data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
+            if data.has_key('page'):
+                data.pop('page')
+            if data.has_key('year'):
+                data['date__year']=data.pop('year')
+            if data.has_key('month'):
+                data['date__month']=data.pop('month')
+            if data.has_key('brick'):
+                data['solds__brick']=data.pop('brick')
+            if data.has_key('rpp'):
+                data.pop('rpp')
+            return self.queryset.filter(**data)
+        return self.queryset
 
     def get_context_data(self, **kwargs):
         context = super(BillListView, self).get_context_data(**kwargs)

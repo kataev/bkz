@@ -30,7 +30,7 @@ class Man(models.Model):
 
 class Add(models.Model):
     """Класс операций для документа"""
-    brick = models.ForeignKey(Brick, related_name="add", verbose_name=u"Кирпич",
+    brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич",
         help_text=u'Выберите кирпич')
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     doc = models.ForeignKey(Man, blank=False, related_name="add", null=False)

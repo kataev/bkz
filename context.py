@@ -51,11 +51,27 @@ menu = dict(
         ('divider',),
         ('brick:Brick', 'icon-Brick', u'Кирпич'),
         ('sale:Agent', 'icon-Agent', u'Контрагента'),
-        )
+        ),
+    lab = (
+        ('lab:Clay','',u'Глина'),
+        ('lab:StoredClay','',u'Глина по позициям'),
+        ('lab:Sand','',u'Песок'),
+        ('lab:Bar','',u'Брус'),
+        ('lab:Raw','',u'Сырец'),
+        ('lab:WaterAbsorption','',u'Водопоглащение'),
+        ('lab:Efflorescence','',u'Высолы'),
+        ('lab:FrostResistance','',u'Морозостойкость'),
+        ('lab:Density','',u'Плотность'),
+        ('lab:Batch','',u'Партия'),
+    ),
+    cpu = (
+        ('cpu:Device','',u'Устройство'),
+        ('cpu:Position','',u'Канал')
+    )
 )
 
 def namespace(request):
-    namespace = request.namespace
+    namespace = getattr(request,'namespace','')
     if namespace in 'sale man':
         namespace = 'brick'
-    return dict(nav=nav.get(request.namespace, []), menu=menu.get(namespace, []))
+    return dict(nav=nav.get(namespace, []), menu=menu.get(namespace, []))
