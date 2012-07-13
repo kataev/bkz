@@ -2,8 +2,8 @@
 from django.db.models.signals import *
 from django.dispatch import receiver
 
-from whs.brick.models import *
-from whs.man.models import *
+from bkz.brick.models import *
+from bkz.man.models import *
 
 @receiver(pre_delete, sender=Add)
 @receiver(pre_save, sender=Add)

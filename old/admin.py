@@ -2,7 +2,7 @@
 __author__ = 'bteam'
 
 from django.contrib import admin
-from whs.old.models import *
+from bkz.old.models import *
 
 class TovarAdmin(admin.ModelAdmin):
     list_display = ('prim','total')

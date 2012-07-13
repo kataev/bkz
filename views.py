@@ -4,7 +4,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from whs.brick.templatetags.class_name import class_name
+from bkz.brick.templatetags.class_name import class_name
 
 def index(request):
     """ Главная страница """

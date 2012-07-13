@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
         db.alter_column('lab_storedclay', 'position', self.gf('django.db.models.fields.CharField')(max_length=30))
 
         # Changing field 'Clay.humidity'
-        db.alter_column('lab_clay', 'humidity', self.gf('whs.lab.models.SlashSeparatedFloatField')(max_length=300))
+        db.alter_column('lab_clay', 'humidity', self.gf('bkz.lab.models.SlashSeparatedFloatField')(max_length=300))
     def backwards(self, orm):
 
         # Changing field 'StoredClay.position'
@@ -61,7 +61,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Clay'},
             'datetime': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 7, 11, 14, 26, 20, 2)'}),
             'dust': ('django.db.models.fields.FloatField', [], {}),
-            'humidity': ('whs.lab.models.SlashSeparatedFloatField', [], {'max_length': '300'}),
+            'humidity': ('bkz.lab.models.SlashSeparatedFloatField', [], {'max_length': '300'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inclusion': ('django.db.models.fields.FloatField', [], {}),
             'info': ('django.db.models.fields.TextField', [], {'max_length': '3000', 'null': 'True', 'blank': 'True'}),

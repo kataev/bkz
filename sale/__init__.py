@@ -1,1 +1,1 @@
-import whs.sale.signals
+import bkz.sale.signals

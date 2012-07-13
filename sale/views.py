@@ -8,9 +8,9 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext as _
 
-from whs.sale.forms import BillFilter, Bill, Agent,YearMonthFilter, BillAggregateFilter
-from whs.views import CreateView, UpdateView, DeleteView, ListView
-from whs.sale.pdf import pdf_render_to_response
+from bkz.sale.forms import BillFilter, Bill, Agent,YearMonthFilter, BillAggregateFilter
+from bkz.views import CreateView, UpdateView, DeleteView, ListView
+from bkz.sale.pdf import pdf_render_to_response
 from django.contrib.formtools.wizard.views import SessionWizardView
 
 logger = logging.getLogger(__name__)

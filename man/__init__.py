@@ -1,1 +1,1 @@
-import whs.man.signals
+import bkz.man.signals

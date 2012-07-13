@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import AnonymousUser
-from whs.ipaccess.models import IPAccess
+from bkz.ipaccess.models import IPAccess
 
 class IPAccessMiddleware(object):
     def process_request(self, request):

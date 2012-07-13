@@ -4,7 +4,7 @@ from copy import deepcopy
 
 from django.shortcuts import render, get_object_or_404,redirect
 
-from whs.energy.models import Energy, Teplo, reverse
+from bkz.energy.models import Energy, Teplo, reverse
 
 
 def delta(queryset,fields):

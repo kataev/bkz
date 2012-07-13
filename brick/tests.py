@@ -4,8 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-from whs.brick.models import Brick
-from whs.brick.constants import *
+from bkz.brick.models import Brick
+from bkz.brick.constants import *
 
 
 class BrickTest(LiveServerTestCase):

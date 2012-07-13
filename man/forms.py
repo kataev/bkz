@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-date = datetime.date.today()
 __author__ = 'bteam'
 import django.forms as forms
-from whs.man.models import *
+from bkz.man.models import *
 from django.forms.models import inlineformset_factory
 
 class ManForm(forms.ModelForm):

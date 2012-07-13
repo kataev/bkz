@@ -19,14 +19,6 @@ ADMINS = (
 
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': '../whs.db', # Or path to database file if using sqlite3.
-#        'USER': '', # Not used with sqlite3.
-#        'PASSWORD': '', # Not used with sqlite3.
-#        'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '', # Set to empty string for default. Not used with sqlite3.
-#    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bteam', # Or path to database file if using sqlite3.
@@ -50,7 +42,7 @@ if 'test' in sys.argv or 'test_coverage' in sys.argv:
     DATABASES['old']['ENGINE'] = 'django.db.backends.sqlite3'
 SOUTH_TESTS_MIGRATE = False
 
-DATABASE_ROUTERS = ('routes.WHSRouter',)
+DATABASE_ROUTERS = ('routes.bkzRouter',)
 
 DECIMAL_SEPARATOR = ','
 
@@ -141,8 +133,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'whs.ipaccess.middleware.IPAccessMiddleware',
-    'whs.middleware.Access',
+    'bkz.ipaccess.middleware.IPAccessMiddleware',
+    'bkz.middleware.Access',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -152,11 +144,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    'whs.context.bricks',
-    'whs.context.namespace',
+    'bkz.context.bricks',
+    'bkz.context.namespace',
     )
 
-ROOT_URLCONF = 'whs.urls'
+ROOT_URLCONF = 'bkz.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
@@ -191,18 +183,18 @@ INSTALLED_APPS = (
 #    'piston',
     'selenium',
 
-    'whs.ipaccess',
+    'bkz.ipaccess',
 
-    'whs.old',
+    'bkz.old',
 
-    'whs.brick',
-    'whs.sale',
-    'whs.man',
-    'whs.cpu',
+    'bkz.brick',
+    'bkz.sale',
+    'bkz.man',
+    'bkz.cpu',
 
-    'whs.energy',
-    'whs.it',
-    'whs.lab',
+    'bkz.energy',
+    'bkz.it',
+    'bkz.lab',
 
 #    graphite
     'tagging',

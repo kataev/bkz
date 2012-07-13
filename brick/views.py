@@ -12,7 +12,7 @@ from brick.forms import VerificationForm
 from man.models import Add, Sorting, Sorted, Write_off
 from sale.models import Sold
 from sale.forms import YearMonthFilter
-from whs.brick.models import make_css, make_label
+from bkz.brick.models import make_css, make_label
 
 def flat_form(request, Form, id):
     """ Форма  """

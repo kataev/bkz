@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from whs.brick.models import Brick
+from bkz.brick.models import Brick
 
 def bricks(request):
     Bricks = Brick.objects.all()

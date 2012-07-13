@@ -3,8 +3,8 @@ import datetime
 
 from django.shortcuts import get_object_or_404, render
 
-from whs.man.models import Add,Sorting,Sorted
-from whs.sale.forms import DateForm
+from bkz.man.models import Add,Sorting,Sorted
+from bkz.sale.forms import DateForm
 
 def main(request):
     form = DateForm(request.GET or None)

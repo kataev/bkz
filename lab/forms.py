@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
-from whs.lab.models import *
-from whs.sale.forms import NumberInput
+from bkz.lab.models import *
+from bkz.sale.forms import NumberInput
 
 
 class ClayForm(forms.ModelForm):

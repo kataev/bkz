@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from whs.brick.models import *
+from bkz.brick.models import *
 from sale.pdf import OperationsMixin, BillMixin, PalletMixin
 
 # Накладная

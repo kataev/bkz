@@ -5,8 +5,8 @@ import datetime
 from piston.handler import BaseHandler
 from piston.utils import rc
 
-from whs.sale.forms import YearMonthFilter
-from whs.sale.models import Sold
+from bkz.sale.forms import YearMonthFilter
+from bkz.sale.models import Sold
 from django.db.models import Sum
 
 class TransferMarkHandler(BaseHandler):

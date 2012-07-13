@@ -4,7 +4,7 @@ import datetime
 
 from django.core.urlresolvers import reverse
 
-from whs.brick.models import *
+from bkz.brick.models import *
 
 
 class Man(models.Model):

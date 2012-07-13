@@ -6,7 +6,7 @@ from django.utils import datetime_safe as datetime
 from django.core.urlresolvers import reverse
 from django.db import models
 
-from whs.brick.constants import defect_c,color_c
+from bkz.brick.constants import defect_c,color_c
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')
@@ -29,7 +29,7 @@ class SlashSeparatedFloatField(models.CharField):
         defaults.update(kwargs)
         return super(SlashSeparatedFloatField,self).formfield(**defaults)
 
-add_introspection_rules([],["^whs\.lab\.models\.SlashSeparatedFloatField"])
+add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField"])
 
 class Clay(models.Model):
     datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())

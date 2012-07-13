@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
 
-from whs.sale.forms import SoldFactory, PalletFactory, BillForm, Bill, AgentForm, SellerForm
-from whs.sale.views import UpdateView, CreateView, DeleteView,BillListView,BillWizard
-from whs.sale.handlers import TransferMarkHandler,TotalHandler
+from bkz.sale.forms import SoldFactory, PalletFactory, BillForm, Bill, AgentForm, SellerForm
+from bkz.sale.views import UpdateView, CreateView, DeleteView,BillListView,BillWizard
+from bkz.sale.handlers import TransferMarkHandler,TotalHandler
 
 from piston.resource import Resource
 
-urlpatterns = patterns('whs.sale.views',
+urlpatterns = patterns('bkz.sale.views',
 
     url(ur'^Мастер$', BillWizard.as_view([AgentForm,BillForm]), name='wizard'),
 
@@ -38,10 +38,10 @@ urlpatterns = patterns('whs.sale.views',
 )
 
 urlpatterns += patterns('',
-    url(ur'^Контрагент/$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent'),
-    url(ur'^Контрагент/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':AgentForm}, name='Agent-view'),
-    url(ur'^Продавец/$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller'),
-    url(ur'^Продавец/(?P<id>\d*)/?$', 'whs.views.flat_form', {'Form':SellerForm}, name='Seller-view'),
+    url(ur'^Контрагент/$', 'bkz.views.flat_form', {'Form':AgentForm}, name='Agent'),
+    url(ur'^Контрагент/(?P<id>\d*)/?$', 'bkz.views.flat_form', {'Form':AgentForm}, name='Agent-view'),
+    url(ur'^Продавец/$', 'bkz.views.flat_form', {'Form':SellerForm}, name='Seller'),
+    url(ur'^Продавец/(?P<id>\d*)/?$', 'bkz.views.flat_form', {'Form':SellerForm}, name='Seller-view'),
 )
 
 

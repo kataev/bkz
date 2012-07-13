@@ -7,8 +7,8 @@ from django.http import QueryDict
 from django.forms.models import inlineformset_factory,BaseInlineFormSet
 from django.core.exceptions import ValidationError
 
-from whs.sale.models import *
-from whs.brick.validation import validate_transfer
+from bkz.sale.models import *
+from bkz.brick.validation import validate_transfer
 
 
 class DateForm(forms.Form):

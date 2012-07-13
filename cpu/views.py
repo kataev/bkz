@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.serializers import serialize
 
-from whs.cpu.models import Position,Device,pos,line
+from bkz.cpu.models import Position,Device,pos,line
 
 def main(request):
     """ Главная страница """

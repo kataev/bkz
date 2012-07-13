@@ -2,7 +2,7 @@
 from django.db.models.signals import *
 from django.dispatch import receiver
 
-from whs.sale.models import *
+from bkz.sale.models import *
 
 @receiver(pre_delete, sender=Sold)
 @receiver(pre_save, sender=Sold)

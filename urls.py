@@ -6,8 +6,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns(u'',
-    url(r'^$', 'whs.views.index', name='index'),
-    url(ur'^Прайс$', 'whs.views.price', name='price'),
+    url(r'^$', 'bkz.views.index', name='index'),
+    url(ur'^Прайс$', 'bkz.views.price', name='price'),
 
 
 )
@@ -15,13 +15,13 @@ urlpatterns = patterns(u'',
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
-    url(ur'^Склад/', include('whs.brick.urls', namespace='brick')),
-    url(ur'^Склад/Реализация/', include('whs.sale.urls', namespace='sale')),
-    url(ur'^Склад/Производство/', include('whs.man.urls', namespace='man')),
-    url(ur'^Энергоресурсы/', include('whs.energy.urls', namespace='energy')),
-    url(ur'^Лаборатория/', include('whs.lab.urls', namespace='lab')),
-    url(ur'^ЦПУ/', include('whs.cpu.urls', namespace='cpu')),
-    url(ur'^ИТ/', include('whs.it.urls', namespace='it')),
+    url(ur'^Склад/', include('bkz.brick.urls', namespace='brick')),
+    url(ur'^Склад/Реализация/', include('bkz.sale.urls', namespace='sale')),
+    url(ur'^Склад/Производство/', include('bkz.man.urls', namespace='man')),
+    url(ur'^Энергоресурсы/', include('bkz.energy.urls', namespace='energy')),
+    url(ur'^Лаборатория/', include('bkz.lab.urls', namespace='lab')),
+    url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
+    url(ur'^ИТ/', include('bkz.it.urls', namespace='it')),
     url(ur'^ЦПУ/Датчики/?', include('graphite.render.urls',namespace='it')),
 )
 

@@ -2,7 +2,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.core.urlresolvers import reverse
 
-from whs.it.models import *
+from bkz.it.models import *
 from django.db.models import F,Count,Sum
 
 def main(request):

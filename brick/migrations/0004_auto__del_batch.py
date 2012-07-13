@@ -18,7 +18,7 @@ class Migration(SchemaMigration):
             ('amount', self.gf('django.db.models.fields.PositiveIntegerField')()),
             ('brick_lab', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_lab', to=orm['brick.Brick'])),
             ('date', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(2012, 7, 6, 0, 0))),
-            ('brick_whs', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_whs', to=orm['brick.Brick'])),
+            ('brick_bkz', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_bkz', to=orm['brick.Brick'])),
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.PositiveIntegerField')()),
         ))

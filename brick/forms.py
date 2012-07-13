@@ -2,7 +2,7 @@
 import django.forms as forms
 from django.core.exceptions import ValidationError
 
-from whs.brick.models import Brick, make_label
+from bkz.brick.models import Brick, make_label
 
 class BrickForm(forms.ModelForm):
     class Meta:

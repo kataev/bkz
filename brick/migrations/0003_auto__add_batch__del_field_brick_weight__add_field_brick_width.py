@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.create_table('brick_batch', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('brick_lab', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_lab', to=orm['brick.Brick'])),
-            ('brick_whs', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_whs', to=orm['brick.Brick'])),
+            ('brick_bkz', self.gf('django.db.models.fields.related.ForeignKey')(related_name='batch_bkz', to=orm['brick.Brick'])),
             ('number', self.gf('django.db.models.fields.PositiveIntegerField')()),
             ('date', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(2012, 7, 6, 0, 0))),
             ('amount', self.gf('django.db.models.fields.PositiveIntegerField')()),
@@ -45,7 +45,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "('-number', '-date')", 'object_name': 'Batch'},
             'amount': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'brick_lab': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'batch_lab'", 'to': "orm['brick.Brick']"}),
-            'brick_whs': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'batch_whs'", 'to': "orm['brick.Brick']"}),
+            'brick_bkz': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'batch_bkz'", 'to': "orm['brick.Brick']"}),
             'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2012, 7, 6, 0, 0)'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'info': ('django.db.models.fields.CharField', [], {'max_length': '300', 'blank': 'True'}),

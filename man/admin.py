@@ -2,7 +2,7 @@
 __author__ = 'bteam'
 
 from django.contrib import admin
-from whs.man.models import *
+from bkz.man.models import *
 
 class ManAdmin(admin.ModelAdmin):
     pass

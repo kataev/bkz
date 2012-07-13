@@ -6,9 +6,9 @@ from dateutil.relativedelta import relativedelta
 from piston.handler import BaseHandler
 from piston.utils import rc
 
-from whs.sale.models import Sold
-from whs.sale.forms import YearMonthFilter
-from whs.man.models import Add,Sorted,Sorting
+from bkz.sale.models import Sold
+from bkz.sale.forms import YearMonthFilter
+from bkz.man.models import Add,Sorted,Sorting
 
 class BrickHandler(BaseHandler):
     allowed_methods = ('GET',)

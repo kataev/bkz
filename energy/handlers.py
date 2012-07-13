@@ -7,9 +7,9 @@ import datetime
 
 from django.db.models import Sum
 
-from whs.man.models import Add
-from whs.energy.models import Energy,Teplo
-from whs.energy.views import delta
+from bkz.man.models import Add
+from bkz.energy.models import Energy,Teplo
+from bkz.energy.views import delta
 
 class EnergyHandler(BaseHandler):
     allowed_methods = ('GET','PUT')

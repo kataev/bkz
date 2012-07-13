@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'bteam'
 import django.forms as forms
-from whs.energy.models import *
+from bkz.energy.models import *
 
 
 class EnergyForm(forms.ModelForm):

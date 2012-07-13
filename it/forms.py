@@ -3,7 +3,7 @@ import datetime
 import django.forms as forms
 from django.db.models import Count,F,Sum
 
-from whs.it.models import Device, Buy, Work, Plug
+from bkz.it.models import Device, Buy, Work, Plug
 
 class DeviceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
