@@ -14,7 +14,7 @@ def main(request):
     totals = Buy.objects.values('cartridge').annotate(c=Count('plug'),s=Sum('amount')).filter(s__gt=F('c')).values('cartridge__name','c','s')
     totals = map(lambda t: dict(name=t['cartridge__name'],amount=t['s']-t['c']) ,totals)
 
-    return render(request, 'it.html',dict(divices=d,works=w,cons=c,totals=totals))
+    return render(request, 'it/it.html',dict(divices=d,works=w,cons=c,totals=totals))
 
 
 

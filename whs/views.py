@@ -15,7 +15,6 @@ from bkz.whs.forms import BillFilter, YearMonthFilter, BillAggregateFilter
 from bkz.views import CreateView, UpdateView, DeleteView, ListView
 from bkz.whs.pdf import pdf_render_to_response
 from django.contrib.formtools.wizard.views import SessionWizardView
-from brick.views import operations, calc
 from whs.forms import DateForm, YearMonthFilter, VerificationForm
 from whs.models import Agent, Bill, Add, Sorting, Sorted, Brick, Sold, Write_off
 
@@ -89,7 +88,7 @@ def bill_print(request, year, number):
 
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from').select_related()
-    template_name = 'bills.html'
+    template_name = 'whs/bills.html'
     paginate_by = 20
     context_object_name = 'bills'
 
@@ -134,10 +133,10 @@ def agents(request):
 
 def stats(request):
     form = YearMonthFilter(request.GET or None)
-    return render(request, 'stats.html',dict(form=form))
+    return render(request, 'whs/stats.html',dict(form=form))
 
 
-def main_man(request):
+def man_main(request):
     form = DateForm(request.GET or None)
     if form.is_valid():
         date = form.cleaned_data.get('date')
@@ -158,7 +157,7 @@ def main_man(request):
 
         for b in sorting:
             b.opers = opers.get(b.pk,{})
-    return render(request,'jurnal.html',dict(man=man,sorting=sorting,form=form))
+    return render(request,'whs/jurnal.html',dict(man=man,sorting=sorting,form=form))
 
 
 def brick_flat_form(request, Form, id):
@@ -218,7 +217,7 @@ def brick_main(request):
             )
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
 
-    return render(request, 'main.html', dict(Bricks=Bricks, order=Brick.order,form=form,begin=begin,end=end - datetime.timedelta(1)))
+    return render(request, 'whs/whs.html', dict(Bricks=Bricks, order=Brick.order,form=form,begin=begin,end=end - datetime.timedelta(1)))
 
 
 def calc(opers):
@@ -269,4 +268,4 @@ def verification(request):
                 deriv.append(dict(brick=b,field=total,name=r[0],deriv=b.total-total))
         total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'],csv=sum([int(r[f]) for r in oborot]))
     print total,deriv,c
-    return render(request,'verification.html',dict(form=form,deriv=deriv,total=total,counter=c))
+    return render(request,'whs/verification.html',dict(form=form,deriv=deriv,total=total,counter=c))

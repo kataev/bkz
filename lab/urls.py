@@ -2,10 +2,11 @@
 from django.conf.urls import *
 
 from bkz.lab.forms import *
+from django.shortcuts import render
 #from bkz.views import UpdateView, CreateView, DeleteView
 
 urlpatterns = patterns('',
-    url(ur'^$', 'bkz.lab.views.main', name='main'),
+    url(ur'^$', render, dict(template_name='lab.html'), name='main'),
     url(ur'^Глина/$', 'bkz.views.flat_form', {'Form':ClayForm}, name='Clay'),
     url(ur'^Глина/(?P<id>\d*)/?$', 'bkz.views.flat_form', {'Form':ClayForm}, name='Clay-view'),
 

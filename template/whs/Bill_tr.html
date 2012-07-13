@@ -18,6 +18,6 @@
 </tr>
 <tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
 {% for s in b.solds.all %}
-    {% include 'Sold_tr.html' %}
+    {% include 'whs/Sold_tr.html' %}
 {% endfor %}
 </tbody>

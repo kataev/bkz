@@ -9,7 +9,6 @@ import datetime
 from piston.handler import BaseHandler
 from piston.utils import rc
 
-from bkz.whs.forms import YearMonthFilter
 from django.db.models import Sum
 
 class TransferMarkHandler(BaseHandler):

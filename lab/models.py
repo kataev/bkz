@@ -6,7 +6,7 @@ from django.utils import datetime_safe as datetime
 from django.core.urlresolvers import reverse
 from django.db import models
 
-from bkz.brick.constants import defect_c,color_c
+from bkz.whs.constants import defect_c,color_c
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')

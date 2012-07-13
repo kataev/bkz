@@ -2,7 +2,6 @@
 import re
 from dateutil.relativedelta import relativedelta
 
-from django.db import models
 from django.http import HttpResponse
 from django.template import loader, Context
 

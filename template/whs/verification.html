@@ -4,7 +4,7 @@
 {% block container %}
     <div class="row">
     <div class="span5">
-    <form action="{% url brick:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
+    <form action="{% url whs:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
         {% csrf_token %}
         <fieldset>
             <legend><h1>Сверка</h1></legend>
@@ -75,10 +75,10 @@
                 <tbody>
                 {% for b in deriv %}
                     <tr>
-                        <td>{{ b.brick.pk }}</td>
-                        <td class="name {{ b.brick.css }}"><a title='{{ b.name }}'
-                                            href="{% url brick:main %}#brick_{{ b.brick.pk }}">{{ b.brick.label|safe }}</a></td>
-                        <td>{{ b.brick.total }}</td>
+                        <td>{{ b.whs.pk }}</td>
+                        <td class="name {{ b.whs.css }}"><a title='{{ b.name }}'
+                                            href="{% url whs:main %}#brick_{{ b.whs.pk }}">{{ b.whs.label|safe }}</a></td>
+                        <td>{{ b.whs.total }}</td>
                         <td>{{ b.field }}</td>
                         <td>{{ b.deriv }}</td>
                     </tr>

@@ -35,7 +35,7 @@ def main(request,year=None,month=None):
         energy.append(o)
         prev = v
 
-    return render(request,'chart.html',dict(opers=[energy]))
+    return render(request,'energy/chart.html',dict(opers=[energy]))
 
 def data(request,Form,id=None,date=None):
     """ Форма  """
@@ -59,4 +59,4 @@ def data(request,Form,id=None,date=None):
         else:
             form = Form(initial=request.GET.dict() or {'date':datetime.date.today()})
     data = Form._meta.model.objects.all()[:31]
-    return render(request, 'energy.html',dict(form=form,data=data))
+    return render(request, 'energy/energy.html',dict(form=form,data=data))

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.db.models.signals import *
 from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
-from bkz.whs.models import *
 from whs.models import Sold, Add, Sorted, Sorting, Brick
 
 @receiver(pre_delete, sender=Sold)

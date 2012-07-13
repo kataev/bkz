@@ -152,11 +152,6 @@ ROOT_URLCONF = 'bkz.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
-    os.path.join(PROJECT_PATH, 'whs/template/'),
-    os.path.join(PROJECT_PATH, 'energy/template/'),
-    os.path.join(PROJECT_PATH, 'cpu/template/'),
-    os.path.join(PROJECT_PATH, 'it/template/'),
-    os.path.join(PROJECT_PATH, 'lab/template/'),
     )
 
 INSTALLED_APPS = (

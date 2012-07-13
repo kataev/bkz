@@ -7,10 +7,10 @@
             <a class="close" data-dismiss="modal">×</a>
 
             <h3>Выбор кирпича</h3>
-            {% include 'brick-select-buttons.html' %}
+            {% include 'whs/brick-select-buttons.html' %}
         </div>
         <div class="modal-body">
-            {% include 'brick-select-table.html' %}
+            {% include 'whs/brick-select-table.html' %}
         </div>
         <div class="modal-footer">
             <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                 {% for b in object_list %}
-                        {% include 'Bill_tr.html' %}
+                        {% include 'whs/Bill_tr.html' %}
                 {% endfor %}
                 </tbody>
                 <tfoot>
@@ -54,21 +54,21 @@
                     <div style="margin-top: 8px;" class="control-group">
                         <div class="controls">
                             {% with year=form.year month=form.month %}
-                                {% include 'year-month-select.html' %}
+                                {% include 'whs/year-month-select.html' %}
                             {% endwith %}
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                             {% with f=form.agent %}
-                                {% include 'agent-select.html' %}
+                                {% include 'whs/agent-select.html' %}
                             {% endwith %}
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                             {% with f=form.brick %}
-                                {% include 'brick-select-field.html' %}
+                                {% include 'whs/brick-select-field.html' %}
                             {% endwith %}
                         </div>
                     </div>

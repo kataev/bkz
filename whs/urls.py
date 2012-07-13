@@ -3,7 +3,7 @@ from django.conf.urls import *
 
 from bkz.whs.forms import *
 from bkz.whs.views import UpdateView, CreateView, DeleteView,BillListView,BillWizard
-from bkz.whs.handlers import TransferMarkHandler,TotalHandler
+from bkz.whs.handlers import TransferMarkHandler,TotalHandler, BrickHandler
 
 from piston.resource import Resource
 
@@ -11,7 +11,7 @@ urlpatterns = patterns('bkz.whs.views',
 
     url(ur'^Мастер$', BillWizard.as_view([AgentForm,BillForm]), name='wizard'),
 
-    url(ur'^$', BillListView.as_view(), name='main'),
+    url(ur'^Реализация$', BillListView.as_view(), name='sale'),
     url(ur'^Статистика$', 'stats', name='statistics'),
 
     url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', DeleteView.as_view(
@@ -36,7 +36,8 @@ urlpatterns = patterns('bkz.whs.views',
 
     url(ur'^Контрагенты$', 'agents', name='agents'),
 
-#    url(ur'^$', 'main', name='main'),
+    url(ur'^$', 'brick_main', name='main'),
+    url(ur'^Журнал$', 'man_main', name='man'),
 
     url(ur'^Производство/$', CreateView.as_view(
         form_class=ManForm,
@@ -82,6 +83,7 @@ urlpatterns += patterns('',
 
 transfer_mark_handler = Resource(TransferMarkHandler)
 total_handler = Resource(TotalHandler)
+brick_handler = Resource(BrickHandler)
 
 urlpatterns += patterns('',
     url(ur'^Статистика/Переводы/$', transfer_mark_handler, name='transfer_mark_handler'),
@@ -89,15 +91,13 @@ urlpatterns += patterns('',
 )
 
 urlpatterns += patterns('',
-    url(ur'^Кирпич/$', 'bkz.brick.views.brick_flat_form', {'Form':BrickForm}, name='Brick'),
-    url(ur'^Кирпич/(?P<id>\d+)/?$', 'bkz.brick.views.brick_flat_form', {'Form':BrickForm}, name='Brick-view'),
-    url(r'^$', 'bkz.brick.views.brick_main', name='main'),
-    url(ur'^Сверка$', 'bkz.brick.views.verification', name='verification'),
-    url(ur'^Статистика$', 'bkz.views.stats', name='stats'),
-    url(ur'^Помошь$', 'bkz.views.help', name='help'),
+    url(ur'^Кирпич/$', 'bkz.whs.views.brick_flat_form', {'Form':BrickForm}, name='Brick'),
+    url(ur'^Кирпич/(?P<id>\d+)/?$', 'bkz.whs.views.brick_flat_form', {'Form':BrickForm}, name='Brick-view'),
+    url(r'^$', 'bkz.whs.views.brick_main', name='main'),
+    url(ur'^Сверка$', 'bkz.whs.views.verification', name='verification'),
 )
 
-brick_handler = Resource(BrickHandler)
+
 
 urlpatterns += patterns('',
     url(ur'^Кирпич/(?P<pk>\d+)/(?P<model>.+)/$', brick_handler),

@@ -6,21 +6,13 @@ def bricks(request):
     return dict(Bricks=Bricks)
 
 nav = dict(
-    brick=(
-        ('whs:main', 'icon-whs icon-white', u'Реализация'),
-        ('divider',),
-        ('whs:main', 'icon-man icon-white', u'Производство'),
-        ),
     whs=(
-        ('brick:main', 'icon-align-justify icon-white', u'Склад'),
-        ('whs:main', 'icon-whs icon-white', u'Накладные'),
-        ('whs:agents', 'icon-Agent icon-white', u'Контрагенты'),
-        ('whs:statistics', 'icon-signal icon-white', u'Статистика')
-        ),
-    man=(
-        ('brick:main', 'icon-align-justify icon-white', u'Склад'),
+        ('whs:main', 'icon-align-justify icon-white', u'Склад'),
         ('divider',),
-        ('whs:main', 'icon-jurnal icon-white', u'Журнал'),
+        ('whs:sale', 'icon-whs icon-white', u'Реализация'),
+        ('whs:man', 'icon-man icon-white', u'Производство'),
+        ('divider',),
+        ('whs:agents', 'icon-Agent icon-white', u'Контрагенты'),
         ),
     it=(
         ('it:main', 'icon-hdd icon-white', u'ИТ'),
@@ -43,13 +35,13 @@ menu = dict(
         ('it:Buy', 'icon-tint', 'Расходник'),
         ('it:Plug', 'icon-adjust', 'Замену'),
         ),
-    brick=(
+    whs=(
         ('whs:Bill', 'icon-Bill', u'Накладную'),
         ('whs:Man', 'icon-Man', u'Производство'),
         ('whs:Sort', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
-        ('brick:Brick', 'icon-Brick', u'Кирпич'),
+        ('whs:Brick', 'icon-Brick', u'Кирпич'),
         ('whs:Agent', 'icon-Agent', u'Контрагента'),
         ),
     lab = (
@@ -72,6 +64,4 @@ menu = dict(
 
 def namespace(request):
     namespace = getattr(request,'namespace','')
-    if namespace in 'whs man':
-        namespace = 'brick'
     return dict(nav=nav.get(namespace, []), menu=menu.get(namespace, []))

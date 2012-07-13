@@ -27,7 +27,7 @@
 
             <div class='controls'>
                 {% if 'brick' in f.name %}
-                    {% include 'brick-select-field.html' %}
+                    {% include 'whs/brick-select-field.html' %}
                 {% elif f.name == 'price' or f.name == 'delivery' %}
                     <div class="input-append">
                         {{ f }}
@@ -41,9 +41,9 @@
                         </span>
                     </div>
                 {% elif f.name == 'agent' or f.name == 'seller' %}
-                    {% include 'agent-select.html' %}
+                    {% include 'whs/agent-select.html' %}
                 {% elif f.name == 'cartridge' or f.name == 'printer' or f.name == 'device' %}
-                    {% include 'cartridge-select.html' %}
+                    {% include 'it/cartridge-select.html' %}
                 {% else %}
                     {{ f }}
                 {% endif %}

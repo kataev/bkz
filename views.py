@@ -4,16 +4,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from bkz.brick.templatetags.class_name import class_name
-
-def index(request):
-    """ Главная страница """
-    return render(request, 'index.html')
-
-def help(request):
-    """ Страница помощи """
-    return render(request, 'help.html')
-
+from bkz.whs.templatetags.class_name import class_name
 
 def flat_form(request,Form,id=None,date=None):
     """ Форма  """
@@ -30,14 +21,6 @@ def flat_form(request,Form,id=None,date=None):
     else:
         form = Form(initial=request.GET.dict() or None,instance=model)
     return render(request, 'flat-form.html',dict(form=form))
-
-
-def stats(request):
-    return render(request,'stats.html',dict(charts=[1,2,3,4]))
-
-def price(request):
-    return render(request,'price.html')
-
 
 class DeleteView(DeleteView):
     template_name = 'delete.html'

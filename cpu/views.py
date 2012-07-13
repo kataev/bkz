@@ -11,6 +11,6 @@ def main(request):
     """ Главная страница """
 
 
-    return render(request, 'cpu.html',dict(positions = pos,line=line))
+    return render(request, 'cpu/cpu.html',dict(positions = pos,line=line))
 
 

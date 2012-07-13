@@ -21,7 +21,7 @@
 
                     <form>
                         {% with year=form.date__year month=form.date__month %}
-                            {% include 'year-month-select.html' %}
+                            {% include 'whs/year-month-select.html' %}
                         {% endwith %}
                         <button id='transfer_show' type="submit" data-loading-text='Загрузка'
                                 style='vertical-align: top'
@@ -39,7 +39,7 @@
 
                     <form>
                         {% with year=form.date__year month=form.date__month %}
-                            {% include 'year-month-select.html' %}
+                            {% include 'whs/year-month-select.html' %}
                         {% endwith %}
                         <button id='total_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top'
                                 class="btn btn-primal">Показать

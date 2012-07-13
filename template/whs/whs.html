@@ -6,7 +6,7 @@
 
     <div style='float:right;'>
                 {% with year=form.date__year month=form.date__month %}
-                    {% include 'year-month-select.html' %}
+                    {% include 'whs/year-month-select.html' %}
                 {% endwith %}
     <input type="submit">
     </div>
@@ -17,7 +17,7 @@
             {% endif %}
         </h1>
     </form>
-    {% include 'brick-select-buttons.html' %}
+    {% include 'whs/brick-select-buttons.html' %}
     <table id='Bricks' class="table table-bordered table-condensed">
         <colgroup>
             <col span=1>

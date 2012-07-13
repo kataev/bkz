@@ -7,7 +7,6 @@ from django.http import QueryDict
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
-from bkz.whs.models import *
 from whs.models import Seller, Agent, Pallet, Sold, Bill, Add, Inventory, Man, Sorted, Sorting, Write_off, Brick
 from whs.validation import validate_transfer
 
