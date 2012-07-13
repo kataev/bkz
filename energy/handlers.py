@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from whs.models import Add
+
 __author__ = 'bteam'
 from piston.handler import BaseHandler
 from piston.utils import rc
@@ -7,7 +9,6 @@ import datetime
 
 from django.db.models import Sum
 
-from bkz.man.models import Add
 from bkz.energy.models import Energy,Teplo
 from bkz.energy.views import delta
 

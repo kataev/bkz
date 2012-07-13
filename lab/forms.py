@@ -2,7 +2,7 @@
 from django import forms
 
 from bkz.lab.models import *
-from bkz.sale.forms import NumberInput
+from bkz.whs.forms import NumberInput
 
 
 class ClayForm(forms.ModelForm):

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+{% spaceless %}
+    <!DOCTYPE document SYSTEM "rml.dtd">
+    <document filename="bill.pdf" debug="1">
+        <docinit>
+            <registerFont fontName="Arial" fontFile="whs/fonts/Arial.ttf"/>
+            <registerFont fontName="Arial-Bold" fontFile="whs/fonts/Arial_Bold.ttf"/>
+        </docinit>
+        <template pageSize="(842.0,595.0)" title="Bill" author="Kataev Denis" allowSplitting="1">
+            <pageTemplate id="first">
+                <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
+            </pageTemplate>
+            <pageTemplate id="akt">
+                <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
+            </pageTemplate>
+        </template>
+        <stylesheet>
+            <blockTableStyle id="Standard_Outline">
+                <blockAlignment value="LEFT"/>
+                <blockValign value="TOP"/>
+            </blockTableStyle>
+
+            <blockTableStyle id="table_invoice">
+                <blockAlignment value="RIGHT"/>
+                <blockLeftPadding value="0"/>
+                <blockBottomPadding value="0"/>
+                <blockValign value="CENTER"/>
+                <lineStyle kind="GRID" colorName="#000000" thickness="0.5"/>
+                <lineStyle kind="BOX" colorName="#000000" start="2,0" stop="2,-1" thickness="1.5"/>
+                <lineStyle kind="BOX" colorName="#000000" start="4,0" stop="11,-1" thickness="1.5"/>
+                <lineStyle kind="BOX" colorName="#000000" start="13,0" stop="-1,-1" thickness="1.5"/>
+            </blockTableStyle>
+
+            <blockTableStyle id="table_total">
+                <blockAlignment value="RIGHT"/>
+                <blockLeftPadding value="0"/>
+                <blockBottomPadding value="0"/>
+                <blockValign value="CENTER"/>
+                <lineStyle kind="GRID" colorName="#000000" start="1,0" stop="-1,-1" thickness="0.5"/>
+            </blockTableStyle>
+
+            <blockTableStyle id="table_taxes">
+                <blockAlignment value="LEFT"/>
+                <blockLeftPadding value="0"/>
+                <blockTopPadding value="0"/>
+                <blockBottomPadding value="0"/>
+                <blockRightPadding value="0"/>
+                <blockValign value="TOP"/>
+            </blockTableStyle>
+            <initialize>
+                <paraStyle name="all" alignment="justify"/>
+            </initialize>
+            <paraStyle name="Standard" fontName="Arial"/>
+            <paraStyle name="Text body" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="List" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="Table Contents" fontName="Arial" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="Table Heading" fontName="Arial" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="Caption" fontName="Arial" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+            <paraStyle name="Index" fontName="Arial"/>
+            <paraStyle name="Heading" fontName="Arial" fontSize="15.0" leading="19" spaceBefore="12.0"
+                       spaceAfter="6.0"/>
+            <paraStyle name="tr_header" fontName="Arial-Bold" fontSize="12.0" leading="15" alignment="LEFT"
+                       spaceBefore="12.0"
+                       spaceAfter="6.0"/>
+            <paraStyle name="tr_default" rightIndent="0.0" leftIndent="2.0" fontName="Arial" fontSize="8.0" leading="12"
+                       alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+            <paraStyle name="tr_right" rightIndent="0.0" leftIndent="0.0" fontName="Arial" fontSize="8.0" leading="10"
+                       alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+            <paraStyle name="tr_center" rightIndent="0.0" leftIndent="0.3cm" fontName="Arial" fontSize="8.0"
+                       leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+        </stylesheet>
+        <images/>
+        <story firstPageTemplate="first">
+            {% with agent=doc.agent seller=doc.seller %}
+                {% include 'bill.rml' %}
+            {% endwith %}
+        {% if doc.seller_id != 1206 %}
+            <nextFrame/>
+            {% with agent=doc.seller seller=doc.bkz %}
+                {% include 'bill.rml' %}
+            {% endwith %}
+        {% endif %}
+        </story>
+    </document>
+{% endspaceless %}

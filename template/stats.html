@@ -14,7 +14,7 @@
 {% block container %}
     <ul class="thumbnails">
         <li class="span12">
-            <div class="thumbnail" id='transfer' data-href="{% url sale:transfer_mark_handler %}">
+            <div class="thumbnail" id='transfer' data-href="{% url whs:transfer_mark_handler %}">
                 <div style="text-align: center;"></div>
                 <div class="caption">
                     <h5>Переводы</h5>
@@ -32,7 +32,7 @@
             </div>
         </li>
         <li class="span12">
-            <div class="thumbnail" id='total' data-href="{% url sale:total_handler %}">
+            <div class="thumbnail" id='total' data-href="{% url whs:total_handler %}">
                 <div></div>
                 <div class="caption">
                     <h5>Продажа кирпичей по виду, размеру, цвету и марке</h5>

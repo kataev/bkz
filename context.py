@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from bkz.brick.models import Brick
+from whs.models import Brick
 
 def bricks(request):
     Bricks = Brick.objects.all()
@@ -7,20 +7,20 @@ def bricks(request):
 
 nav = dict(
     brick=(
-        ('sale:main', 'icon-sale icon-white', u'Реализация'),
+        ('whs:main', 'icon-whs icon-white', u'Реализация'),
         ('divider',),
-        ('man:main', 'icon-man icon-white', u'Производство'),
+        ('whs:main', 'icon-man icon-white', u'Производство'),
         ),
-    sale=(
+    whs=(
         ('brick:main', 'icon-align-justify icon-white', u'Склад'),
-        ('sale:main', 'icon-sale icon-white', u'Накладные'),
-        ('sale:agents', 'icon-Agent icon-white', u'Контрагенты'),
-        ('sale:statistics', 'icon-signal icon-white', u'Статистика')
+        ('whs:main', 'icon-whs icon-white', u'Накладные'),
+        ('whs:agents', 'icon-Agent icon-white', u'Контрагенты'),
+        ('whs:statistics', 'icon-signal icon-white', u'Статистика')
         ),
     man=(
         ('brick:main', 'icon-align-justify icon-white', u'Склад'),
         ('divider',),
-        ('man:main', 'icon-jurnal icon-white', u'Журнал'),
+        ('whs:main', 'icon-jurnal icon-white', u'Журнал'),
         ),
     it=(
         ('it:main', 'icon-hdd icon-white', u'ИТ'),
@@ -44,13 +44,13 @@ menu = dict(
         ('it:Plug', 'icon-adjust', 'Замену'),
         ),
     brick=(
-        ('sale:Bill', 'icon-Bill', u'Накладную'),
-        ('man:Man', 'icon-Man', u'Производство'),
-        ('man:Sort', 'icon-Sorting', u'Сортировку'),
-        ('man:Inventory', 'icon-Inventory', u'Инвентаризацию'),
+        ('whs:Bill', 'icon-Bill', u'Накладную'),
+        ('whs:Man', 'icon-Man', u'Производство'),
+        ('whs:Sort', 'icon-Sorting', u'Сортировку'),
+        ('whs:Inventory', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
         ('brick:Brick', 'icon-Brick', u'Кирпич'),
-        ('sale:Agent', 'icon-Agent', u'Контрагента'),
+        ('whs:Agent', 'icon-Agent', u'Контрагента'),
         ),
     lab = (
         ('lab:Clay','',u'Глина'),
@@ -72,6 +72,6 @@ menu = dict(
 
 def namespace(request):
     namespace = getattr(request,'namespace','')
-    if namespace in 'sale man':
+    if namespace in 'whs man':
         namespace = 'brick'
     return dict(nav=nav.get(namespace, []), menu=menu.get(namespace, []))

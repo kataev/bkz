@@ -152,9 +152,7 @@ ROOT_URLCONF = 'bkz.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'template/'),
-    os.path.join(PROJECT_PATH, 'sale/template/'),
-    os.path.join(PROJECT_PATH, 'brick/template/'),
-    os.path.join(PROJECT_PATH, 'man/template/'),
+    os.path.join(PROJECT_PATH, 'whs/template/'),
     os.path.join(PROJECT_PATH, 'energy/template/'),
     os.path.join(PROJECT_PATH, 'cpu/template/'),
     os.path.join(PROJECT_PATH, 'it/template/'),
@@ -187,10 +185,8 @@ INSTALLED_APPS = (
 
     'bkz.old',
 
-    'bkz.brick',
-    'bkz.sale',
-    'bkz.man',
     'bkz.cpu',
+    'bkz.whs',
 
     'bkz.energy',
     'bkz.it',

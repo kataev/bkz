@@ -1,0 +1,32 @@
+{% spaceless %}
+    <div class="input-append" href="{% if f.name == 'seller' %}{% url whs:Seller %}{% else %}{% url whs:Agent %}{% endif %}">
+        {% if 'agent' in f.name %}
+            <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
+                {% if not f.field.required %}
+                    <option value="" {% if not f.value %}selected="selected"{% endif %}>---------</option>
+                {% endif %}
+                <optgroup label="Выберите контрагента:">
+                    {% for a in f.field.queryset %}
+                        {% ifchanged a.name|capfirst|first %}
+                            </optgroup>
+                            <optgroup label="{{ a.name|capfirst|first }}">
+                        {% endifchanged %}
+                        <option value="{{ a.pk }}"
+                                {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                    </optgroup>
+            </select>
+        {% else %}
+            {{ f }}
+        {% endif %}
+        {% if f.value %}
+            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url whs:Seller-view id=f.value %}{% else %}{% url whs:Agent-view id=f.value %}{% endif %}" title="Редактировать выбранного контрагента">
+                <i class="icon-info-sign"></i>
+            </a>
+        {% else %}
+            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url whs:Seller %}{% else %}{% url whs:Agent %}{% endif %}" title="Создать контрагента">
+                <i class="icon-plus-sign"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endspaceless %}
