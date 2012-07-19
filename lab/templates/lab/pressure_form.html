@@ -1,0 +1,14 @@
+{% for f in form.visible_fields %}
+    <td>
+        {% if f.name == 'size' %}
+            {% include 'lab/widgets/size-input.html' %}
+        {% else %}
+            {{ f }}
+        {% endif %}
+        {% if forloop.last %}
+            {% for f in form.hidden_fields %}
+                {{ f }}
+            {% endfor %}
+        {% endif %}
+    </td>
+{% endfor %}

@@ -22,29 +22,83 @@
             {% endwith %}
         {% endfor %}
     </div>
-    <object method="POST" action="" class='object-horizontal'>
+    <form method="POST" action="" class='form-horizontal'>
         {% csrf_token %}
         {% for factory in opers %}
             {{ factory.management_object }}
+            {{ factory.management_form }}
         {% endfor %}
-    <h1 class="">Партия № {{ form.number }}, от {{ form.date }}</h1>
-    <div class="tabbable">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle='tab'>Section 1</a></li>
-            <li><a href="#tab2" data-toggle='tab'>Section 2</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id='tab1'>
-                <p>ololo</p>
+
+        <fieldset class="Batch">
+            <legend>
+                <h1>{{ form.instance }}</h1>
+            </legend>
+            <div class="row">
+                <div class="span3 limit">
+                    <h3>Идентификация партии</h3>
+                    {% include 'core/field.html' with f=form.number %}
+                    {% include 'core/field.html' with f=form.date %}
+                </div>
+                <div class="span3 limit">
+                    <h3>Вид продукции</h3>
+                    {% include 'core/field.html' with f=form.width %}
+                    {% include 'core/field.html' with f=form.color %}
+                </div>
+                <div class="span3">
+                    <h3>Характеристики</h3>
+                    {% include 'core/field.html' with f=form.seonr %}
+                    {% include 'core/field.html' with f=form.heatconduction %}
+                </div>
             </div>
-            <div class="tab-pane" id='tab2'>
-                <p>ololo2</p>
-            </div>
+        </fieldset>
+        {% for factory in opers|slice:'0:1' %}
+            <fieldset class="{{ factory.empty_form.instance|class_name }}">
+                <legend>
+                    <h3>{{ factory.empty_form.instance|model_verbose_name_plural }}</h3>
+                </legend>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        {% for f in factory.empty_form.visible_fields %}
+                            <th> {{ f.label }} </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="display: none">
+                        {% include 'lab/pressure_form.html' with form=factory.empty_form %}
+                    </tr>
+                    {% for form in factory %}
+                        <tr>
+                            {% include 'lab/pressure_form.html' %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="{{ form.visible_fields|length }}" style='text-align: center'><i class="icon-plus-sign"></i> Добавить</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </fieldset>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-large">
+                <i class="icon-ok icon-white"></i> Сохранить
+            </button>
+            {% if form.instance|class_name == 'Bill' and form.instance.pk %}
+                <a href="печать" target="_blank" class="btn btn-info">
+                    <i class='icon-print icon-white'></i> Печать
+                </a>
+            {% endif %}
+            <button type="reset" class="btn">
+                <i class="icon-ban-circle"></i> Сбросить
+            </button>
+            {% if form.instance.pk %}
+                <a href="удалить" style='float:right' class="btn btn-danger">
+                <i class='icon-remove icon-white'></i> Удалить
+            {% endif %}
+            </a>
         </div>
-    </div>
-
-
-
-
-    </object>
+    </form>
 {% endblock %}

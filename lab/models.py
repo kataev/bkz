@@ -215,7 +215,7 @@ class Batch(UrlMixin,models.Model):
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
     efflorescence = models.ForeignKey(Efflorescence, verbose_name=u'Высолы', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
-    density = models.ForeignKey(Density,verbose_name=u'Плотность')
+#    density = models.FloatField(u'Класс средней плотности')
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.')
     heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность')
     inclusion = models.TextField(u'Включения',null=True,blank=True)
@@ -238,16 +238,16 @@ class Pressure(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'pressure_tests')
     tto = models.CharField(u'Номер ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
+    size = models.CharField(u'Размер',max_length=20)
     concavity = models.FloatField(u'Вогнутость')
     perpendicularity = models.FloatField(u'Перпендикулярность')
     flatness = models.FloatField(u'Плоскностность')
-    size = models.CharField(u'Размер',max_length=20)
+    readings = models.FloatField(u'Показание прибора')
     value = models.FloatField(u'Значение')
 
     def __unicode__(self):
         if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
         else: return u'Новое испытание'
-
 
     class Meta():
         verbose_name = u"На сжатие"
@@ -258,10 +258,10 @@ class Flexion(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'flexion_tests')
     tto = models.CharField(u'Номер ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
+    size = models.CharField(u'Размер',max_length=20)
     concavity = models.FloatField(u'Вогнутость')
     perpendicularity = models.FloatField(u'Перпендикулярность')
     flatness = models.FloatField(u'Плоскностность')
-    size = models.CharField(u'Размер',max_length=20)
     value = models.FloatField(u'Значение')
 
     class Meta():
@@ -270,7 +270,7 @@ class Flexion(models.Model):
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = models.CommaSeparatedIntegerField(u'Номера телег',max_length=30)
+    tto = models.CommaSeparatedIntegerField(u'Номер телег',max_length=30)
     amount = models.IntegerField(u'Кол-во')
     test = models.IntegerField(u'Расход кирпича на испытание')
     half = models.FloatField(u'Половняк')
