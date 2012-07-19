@@ -1,0 +1,96 @@
+{% extends 'core/index.html' %}
+{% load class_name %}
+{% block title %}Сверка{% endblock %}
+{% block container %}
+    <div class="row">
+    <div class="span5">
+    <form action="{% url whs:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Сверка</h1></legend>
+        </fieldset>
+        {% include 'core/fieldset.html' %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="icon-white icon-upload"></i> Отправить
+            </button>
+        </div>
+    </form>
+    </div>
+    <div class="span7">
+        <h2>Как создать файл в формате csv</h2>
+        <ol>
+            <li>Скопировать оборотку за <b>один текущий</b> день в отдельный файл</li>
+            <li>Выбрать в меню Файл - Сохранить как</li>
+            <li>Выбрать тип файла "CSV (MS-DOS)", и сохранить под любым именем</li>
+            <li>При воросах выбрать "Да"</li>
+            <li>Выбрать файл через форму слева.</li>
+        </ol>
+    </div>
+    </div>
+    <div class="row">
+        <div class="span3">
+            <table class="table table-bordered">
+                <caption><h2>Итог</h2></caption>
+                <tr>
+                    <td>Текушее значение</td>
+                    <td>{{ total.base }}</td>
+                </tr>
+                <tr>
+                    <td>Загруженный файл</td>
+                    <td>{{ total.csv }}</td>
+                </tr>
+            </table>
+            {% if counter %}
+            <table class="table table-bordered">
+                <caption><h2>Повтор УИД</h2></caption>
+            <thead>
+            <tr>
+                <td>УИД</td>
+                <td>Кол-во подвторов</td>
+            </tr>
+            </thead>
+            <tbody>
+                {% for k,v in counter.iteritems %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div class="span9">
+            <table id='Verification' class="table table-bordered">
+                <caption><h2>Расхождения по позициям</h2></caption>
+                <thead>
+                <tr>
+                    <td style='width: 20px'>УИД</td>
+                    <td>Имя</td>
+                    <td>Текушее</td>
+                    <td>Файл</td>
+                    <td>Разница</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for b in deriv %}
+                    <tr>
+                        <td>{{ b.whs.pk }}</td>
+                        <td class="name {{ b.whs.css }}"><a title='{{ b.name }}'
+                                            href="{% url whs:main %}#brick_{{ b.whs.pk }}">{{ b.whs.label|safe }}</a></td>
+                        <td>{{ b.whs.total }}</td>
+                        <td>{{ b.field }}</td>
+                        <td>{{ b.deriv }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4" style='text-align: right'>Сумма:</td>
+                <td>{{ deriv|sum_pluck:'deriv' }}</td>
+            </tr>
+            </tfoot>
+            </table>
+        </div>
+    </div>
+{% endblock %}

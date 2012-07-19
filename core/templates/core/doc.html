@@ -1,0 +1,132 @@
+{% extends 'core/index.html' %}
+{% load class_name %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        {{ form.instance|model_verbose_name|safe }}
+    {% endif %}
+    {{ form.instance|striptags }}
+{% endblock %}
+{% block container %}
+    {% for factory in opers %}
+        {% for e in factory.non_form_errors %}
+            <div class="alert alert-error">
+                <i class="icon-warning-sign"></i>
+                <strong>{{ e|safe }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class='hidden'>
+        {% for factory in opers %}
+            {% with form=factory.empty_form %}
+                <div class="tab-pane" id="{{ form.prefix }}">
+                    {% include 'core/fieldset.html' %}
+                </div>
+            {% endwith %}
+        {% endfor %}
+    </div>
+    {#  Див для всплывающего окна Modal, работает из контекст процессора  #}
+    <form method="POST" action="" class='form-horizontal'>
+        {% csrf_token %}
+        {% for factory in opers %}
+            {{ factory.management_form }}
+        {% endfor %}
+
+        <div class='row'>
+            <div style='border-right: 1px solid #EEE;' class="span3">
+                <ul class="nav nav-list form-nav">
+                    {#  Документ  #}
+                    <li class="nav-header">
+                    <h4 {% if form.instance.pk %}title="id:{{ form.instance.pk }}"{% endif %}>
+                        <i class="icon-{{ form.instance|class_name }}"></i> Документ
+                    </h4>
+                    </li>
+                    <li class="active">
+                        <a href="#{{ form.prefix }}" data-toggle="tab">
+                            {% if form.errors %}
+                                <i class="icon-warning-sign"></i>
+                            {% endif %}
+                            {{ form.instance|safe|truncatewords:10 }}
+                        </a>
+                    </li>
+                    {#  Операции  #}
+                    {% for factory in opers %}
+                        <li class="nav-header {{ factory.form|class_name }}">
+                            <h5 >
+                            <i class='icon-{{ factory.form|class_name }}'></i> {{ factory.form.Meta.model|model_verbose_name_plural }}
+                            </h5>
+                        </li>
+                        {% for form in factory %}
+                            <li class="{{ form|class_name }}" {% if form.instance.pk %}title="id:{{ form.instance.pk }}"{% endif %}>
+                                <a class='{{ form.instance.brick.css }}{{ form.instance.brick_from.css }}'
+                                   href="#{{ form.prefix }}" data-toggle="tab">
+                                    {% if form.errors %}
+                                        <i class="icon-warning-sign"></i>
+                                    {% endif %}
+                                    {{ form.instance|safe }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="create">
+                            <a class='form-add' data-prefix='{{ factory.form|class_name }}' title='{{ factory.model|safe }}' href="#" data-toggle="tab">
+                                <i class="icon-plus form-add icon-white"></i> Добавить {{ factory.form.Meta.verbose_name_accusative|lower }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% include 'core/log.html' %}
+            </div>
+
+            <div class="span8">
+                {#  Навигация  #}
+                <div class="tabbable ">
+                    <div class="tab-content">
+                        {#  Форма документа  #}
+                        <div class="tab-pane active" id="{{ form.prefix }}">
+                            {% for factory in opers %}
+                                {% for e in factory.errors.values %}
+                                    <div class="alert alert-error">
+                                        <strong>{{ e }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% include 'core/fieldset.html' %}
+                        </div>
+                        {#  Формы операций  #}
+                        {% for factory in opers %}
+                            {% for form in factory %}
+                                <div class="tab-pane" id="{{ form.prefix }}">
+                                    {% include 'core/fieldset.html' %}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-large">
+                <i class="icon-ok icon-white"></i> Сохранить
+            </button>
+            {% if form.instance|class_name == 'Bill' and form.instance.pk %}
+                <a href="печать" target="_blank" class="btn btn-info">
+                    <i class='icon-print icon-white'></i> Печать
+                </a>
+            {% endif %}
+            <button type="reset" class="btn">
+                <i class="icon-ban-circle"></i> Сбросить
+            </button>
+            {% if form.instance.pk %}
+                <a href="удалить" style='float:right' class="btn btn-danger">
+                <i class='icon-remove icon-white'></i> Удалить
+            {% endif %}
+            </a>
+        </div>
+    </form>
+
+    <div>
+
+    </div>
+
+{% endblock %}

@@ -10,23 +10,20 @@ from django.db.models import Max,Sum
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext as _
+from django.views.generic import UpdateView,CreateView,DeleteView,ListView
 
-from bkz.whs.forms import BillFilter, YearMonthFilter, BillAggregateFilter
-from bkz.views import CreateView, UpdateView, DeleteView, ListView
+from bkz.core.templatetags.class_name import class_name
+from bkz.whs.forms import BillFilter, YearMonthFilter
+
 from bkz.whs.pdf import pdf_render_to_response
-from django.contrib.formtools.wizard.views import SessionWizardView
-from whs.forms import DateForm, YearMonthFilter, VerificationForm
-from whs.models import Agent, Bill, Add, Sorting, Sorted, Brick, Sold, Write_off
+from whs.forms import DateForm, VerificationForm,SoldFactory, PalletFactory, AddFactory
+from whs.models import *
+
+from whs.utils import operations, calc
 
 logger = logging.getLogger(__name__)
 
 __author__ = 'bteam'
-
-
-class BillWizard(SessionWizardView):
-    def done(self,form_list,**kwargs):
-        return redirect('/')
-
 
 class BillSlugMixin(object):
     def get_object(self, queryset=None):
@@ -57,16 +54,42 @@ class BillSlugMixin(object):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+class BillUpdateView(UpdateView):
+    opers = [SoldFactory,PalletFactory]
+    select_related = ('brick','brick_from')
 
-class UpdateView(BillSlugMixin, UpdateView):
-    pass
+    def form_valid(self, form):
+        instance = form.save()
+        opers = self.get_context_data()['opers']
 
+        for factory in opers:
+            if factory.is_valid():
+                factory.save()
+        if all([f.is_valid() for f in opers]):
+            return redirect(instance.get_absolute_url())
 
-class DeleteView(BillSlugMixin, DeleteView):
-    pass
+        return self.render_to_response(dict(form=form,opers=opers))
 
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
-class CreateView(CreateView):
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+
+        instance = self.object
+        context['opers'] = []
+        if self.request.POST:
+            for factory in self.opers:
+                context['opers'].append(factory(self.request.POST,instance=instance,prefix=class_name(factory.form)))
+        else:
+            for factory in self.opers:
+                context['opers'].append(factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related(*self.select_related)))
+        return context
+
+class BillDeleteView(BillSlugMixin, DeleteView):
+    model = Bill
+
+class BillCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
         if self.request.method == 'GET':
@@ -82,9 +105,48 @@ def bill_pk_redirect(request,pk):
     return redirect(b.get_absolute_url())
 
 
+class ManUpdateView(BillUpdateView):
+    opers = [AddFactory,]
+    select_related = ('brick',)
+
+class BrickCreateView(CreateView):
+    model = Brick
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.label = make_label(self.object)
+        self.object.css = make_css(self.object)
+        self.object.save()
+        return super(CreateView, self).form_valid(form)
+
+
+class BrickUpdateView(UpdateView):
+    model = Brick
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.label = make_label(self.object)
+        self.object.css = make_css(self.object)
+        self.object.save()
+        return super(UpdateView, self).form_valid(form)
+
+
+def BrickFlatForm(request, Form, id):
+    if id: instance = get_object_or_404(Form._meta.model, pk=id)
+    else: instance = None
+    if request.method == 'POST':
+        form = Form(request.POST, instance=instance)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.label = make_label(instance)
+            instance.css = make_css(instance)
+            instance.save()
+            return redirect(instance.get_absolute_url())
+    else:
+        form = Form(instance=instance)
+    return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
+
 def bill_print(request, year, number):
     doc = get_object_or_404(Bill.objects.select_related(), number=number, date__year=year)
-    return pdf_render_to_response('torg-12.rml', {'doc': doc})
+    return pdf_render_to_response('whs/torg-12.rml', {'doc': doc})
 
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from').select_related()
@@ -128,7 +190,7 @@ def agents(request):
     letter = request.GET.get('b','')
     if letter:
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
-    return render(request, 'agents.html', dict(Agents=Agents,alphabet=alphabet))
+    return render(request, 'whs/agents.html', dict(Agents=Agents,alphabet=alphabet))
 
 
 def stats(request):
@@ -145,18 +207,6 @@ def man_main(request):
     man = Add.objects.select_related().filter(doc__date__year=date.year,doc__date__month=date.month)
     sorting = Sorting.objects.select_related().filter(date__year=date.year,date__month=date.month)
     opers = {}
-    if len(sorting):
-        for m in (Sorted,):
-            name = m._meta.object_name
-            for o in m.objects.select_related().filter(doc__in=sorting):
-                d = opers.get(o.doc_id,{})
-                a = d.get(name,[])
-                a.append(o)
-                d[name] = a
-                opers[o.doc_id] = d
-
-        for b in sorting:
-            b.opers = opers.get(b.pk,{})
     return render(request,'whs/jurnal.html',dict(man=man,sorting=sorting,form=form))
 
 
@@ -216,41 +266,7 @@ def brick_main(request):
                    + b.m_from - b.m_to # + b.m_rmv # Перебор кирпича в цехе
             )
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
-
     return render(request, 'whs/whs.html', dict(Bricks=Bricks, order=Brick.order,form=form,begin=begin,end=end - datetime.timedelta(1)))
-
-
-def calc(opers):
-    d = dict()
-    for k,o in opers.items():
-        for i,v in o.items():
-            if k in ['sold','t_from','inv','f_from']:
-                d[i]=d.get(i,0) + v
-            if k in ['t_to','add','m_to']:
-                d[i]=d.get(i,0) - v
-    return d
-
-
-def operations(filter):
-    m_from = Sorting.objects.filter(**filter)
-    m_to = Sorted.objects.filter(type=0).filter(**filter)
-    m_rmv = Sorted.objects.filter(type=1).filter(**filter)
-    filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
-    add = Add.objects.filter(**filter)
-    sold = Sold.objects.filter(**filter)
-    t_from = Sold.objects.filter(**filter).filter(brick_from__isnull=False)
-    t_to = Sold.objects.filter(**filter).filter(brick_from__isnull=False)
-    inv = Write_off.objects.filter(**filter)
-
-    return dict(add=dict(add.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        sold=dict(sold.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        t_from=dict(t_from.values_list('brick_from__id').annotate(Sum('amount')).order_by()),
-        t_to=dict(t_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        m_from=dict(m_from.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        m_to=dict(m_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        m_rmv=dict(m_rmv.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        inv=dict(inv.values_list('brick__id').annotate(Sum('amount')).order_by()))
-
 
 def verification(request):
     form = VerificationForm(request.POST or None,request.FILES or None)
@@ -267,5 +283,6 @@ def verification(request):
             if b.total != total:
                 deriv.append(dict(brick=b,field=total,name=r[0],deriv=b.total-total))
         total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'],csv=sum([int(r[f]) for r in oborot]))
-    print total,deriv,c
     return render(request,'whs/verification.html',dict(form=form,deriv=deriv,total=total,counter=c))
+
+

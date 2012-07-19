@@ -1,0 +1,52 @@
+{% extends 'core/index.html' %}
+
+{% block script %}
+    <script type="text/javascript" src="/static/js/libs/d3.v2.min.js"></script>
+    <script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
+    <script type="text/javascript" src="/static/js/stats.js"></script>
+
+{% endblock %}
+{% block head %}
+    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/css/stats.css"/>
+{% endblock %}
+{% block title %}Статистика{% endblock %}
+{% block container %}
+    <ul class="thumbnails">
+        <li class="span12">
+            <div class="thumbnail" id='transfer' data-href="{% url whs:transfer_mark_handler %}">
+                <div style="text-align: center;"></div>
+                <div class="caption">
+                    <h5>Переводы</h5>
+
+                    <form>
+                        {% with year=form.date__year month=form.date__month %}
+                            {% include 'whs/year-month-select.html' %}
+                        {% endwith %}
+                        <button id='transfer_show' type="submit" data-loading-text='Загрузка'
+                                style='vertical-align: top'
+                                class="btn btn-primal">Показать
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        <li class="span12">
+            <div class="thumbnail" id='total' data-href="{% url whs:total_handler %}">
+                <div></div>
+                <div class="caption">
+                    <h5>Продажа кирпичей по виду, размеру, цвету и марке</h5>
+
+                    <form>
+                        {% with year=form.date__year month=form.date__month %}
+                            {% include 'whs/year-month-select.html' %}
+                        {% endwith %}
+                        <button id='total_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top'
+                                class="btn btn-primal">Показать
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'core/index.html' %}
+{% load class_name %}
+{% block title %}
+    {% if form.instance.pk %}
+        {{ form.instance|model_verbose_name|safe }}
+    {% endif %}
+    {{ form.instance|striptags }}
+{% endblock %}
+{% block container %}
+    {% for factory in opers %}
+        {% for e in factory.non_form_errors %}
+            <div class="alert alert-error">
+                <i class="icon-warning-sign"></i>
+                <strong>{{ e|safe }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class='hidden'>
+        {% for factory in opers %}
+            {% with form=factory.empty_form %}
+                <div class="tab-pane" id="{{ form.prefix }}">
+                    {% include 'core/fieldset.html' %}
+                </div>
+            {% endwith %}
+        {% endfor %}
+    </div>
+    <form method="POST" action="" class='form-horizontal'>
+        {% csrf_token %}
+        {% for factory in opers %}
+            {{ factory.management_form }}
+        {% endfor %}
+    <h1 class="well">Партия № <input class="span1" type='text'>, от <input class="span2" type='date'></h1>
+    <div class="span12">
+
+    </div>
+
+
+
+
+    </form>
+{% endblock %}

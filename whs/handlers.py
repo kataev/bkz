@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
 from whs.forms import YearMonthFilter
-from whs.models import Sold, Add, Sorting, Sorted
+from whs.models import Sold, Add, Sorting
 
 __author__ = 'bteam'
 import datetime
@@ -79,7 +79,7 @@ class BrickHandler(BaseHandler):
             objects = Sorting.objects.filter(**date).filter(brick_id=pk)
             objects = objects.values_list('date','amount')
         elif kwargs['model'] == 'm_to':
-            objects = Sorted.objects.filter(**date).filter(brick_id=pk)
+            objects = Sorting.objects.filter(**date).filter(brick_id=pk)
             objects = objects.values_list('doc__date','amount')
         elif kwargs['model'] == 'm_rmv':
             objects = Removed.objects.filter(**date).filter(brick_id=pk)

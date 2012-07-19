@@ -7,20 +7,25 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns(u'',
-    url(ur'^$', render, dict(template_name='index.html'), name='index'),
-    url(ur'^Помошь$', render, dict(template_name='help.html'), name='help'),
-    url(ur'^Прайс$', render, dict(template_name='price.html'), name='price'),
+    url(ur'^$', render, dict(template_name='core/index.html'), name='index'),
+    url(ur'^Помошь$', render, dict(template_name='core/help.html'), name='help'),
+    url(ur'^Прайс$', render, dict(template_name='core/price.html'), name='price'),
 )
 
 urlpatterns += patterns('',
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls), name='admin'),
 
     url(ur'^Склад/', include('bkz.whs.urls', namespace='whs')),
     url(ur'^Энергоресурсы/', include('bkz.energy.urls', namespace='energy')),
     url(ur'^Лаборатория/', include('bkz.lab.urls', namespace='lab')),
     url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
     url(ur'^ИТ/', include('bkz.it.urls', namespace='it')),
-    url(ur'^ЦПУ/Датчики/?', include('graphite.render.urls',namespace='it')),
+    url(ur'^ЦПУ/Датчики/?', include('graphite.render.urls',namespace='carbon')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
+
+
+
+
+

@@ -1,0 +1,9 @@
+{% extends 'flat-form.html' %}
+{% load class_name %}
+{% load url from future %}
+{% block bonus-button %}
+    {% if object.pk %}
+        <a href="{% url 'whs:Brick-view' pk=object.pk|add:1 %}" class="btn"><i class="icon-chevron-right"></i>
+            Следующий {{ object|model_verbose_name }}</a>
+    {% endif %}
+{% endblock %}

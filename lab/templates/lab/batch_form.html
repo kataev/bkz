@@ -1,0 +1,50 @@
+{% extends 'core/index.html' %}
+{% load class_name %}
+{% block title %}
+    {{ object|striptags }}
+{% endblock %}
+{% block container %}
+    {% for factory in opers %}
+        {% for e in factory.non_object_errors %}
+            <div class="alert alert-error">
+                <i class="icon-warning-sign"></i>
+                <strong>{{ e|safe }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class='hidden'>
+        {% for factory in opers %}
+            {% with object=factory.empty_object %}
+                <div class="tab-pane" id="{{ object.prefix }}">
+                    {% include 'core/fieldset.html' %}
+                </div>
+            {% endwith %}
+        {% endfor %}
+    </div>
+    <object method="POST" action="" class='object-horizontal'>
+        {% csrf_token %}
+        {% for factory in opers %}
+            {{ factory.management_object }}
+        {% endfor %}
+    <h1 class="">Партия № {{ form.number }}, от {{ form.date }}</h1>
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle='tab'>Section 1</a></li>
+            <li><a href="#tab2" data-toggle='tab'>Section 2</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id='tab1'>
+                <p>ololo</p>
+            </div>
+            <div class="tab-pane" id='tab2'>
+                <p>ololo2</p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    </object>
+{% endblock %}

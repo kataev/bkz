@@ -1,0 +1,15 @@
+{% extends 'core/index.html' %}
+{% block head %}
+{% endblock %}
+{% block title %}Лаборатория{% endblock %}
+{% block container %}
+    <h1>Лаборатория</h1>
+    <table class="table">
+    {% for b in object_list %}
+    <tr>
+        <td><a href="{{ b.get_absolute_url }}">{{ b }}</a></td>
+
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

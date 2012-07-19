@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="add.pdf" debug="1">
+    <docinit>
+        <registerFont fontName="Arial" fontFile="whs/fonts/Arial.ttf"/>
+        <registerFont fontName="Arial-Bold" fontFile="whs/fonts/Arial_Bold.ttf"/>
+    </docinit>
+    <template pageSize="(842.0,595.0)" title="Add" author="Kataev Denis" allowSplitting="1">
+        <pageTemplate id="first">
+            <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
+        </pageTemplate>
+        <pageTemplate id="akt">
+            <frame id="first" x1="0.0" y1="0.0" width="786" height="590"/>
+        </pageTemplate>
+    </template>
+    <stylesheet>
+        <blockTableStyle id="Standard_Outline">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+
+        <blockTableStyle id="table_taxes">
+            <blockAlignment value="LEFT"/>
+            <blockLeftPadding value="0"/>
+            <blockTopPadding value="0"/>
+            <blockBottomPadding value="0"/>
+            <blockRightPadding value="0"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+
+        <blockTableStyle id="table_invoice">
+            <blockSpan start='6,0' stop='7,0'/>
+            <blockSpan start='0,1' stop='0,0'/>
+            <blockSpan start='1,1' stop='1,0'/>
+            <blockSpan start='2,1' stop='2,0'/>
+            <blockSpan start='3,1' stop='3,0'/>
+            <blockSpan start='4,1' stop='4,0'/>
+            <blockSpan start='8,1' stop='8,0'/>
+            <blockSpan start='9,1' stop='9,0'/>
+            <blockSpan start='10,1' stop='10,0'/>
+            <blockSpan start='11,1' stop='11,0'/>
+            <blockSpan start='12,1' stop='12,0'/>
+            <blockLeading />
+            <blockAlignment value="RIGHT"/>
+            <blockValign value="CENTER"/>
+            <blockLeftPadding value="0"/>
+            <blockBottomPadding value="0"/>
+            <blockValign value="CENTER"/>
+            <lineStyle kind="GRID" colorName="#000000" thickness="0.5"/>
+        </blockTableStyle>
+
+        <initialize>
+            <paraStyle name="all" alignment="justify"/>
+        </initialize>
+        <paraStyle name="tr_header" fontName="Arial-Bold" fontSize="12.0" leading="15" alignment="LEFT"
+                   spaceBefore="12.0"
+                   spaceAfter="6.0"/>
+        <paraStyle name="tr_default" rightIndent="0.0" leftIndent="2.0" fontName="Arial" fontSize="8.0" leading="12"
+                   alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="tr_right" rightIndent="0.0" leftIndent="0.0" fontName="Arial" fontSize="8.0" leading="10"
+                   alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="tr_center" rightIndent="0.0" leftIndent="0.3cm" fontName="Arial" fontSize="8.0"
+                   leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    </stylesheet>
+    <images/>
+<story firstPageTemplate="first">
+    <illustration height="65mm" width="295mm">
+        <setFont name="Arial" size="12"/>
+        <drawCentredString x="14.5cm" y="5.4cm">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ</drawCentredString>
+        <drawCentredString x="14.5cm" y="5cm">"БЕРЕЗНИКОВСКИЙ КИРПИЧНЫЙ ЗАВОД"</drawCentredString>
+        <drawString x="22cm" y="4.6cm">УТВЕРЖДАЮ</drawString>
+        <setFont name="Arial" size="11"/>
+        <drawString x="22cm" y="4cm">Главный инженер ООО "БКЗ"</drawString>
+        <drawString x="22cm" y="3.4cm">________________ В.М.Мухлынин</drawString>
+        <drawString x="22cm" y="2.8cm">"____" ______________ 20 г.</drawString>
+        <drawString x="2cm" y="0.3cm">"____" ______________ 20 г.</drawString>
+        <drawString x="20.6cm" y="0.3cm">Смена ____________________________</drawString>
+        <setFont name="Arial-Bold" size="20"/>
+        <drawCentredString x="14.5cm" y="1.6cm">АКТ</drawCentredString>
+        <setFont name="Arial-Bold" size="14"/>
+        <drawCentredString x="14.5cm" y="1cm">по выходу с производства готовой продукции</drawCentredString>
+    </illustration>
+    <blockTable style="table_taxes" colWidths="26cm">
+        <tr>
+        <td>
+        <blockTable style="table_invoice" colWidths=" 6.5cm, 1.2cm, 1.2cm, 2.2cm, 2.2cm, 2.2cm, 1.7cm, 1.7cm, 1.6cm, 1.8cm, 2.0cm, 1.6cm, 1.6cm">
+        <tr>
+            <td> <para style="tr_center">Наименование продукции</para> </td>
+            <td> <para style="tr_center">Номер партии</para> </td>
+            <td> <para style="tr_center">Номер ТТО</para> </td>
+            <td> <para style="tr_center">Количество кирпича на ТТО, шт.</para> </td>
+            <td> <para style="tr_center">Выход готовой продукции, шт.</para> </td>
+            <td> <para style="tr_center">Приёмка кирпича</para> </td>
+            <td> <para style="tr_center">Предел прочности, МПа:</para> </td>
+            <td> <para style="tr_center"></para> </td>
+            <td> <para style="tr_center">Марка кирпича</para> </td>
+            <td> <para style="tr_center">Водо- поглощение, %</para> </td>
+            <td> <para style="tr_center">Морозо- стойкость, цикл</para> </td>
+            <td> <para style="tr_center">Масса кирпича, кг</para> </td>
+            <td> <para style="tr_center">Класс средней плотности</para> </td>
+        </tr>
+        <tr>
+            <td><para>1</para></td>
+            <td><para>2</para></td>
+            <td><para>3</para></td>
+            <td><para>4</para></td>
+            <td><para>5</para></td>
+            <td><para style='tr_center'>Половняк %</para></td>
+            <td><para style='tr_center'>при сжатии</para></td>
+            <td><para style='tr_center'>при изгибе</para></td>
+            <td><para></para></td>
+            <td><para></para></td>
+            <td><para></para></td>
+            <td><para></para></td>
+            <td><para></para></td>
+        </tr>
+        <tr>
+            <td><para style='tr_default'>Кирпич керамический пластического формования с фаской условно-эффективный</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+            <td><para style='tr_center'>1</para></td>
+        </tr>
+        </blockTable>
+    </td>
+    </tr>
+    </blockTable>
+</story>
+</document>

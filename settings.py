@@ -143,6 +143,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.static",
+    "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     'bkz.context.bricks',
     'bkz.context.namespace',
@@ -151,7 +152,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'bkz.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'template/'),
     )
 
 INSTALLED_APPS = (
@@ -170,7 +170,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
-    'south',
+#    'south',
     'trml2pdf',
     'gunicorn',
 #    'piston',
@@ -179,13 +179,14 @@ INSTALLED_APPS = (
     'bkz.ipaccess',
 
     'bkz.old',
+    'bkz.core',
 
     'bkz.cpu',
+    'bkz.lab',
     'bkz.whs',
-
     'bkz.energy',
     'bkz.it',
-    'bkz.lab',
+
 
 #    graphite
     'tagging',

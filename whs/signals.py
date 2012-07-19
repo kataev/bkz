@@ -2,7 +2,11 @@
 from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
-from whs.models import Sold, Add, Sorted, Sorting, Brick
+from whs.models import *
+
+#@receiver(post_save,sender=Brick)
+#def brick_make(instance, *args, **kwargs):
+
 
 @receiver(pre_delete, sender=Sold)
 @receiver(pre_save, sender=Sold)
@@ -46,31 +50,6 @@ def add_pre_save(instance, *args, **kwargs):
     """
     if instance.pk:
         origin = Add.objects.get(pk=instance.pk)
-        brick = Brick.objects.get(pk=origin.brick.pk)
-        brick.total -= origin.amount
-        brick.save()
-
-
-@receiver(post_save, sender=Sorted)
-def sorted_post_save(instance, *args, **kwargs):
-    """
-    Сигнал для выдачи в цеха сортированного кирпича.
-    Создаёт изменения от отперации
-    """
-    brick = Brick.objects.get(pk=instance.brick.pk)
-    brick.total += instance.amount
-    brick.save()
-
-
-@receiver(pre_delete, sender=Sorted)
-@receiver(pre_save, sender=Sorted)
-def sorted_pre_save(instance, *args, **kwargs):
-    """
-    Сигнал для выдачи в цеха сортированного кирпича.
-    Убирает изменения от отперации
-    """
-    if instance.pk:
-        origin = Sorted.objects.get(pk=instance.pk)
         brick = Brick.objects.get(pk=origin.brick.pk)
         brick.total -= origin.amount
         brick.save()

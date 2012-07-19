@@ -1,0 +1,98 @@
+{% extends 'core/index.html' %}
+{% block head %}
+    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
+{% endblock %}
+{% block title %}ИТ{% endblock %}
+{% block container %}
+    <div class="well">
+    <h1>Учет заявок в службу поддержки и разходников</h1>
+    </div>
+    <div class="row">
+        <table class="span2 table table-striped">
+            <caption><h2>Остатки</h2></caption>
+            <thead>
+            <tr>
+                <th>Расходник</th>
+                <th>Кол-во</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for w in totals %}
+                <tr>
+                    <th>{{ w.name }}</th>
+                    <td>{{ w.amount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="span10 table table-bordered">
+            <caption><h2>Заявки</h2></caption>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Устройство</th>
+            <th>Описание</th>
+            <th>Статус</th>
+        </tr>
+        </thead>
+            <tbody>
+            {% for w in works %}
+                <tr>
+                    <th title='{{ w.people|default_if_none:'' }}'>{{ w.date }}</th>
+                    <th>{{ w.device }}</th>
+                    <td><a href="{{ w.get_absolute_url }}">{{ w.name }}</a></td>
+                    <td><span class="label label-{{ w.status }}">{{ w.get_status_display }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <div class="row">
+        <table class="span4 table">
+            <caption><h2>Устройства</h2></caption>
+        <thead>
+        <tr>
+            <th>Категория</th>
+            <th>Имя</th>
+            <th>Место</th>
+        </tr>
+        </thead>
+            <tbody>
+            {% for d in divices %}
+                <tr>
+                    <th>{{ d.type }}</th>
+                    <td><a href="{{ d.get_absolute_url }}">{{ d }}</a></td>
+                    <td>{{ d.place }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table span8">
+            <caption><h2>Закупки</h2></caption>
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Расходник</th>
+                <th>Кол-во</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for w in cons %}
+                <tr>
+                    <th>{{ w.date }}</th>
+                    <th><a href="{{ w.get_absolute_url }}">{{ w.cartridge }}</a></th>
+                    <td>{{ w.amount }}</td>
+                    <td>{{ w.price }}</td>
+                    <td>{{ w.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+
+    </div>
+{% endblock %}

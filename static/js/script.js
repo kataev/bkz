@@ -26,39 +26,39 @@ $(function () {
     }
 })
 
-$(function () {
-    $.datepicker.regional['ru'] = {
-        closeText:'Закрыть',
-        prevText:'&#x3c;Пред',
-        nextText:'След&#x3e;',
-        currentText:'Сегодня',
-        monthNames:['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-        monthNamesShort:['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
-            'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-        dayNames:['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
-        dayNamesShort:['вск', 'пнд', 'втр', 'срд', 'чтв', 'птн', 'сбт'],
-        dayNamesMin:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-        dateFormat:"yy-mm-dd",
-        firstDay:1,
-        isRTL:false,
-        onSelect:function (selectedDate) {
-            if (this.id == 'date') {
-                window.location = '?date=' + selectedDate
-                return
-            }
-            var option = this.id.split('__')[1] == "gte" ? "minDate" : "maxDate",
-                instance = $(this).data("datepicker"),
-                date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                        $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings);
-            dates.not(this).datepicker("option", option, date);
-        }
-    };
-    $.datepicker.setDefaults($.datepicker.regional['ru']);
-    var dates = $('[type=date],[name*="date"]').datepicker();
-})
+//$(function () {
+//    $.datepicker.regional['ru'] = {
+//        closeText:'Закрыть',
+//        prevText:'&#x3c;Пред',
+//        nextText:'След&#x3e;',
+//        currentText:'Сегодня',
+//        monthNames:['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+//            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+//        monthNamesShort:['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
+//            'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+//        dayNames:['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+//        dayNamesShort:['вск', 'пнд', 'втр', 'срд', 'чтв', 'птн', 'сбт'],
+//        dayNamesMin:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+//        dateFormat:"yy-mm-dd",
+//        firstDay:1,
+//        isRTL:false,
+//        onSelect:function (selectedDate) {
+//            if (this.id == 'date') {
+//                window.location = '?date=' + selectedDate
+//                return
+//            }
+//            var option = this.id.split('__')[1] == "gte" ? "minDate" : "maxDate",
+//                instance = $(this).data("datepicker"),
+//                date = $.datepicker.parseDate(
+//                    instance.settings.dateFormat ||
+//                        $.datepicker._defaults.dateFormat,
+//                    selectedDate, instance.settings);
+//            dates.not(this).datepicker("option", option, date);
+//        }
+//    };
+//    $.datepicker.setDefaults($.datepicker.regional['ru']);
+//    var dates = $('[type=date],[name*="date"]').datepicker();
+//})
 
 $(function () {
     $('.form-add').click(function (e) {

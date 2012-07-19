@@ -2,10 +2,18 @@
 from whs.models import Brick
 
 def bricks(request):
-    Bricks = Brick.objects.all()
-    return dict(Bricks=Bricks)
+    if getattr(request,'namespace',None) == 'whs':
+        Bricks = Brick.objects.all()
+        return dict(Bricks=Bricks)
+    return {}
 
 nav = dict(
+    main= (
+        ('whs:main', 'icon-align-justify icon-white', u'Склад'),
+        ('lab:main', 'icon-fullscreen icon-white', u'Лаборатория'),
+        ('energy:main', 'icon-energy icon-white', u'Энергоресурсы'),
+        ('it:main', 'icon-hdd icon-white', u'ИТ'),
+    ),
     whs=(
         ('whs:main', 'icon-align-justify icon-white', u'Склад'),
         ('divider',),
@@ -38,7 +46,7 @@ menu = dict(
     whs=(
         ('whs:Bill', 'icon-Bill', u'Накладную'),
         ('whs:Man', 'icon-Man', u'Производство'),
-        ('whs:Sort', 'icon-Sorting', u'Сортировку'),
+        ('whs:Sorting', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
         ('whs:Brick', 'icon-Brick', u'Кирпич'),
@@ -53,6 +61,8 @@ menu = dict(
         ('lab:WaterAbsorption','',u'Водопоглащение'),
         ('lab:Efflorescence','',u'Высолы'),
         ('lab:FrostResistance','',u'Морозостойкость'),
+        ('lab:SEONR','',u'Уд.эф.акт.ест.рад.'),
+        ('lab:HeatConduction','',u'Теплопроводность'),
         ('lab:Density','',u'Плотность'),
         ('lab:Batch','',u'Партия'),
     ),
@@ -63,5 +73,5 @@ menu = dict(
 )
 
 def namespace(request):
-    namespace = getattr(request,'namespace','')
-    return dict(nav=nav.get(namespace, []), menu=menu.get(namespace, []))
+    namespace = getattr(request,'namespace',None) or 'main'
+    return dict(nav=nav.get(namespace), menu=menu.get(namespace))

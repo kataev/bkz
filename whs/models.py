@@ -2,17 +2,15 @@
 import datetime
 import pytils
 
-from django.core.urlresolvers import reverse
 from django.db import models
 
 from constants import *
+from bkz.utils import UrlMixin
 from whs.pdf import PalletMixin, OperationsMixin, BillMixin
 
-
-class Brick(models.Model):
+class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """
-
     cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
@@ -37,9 +35,6 @@ class Brick(models.Model):
         if not self.pk: return u'Новый кирпич'
         else: return self.label
 
-    def get_absolute_url(self):
-        return reverse('brick:Brick-view',kwargs=dict(id=self.pk))
-
     def make_label(self):
         return make_label(self)
 
@@ -56,16 +51,13 @@ class Brick(models.Model):
         verbose_name_plural = u'Кирпичи'
         permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
 
-
 class OldBrick(Brick):
     old = models.IntegerField('Старое ID')
     prim = models.CharField(u"Имя", max_length=260, default='', help_text=u'Старое "имя"')
 
-
 type_c = ((0,u'Юр.Лицо'),(1,u'Физ.лицо'))
-sorting_c = ((0,u'Отсортированно'),(1,u'Списанно'))
 
-class Agent(models.Model):
+class Agent(models.Model,UrlMixin):
     name = models.CharField(u"Имя",max_length=400,
         help_text=u'Название без юридической формы, без ООО, без ИП, без кавычек.')
     fullname = models.CharField(u"Полное имя",max_length=400,help_text=u'Название для накладных')
@@ -99,10 +91,7 @@ class Agent(models.Model):
         else:
             return u'Новый контрагент'
 
-    def get_absolute_url(self):
-        return reverse('whs:Agent',kwargs=dict(id=self.pk))
-
-class Seller(Agent):
+class Seller(Agent,UrlMixin):
     director_name = models.CharField(u'Должность директора',max_length=200)
     director = models.CharField(u'Директор',max_length=200)
     buhgalter_name = models.CharField(u'Должность бухгалтер',max_length=200)
@@ -111,23 +100,15 @@ class Seller(Agent):
     dispetcher = models.CharField(u'Диспечер',max_length=200)
     nds = models.FloatField(u'НДС',default=0.18)
 
-    def get_absolute_url(self):
-        return reverse('whs:Seller',kwargs=dict(id=self.pk))
-
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
-
-
         ordering = ('name', )
-
 
 class OldAgent(Agent):
     old = models.IntegerField('Старое ID')
 
-
-
-class Bill(BillMixin, models.Model):
+class Bill(UrlMixin, BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
     Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
@@ -144,14 +125,10 @@ class Bill(BillMixin, models.Model):
     def bkz(self):
         return Seller.objects.get(pk=1206)
 
-
     class Meta():
         verbose_name = u"Накладная"
         verbose_name_plural = u"Накладные"
         ordering = ['-date', '-number']
-        permissions = (
-            ("view_bill", u"Может просматривать накладные"),
-            )
 
     solds = []
 
@@ -161,13 +138,8 @@ class Bill(BillMixin, models.Model):
         else:
             return u'Новая накладная'
 
-    def get_absolute_url(self):
-        return reverse('whs:Bill-year',kwargs=dict(year=self.date.year, number=self.number))
-
 class Pallet(PalletMixin, models.Model):
-    """
-    Поддоны при продаже
-    """
+    """ Поддоны при продаже """
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     amount = models.PositiveIntegerField(u"Кол-во поддоннов")
@@ -186,10 +158,8 @@ class Pallet(PalletMixin, models.Model):
         else:
             return u'Продажа поддонов'
 
-
 class Sold(OperationsMixin,models.Model):
-    """ Класс для операций отгруки, является аналогом строки в накладной.
-Сообщяет нам какой,сколько и по какой цене отгружает кирпич в накладной. """
+    batch = models.ForeignKey('lab.Batch', related_name='sold',verbose_name=u'Партия')
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
     batch_from = models.CommaSeparatedIntegerField(u'Номера партий до перевода', blank=True, null=True,max_length=600)
@@ -205,7 +175,6 @@ class Sold(OperationsMixin,models.Model):
     class Meta():
         verbose_name = u"Отгрузка"
         verbose_name_plural = u"Отгрузки"
-
         ordering = ['-doc__date','-doc__number']
 
     def __unicode__(self):
@@ -218,28 +187,17 @@ class Sold(OperationsMixin,models.Model):
             return u'Новая отгрузка'
 
 
-class Nomenclature(models.Model):
+class Nomenclature(models.Model, UrlMixin):
     title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.code,self.title)
 
-    def intcode(self):
-        return int(self.code)
-
-
-
-class Price(models.Model):
-    date = models.DateField(u'Дата')
-    brick = models.ForeignKey(Brick,verbose_name=u'Кирпич')
-    price = models.FloatField(u'Цена')
-
-
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
-class Man(models.Model):
+class Man(models.Model, UrlMixin):
     """Класс документа для учета прихода кирпича с производства"""
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
@@ -257,15 +215,10 @@ class Man(models.Model):
         else:
             return u'Новая партия с производства'
 
-    def get_absolute_url(self):
-        return reverse('man:Man-view',kwargs=dict(pk=self.pk))
-
-
-
 class Add(models.Model):
     """Класс операций для документа"""
-    brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич",
-        help_text=u'Выберите кирпич')
+    part = models.ForeignKey('lab.Part',related_name='add',verbose_name=u'Партия')
+    brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     doc = models.ForeignKey(Man, blank=False, related_name="add", null=False)
 
@@ -282,8 +235,26 @@ class Add(models.Model):
             return u'Новая партия'
 
 
-class Inventory(models.Model):
+class Sorting(models.Model,UrlMixin):
+    """ Класс документа для учета сортировки кипича из одного товара в другой
+    only brick - в цех
+    brick & brick_from - из цеха
+    only brick_from - бой
+    """
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
+    batch = models.ForeignKey('lab.Batch',related_name='sorting', verbose_name=u'Партия')
+    brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
+    brick_from = models.ForeignKey(Brick, related_name="sorting_from", verbose_name=u"Кирпич")
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+
+    class Meta():
+        verbose_name = u"Сортировка"
+
+    def __unicode__(self):
+        return u'Новая сортировка'
+
+class Inventory(models.Model, UrlMixin):
+    date = models.DateField(u'Дата', default=datetime.date.today())
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
     class Meta():
@@ -291,63 +262,14 @@ class Inventory(models.Model):
         verbose_name_plural = u"Инвентаризации"
         permissions = (("view_inventory", u"Может просматривать инвентаризацию"),)
 
-    def get_absolute_url(self):
-        return reverse('man:Inventory-view',kwargs=dict(pk=self.pk))
-
     def __unicode__(self):
         if self.pk:
             return u'от %s' % self.date
         else:
             return u'Новая инвентаризация'
 
-class Sorting(models.Model):
-    """ Класс документа для учета перебора кипича из одного товара в другой """
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич",
-        help_text=u'Выберите кирпич')
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-
-    class Meta():
-        verbose_name = u"Из цеха"
-        permissions = (("view_man", u"Может просматривать операции из цеха"),)
-
-    def get_absolute_url(self):
-        return reverse('man:Sort-view',kwargs=dict(pk=self.pk))
-
-    def __unicode__(self):
-        if self.pk:
-            date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-            return u'%s от %s' % (self.brick,date)
-        else:
-            return u'Новая сортировка'
-
-
-class Sorted(models.Model):
-    """ Кирпич после сортировки """
-    type = models.IntegerField(u'Тип',choices=sorting_c,help_text=u'Выберите кирпич после сортировки')
-    brick = models.ForeignKey(Brick, related_name="sorted",
-        verbose_name=u"Кирпич", help_text=u'Выберите кирпич')
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
-    doc = models.ForeignKey(Sorting, blank=False, related_name="sorted", null=False)
-    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-
-    class Meta():
-        verbose_name = u"Сортированый кирпич"
-        verbose_name_plural = u"Кирпич после сортировки"
-
-    def __unicode__(self):
-        if self.pk:
-            return u'%s, %d шт' % (self.brick, self.amount)
-        else:
-            return u'Новый сортированый кирпич'
-
-
-
-
 class Write_off(models.Model):
-    brick = models.ForeignKey(Brick, related_name="write_off", verbose_name=u"Кирпич",
-        help_text=u'Выберите кирпич')
+    brick = models.ForeignKey(Brick, related_name="write_off", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     doc = models.ForeignKey(Inventory, blank=False, related_name="write_off", null=False)
 
@@ -356,8 +278,5 @@ class Write_off(models.Model):
         verbose_name_plural = u"Списания"
 
     def __unicode__(self):
-        if self.pk:
-            return u'%s, %d шт' % (self.brick, self.amount)
-        else:
-            return u'Списание'
-
+        if self.pk: return u'%s, %d шт' % (self.brick, self.amount)
+        else: return u'Списание'

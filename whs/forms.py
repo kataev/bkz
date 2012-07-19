@@ -7,7 +7,7 @@ from django.http import QueryDict
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
-from whs.models import Seller, Agent, Pallet, Sold, Bill, Add, Inventory, Man, Sorted, Sorting, Write_off, Brick
+from whs.models import Seller, Agent, Pallet, Sold, Bill, Add, Inventory, Man, Sorting, Write_off, Brick, make_label, make_css
 from whs.validation import validate_transfer
 
 
@@ -219,14 +219,6 @@ class ManForm(forms.ModelForm):
         verbose_name_plural = Man._meta.verbose_name_plural
 
 
-class SortedForm(forms.ModelForm):
-    class Meta:
-        name = 'Sorted'
-        model = Sorted
-        verbose_name = Sorted._meta.verbose_name
-        verbose_name_plural = Sorted._meta.verbose_name_plural
-
-
 class SortingForm(forms.ModelForm):
     class Meta:
         name = 'Sorting'
@@ -246,7 +238,6 @@ class Write_offForm(forms.ModelForm):
 
 AddFactory = inlineformset_factory(Man, Add, extra=0, form=AddForm, )
 Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Write_offForm, )
-SortedFactory = inlineformset_factory(Sorting, Sorted, extra=0, form=SortedForm, )
 
 class BrickForm(forms.ModelForm):
     class Meta:
@@ -263,11 +254,9 @@ class BrickForm(forms.ModelForm):
         try:
             b = Brick.objects.exclude(pk=b.pk).get(label=make_label(b))
         except Brick.DoesNotExist:
-            pass
+            return self.cleaned_data
         else:
             raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
-        return self.cleaned_data
-
 
 class VerificationForm(forms.Form):
     csv = forms.FileField(label=u'Файл в формате csv')

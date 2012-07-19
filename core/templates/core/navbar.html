@@ -1,0 +1,51 @@
+{% load url from future %}
+<div class="navbar navbar-fixed-top" style='position: fixed;'>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="{% url 'index' %}">
+                <i class="icon-logo"></i>
+                <abbr style="border: none" title="Березниковский кирпичный завод'">BKZ</abbr>
+            </a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="divider-vertical"></li>
+                    {% for v in nav %}
+                        {% if v|length_is:1 %}
+                        <li class="divider-vertical"></li>
+                        {% else %}
+                        <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% block navbar-form %}
+                {% endblock %}
+                <ul class="nav pull-right">
+                    {% include 'core/auth.html' %}
+                {% if menu|length %}
+                    <li class="divider-vertical"></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus icon-white'></i>
+                            Создать <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% for v in menu %}
+                                {% if v|length_is:1 %}
+                                    <li class="{{ v.0 }}"></li>
+                                {% else %}
+                                    <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>

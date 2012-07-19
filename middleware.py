@@ -8,4 +8,4 @@ class Access(CommonMiddleware):
             namespace = resolve(request.path).namespace
             request.namespace = namespace
         except Resolver404:
-            request.namespace = ''
+            request.namespace = None
