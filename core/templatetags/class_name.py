@@ -22,6 +22,11 @@ def class_name(value):
     else:
         return 'unknow'
 
+
+@register.filter(name='form_name')
+def form_name(value):
+    return 'lab/%s_form.html' % class_name(value).lower()
+
 @register.filter(name='model_verbose_name')
 def model_verbose_name(obj):
     return obj._meta.verbose_name

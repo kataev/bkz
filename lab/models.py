@@ -191,6 +191,9 @@ class SEONR(models.Model,UrlMixin):
     delta = models.FloatField(u'Плюс-минус')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    def __unicode__(self):
+        return u'%.2f\u00b1%.2f от %s' % (self.value,self.delta,self.date)
+
     class Meta():
         verbose_name = u"Уд.эф.акт.ест.рад."
 
@@ -201,6 +204,9 @@ class HeatConduction(models.Model,UrlMixin):
     value = models.FloatField(u'Значение')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    def __unicode__(self):
+        return u'%.2f от %s' % (self.value,self.date)
+
     class Meta():
         verbose_name = u"Теплопроводность"
 
@@ -208,7 +214,7 @@ class HeatConduction(models.Model,UrlMixin):
 class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
-    tto = models.CharField(u'Номер ТТО',max_length=20)
+    tto = models.CharField(u'№ ТТО',max_length=20)
     amount = models.IntegerField(u'Кол-во')
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c)
     color = models.IntegerField(u'Цвет',choices=color_c)
@@ -236,46 +242,51 @@ class Batch(UrlMixin,models.Model):
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'pressure_tests')
-    tto = models.CharField(u'Номер ТТО',max_length=20)
+    tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
     concavity = models.FloatField(u'Вогнутость')
     perpendicularity = models.FloatField(u'Перпендикулярность')
     flatness = models.FloatField(u'Плоскностность')
     readings = models.FloatField(u'Показание прибора')
+    area = models.FloatField(u'Площадь')
     value = models.FloatField(u'Значение')
+    pair = models.ForeignKey('self')
 
     def __unicode__(self):
         if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
         else: return u'Новое испытание'
 
     class Meta():
-        verbose_name = u"На сжатие"
-        verbose_name_plural = u"На сжатие"
+        verbose_name = u"Испытание еа сжатие"
+        verbose_name_plural = u"Испытания на сжатие"
 
 class Flexion(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'flexion_tests')
-    tto = models.CharField(u'Номер ТТО',max_length=20)
+    tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
     concavity = models.FloatField(u'Вогнутость')
     perpendicularity = models.FloatField(u'Перпендикулярность')
     flatness = models.FloatField(u'Плоскностность')
+    readings = models.FloatField(u'Показание прибора')
+    area = models.FloatField(u'Площадь')
     value = models.FloatField(u'Значение')
 
     class Meta():
-        verbose_name = u"На изгиб"
-        verbose_name_plural = u"На изгиб"
+        verbose_name = u"Испытание на изгиб"
+        verbose_name_plural = u"Испытания на изгиб"
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = models.CommaSeparatedIntegerField(u'Номер телег',max_length=30)
+    tto = models.CommaSeparatedIntegerField(u'№ телег',max_length=30)
     amount = models.IntegerField(u'Кол-во')
-    test = models.IntegerField(u'Расход кирпича на испытание')
-    half = models.FloatField(u'Половняк')
-    defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c)
-    dnumber = models.FloatField(u'Браковочное число')
+    test = models.IntegerField(u'Расход кирпича на испытание',default=0)
+    brocken = models.IntegerField(u'Бой',default=0)
+    half = models.FloatField(u'Половняк',default=3)
+    defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c,default=u'')
+    dnumber = models.FloatField(u'Браковочное число',default=0)
     cause = models.TextField(u'Причина',max_length=600)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.forms.fields import MultiValueField
+from django.forms.widgets import MultiWidget
+
 
 from bkz.lab.models import *
 from bkz.whs.forms import NumberInput
-from django.forms.fields import MultiValueField
-from django.forms.widgets import MultiWidget
+from bkz.core.widgets import AppendedText,PrependedText,AppendPrependText
+
 
 
 class ClayForm(forms.ModelForm):
@@ -95,13 +98,8 @@ class BatchForm(forms.ModelForm):
             'date':DateHTML5Input(attrs={'autocomplete':'off','class':'input-small'}),
             'width':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
             'color':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
-            'seonr':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
+#            'seonr':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
         }
-
-class PartForm(forms.ModelForm):
-    class Meta:
-        model = Part
-        exclude = ('Batch',)
 
 class SplitSizeWidget(MultiWidget):
     def __init__(self, attrs=None):
@@ -118,31 +116,63 @@ class SplitSizeField(MultiValueField):
     widget = SplitSizeWidget
     hidden_widget = SplitSizeWidget
 
+class AppendedNumberInput(AppendedText,NumberInput):
+    pass
+
 class PressureForm(forms.ModelForm):
     size = SplitSizeField(label=u'Размеры',widget=SplitSizeWidget(attrs={'autocomplete':'off','class':'input-micro','min':0}))
+
+    def __init__(self,*args,**kwargs):
+        super(forms.ModelForm,self).__init__(*args, **kwargs)
+        self['perpendicularity'].label = u'Перпенд.'
+
     class Meta:
         model = Pressure
         widgets = {
-            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro'}),
             'row':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro'}),
             'concavity':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
             'perpendicularity':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
             'flatness':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
-            'readings':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
-            'value':NumberInput(attrs={'autocomplete':'off','class':'input-small',}),
+            'readings':NumberInput(attrs={'autocomplete':'off','class':'input input-small'}),
+            'value':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro','readonly':'readonly'}),
+            'area':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro','readonly':'readonly'}),
+            'pair':forms.HiddenInput(),
         }
 
 
 
 class FlexionForm(forms.ModelForm):
+    size = SplitSizeField(label=u'Размеры',widget=SplitSizeWidget(attrs={'autocomplete':'off','class':'input-micro','min':0}))
     class Meta:
         model = Flexion
         widgets = {
-            'inclusion': forms.Textarea(attrs={'rows': 2}),
-            'info': forms.Textarea(attrs={'rows': 2}),
+            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro'}),
+            'row':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro'}),
+            'concavity':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'perpendicularity':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'flatness':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'readings':NumberInput(attrs={'autocomplete':'off','class':'input input-small'}),
+            'value':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro','readonly':'readonly'}),
+            'area':forms.TextInput(attrs={'autocomplete':'off','class':'input-micro','readonly':'readonly'}),
+            }
+
+class PartForm(forms.ModelForm):
+    class Meta:
+        model = Part
+        widgets = {
+            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'row':forms.TextInput(attrs={'autocomplete':'off','class':'input-mini'}),
+            'amount':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'test':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'half':NumberInput(attrs={'autocomplete':'off','class':'input-micro'}),
+            'defect':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
+            'dnumber':NumberInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'cause':forms.Textarea(attrs={'autocomplete':'off','class':'input-small','rows':1,}),
+            'info':forms.Textarea(attrs={'autocomplete':'off','class':'input-small','rows':1,}),
             }
 
 
-PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=0)
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=1)
-FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=0)
+PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2)
+PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=2)
+FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=2)

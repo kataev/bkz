@@ -12,11 +12,9 @@ TEMPLATE_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
 DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
 
-ADMINS = (
-    ('Kataev Denis', 'bteamko@gmail.com'),
-    )
+DEVSERVER_MODULES = ()
 
-
+ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
 DATABASES = {
     'default': {
@@ -170,6 +168,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
+    'devserver',
     'south',
     'trml2pdf',
     'gunicorn',

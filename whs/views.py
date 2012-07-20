@@ -97,7 +97,6 @@ class BillCreateView(CreateView):
             initial['number'] = (initial.get('number') or 0) + 1
             print context['form'].instance
             context['form'].initial = initial
-        print context['form'].initial
         return context
 
 def bill_pk_redirect(request,pk):
