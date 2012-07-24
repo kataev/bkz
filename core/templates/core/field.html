@@ -3,7 +3,15 @@
             class='icon-{{ f.name }}'></i>
         {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
     </label>
+
     <div class='controls'>
         {{ f }}
+        {% if f.errors %}
+            <span class="help-inline">
+                        {% for q in f.errors %}
+                            {{ q }}
+                        {% endfor %}
+                    </span>
+        {% endif %}
     </div>
 </div>

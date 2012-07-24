@@ -5,8 +5,14 @@
 {% endblock %}
 {% block head %}
     <style>
-    th.size { width:128px !important; }
-    th.counter { vertical-align: middle; width: 10px !important; }
+        th.size {
+            width: 128px !important;
+        }
+
+        th.counter {
+            vertical-align: middle;
+            width: 10px !important;
+        }
     </style>
 {% endblock %}
 {% block container %}
@@ -18,35 +24,48 @@
             </div>
         {% endfor %}
     {% endfor %}
-
+<table style='display: none'>
+{% for factory in opers %}
+    <tr id="{{ factory.empty_form.prefix }}">
+        {% include factory.model|form_name with form=factory.empty_form %}
+    </tr>
+{% endfor %}
+</table>
     <form method="POST" action="" class='form-horizontal'>
+    <fieldset style='display: none'>
         {% csrf_token %}
         {% for factory in opers %}
             {{ factory.management_object }}
             {{ factory.management_form }}
         {% endfor %}
-
+    </fieldset>
         <fieldset class="Batch">
             <legend>
                 <h1>{{ form.instance }}</h1>
             </legend>
-            <div class="row">
-                <div class="span3 limit">
+                <div class="span4">
                     <h3>Идентификация партии</h3>
                     {% include 'core/field.html' with f=form.number %}
                     {% include 'core/field.html' with f=form.date %}
-                </div>
-                <div class="span3 limit">
-                    <h3>Вид продукции</h3>
                     {% include 'core/field.html' with f=form.width %}
                     {% include 'core/field.html' with f=form.color %}
                 </div>
-                <div class="span3">
+                <div class="span4">
                     <h3>Характеристики</h3>
                     {% include 'core/field.html' with f=form.seonr %}
                     {% include 'core/field.html' with f=form.heatconduction %}
                     {% include 'core/field.html' with f=form.frost_resistance %}
                 </div>
+            <div class="span12">
+                {% for factory in opers %}
+                    {% for e in factory.non_form_errors %}
+                        <div class="alert alert-error">
+                            <i class="icon-warning-sign"></i>
+                            <strong>{{ e|safe }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
             </div>
         </fieldset>
         {% for factory in opers %}
@@ -64,9 +83,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr style="display: none">
-                        {% include factory.model|form_name with form=factory.empty_form %}
-                    </tr>
                     {% for form in factory %}
                         <tr title='{{ form.instance.pk|default:"" }}' id="{{ form.prefix }}">
                             <th class="counter">{{ forloop.counter }}</th>
@@ -76,22 +92,26 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="{{ factory.form.visible_fields|length|add:'1' }}" style='text-align: center'><i
-                                class="icon-plus-sign"></i> Добавить {{ factory.model|model_verbose_name|lower }}
+                        <td class="create" colspan="{{ factory.form.visible_fields|length|add:'1' }}"
+                            style='text-align: center'>
+                            <a class="form-add" data-prefix='{{ factory.form|class_name }}'
+                               title='{{ factory.model|safe }}' href="#">
+                                <i class="icon-plus-sign"></i> Добавить {{ factory.model|model_verbose_name|lower }}
+                            </a>
                         </td>
                     </tr>
-{#                    <tr>#}
-{#                        <td colspan="{{ factory.form.visible_fields|length|add:'-1' }}" rowspan="4">#}
-{#                            <h2>#}
-{#                            Марка по сжатию: <span>125</span>#}
-{#                            </h2>#}
-{#                        </td>#}
-{#                        <th>Среднее:</th>#}
-{#                        <td></td>#}
-{#                    </tr>#}
-{#                    <tr><th>Минимум:</th><td></td></tr>#}
-{#                    <tr><th>Максимум:</th><td></td></tr>#}
-{#                    <tr><th>Среднее:</th><td></td></tr>#}
+                    {#                    <tr>#}
+                    {#                        <td colspan="{{ factory.form.visible_fields|length|add:'-1' }}" rowspan="4">#}
+                    {#                            <h2>#}
+                    {#                            Марка по сжатию: <span>125</span>#}
+                    {#                            </h2>#}
+                    {#                        </td>#}
+                    {#                        <th>Среднее:</th>#}
+                    {#                        <td></td>#}
+                    {#                    </tr>#}
+                    {#                    <tr><th>Минимум:</th><td></td></tr>#}
+                    {#                    <tr><th>Максимум:</th><td></td></tr>#}
+                    {#                    <tr><th>Среднее:</th><td></td></tr>#}
                     </tfoot>
                 </table>
             </fieldset>

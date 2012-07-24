@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import get_models,get_app
 from django.utils.importlib import import_module
 from django.views.generic import CreateView,UpdateView
+import pytils
 
 def make_urls(app_name):
     urls = []
@@ -30,3 +31,7 @@ class UrlMixin(object):
         url = '%s:%s' % (self._meta.app_label,self._meta.object_name)
         if self.pk:url+='-view'
         return reverse(url ,kwargs=dict(pk=self.pk))
+
+
+def ru_date(date):
+    return pytils.dt.ru_strftime(u'%d %B %Y',inflected=True,date=date)

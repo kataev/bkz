@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 import django.forms as forms
 from django.http import QueryDict
@@ -9,6 +10,7 @@ from django.core.exceptions import ValidationError
 
 from whs.models import Seller, Agent, Pallet, Sold, Bill, Add, Inventory, Man, Sorting, Write_off, Brick, make_label, make_css
 from whs.validation import validate_transfer
+
 
 
 class DateForm(forms.Form):
@@ -101,20 +103,19 @@ class SoldFactory(SoldFactory):
     def clean(self):
         if any(self.errors):
             return
-        bricks, amounts = {},{}
+        bricks, amounts = {},defaultdict(int)
         for form in self.forms:
             brick_from, brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['brick'],form.cleaned_data['amount']
             if brick_from:
-                bricks[brick_from.pk] = brick_from
-                amounts[brick_from.pk] = amounts.get(brick_from.pk,0) + amount
+                id = brick_from.pk
             else:
-                bricks[brick.pk] = brick
-                amounts[brick.pk] = amounts.get(brick.pk,0) + amount
+                id = brick.pk
+            amounts[id] += amount
             if form.instance.pk:
-                amounts[brick.pk] -= form.instance.amount
-        for pk in bricks:
-            b = bricks[pk]
-            if b.total < amounts[pk]:
+                amounts[id] -= form.instance.amount
+        for id in bricks:
+            b = bricks[id]
+            if b.total < amounts[id]:
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
 
 class YearMonthFilter(forms.Form):

@@ -1,9 +1,18 @@
 {% for f in form.visible_fields %}
     <td>
         {{ f }}
+
+        {% for q in f.errors %}
+            {{ q }}
+        {% endfor %}
         {% if forloop.last %}
             {% for f in form.hidden_fields %}
                 {{ f }}
+            {% endfor %}
+            {% for e in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <strong>{{ e }}</strong>
+                </div>
             {% endfor %}
         {% endif %}
     </td>

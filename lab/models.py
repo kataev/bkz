@@ -5,8 +5,10 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
+
 from bkz.whs.constants import defect_c,color_c,mark_c
-from bkz.utils import UrlMixin
+from bkz.utils import UrlMixin,ru_date
+
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')
@@ -141,7 +143,7 @@ class WaterAbsorption(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f от %s для %s %s' % (self.value,self.date,self.get_width_display(),self.get_color_display())
+        return u'%.2f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
 
     class Meta():
         verbose_name = u"Водопоглащение"
@@ -152,7 +154,7 @@ class Efflorescence(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'от %s для %s' % (self.date,self.get_color_display())
+        return u'от %s для %s' % (ru_date(self.date),self.get_color_display())
 
     class Meta():
         verbose_name = u"Высолы"
@@ -165,7 +167,7 @@ class FrostResistance(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f от %s для %s %s' % (self.value,self.date,self.get_width_display(),self.get_color_display())
+        return u'%.0f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
 
     class Meta():
         verbose_name = u"Морозостойкость"
@@ -178,7 +180,7 @@ class Density(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f от %s для %s %s' % (self.value,self.date,self.get_width_display(),self.get_color_display())
+        return u'%.2f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
 
     class Meta():
         verbose_name = u"Плотность"
@@ -192,7 +194,7 @@ class SEONR(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f\u00b1%.2f от %s' % (self.value,self.delta,self.date)
+        return u'%.2f\u00b1%.2f от %s' % (self.value,self.delta,ru_date(self.date))
 
     class Meta():
         verbose_name = u"Уд.эф.акт.ест.рад."
@@ -205,7 +207,7 @@ class HeatConduction(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f от %s' % (self.value,self.date)
+        return u'%.2f от %s' % (self.value,ru_date(self.date))
 
     class Meta():
         verbose_name = u"Теплопроводность"
@@ -214,8 +216,8 @@ class HeatConduction(models.Model,UrlMixin):
 class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
-    tto = models.CharField(u'№ ТТО',max_length=20)
-    amount = models.IntegerField(u'Кол-во')
+    tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
+    amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c)
     color = models.IntegerField(u'Цвет',choices=color_c)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
@@ -225,14 +227,14 @@ class Batch(UrlMixin,models.Model):
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.')
     heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность')
     inclusion = models.TextField(u'Включения',null=True,blank=True)
-    pressure = models.FloatField(u'При сжатии')
-    flexion = models.FloatField(u'При изгибе')
-    mark = models.PositiveIntegerField(u"Марка",choices=mark_c)
-    chamfer = models.IntegerField(u'Фаска')
+    pressure = models.FloatField(u'При сжатии',null=True,blank=True)
+    flexion = models.FloatField(u'При изгибе',null=True,blank=True)
+    mark = models.PositiveIntegerField(u"Марка",choices=mark_c,null=True,blank=True)
+    chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
-        if self.pk: return u'Партия № %d, %d г.' % (self.number,self.date.year)
+        if self.pk: return u'Партия № %d, %d' % (self.number,self.date.year)
         else: return u'Новая партия'
 
     class Meta():
@@ -245,13 +247,9 @@ class Pressure(models.Model):
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    concavity = models.FloatField(u'Вогнутость')
-    perpendicularity = models.FloatField(u'Перпендикулярность')
-    flatness = models.FloatField(u'Плоскностность')
-    readings = models.FloatField(u'Показание прибора')
     area = models.FloatField(u'Площадь')
-    value = models.FloatField(u'Значение')
-    pair = models.ForeignKey('self')
+    readings = models.FloatField(u'Показание прибора')
+    value = models.FloatField(u'Значение',default=0.0)
 
     def __unicode__(self):
         if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
@@ -267,16 +265,19 @@ class Flexion(models.Model):
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    concavity = models.FloatField(u'Вогнутость')
-    perpendicularity = models.FloatField(u'Перпендикулярность')
-    flatness = models.FloatField(u'Плоскностность')
-    readings = models.FloatField(u'Показание прибора')
     area = models.FloatField(u'Площадь')
-    value = models.FloatField(u'Значение')
+    readings = models.FloatField(u'Показание прибора')
+    value = models.FloatField(u'Значение',default=0.0)
 
     class Meta():
         verbose_name = u"Испытание на изгиб"
         verbose_name_plural = u"Испытания на изгиб"
+
+cause_c = (
+    ('0',u'Трешины'),
+    ('1',u'Извесняк.вкл <1см²'),
+    ('2',u'Другое, указать в примечании'),
+    )
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
@@ -287,7 +288,7 @@ class Part(models.Model):
     half = models.FloatField(u'Половняк',default=3)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c,default=u'')
     dnumber = models.FloatField(u'Браковочное число',default=0)
-    cause = models.TextField(u'Причина',max_length=600)
+    cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     class Meta():

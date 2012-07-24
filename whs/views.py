@@ -64,7 +64,8 @@ class BillUpdateView(UpdateView):
 
         for factory in opers:
             if factory.is_valid():
-                factory.save()
+                print 'valid factory',factory.prefix
+                a = factory.save()
         if all([f.is_valid() for f in opers]):
             return redirect(instance.get_absolute_url())
 
@@ -75,12 +76,14 @@ class BillUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
-
+        print self.request.POST,self.request.method
         instance = self.object
         context['opers'] = []
         if self.request.POST:
             for factory in self.opers:
+                print class_name(factory.form)
                 context['opers'].append(factory(self.request.POST,instance=instance,prefix=class_name(factory.form)))
+
         else:
             for factory in self.opers:
                 context['opers'].append(factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related(*self.select_related)))
