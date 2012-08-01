@@ -6,14 +6,16 @@
         {% else %}{{ form.instance|model_verbose_name }} {% endif %}
 {% endblock %}
 {% block container %}
-    <form method="POST" action="" class='form-horizontal'>
-        {% csrf_token %}
-        {% include 'core/fieldset.html' %}
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-            {% block bonus-button %} {% endblock %}
-        </div>
-    </form>
+    <div class="span6">
+        <form method="POST" action="" class='form-horizontal'>
+            {% csrf_token %}
+            {% include 'core/fieldset.html' %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить изменения
+                </button>
+                <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+                {% block bonus-button %} {% endblock %}
+            </div>
+        </form>
+    </div>
 {% endblock %}

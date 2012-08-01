@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
-from bkz.it.forms import WorkForm, BuyForm, DeviceForm, PlugForm
+from bkz.utils import make_urls
+
 
 urlpatterns = patterns('',
     url(r'^$', 'bkz.it.views.main', name='main'),
-    url(ur'^Устройство/(?P<id>\d+)?/?$', 'bkz.views.flat_form', {'Form':DeviceForm}, name='Device'),
-    url(ur'^Заявка/(?P<id>\d+)?/?$', 'bkz.views.flat_form', {'Form':WorkForm}, name='Work'),
-    url(ur'^Приход/(?P<id>\d+)?/?$', 'bkz.views.flat_form', {'Form':BuyForm}, name='Buy'),
-    url(ur'^Расход/(?P<id>\d+)?/?$', 'bkz.views.flat_form', {'Form':PlugForm}, name='Plug'),
 )
 
-
+urlpatterns += patterns('',*make_urls('it'))

@@ -34,41 +34,41 @@ nav = dict(
 )
 menu = dict(
     energy=(
-        ('energy:Energy', 'icon-Energy', u'Энергоресурсы'),
-        ('energy:Teplo', 'icon-Teplo', u'Тепло'),
+        ('energy:Energy-add', 'icon-Energy', u'Энергоресурсы'),
+        ('energy:Teplo-add', 'icon-Teplo', u'Тепло'),
         ),
     it=(
-        ('it:Device', 'icon-inbox', 'Устройство'),
-        ('it:Work', 'icon-headphones', 'Заявку'),
-        ('it:Buy', 'icon-tint', 'Расходник'),
-        ('it:Plug', 'icon-adjust', 'Замену'),
+        ('it:Device-add', 'icon-inbox', 'Устройство или картридж'),
+        ('it:Work-add', 'icon-headphones', 'Заявку'),
+        ('it:Buy-add', 'icon-tint', 'Накладную'),
+        ('it:Plug-add', 'icon-adjust', 'Замену'),
         ),
     whs=(
-        ('whs:Bill', 'icon-Bill', u'Накладную'),
-        ('whs:Man', 'icon-Man', u'Производство'),
-        ('whs:Sorting', 'icon-Sorting', u'Сортировку'),
-        ('whs:Inventory', 'icon-Inventory', u'Инвентаризацию'),
+        ('whs:Bill-add', 'icon-Bill', u'Накладную'),
+        ('whs:Man-add', 'icon-Man', u'Производство'),
+        ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
+        ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
-        ('whs:Brick', 'icon-Brick', u'Кирпич'),
-        ('whs:Agent', 'icon-Agent', u'Контрагента'),
+        ('whs:Brick-add', 'icon-Brick', u'Кирпич'),
+        ('whs:Agent-add', 'icon-Agent', u'Контрагента'),
         ),
     lab = (
-        ('lab:Clay','',u'Глина'),
-        ('lab:StoredClay','',u'Глина по позициям'),
-        ('lab:Sand','',u'Песок'),
-        ('lab:Bar','',u'Брус'),
-        ('lab:Raw','',u'Сырец'),
-        ('lab:WaterAbsorption','',u'Водопоглащение'),
-        ('lab:Efflorescence','',u'Высолы'),
-        ('lab:FrostResistance','',u'Морозостойкость'),
-        ('lab:SEONR','',u'Уд.эф.акт.ест.рад.'),
-        ('lab:HeatConduction','',u'Теплопроводность'),
-        ('lab:Density','',u'Плотность'),
-        ('lab:Batch','',u'Партия'),
+        ('lab:Clay-add','',u'Глина'),
+        ('lab:StoredClay-add','',u'Глина по позициям'),
+        ('lab:Sand-add','',u'Песок'),
+        ('lab:Bar-add','',u'Брус'),
+        ('lab:Raw-add','',u'Сырец'),
+        ('lab:WaterAbsorption-add','',u'Водопоглащение'),
+        ('lab:Efflorescence-add','',u'Высолы'),
+        ('lab:FrostResistance-add','',u'Морозостойкость'),
+        ('lab:SEONR-add','',u'Уд.эф.акт.ест.рад.'),
+        ('lab:HeatConduction-add','',u'Теплопроводность'),
+        ('lab:Density-add','',u'Плотность'),
+        ('lab:Batch-add','',u'Партия'),
     ),
     cpu = (
-        ('cpu:Device','',u'Устройство'),
-        ('cpu:Position','',u'Канал')
+        ('cpu:Device-add','',u'Устройство'),
+        ('cpu:Position-add','',u'Канал')
     )
 )
 

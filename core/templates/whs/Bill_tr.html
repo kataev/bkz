@@ -20,4 +20,13 @@
 {% for s in b.solds.all %}
     {% include 'whs/Sold_tr.html' %}
 {% endfor %}
+{% if b.solds.all|length > 1 %}
+    <tr class="info">
+        <td colspan="3" style='text-align: right'><em>Итого по накладной:</em></td>
+        <td><strong>{{ b.total }}</strong></td>
+        {% with total=b.in_total %}
+        <td><strong><span rel='tooltip' data-original-title='{{ total }} за шт' class='money'>{{ total }}</span></strong></td>
+        {% endwith %}
+    </tr>
+{% endif %}
 </tbody>

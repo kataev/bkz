@@ -2,23 +2,26 @@
 {% load class_name %}
 {% block title %}Остатки{% endblock %}
 {% block container %}
-    <form method="GET" action="">
-
-    <div style='float:right;'>
+        <div class="span4 offset4" style='text-align: center'>
+            <h1 class="">
+                {{ begin|date:'Y F' }}
+                {% if begin.year != end.year or begin.month != end.month %}
+                    &mdash; {{ end|date:'Y F' }}
+                {% endif %}
+            </h1>
+        </div>
+        <div class="span4">
+            <form method="GET" action="" class="form form-inline">
                 {% with year=form.date__year month=form.date__month %}
                     {% include 'whs/widgets/year-month-select.html' %}
                 {% endwith %}
-    <input type="submit">
+                <input type="submit" class="">
+            </form>
+        </div>
     </div>
-        <h1 style="">
-            {{ begin|date:'Y F' }}
-            {% if begin.year != end.year or begin.month != end.month %}
-                &mdash; {{ end|date:'Y F' }}
-            {% endif %}
-        </h1>
-    </form>
+    <div class="row">
     {% include 'whs/widgets/brick-select-buttons.html' %}
-    <table id='Bricks' class="table table-bordered table-condensed">
+    <table id='Bricks' class="span12 table table-bordered table-condensed">
         <colgroup>
             <col span=1>
             <col span="10" style='width:70px;'>

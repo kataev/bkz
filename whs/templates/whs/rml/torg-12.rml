@@ -72,12 +72,12 @@
         <images/>
         <story firstPageTemplate="first">
             {% with agent=doc.agent seller=doc.seller %}
-                {% include 'whs/bill.rml' %}
+                {% include 'whs/rml/bill.rml' %}
             {% endwith %}
         {% if doc.seller_id != 1206 %}
             <nextFrame/>
             {% with agent=doc.seller seller=doc.bkz %}
-                {% include 'whs/bill.rml' %}
+                {% include 'whs/rml/bill.rml' %}
             {% endwith %}
         {% endif %}
         </story>

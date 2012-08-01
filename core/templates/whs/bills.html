@@ -7,10 +7,10 @@
             <a class="close" data-dismiss="modal">×</a>
 
             <h3>Выбор кирпича</h3>
-            {% include 'whs/brick-select-buttons.html' %}
+            {% include 'whs/widgets/brick-select-buttons.html' %}
         </div>
         <div class="modal-body">
-            {% include 'whs/brick-select-table.html' %}
+            {% include 'whs/widgets/brick-select-table.html' %}
         </div>
         <div class="modal-footer">
             <a href="#" class="brick-select btn btn-primary" data-dismiss="modal">Сохранить</a>
@@ -25,7 +25,7 @@
                 <thead>
                 <tr>
                     <th width=15px>#</th>
-                    <th width="80px">Дата</th>
+                    <th width="85px">Дата</th>
                     <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in"></i></th>
                     <th style='width:60px;'>Кол-во</th>
                     <th style='width:100px;'>Цена</th>
@@ -54,21 +54,21 @@
                     <div style="margin-top: 8px;" class="control-group">
                         <div class="controls">
                             {% with year=form.year month=form.month %}
-                                {% include 'whs/year-month-select.html' %}
+                                {% include 'whs/widgets/year-month-select.html' %}
                             {% endwith %}
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                             {% with f=form.agent %}
-                                {% include 'whs/agent-select.html' %}
+                                {% include 'whs/widgets/agent-select.html' %}
                             {% endwith %}
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                             {% with f=form.brick %}
-                                {% include 'whs/brick-select-field.html' %}
+                                {% include 'whs/widgets/brick-select-field.html' %}
                             {% endwith %}
                         </div>
                     </div>

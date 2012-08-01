@@ -99,6 +99,11 @@ class BatchForm(forms.ModelForm):
             'width':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
             'color':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
 #            'seonr':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
+            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
+            'amount':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
+            'pressure':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
+            'flexion':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
+            'chamfer':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
         }
 
 class SplitSizeWidget(MultiWidget):

@@ -146,9 +146,9 @@ def BrickFlatForm(request, Form, id):
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
 
-def bill_print(request, year, number):
-    doc = get_object_or_404(Bill.objects.select_related(), number=number, date__year=year)
-    return pdf_render_to_response('whs/torg-12.rml', {'doc': doc})
+def bill_print(request, pk):
+    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
+    return pdf_render_to_response('whs/rml/torg-12.rml', {'doc': doc})
 
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from').select_related()

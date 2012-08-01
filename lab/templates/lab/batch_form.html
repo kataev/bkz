@@ -24,98 +24,97 @@
             </div>
         {% endfor %}
     {% endfor %}
-<table style='display: none'>
-{% for factory in opers %}
-    <tr id="{{ factory.empty_form.prefix }}">
-        {% include factory.model|form_name with form=factory.empty_form %}
-    </tr>
-{% endfor %}
-</table>
+    <table style='display: none'>
+        {% for factory in opers %}
+            <tr id="{{ factory.empty_form.prefix }}">
+                {% include factory.model|form_name with form=factory.empty_form %}
+            </tr>
+        {% endfor %}
+    </table>
+    <h1>{{ form.instance }}</h1>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#Batch" data-toggle='tab'>Характеристики</a></li>
+        <li><a href="#Tests" data-toggle='tab'>Испытания</a></li>
+    </ul>
     <form method="POST" action="" class='form-horizontal'>
-    <fieldset style='display: none'>
-        {% csrf_token %}
-        {% for factory in opers %}
-            {{ factory.management_object }}
-            {{ factory.management_form }}
-        {% endfor %}
-    </fieldset>
-        <fieldset class="Batch">
-            <legend>
-                <h1>{{ form.instance }}</h1>
-            </legend>
-                <div class="span4">
-                    <h3>Идентификация партии</h3>
-                    {% include 'core/field.html' with f=form.number %}
-                    {% include 'core/field.html' with f=form.date %}
-                    {% include 'core/field.html' with f=form.width %}
-                    {% include 'core/field.html' with f=form.color %}
-                </div>
-                <div class="span4">
-                    <h3>Характеристики</h3>
-                    {% include 'core/field.html' with f=form.seonr %}
-                    {% include 'core/field.html' with f=form.heatconduction %}
-                    {% include 'core/field.html' with f=form.frost_resistance %}
-                </div>
-            <div class="span12">
-                {% for factory in opers %}
-                    {% for e in factory.non_form_errors %}
-                        <div class="alert alert-error">
-                            <i class="icon-warning-sign"></i>
-                            <strong>{{ e|safe }}</strong>
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-
-            </div>
+        <fieldset style='display: none'>
+            {% csrf_token %}
+            {% for factory in opers %}
+                {{ factory.management_object }}
+                {{ factory.management_form }}
+            {% endfor %}
         </fieldset>
-        {% for factory in opers %}
-            <fieldset class="{{ factory.empty_form.instance|class_name }}">
-                <legend>
-                    <h3>{{ factory.empty_form.instance|model_verbose_name_plural }}</h3>
-                </legend>
-                <table class="table table-bordered table-condensed">
-                    <thead>
-                    <tr>
-                        <th class="counter">#</th>
-                        {% for f in factory.empty_form.visible_fields %}
-                            <th class="{{ f.field.widget.attrs.class|default:'span1' }} {{ f.name }}"> {{ f.label }} </th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for form in factory %}
-                        <tr title='{{ form.instance.pk|default:"" }}' id="{{ form.prefix }}">
-                            <th class="counter">{{ forloop.counter }}</th>
-                            {% include 'lab/tr_form.html' %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td class="create" colspan="{{ factory.form.visible_fields|length|add:'1' }}"
-                            style='text-align: center'>
-                            <a class="form-add" data-prefix='{{ factory.form|class_name }}'
-                               title='{{ factory.model|safe }}' href="#">
-                                <i class="icon-plus-sign"></i> Добавить {{ factory.model|model_verbose_name|lower }}
-                            </a>
-                        </td>
-                    </tr>
-                    {#                    <tr>#}
-                    {#                        <td colspan="{{ factory.form.visible_fields|length|add:'-1' }}" rowspan="4">#}
-                    {#                            <h2>#}
-                    {#                            Марка по сжатию: <span>125</span>#}
-                    {#                            </h2>#}
-                    {#                        </td>#}
-                    {#                        <th>Среднее:</th>#}
-                    {#                        <td></td>#}
-                    {#                    </tr>#}
-                    {#                    <tr><th>Минимум:</th><td></td></tr>#}
-                    {#                    <tr><th>Максимум:</th><td></td></tr>#}
-                    {#                    <tr><th>Среднее:</th><td></td></tr>#}
-                    </tfoot>
-                </table>
-            </fieldset>
-        {% endfor %}
+        <div class="tab-content">
+            <div class="tab-pane active" id='Batch'>
+                <fieldset class="Batch">
+                    <legend>
+                        <h1>{{ form.instance|safe }}</h1>
+                    </legend>
+                    <div class="row">
+                        <div class="span6">
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            {% include 'core/field.html' with f=form.date %}
+                            {% include 'core/field.html' with f=form.number %}
+                            {% include 'core/field.html' with f=form.width %}
+                            {% include 'core/field.html' with f=form.color %}
+                        </div>
+                        <div class="span4 offset1">
+                            {% include 'core/field.html' with f=form.heatconduction %}
+                            {% include 'core/field.html' with f=form.seonr %}
+                            {% include 'core/field.html' with f=form.frost_resistance %}
+                            {% include 'core/field.html' with f=form.water_absorption %}
+                            {% include 'core/field.html' with f=form.efflorescence %}
+                        </div>
+                    </div>
+                    <div class="row row-fluid limit">
+                        <div class="span2">
+                            {% include 'core/field.html' with f=form.tto %}
+                        </div>
+                        <div class="span2">
+                            {% include 'core/field.html' with f=form.amount %}
+                        </div>
+                        <div class="span2">
+                            {% include 'core/field.html' with f=form.pressure %}
+                        </div>
+                        <div class="span2">
+                            {% include 'core/field.html' with f=form.flexion %}
+                        </div>
+                        <div class="span2">
+                            {% include 'core/field.html' with f=form.chamfer %}
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="Part">
+                    <legend><h2>Выход готовой продукции</h2></legend>
+                    {% include 'lab/table_form.html' with factory=opers|last %}
+                </fieldset>
+            </div>
+            <div class="tab-pane" id='Tests'>
+                {% for factory in opers|slice:':-1' %}
+                    {% if factory.non_form_errors %}
+                        <fieldset>
+                            <legend>
+                                <h3>Ошибки</h3>
+                            </legend>
+                            {% for e in factory.non_form_errors %}
+                                <div class="alert alert-error">
+                                    <i class="icon-warning-sign"></i>
+                                    <strong>{{ e|safe }}</strong>
+                                </div>
+                                </fieldset>
+                            {% endfor %}
+                    {% endif %}
+                    <fieldset class="{{ factory.empty_form.instance|class_name }}">
+                        <legend>
+                            <h2>{{ factory.empty_form.instance|model_verbose_name_plural }}</h2>
+                        </legend>
+                        {% include 'lab/table_form.html' %}
+                    </fieldset>
+                {% endfor %}
+            </div>
+        </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary btn-large">
                 <i class="icon-ok icon-white"></i> Сохранить

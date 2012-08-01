@@ -15,7 +15,8 @@ urlpatterns = patterns('bkz.whs.views',
     url(ur'^Журнал$', 'man_main', name='man'),
     url(ur'^Сверка$', 'verification', name='verification'),
 
-    url(ur'^Накладная/(?P<year>\d{4})/(?P<number>\d+)/удалить$', BillDeleteView.as_view(), name='Bill-delete'),
+    url(ur'^Накладная/(?P<pk>\d+)/удалить$', BillDeleteView.as_view(), name='Bill-delete'),
+    url(ur'^Накладная/(?P<pk>\d+)/печать', 'bill_print', name='Bill-print'),
 )
 urlpatterns += patterns('', *make_urls('whs'))
 

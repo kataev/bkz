@@ -7,17 +7,16 @@
             {% if a.cartridge.type %}
             {% ifchanged a.cartridge.type %}
                 </optgroup>
-                <optgroup label="{{ a.cartridge.type }}">
+                <optgroup label="{{ a.cartridge.type|default_if_none:'Группы' }}">
             {% endifchanged %}
                 {% else %}
             {% ifchanged a.type %}
                 </optgroup>
-                <optgroup label="{{ a.type }}">
+                <optgroup label="{{ a.type|default_if_none:'Группы' }}">
             {% endifchanged %}
             {% endif %}
             <option value="{{ a.pk }}"
                     {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
-
         {% endfor %}
         </optgroup>
 </select>

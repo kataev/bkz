@@ -110,7 +110,7 @@
                 <i class="icon-ok icon-white"></i> Сохранить
             </button>
             {% if form.instance|class_name == 'Bill' and form.instance.pk %}
-                <a href="печать" target="_blank" class="btn btn-info">
+                <a href="{{ form.instance.get_absolute_url|add:'/печать' }}" target="_blank" class="btn btn-info">
                     <i class='icon-print icon-white'></i> Печать
                 </a>
             {% endif %}

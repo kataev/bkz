@@ -32,9 +32,9 @@ add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField"])
 class Clay(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())
     humidity = SlashSeparatedFloatField(u'Пробы влажности',max_length=300)
-    sand = models.FloatField(u'Песок %')
-    inclusion = models.FloatField(u'Включения %')
-    dust = models.FloatField(u'Пылеватость %')
+    sand = models.FloatField(u'Песок')
+    inclusion = models.FloatField(u'Включения')
+    dust = models.FloatField(u'Пылеватость')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     @property
@@ -46,17 +46,18 @@ class Clay(models.Model,UrlMixin):
             return 0
 
     def __unicode__(self):
-        return u'Глина от %s, %.2f' % (self.datetime.date(),self.value)
+        if self.pk: return u'Глина от %s, %.2f' % (self.datetime.date(),self.value)
+        else: return u'Новая проба глины из карьера'
 
     class Meta():
         verbose_name = u"Глина"
 
 clay_positions = (
-    (1,u'Позиция 1'),
-    (2,u'Позиция 2'),
-    (3,u'Позиция 3'),
-    (4,u'Позиция 4'),
-    (5,u'Позиция 5'),
+    (1,u'1 позиция'),
+    (2,u'2 позиция'),
+    (3,u'3 позиция'),
+    (4,u'4 позиция'),
+    (5,u'5 позиция'),
 )
 
 class StoredClay(models.Model,UrlMixin):
@@ -66,7 +67,8 @@ class StoredClay(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'Глина от %s, с позиции %.0f %.2f' % (self.datetime.date(),self.position,self.humidity)
+        if self.pk: return u'Глина от %s, с позиции %.0f %.2f' % (ru_date(self.datetime.date()),self.position,self.humidity)
+        else: return u'Новая проба глины со склада'
 
     class Meta():
         verbose_name = u"Глина по позициям"
@@ -78,6 +80,10 @@ class Sand(models.Model,UrlMixin):
     module_size = models.FloatField(u'Модуль крупности')
     dirt = models.TextField(u'Включения')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk: return u'Проба песка от %s' % ru_date(self.date)
+        else: return u'Новая проба песка'
 
     class Meta():
         verbose_name = u"Песок"
@@ -106,6 +112,10 @@ class Bar(models.Model,UrlMixin):
     humidity_transporter = models.FloatField(u'Влажность с конвейера')
     info = models.TextField(u'Примечание',max_length=3000)
 
+    def __unicode__(self):
+        if self.pk: return u'Брус от %s' % self.datetime
+        else: return u'Новый брус'
+
     class Meta():
         verbose_name = u"Брус"
 
@@ -117,6 +127,10 @@ class Raw(models.Model,UrlMixin):
     weight = models.FloatField(u'Масса')
     humidity = models.FloatField(u'Влажность')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk: return u'Сырец от %s' % self.datetime
+        else: return u'Новый сырец'
 
     class Meta():
         verbose_name = u"Сырец из накопителя"
@@ -132,6 +146,10 @@ class Half(models.Model):
     shrink = models.FloatField(u'Усадка')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    def __unicode__(self):
+        if self.pk: return u'Полуфабрикат с поз № %d от %s' % (self.humidity,ru_date(self.datetime))
+        else: return u'Новый полуфабрикат'
+
     class Meta():
         verbose_name = u"Полуфабрикат"
 
@@ -143,7 +161,8 @@ class WaterAbsorption(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
+        if self.pk: return u'%.2f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
+        else: return u'Новая проба водопоглащения'
 
     class Meta():
         verbose_name = u"Водопоглащение"
@@ -154,7 +173,8 @@ class Efflorescence(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'от %s для %s' % (ru_date(self.date),self.get_color_display())
+        if self.pk: return u'от %s для %s' % (ru_date(self.date),self.get_color_display())
+        else: return u'Новая проба высолов'
 
     class Meta():
         verbose_name = u"Высолы"
@@ -216,17 +236,19 @@ class HeatConduction(models.Model,UrlMixin):
 class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
-    tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
-    amount = models.IntegerField(u'Кол-во',null=True,blank=True)
+
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c)
     color = models.IntegerField(u'Цвет',choices=color_c)
+
+    heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность')
+    seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.')
+    frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
     efflorescence = models.ForeignKey(Efflorescence, verbose_name=u'Высолы', null=True, blank=True)
-    frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
 #    density = models.FloatField(u'Класс средней плотности')
-    seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.')
-    heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность')
-    inclusion = models.TextField(u'Включения',null=True,blank=True)
+
+    tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
+    amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
     flexion = models.FloatField(u'При изгибе',null=True,blank=True)
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c,null=True,blank=True)
@@ -290,6 +312,10 @@ class Part(models.Model):
     dnumber = models.FloatField(u'Браковочное число',default=0)
     cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk: return u'%s c телег %s, %s' % (self.get_defect_display(),self.tto,unicode(self.batch).lower())
+        else: return u'Новый выход с производства'
 
     class Meta():
         verbose_name = u"Часть партии"

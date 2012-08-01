@@ -1,5 +1,5 @@
 {% spaceless %}
-    <div class="input-append" href="{% if f.name == 'seller' %}{% url whs:Seller %}{% else %}{% url whs:Agent %}{% endif %}">
+    <div class="input-append" href="{% if f.name == 'seller' %}{% url whs:Seller-add %}{% else %}{% url whs:Agent-add %}{% endif %}">
         {% if 'agent' in f.name %}
             <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
                 {% if not f.field.required %}
@@ -22,13 +22,13 @@
         {% if f.value %}
             <a class="add-on btn" target="_blank" href="
             {% if f.name == 'seller' %}
-            {% url whs:Seller-view pk=f.value %}
-            {% else %}{% url whs:Agent-view pk=f.value %}
+            {% url whs:Seller-change pk=f.value %}
+            {% else %}{% url whs:Agent-change pk=f.value %}
             {% endif %}" title="Редактировать выбранного контрагента">
                 <i class="icon-info-sign"></i>
             </a>
         {% else %}
-            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url whs:Seller %}{% else %}{% url whs:Agent %}{% endif %}" title="Создать контрагента">
+            <a class="add-on btn" target="_blank" href="{% if f.name == 'seller' %}{% url whs:Seller-add %}{% else %}{% url whs:Agent-add %}{% endif %}" title="Создать контрагента">
                 <i class="icon-plus-sign"></i>
             </a>
         {% endif %}

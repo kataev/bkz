@@ -19,17 +19,18 @@ def make_urls(app_name):
 #            form = getattr(forms,name+'FlatForm',False)
         else: continue
         view = getattr(views,name+'CreateView',CreateView).as_view(form_class=form,model=model)
-        u = url(ur'%s/Создать' % model._meta.verbose_name.replace(' ','_'), view, name=name)
+        u = url(ur'%s/Создать$' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-add')
         urls.append(u)
         view = getattr(views,name+'UpdateView',UpdateView).as_view(form_class=form,model=model)
-        u = url(ur'%s/(?P<pk>\d+)' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-view')
+        u = url(ur'%s/(?P<pk>\d+)$' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-change')
         urls.append(u)
     return urls
 
 class UrlMixin(object):
     def get_absolute_url(self):
         url = '%s:%s' % (self._meta.app_label,self._meta.object_name)
-        if self.pk:url+='-view'
+        if self.pk:url+='-change'
+        else:url+='-add'
         return reverse(url ,kwargs=dict(pk=self.pk))
 
 
