@@ -5,28 +5,27 @@
         {{ b.date|date:'j M Y' }}
         {% ifchanged b.date %}</b>{% endifchanged %}
     </td>
-    <td colspan="3">
+    <td>
         <a href="{{ b.get_absolute_url }}">{{ b }}</a>
-        {% if b.seller.pk != 1206 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
-        <i class="icon-zoom-in"></i>
     <span class='label {% if not b.agent.form %}label-success{% endif %}'>
         <a title='Посмотреть агента' href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
         <a title='Показать накладные этого агента' href="?agent={{ b.agent.pk }}"><i
                 class="icon-eye-open icon-white"></i></a>
     </span>
+        {% if b.seller.pk != 1206 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
+        <i class="icon-zoom-in"></i>
     </td>
+    <td><strong>{{ b.total }}</strong></td>
+    {% with total=b.in_total %}
+        <td>
+            <strong>
+                <span class='money'>{{ total }}</span>
+            </strong>
+        </td>
+    {% endwith %}
 </tr>
 <tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
 {% for s in b.solds.all %}
     {% include 'whs/Sold_tr.html' %}
 {% endfor %}
-{% if b.solds.all|length > 1 %}
-    <tr class="info">
-        <td colspan="3" style='text-align: right'><em>Итого по накладной:</em></td>
-        <td><strong>{{ b.total }}</strong></td>
-        {% with total=b.in_total %}
-        <td><strong><span rel='tooltip' data-original-title='{{ total }} за шт' class='money'>{{ total }}</span></strong></td>
-        {% endwith %}
-    </tr>
-{% endif %}
 </tbody>

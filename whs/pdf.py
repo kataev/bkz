@@ -39,9 +39,11 @@ def pdf_render_to_response(template, context, filename=None, prompt=False):
 
 
 class BillMixin(object):
-
     def opers(self):
-        return list(self.solds.all()) + list(self.pallets.all())
+        opers = list(self.solds.all()) + list(self.pallets.all())
+        for o in opers:
+            o.doc = self
+        return opers
 
     @property
     def tara_return(self):
@@ -53,20 +55,15 @@ class BillMixin(object):
 
     @property
     def netto(self):
-        return sum([x.netto for x in self.solds.all()]) + sum([x.netto for x in self.pallets.all()])
+        return sum([x.netto for x in self.opers])
 
     @property
     def brutto(self):
-        return sum([x.brutto for x in self.solds.all()]) + sum([x.brutto for x in self.pallets.all()])
+        return sum([x.brutto for x in self.opers])
 
     @property
     def tara(self):
-        t = 0
-        for o in self.solds.all():
-            t+= getattr(o,'tara',0)
-        for o in self.pallets.all():
-            t+= getattr(o,'tara',0)
-        return t
+        return sum([getattr(x,'tara',0) for x in self.opers])
 
     @property
     def items(self):

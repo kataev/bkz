@@ -6,20 +6,25 @@ import logging
 
 from exceptions import ValueError
 from dateutil.relativedelta import relativedelta
+
 from django.db.models import Max,Sum
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView,CreateView,DeleteView,ListView
+from django.views.generic.edit import FormMixin,FormView
+
 
 from bkz.core.templatetags.class_name import class_name
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
 from bkz.whs.pdf import pdf_render_to_response
-from whs.forms import DateForm, VerificationForm,SoldFactory, PalletFactory, AddFactory
+from whs.forms import DateForm, VerificationForm,SoldFactory, PalletFactory, AddFactory, AgentForm, AgentCreateOrSelectForm
 from whs.models import *
 
 from whs.utils import operations, calc
+
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +69,6 @@ class BillUpdateView(UpdateView):
 
         for factory in opers:
             if factory.is_valid():
-                print 'valid factory',factory.prefix
                 a = factory.save()
         if all([f.is_valid() for f in opers]):
             return redirect(instance.get_absolute_url())
@@ -76,12 +80,10 @@ class BillUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
-        print self.request.POST,self.request.method
         instance = self.object
         context['opers'] = []
         if self.request.POST:
             for factory in self.opers:
-                print class_name(factory.form)
                 context['opers'].append(factory(self.request.POST,instance=instance,prefix=class_name(factory.form)))
 
         else:
@@ -89,18 +91,30 @@ class BillUpdateView(UpdateView):
                 context['opers'].append(factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related(*self.select_related)))
         return context
 
-class BillDeleteView(BillSlugMixin, DeleteView):
-    model = Bill
-
 class BillCreateView(CreateView):
-    def get_context_data(self, **kwargs):
-        context = super(CreateView, self).get_context_data(**kwargs)
+    def get_initial(self):
+        initial = self.initial.copy()
         if self.request.method == 'GET':
-            initial = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
-            initial['number'] = (initial.get('number') or 0) + 1
-            print context['form'].instance
-            context['form'].initial = initial
-        return context
+            number = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
+            initial['number'] = (number.get('number') or 0) + 1
+            agent = self.request.GET.get('agent',None)
+            if agent:
+                initial['agent']=agent
+        return initial
+
+def agent_select_or_create(request):
+    select = AgentCreateOrSelectForm(request.POST or None)
+    form=AgentForm(request.POST or None)
+    if request.method == 'POST':
+        bill_url = reverse_lazy('whs:Bill-add')
+        if select.is_valid() and select.cleaned_data.has_key('agent'):
+            agent = select.cleaned_data.get('agent')
+            return redirect(bill_url+'?agent=%d'%agent.pk)
+        elif form.is_valid():
+            agent = form.save()
+            return redirect(bill_url+'?agent=%d'%agent.pk)
+    return render(request,'whs/agent_select_or_create.html',dict(select=select,form=form))
+
 
 def bill_pk_redirect(request,pk):
     b = get_object_or_404(Bill,pk=pk)
@@ -151,21 +165,22 @@ def bill_print(request, pk):
     return pdf_render_to_response('whs/rml/torg-12.rml', {'doc': doc})
 
 class BillListView(ListView):
-    queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from').select_related()
-    template_name = 'whs/bills.html'
+    queryset = Bill.objects.prefetch_related('solds','pallets','solds__brick','solds__brick_from','seller','agent').select_related()
+    model = Bill
+    form_class = BillFilter
     paginate_by = 20
-    context_object_name = 'bills'
+    def get_context_data(self, **kwargs):
+        context = super(BillListView, self).get_context_data(**kwargs)
+        context['form'] = self.form_class(self.request.GET or None)
+        return context
 
     def get_paginate_by(self, queryset):
-        try:
-            p = int(self.request.GET.get('rpp',''))
-        except ValueError:
-            p = self.paginate_by
+        try: p = int(self.request.GET.get('rpp',''))
+        except ValueError: p = self.paginate_by
         return p
 
     def get_queryset(self):
         form = BillFilter(self.request.GET or None)
-        print form.is_valid()
         if form.is_valid():
             data = dict([(k,v) for k,v in form.cleaned_data.items() if v is not None])
             if data.has_key('page'):
@@ -181,18 +196,13 @@ class BillListView(ListView):
             return self.queryset.filter(**data)
         return self.queryset
 
-    def get_context_data(self, **kwargs):
-        context = super(BillListView, self).get_context_data(**kwargs)
-        context['form'] = BillFilter(self.request.GET or None)
-        return context
-
 def agents(request):
     alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"
     Agents = Agent.objects.all()
     letter = request.GET.get('b','')
     if letter:
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
-    return render(request, 'whs/agents.html', dict(Agents=Agents,alphabet=alphabet))
+    return render(request, 'whs/agent_list.html', dict(Agents=Agents,alphabet=alphabet))
 
 
 def stats(request):

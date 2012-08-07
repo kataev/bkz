@@ -32,7 +32,7 @@ DATABASES = {
         'PASSWORD': '89026441284', # Not used with sqlite3.
         'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
-    }
+    },
 }
 
 if 'test' in sys.argv or 'test_coverage' in sys.argv:
@@ -133,6 +133,7 @@ MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'bkz.ipaccess.middleware.IPAccessMiddleware',
     'bkz.middleware.Access',
+    'linaro_django_pagination.middleware.PaginationMiddleware',
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -186,7 +187,7 @@ INSTALLED_APPS = (
     'bkz.energy',
     'bkz.it',
 
-
+    'linaro_django_pagination',
 #    graphite
     'tagging',
 #    'graphite',

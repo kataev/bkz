@@ -23,7 +23,6 @@ class TransferMarkHandler(BaseHandler):
         else:
             date = datetime.date.today()
             queryset = queryset.filter(doc__date__year=date.year,doc__date__month=date.month)
-        print queryset
         queryset = queryset.values('brick__mark','brick_from__mark').annotate(Sum('amount'))
 
         return queryset

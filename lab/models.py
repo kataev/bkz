@@ -26,8 +26,26 @@ class SlashSeparatedFloatField(models.CharField):
         defaults.update(kwargs)
         return super(SlashSeparatedFloatField,self).formfield(**defaults)
 
+range_list_re = re.compile('^[\d,-]+$')
+
+validate_range_list = RegexValidator(range_list_re,u'Вводите числа разеделённые дробью','invalid')
+
+class RangeField(models.CharField):
+    default_validators = [validate_range_list]
+    description = u'Range field'
+
+    def formfield(self,**kwargs):
+        defaults = {
+            'error_messages': {
+                'invalid': u'Вводите числа разеделённые дробью'
+            }
+        }
+        defaults.update(kwargs)
+        return super(RangeField,self).formfield(**defaults)
+
+
 from south.modelsinspector import add_introspection_rules
-add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField"])
+add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])
 
 class Clay(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())
@@ -207,14 +225,14 @@ class Density(models.Model,UrlMixin):
 
 class SEONR(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
-    width = models.FloatField(u'Вид кирпича',choices=width_c)
     color = models.IntegerField(u'Цвет',choices=color_c)
     value = models.FloatField(u'Значение')
     delta = models.FloatField(u'Плюс-минус')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        return u'%.2f\u00b1%.2f от %s' % (self.value,self.delta,ru_date(self.date))
+        if self.pk: return u'%.2f\u00b1%.2f для %s' % (self.value,self.delta,self.get_color_display())
+        else: return u'Новое значение радионуклидов'
 
     class Meta():
         verbose_name = u"Уд.эф.акт.ест.рад."
@@ -254,6 +272,10 @@ class Batch(UrlMixin,models.Model):
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c,null=True,blank=True)
     chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
+
+
+    def get_mark_display(self):
+        return 0
 
     def __unicode__(self):
         if self.pk: return u'Партия № %d, %d' % (self.number,self.date.year)
@@ -303,14 +325,14 @@ cause_c = (
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = models.CommaSeparatedIntegerField(u'№ телег',max_length=30)
+    tto = RangeField(u'№ телег',max_length=30)
     amount = models.IntegerField(u'Кол-во')
     test = models.IntegerField(u'Расход кирпича на испытание',default=0)
     brocken = models.IntegerField(u'Бой',default=0)
     half = models.FloatField(u'Половняк',default=3)
-    defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c,default=u'')
+    defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c,default=u'',blank=True)
     dnumber = models.FloatField(u'Браковочное число',default=0)
-    cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c)
+    cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):

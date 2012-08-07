@@ -7,7 +7,7 @@ from piston.resource import Resource
 from bkz.views import DeleteView
 
 urlpatterns = patterns('',
-    url(r'^$', 'bkz.energy.views.main', name='main'),
+    url(r'^$', 'bkz.energy.views.main', name='index'),
     url(ur'^Энергоресурсы/(?P<date>\d{4}-\d{2}-\d{2})?/?$', 'bkz.energy.views.data', {'Form': EnergyForm},
         name='Energy'),
     url(ur'^Энергоресурсы/(?P<id>\d+)?/?$', 'bkz.energy.views.data', {'Form': EnergyForm}, name='Energy-pk'),

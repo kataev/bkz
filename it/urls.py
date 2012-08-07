@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import *
-from bkz.utils import make_urls
+from bkz.utils import app_urlpatterns
 
 
 urlpatterns = patterns('',
-    url(r'^$', 'bkz.it.views.main', name='main'),
+    url(r'^$', 'bkz.it.views.main', name='index'),
 )
 
-urlpatterns += patterns('',*make_urls('it'))
+urlpatterns += app_urlpatterns('it')

@@ -1,0 +1,91 @@
+.bc-red {
+  background-color: #f77a6c;
+  color: inherit;
+  fill: #f77a6c;
+}
+tr.bc-red:hover {
+  background-color: #f77a6c;
+}
+a.btn.bc-red {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 #f66d5d;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f77a6c), to(#f66d5d));
+}
+a.btn.bc-red:hover {
+  background-color: #f66d5d;
+}
+a.btn.bc-red.active {
+  background-color: #f66d5d;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f77a6c), to(#f66d5d));
+}
+.bc-red.facial {
+  background-color: #f66d5d;
+}
+.bc-yellow {
+  background-color: #f6d87c;
+  color: inherit;
+  fill: #f6d87c;
+}
+a.btn.bc-yellow {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 #f5d46e;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f6d87c), to(#f5d46e));
+}
+a.bc-yellow:hover {
+  background-color: #f5d46e;
+}
+a.bc-yellow.active {
+  background-color: #f5d46e;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f6d87c), to(#f5d46e));
+}
+.bc-yellow.facial {
+  background-color: #f5d46e;
+}
+.bc-brown {
+  background-color: #d48b6b;
+  color: inherit;
+  fill: #d48b6b;
+}
+a.bc-brown {
+  background: #d48b6b;
+}
+a.btn.bc-brown {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 #d1825f;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d48b6b), to(#d1825f));
+}
+a.btn.bc-brown:hover {
+  background-color: #d1825f;
+}
+a.btn.bc-brown.active {
+  background-color: #d1825f;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d48b6b), to(#d1825f));
+}
+.bc-brown.facial {
+  background-color: #cf7f5b;
+}
+.bc-light {
+  background-color: #38d187;
+  color: inherit;
+  fill: #38d187;
+}
+.bc-light.facial {
+  background-color: #2ec77d;
+}
+.bc-white {
+  background-color: #fffafa;
+  color: inherit;
+  fill: #fffafa;
+}
+.bc-white.facial {
+  background-color: #ffe6e6;
+}
+.v-facial {
+  font-style: italic;
+}
+table tr.v-facial td.name {
+  font-style: italic;
+}
+.w-single b {
+  font-weight: normal;
+}

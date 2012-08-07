@@ -39,7 +39,7 @@
                     {#  Документ  #}
                     <li class="nav-header">
                     <h4 {% if form.instance.pk %}title="id:{{ form.instance.pk }}"{% endif %}>
-                        <i class="icon-{{ form.instance|class_name }}"></i> Документ
+                        Документ
                     </h4>
                     </li>
                     <li class="active">
@@ -118,7 +118,7 @@
                 <i class="icon-ban-circle"></i> Сбросить
             </button>
             {% if form.instance.pk %}
-                <a href="удалить" style='float:right' class="btn btn-danger">
+                <a href="{{ form.instance.get_delete_url }}" style='float:right' class="btn btn-danger">
                 <i class='icon-remove icon-white'></i> Удалить
             {% endif %}
             </a>

@@ -1,7 +1,7 @@
-<div class="control-group {% if f.errors %}error{% endif %} {{ f.name }}">
+<div class="control-group {% if f.errors %}error{% endif %} {{ state }} {{ f.name }}">
     <label title="{{ f.help_text }}" class="control-label" for="{{ f.id_for_label }}"><i
             class='icon-{{ f.name }}'></i>
-        {{ f.label }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
+        {{ f.label|truncatechars:14 }}{% if f.field.required %}<b title='Обязательное поле'>*</b>{% endif %}
     </label>
 
     <div class='controls'>

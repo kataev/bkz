@@ -14,4 +14,5 @@ $(function () {
         $(total).val(parseInt($(total).val()) + 1)
     })
 
+
 })

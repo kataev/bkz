@@ -141,14 +141,18 @@ class BillFilter(forms.Form):
 
     def url_next(self):
         q = QueryDict('',mutable=True)
-        if self.is_valid():
+        if self.is_valid() and self.is_bound:
             q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',1)+1))
+        else:
+            q['page']=2
         return q.urlencode()
 
     def url_prev(self):
         q = QueryDict('',mutable=True)
-        if self.is_valid():
-            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',2)-1))
+        if self.is_valid() and self.is_bound:
+            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',1)+1))
+        else:
+            q['page']=2
         return q.urlencode()
 
     def __init__(self, *args, **kwargs):
@@ -182,6 +186,13 @@ class AgentForm(forms.ModelForm):
             'bank': forms.Textarea(attrs=dict(rows=2)),
             'address': forms.Textarea(attrs=dict(rows=2)),
             }
+
+agent_choices = (
+    (0,'Выбрать'),
+    (1,'Создать'),
+)
+class AgentCreateOrSelectForm(forms.Form):
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False,)
 
 class SellerForm(forms.ModelForm):
     class Meta:

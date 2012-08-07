@@ -35,6 +35,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#Batch" data-toggle='tab'>Характеристики</a></li>
         <li><a href="#Tests" data-toggle='tab'>Испытания</a></li>
+        <li><a href="#Info" data-toggle='tab'>Периодические испытания</a></li>
     </ul>
     <form method="POST" action="" class='form-horizontal'>
         <fieldset style='display: none'>
@@ -46,73 +47,83 @@
         </fieldset>
         <div class="tab-content">
             <div class="tab-pane active" id='Batch'>
-                <fieldset class="Batch">
-                    <legend>
-                        <h1>{{ form.instance|safe }}</h1>
-                    </legend>
+                <div class="span3">
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    {% include 'core/field.html' with f=form.date %}
+                    {% include 'core/field.html' with f=form.number %}
+                    {% include 'core/field.html' with f=form.width %}
+                    {% include 'core/field.html' with f=form.color %}
+                </div>
+                <div class="span9">
                     <div class="row">
-                        <div class="span6">
-                            {% for hidden in form.hidden_fields %}
-                                {{ hidden }}
-                            {% endfor %}
-                            {% include 'core/field.html' with f=form.date %}
-                            {% include 'core/field.html' with f=form.number %}
-                            {% include 'core/field.html' with f=form.width %}
-                            {% include 'core/field.html' with f=form.color %}
-                        </div>
-                        <div class="span4 offset1">
-                            {% include 'core/field.html' with f=form.heatconduction %}
-                            {% include 'core/field.html' with f=form.seonr %}
-                            {% include 'core/field.html' with f=form.frost_resistance %}
-                            {% include 'core/field.html' with f=form.water_absorption %}
-                            {% include 'core/field.html' with f=form.efflorescence %}
-                        </div>
-                    </div>
-                    <div class="row row-fluid limit">
-                        <div class="span2">
+                        <div class="span3">
                             {% include 'core/field.html' with f=form.tto %}
                         </div>
-                        <div class="span2">
+                        <div class="span3">
                             {% include 'core/field.html' with f=form.amount %}
                         </div>
-                        <div class="span2">
-                            {% include 'core/field.html' with f=form.pressure %}
+                    </div>
+                    <div class="row">
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.pressure state='warning' %}
                         </div>
-                        <div class="span2">
-                            {% include 'core/field.html' with f=form.flexion %}
-                        </div>
-                        <div class="span2">
-                            {% include 'core/field.html' with f=form.chamfer %}
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.flexion state='warning' %}
                         </div>
                     </div>
+                    {% include 'core/field.html' with f=form.chamfer %}
+                </div>
                 </fieldset>
-                <fieldset class="Part">
-                    <legend><h2>Выход готовой продукции</h2></legend>
-                    {% include 'lab/table_form.html' with factory=opers|last %}
-                </fieldset>
-            </div>
-            <div class="tab-pane" id='Tests'>
-                {% for factory in opers|slice:':-1' %}
-                    {% if factory.non_form_errors %}
-                        <fieldset>
-                            <legend>
-                                <h3>Ошибки</h3>
-                            </legend>
-                            {% for e in factory.non_form_errors %}
-                                <div class="alert alert-error">
-                                    <i class="icon-warning-sign"></i>
-                                    <strong>{{ e|safe }}</strong>
-                                </div>
-                                </fieldset>
-                            {% endfor %}
-                    {% endif %}
-                    <fieldset class="{{ factory.empty_form.instance|class_name }}">
-                        <legend>
-                            <h2>{{ factory.empty_form.instance|model_verbose_name_plural }}</h2>
-                        </legend>
-                        {% include 'lab/table_form.html' %}
+                {% if opers %}
+                    <fieldset class="Part">
+                        <div class="span12">
+                            <legend><h2>Выход готовой продукции</h2></legend>
+                            {% include 'lab/part_list.html' with factory=opers|last %}
+                        </div>
                     </fieldset>
-                {% endfor %}
+                    </div>
+                    <div class="tab-pane" id='Tests'>
+                    {% for factory in opers|slice:':-1' %}
+                        <div class="span12">
+                            {% if factory.non_form_errors %}
+                                <fieldset>
+                                    <legend>
+                                        <h3>Ошибки</h3>
+                                    </legend>
+                                    {% for e in factory.non_form_errors %}
+                                        <div class="alert alert-error">
+                                            <i class="icon-warning-sign"></i>
+                                            <strong>{{ e|safe }}</strong>
+                                        </div>
+                                        </fieldset>
+                                    {% endfor %}
+                            {% endif %}
+                            <fieldset class="{{ factory.empty_form.instance|class_name }}">
+                                <legend>
+                                    <h2>{{ factory.empty_form.instance|model_verbose_name_plural }}</h2>
+                                </legend>
+                                {% include 'lab/part_list.html' %}
+                            </fieldset>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                </div>
+
+            <div class="tab-pane" id='Info'>
+                <div class="span12">
+                    <fieldset class="Info">
+                        <legend>
+                            <h2>Периодические испытания</h2>
+                        </legend>
+                        {% include 'core/field.html' with f=form.heatconduction %}
+                        {% include 'core/field.html' with f=form.seonr %}
+                        {% include 'core/field.html' with f=form.frost_resistance %}
+                        {% include 'core/field.html' with f=form.water_absorption %}
+                        {% include 'core/field.html' with f=form.efflorescence %}
+                    </fieldset>
+                </div>
             </div>
         </div>
         <div class="form-actions">
@@ -128,7 +139,7 @@
                 <i class="icon-ban-circle"></i> Сбросить
             </button>
             {% if form.instance.pk %}
-                <a href="удалить" style='float:right' class="btn btn-danger">
+                <a href="{{ form.instance.get_delete_url }}" style='float:right' class="btn btn-danger">
                 <i class='icon-remove icon-white'></i> Удалить
             {% endif %}
             </a>

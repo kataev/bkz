@@ -99,16 +99,19 @@ class BatchForm(forms.ModelForm):
             'width':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
             'color':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
 #            'seonr':forms.Select(attrs={'autocomplete':'off','class':'input-small'}),
-            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
-            'amount':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
-            'pressure':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
-            'flexion':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
-            'chamfer':forms.TextInput(attrs={'autocomplete':'off','class':'input-small','readonly':'readonly'}),
+            'tto':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'amount':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'pressure':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'flexion':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
+            'chamfer':forms.TextInput(attrs={'autocomplete':'off','class':'input-small'}),
         }
+
 
 class SplitSizeWidget(MultiWidget):
     def __init__(self, attrs=None):
-        self.widgets = (NumberInput(attrs=attrs), NumberInput(attrs=attrs), NumberInput(attrs=attrs),)
+        get_widget = lambda name:NumberInput(attrs={'title':name})
+        names = (u'Длина',u'Ширина',u'Толщина')
+        self.widgets = map(get_widget,names)
         super(MultiWidget, self).__init__(attrs)
 
     def decompress(self, value):

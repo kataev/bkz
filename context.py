@@ -9,13 +9,13 @@ def bricks(request):
 
 nav = dict(
     main= (
-        ('whs:main', 'icon-align-justify icon-white', u'Склад'),
-        ('lab:main', 'icon-fullscreen icon-white', u'Лаборатория'),
-        ('energy:main', 'icon-energy icon-white', u'Энергоресурсы'),
-        ('it:main', 'icon-hdd icon-white', u'ИТ'),
+        ('whs:index', 'icon-align-justify icon-white', u'Склад'),
+        ('lab:index', 'icon-fullscreen icon-white', u'Лаборатория'),
+        ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
+        ('it:index', 'icon-hdd icon-white', u'ИТ'),
     ),
     whs=(
-        ('whs:main', 'icon-align-justify icon-white', u'Склад'),
+        ('whs:index', 'icon-align-justify icon-white', u'Склад'),
         ('divider',),
         ('whs:sale', 'icon-whs icon-white', u'Реализация'),
         ('whs:man', 'icon-man icon-white', u'Производство'),
@@ -23,14 +23,17 @@ nav = dict(
         ('whs:agents', 'icon-Agent icon-white', u'Контрагенты'),
         ),
     it=(
-        ('it:main', 'icon-hdd icon-white', u'ИТ'),
+        ('it:index', 'icon-hdd icon-white', u'ИТ'),
         ),
     energy=(
-        ('energy:main', 'icon-energy icon-white', u'Энергоресурсы'),
+        ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
         ('divider',),
         ('energy:Energy', 'icon-Energy icon-white', u'Энергия'),
         ('energy:Teplo', 'icon-Teplo icon-white', u'Тепло'),
-        )
+        ),
+    lab = (
+        ('lab:index','icon-white icon-fullscreen', u'Лаборатория'),
+    )
 )
 menu = dict(
     energy=(
@@ -44,7 +47,7 @@ menu = dict(
         ('it:Plug-add', 'icon-adjust', 'Замену'),
         ),
     whs=(
-        ('whs:Bill-add', 'icon-Bill', u'Накладную'),
+        ('whs:Bill-wizard', 'icon-Bill', u'Накладную'),
         ('whs:Man-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
@@ -58,20 +61,24 @@ menu = dict(
         ('lab:Sand-add','',u'Песок'),
         ('lab:Bar-add','',u'Брус'),
         ('lab:Raw-add','',u'Сырец'),
+        ('lab:Batch-add','',u'Партия'),
+        ('divider',),
         ('lab:WaterAbsorption-add','',u'Водопоглащение'),
         ('lab:Efflorescence-add','',u'Высолы'),
         ('lab:FrostResistance-add','',u'Морозостойкость'),
         ('lab:SEONR-add','',u'Уд.эф.акт.ест.рад.'),
         ('lab:HeatConduction-add','',u'Теплопроводность'),
         ('lab:Density-add','',u'Плотность'),
-        ('lab:Batch-add','',u'Партия'),
     ),
     cpu = (
         ('cpu:Device-add','',u'Устройство'),
         ('cpu:Position-add','',u'Канал')
     )
 )
-
+from django.core.urlresolvers import reverse
 def namespace(request):
     namespace = getattr(request,'namespace',None) or 'main'
-    return dict(nav=nav.get(namespace), menu=menu.get(namespace))
+    for u in nav.get(namespace):
+        if u:
+            reverse(u[0])
+    return dict(nav=nav.get(namespace), menu=menu.get(namespace),current_app=namespace)

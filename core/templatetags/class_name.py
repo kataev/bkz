@@ -9,6 +9,8 @@ register = template.Library()
 
 @register.filter(name='class_name')
 def class_name(value):
+    if not value:
+        return ''
     if isinstance(value,Model):
         return value._meta.object_name
     if isinstance(value,Form):
@@ -33,6 +35,7 @@ def model_verbose_name(obj):
 
 @register.filter(name='model_verbose_name_plural')
 def model_verbose_name_plural(obj):
+    if not obj: return ''
     if hasattr(obj._meta,'verbose_name_plural'):
         return obj._meta.verbose_name_plural
     elif hasattr(obj._meta,'verbose_name'):
@@ -42,6 +45,7 @@ def model_verbose_name_plural(obj):
 
 @register.filter(name='model_verbose_name_accusative')
 def model_verbose_name_plural(obj):
+    if not obj: return ''
     if hasattr(obj._meta,'verbose_name_accusative'):
         return obj._meta.verbose_name_accusative
     else:

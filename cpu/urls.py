@@ -3,7 +3,7 @@ from django.conf.urls import *
 from bkz.cpu.forms import DeviceForm,PositionForm
 
 urlpatterns = patterns('',
-    url(r'^$', 'bkz.cpu.views.main', name='main'),
+    url(r'^$', 'bkz.cpu.views.main', name='index'),
     url(ur'^Устройство/$', 'bkz.views.flat_form', {'Form':DeviceForm}, name='Device'),
     url(ur'^Устройство/(?P<id>\d*)/?$', 'bkz.views.flat_form', {'Form':DeviceForm}, name='Device-view'),
 

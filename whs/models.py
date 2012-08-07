@@ -58,7 +58,7 @@ class OldBrick(Brick):
 type_c = ((0,u'Юр.Лицо'),(1,u'Физ.лицо'))
 
 class Agent(models.Model,UrlMixin):
-    name = models.CharField(u"Имя",max_length=400,
+    name = models.CharField(u"Имя",max_length=400,db_index=True,
         help_text=u'Название без юридической формы, без ООО, без ИП, без кавычек.')
     fullname = models.CharField(u"Полное имя",max_length=400,help_text=u'Название для накладных')
     form = models.IntegerField(u'Тип',choices=type_c,help_text=u'Выберите тип контрагента',default=0)
@@ -113,7 +113,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
     Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),db_index=True)
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents')
     seller = models.ForeignKey(Seller, verbose_name=u'Продавец', help_text=u'', default=350,related_name='bill_sallers')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
