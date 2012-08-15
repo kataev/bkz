@@ -1,19 +1,7 @@
 {% extends 'core/index.html' %}
 {% load class_name %}
 {% block title %}
-    {{ object|striptags }}
-{% endblock %}
-{% block head %}
-    <style>
-        th.size {
-            width: 128px !important;
-        }
-
-        th.counter {
-            vertical-align: middle;
-            width: 10px !important;
-        }
-    </style>
+    {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
     {% for factory in opers %}
@@ -24,18 +12,18 @@
             </div>
         {% endfor %}
     {% endfor %}
-    <table style='display: none'>
+    <div style='display: none'>
         {% for factory in opers %}
-            <tr id="{{ factory.empty_form.prefix }}">
                 {% include factory.model|form_name with form=factory.empty_form %}
-            </tr>
         {% endfor %}
-    </table>
+    </div>
     <h1>{{ form.instance }}</h1>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#Batch" data-toggle='tab'>Характеристики</a></li>
+{#        {% if form.instance.pk %}#}
         <li><a href="#Tests" data-toggle='tab'>Испытания</a></li>
         <li><a href="#Info" data-toggle='tab'>Периодические испытания</a></li>
+{#    {% endif %}#}
     </ul>
     <form method="POST" action="" class='form-horizontal'>
         <fieldset style='display: none'>
@@ -73,16 +61,26 @@
                             {% include 'core/field.html' with f=form.flexion state='warning' %}
                         </div>
                     </div>
-                    {% include 'core/field.html' with f=form.chamfer %}
+                    <div class="row">
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.chamfer %}
+                        </div>
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.density %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.mark %}
+                        </div>
+                        <div class="span3">
+                            {% include 'core/field.html' with f=form.weight %}
+                        </div>
+                    </div>
                 </div>
                 </fieldset>
                 {% if opers %}
-                    <fieldset class="Part">
-                        <div class="span12">
-                            <legend><h2>Выход готовой продукции</h2></legend>
                             {% include 'lab/part_list.html' with factory=opers|last %}
-                        </div>
-                    </fieldset>
                     </div>
                     <div class="tab-pane" id='Tests'>
                     {% for factory in opers|slice:':-1' %}
@@ -104,27 +102,12 @@
                                 <legend>
                                     <h2>{{ factory.empty_form.instance|model_verbose_name_plural }}</h2>
                                 </legend>
-                                {% include 'lab/part_list.html' %}
+                                {% include 'lab/test_list.html' %}
                             </fieldset>
                         </div>
                     {% endfor %}
                 {% endif %}
                 </div>
-
-            <div class="tab-pane" id='Info'>
-                <div class="span12">
-                    <fieldset class="Info">
-                        <legend>
-                            <h2>Периодические испытания</h2>
-                        </legend>
-                        {% include 'core/field.html' with f=form.heatconduction %}
-                        {% include 'core/field.html' with f=form.seonr %}
-                        {% include 'core/field.html' with f=form.frost_resistance %}
-                        {% include 'core/field.html' with f=form.water_absorption %}
-                        {% include 'core/field.html' with f=form.efflorescence %}
-                    </fieldset>
-                </div>
-            </div>
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary btn-large">

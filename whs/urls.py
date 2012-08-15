@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import *
-
-from bkz.utils import app_urlpatterns
+from bkz.utils import app_urlpatterns,url,patterns
 from bkz.whs.views import BillListView
 from bkz.whs.handlers import TransferMarkHandler,TotalHandler, BrickHandler
 

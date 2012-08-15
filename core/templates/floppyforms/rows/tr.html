@@ -1,0 +1,21 @@
+{% extends 'floppyforms/rows/p.html' %}
+{% load floppyforms %}
+{% block field %}
+    <div class="control-group {% if errors %}error {% endif %}{% if classes %}{{ classes }}{% endif %}">
+        {% block label %}{% if field|id %}<label class="control-label" for="{{ field|id }}">{% endif %}{{ label }}
+        {% if label|last not in ".:!?" %}:{% endif %}{% if field|id %}</label>{% endif %}{% endblock %}
+        <div class="controls">
+            {% block widget %}{% formfield field %}{% endblock %}
+            {% block help_text %}{% if help_text %}
+                <div class="help-inline">
+                    <span class="badge badge-info" title='{{ help_text }}'>
+                        <i class="icon-info-sign"></i>
+                    </span>
+                </div>
+            {% endif %}{% endblock %}
+            {% block hidden_fields %}{% for field in hidden_fields %}{{ field.as_hidden }}{% endfor %}{% endblock %}
+            {% block errors %}{% include "floppyforms/errors.html" with errors=field.errors %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+

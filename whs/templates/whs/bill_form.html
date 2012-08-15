@@ -1,18 +1,85 @@
-{% extends 'core/doc.html' %}
-{% block brick-select %}
-    <div id="brick-select" class="modal hide fade">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            <h3>Выбор кирпича</h3>
-            {% include 'whs/widgets/brick-select-buttons.html' %}
-        </div>
-        <div class="modal-body">
-            {% include 'whs/widgets/brick-select-table.html' %}
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" data-dismiss="modal">Сохранить</button>
-            <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
-        </div>
-    </div>
+{% extends 'core/index.html' %}
+{% load floppyforms %}
+{% load class_name %}
+{% block title %}
 {% endblock %}
-
+{% block container %}
+<div class="container">
+<form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+    {% csrf_token %}
+<div class="row">
+    <div class="span5">
+        <fieldset>
+            <legend>
+                <h1>{% if form.instance.pk %}{{ form.Meta.model|model_verbose_name }} {% endif %}
+                    {{ form.instance }}
+                </h1>
+            </legend>
+        {% form form %}
+        </fieldset>
+    </div>
+    <div class="span7">
+    {% if solds and pallets %}
+{#            <legend>#}
+{#                <h2>#}
+{#                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить кирпич</a>#}
+{#                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить поддоны</a>#}
+{#                </h2>#}
+{#            </legend>#}
+            <div class="navbar navbar-static">
+                <div class="navbar-inner">
+                    <div class="container" style="width: auto">
+                        <a class="brand" href="#">Операции</a>
+                        <ul class="nav">
+                            <li class=""><a href="#">@fat</a></li>
+                        </ul>
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-plus-sign"></i> Добавить <b class="caret"></b>
+                                </a>
+                            <ul class="dropdown-menu">
+                                <li><a>Кирпич</a></li>
+                                <li><a>Поддоны</a></li>
+                            </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <div data-spy="scroll" style='overflow: auto;height: 450px;'>
+        {#  solds  #}
+        <fieldset style="display: none">
+            {% form solds.empty_form %}
+        </fieldset>
+        {{ solds.management_form }}
+        {% for form in solds %}
+            <fieldset>
+                <legend>
+                    <h3> {{ form.instance }} </h3>
+                </legend>
+                {% form form %}
+            </fieldset>
+        {% endfor %}
+        {#  pallets  #}
+        <fieldset style="display: none">
+            {% form pallets.empty_form %}
+        </fieldset>
+        {{ pallets.management_form }}
+        {% for form in pallets %}
+            <fieldset>
+                {% form form %}
+            </fieldset>
+        {% endfor %}
+        </div>
+    {% endif %}
+    </div>
+</div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-large">
+            <i class="icon-ok icon-white"></i> Сохранить
+        </button>
+    </div>
+</form>
+</div>
+{% endblock %}

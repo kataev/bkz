@@ -69,7 +69,7 @@
                             </li>
                         {% endfor %}
                         <li class="create">
-                            <a class='form-add' data-prefix='{{ factory.form|class_name }}' title='{{ factory.model|safe }}' href="#" data-toggle="tab">
+                            <a class='form-add' data-append='.tabbable .tab-content' data-prefix='{{ factory.form|class_name }}' title='{{ factory.model|safe }}' href="#" data-toggle="tab">
                                 <i class="icon-plus form-add icon-white"></i> Добавить {{ factory.form.Meta.verbose_name_accusative|lower }}
                             </a>
                         </li>

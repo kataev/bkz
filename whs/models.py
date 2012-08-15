@@ -114,7 +114,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),db_index=True)
-    agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents')
+    agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents',help_text=u'')
     seller = models.ForeignKey(Seller, verbose_name=u'Продавец', help_text=u'', default=350,related_name='bill_sallers')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
@@ -140,8 +140,6 @@ class Bill(UrlMixin, BillMixin, models.Model):
 
 class Pallet(PalletMixin, models.Model):
     """ Поддоны при продаже """
-    number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
-        help_text=u'Число уникальное в этом году')
     amount = models.PositiveIntegerField(u"Кол-во поддоннов")
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=200)
@@ -215,12 +213,11 @@ class Man(models.Model, UrlMixin):
         else:
             return u'Новая партия с производства'
 
-class Add(models.Model):
+class Add(models.Model,UrlMixin):
     """Класс операций для документа"""
     part = models.ForeignKey('lab.Part',related_name='add',verbose_name=u'Партия')
     brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич")
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    doc = models.ForeignKey(Man, blank=False, related_name="add", null=False)
+
 
     class Meta():
         verbose_name = u"Партия"
@@ -229,7 +226,6 @@ class Add(models.Model):
 
     def __unicode__(self):
         if self.pk:
-
             return u'%s, %d шт' % (self.brick, self.amount)
         else:
             return u'Новая партия'
@@ -237,14 +233,15 @@ class Add(models.Model):
 
 class Sorting(models.Model,UrlMixin):
     """ Класс документа для учета сортировки кипича из одного товара в другой
-    only brick - в цех
-    brick & brick_from - из цеха
-    only brick_from - бой
+    brick & part - в цех
+    brick & sourse & part - из цеха
+    brick & sourse - бой
     """
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    batch = models.ForeignKey('lab.Batch',related_name='sorting', verbose_name=u'Партия')
+    source = models.ForeignKey('self',null=True,blank=True)
+    part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия')
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
-    brick_from = models.ForeignKey(Brick, related_name="sorting_from", verbose_name=u"Кирпич")
+
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
 
     class Meta():

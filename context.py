@@ -48,7 +48,7 @@ menu = dict(
         ),
     whs=(
         ('whs:Bill-wizard', 'icon-Bill', u'Накладную'),
-        ('whs:Man-add', 'icon-Man', u'Производство'),
+        ('whs:Add-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
@@ -78,7 +78,4 @@ menu = dict(
 from django.core.urlresolvers import reverse
 def namespace(request):
     namespace = getattr(request,'namespace',None) or 'main'
-    for u in nav.get(namespace):
-        if u:
-            reverse(u[0])
     return dict(nav=nav.get(namespace), menu=menu.get(namespace),current_app=namespace)

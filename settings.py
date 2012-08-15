@@ -9,7 +9,7 @@ from cpu.graphite_settings import *
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-INTERNAL_IPS = ('127.0.0.1','192.168.1.2')
+INTERNAL_IPS = ('127.0.0.1','192.168.1.2',)
 DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
 
 DEVSERVER_MODULES = ()
@@ -33,6 +33,14 @@ DATABASES = {
         'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
     },
+    'localhost': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'bteam', # Or path to database file if using sqlite3.
+        'USER': 'root', # Not used with sqlite3.
+        'PASSWORD': 'root', # Not used with sqlite3.
+        'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '', # Set to empty string for default. Not used with sqlite3.
+    },
 }
 
 if 'test' in sys.argv or 'test_coverage' in sys.argv:
@@ -41,8 +49,6 @@ if 'test' in sys.argv or 'test_coverage' in sys.argv:
 SOUTH_TESTS_MIGRATE = False
 
 DATABASE_ROUTERS = ('routes.bkzRouter',)
-
-DECIMAL_SEPARATOR = ','
 
 APPEND_SLASH = True
 # Local time zone for this installation. Choices can be found here:
@@ -56,8 +62,6 @@ TIME_ZONE = 'Asia/Yekaterinburg'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'ru-Ru'
-#DATE_FORMAT='Y-m-d'
 LANGUAGE_CODE = 'ru'
 
 LANGUAGES = (
@@ -73,9 +77,8 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
-USE_L10N = False
-
-DECIMAL_SEPARATOR = ','
+#USE_L10N = True
+FORMAT_MODULE_PATH = 'core.formats'
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media/')
@@ -170,7 +173,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'pytils',
     'devserver',
-    'south',
+#    'south',
     'trml2pdf',
     'gunicorn',
 #    'piston',
@@ -187,6 +190,7 @@ INSTALLED_APPS = (
     'bkz.energy',
     'bkz.it',
 
+    'floppyforms',
     'linaro_django_pagination',
 #    graphite
     'tagging',

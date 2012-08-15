@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from whs.models import BuhAgent, Nomenclature, Seller, OldAgent, Agent, Sold, Bill, Add, Man, Sorted, Sorting, Brick
+from whs.models import Brick,OldBrick
 
 __author__ = 'bteam'
 from old.models import *
-from man.models import *
 
 def nomenclature():
     """

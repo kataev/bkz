@@ -13,18 +13,15 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView,CreateView,DeleteView,ListView
-from django.views.generic.edit import FormMixin,FormView
-
 
 from bkz.core.templatetags.class_name import class_name
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
 from bkz.whs.pdf import pdf_render_to_response
-from whs.forms import DateForm, VerificationForm,SoldFactory, PalletFactory, AddFactory, AgentForm, AgentCreateOrSelectForm
+from whs.forms import DateForm, VerificationForm,SoldFactory, PalletFactory, AgentForm, AgentCreateOrSelectForm
 from whs.models import *
 
 from whs.utils import operations, calc
-
 
 logger = logging.getLogger(__name__)
 
@@ -82,20 +79,23 @@ class BillUpdateView(UpdateView):
         context = super(UpdateView, self).get_context_data(**kwargs)
         instance = self.object
         context['opers'] = []
+
         if self.request.POST:
             for factory in self.opers:
-                context['opers'].append(factory(self.request.POST,instance=instance,prefix=class_name(factory.form)))
+                related_name = factory.fk.related_query_name()
+                context[related_name]=factory(self.request.POST,instance=instance,prefix=class_name(factory.form))
 
         else:
             for factory in self.opers:
-                context['opers'].append(factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related(*self.select_related)))
+                related_name = factory.fk.related_query_name()
+                context[related_name] = factory(instance=instance,prefix=class_name(factory.form),queryset=factory.model.objects.select_related(*self.select_related))
         return context
 
 class BillCreateView(CreateView):
     def get_initial(self):
         initial = self.initial.copy()
         if self.request.method == 'GET':
-            number = Bill.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
+            number = self.model.objects.filter(date__year=datetime.date.today().year).aggregate(number=Max('number'))
             initial['number'] = (number.get('number') or 0) + 1
             agent = self.request.GET.get('agent',None)
             if agent:
@@ -120,10 +120,6 @@ def bill_pk_redirect(request,pk):
     b = get_object_or_404(Bill,pk=pk)
     return redirect(b.get_absolute_url())
 
-
-class ManUpdateView(BillUpdateView):
-    opers = [AddFactory,]
-    select_related = ('brick',)
 
 class BrickCreateView(CreateView):
     model = Brick

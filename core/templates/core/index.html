@@ -17,7 +17,9 @@
     <script type="text/javascript" src="/static/js/libs/less-1.2.1.min.js"></script>
     <link href="/static/css/style.css" rel="stylesheet">
     <link href="/static/css/brick.css" rel="stylesheet">
-    <style type="text/css" media="print"> .navbar { display: none } </style>
+    <style type="text/css" media="print"> .navbar {
+        display: none
+    } </style>
     {% block head %}
     {% endblock %}
     <link rel="shortcut icon" href="/static/img/cargo/cargo3.png">
@@ -26,9 +28,9 @@
 <body>
 {% include 'core/navbar.html' %}
 {% block brick-select %} {% endblock %}
+{% block container %}
 <div class="container">
-    <div class="row">
-        {% block container %}
+        <div class="row">
             <div id="bkz-carousel" class="span5 carousel slide">
                 <div class="carousel-inner">
                     <div class="active item">
@@ -66,9 +68,9 @@
                     <li>Учет расходников ИТ</li>
                 </ul>
             </div>
-        {% endblock %}
-    </div>
+        </div>
 </div>
+{% endblock %}
 <div class="container-fluid" id="footer">
     <div class="span4">
         <blockquote>

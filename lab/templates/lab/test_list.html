@@ -1,0 +1,29 @@
+{% load class_name %}
+<table class="table table-bordered table-condensed" >
+    <thead>
+    <tr>
+        {% for f in factory.empty_form.visible_fields %}
+            <th class="{{ f.field.widget.attrs.class|default:'span1' }} {{ f.name }}"> {{ f.label }} </th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for form in factory %}
+        <tr id="{{ form.prefix }}" class="{% if form.errors %}error{% endif %}">
+            {% include 'lab/test_form.html' %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td class="create" colspan="{{ factory.form.visible_fields|length|add:'1' }}"
+            style='text-align: center'>
+            <a class="form-add" data-prefix='{{ factory.form|class_name }}' data-append="fieldset.{{ factory.empty_form.instance|class_name }} table tbody"
+               title='{{ factory.model|safe }}' href="#">
+                <i class="icon-plus-sign"></i>
+                Добавить {{ factory.model|model_verbose_name|lower }}
+            </a>
+        </td>
+    </tr>
+    </tfoot>
+</table>

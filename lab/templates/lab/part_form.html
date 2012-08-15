@@ -1,10 +1,3 @@
-{% for f in form.visible_fields %}
-    <td>
-        {{ f }}
-        {% if forloop.last %}
-            {% for f in form.hidden_fields %}
-                {{ f }}
-            {% endfor %}
-        {% endif %}
-    </td>
-{% endfor %}
+<fieldset class="span6" id="{{ form.prefix }}">
+{% include 'core/fieldset.html' %}
+</fieldset>

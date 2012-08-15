@@ -8,9 +8,5 @@ class AddAdmin(admin.ModelAdmin):
     pass
 
 
-class ManAdmin(admin.ModelAdmin):
-    pass
-
-
 class BrickAdmin(admin.ModelAdmin):
     list_display = ('__unicode__','name','css','total')

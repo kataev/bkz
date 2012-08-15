@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import *
-from bkz.utils import app_urlpatterns
+from bkz.utils import app_urlpatterns,patterns,url
 
 
 urlpatterns = patterns('',

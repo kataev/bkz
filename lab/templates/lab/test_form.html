@@ -1,11 +1,9 @@
 {% for f in form.visible_fields %}
     <td>
-        {{ f }}
-
-        {% for q in f.errors %}
-            {{ q }}
-        {% endfor %}
         {% if forloop.last %}
+            <span class="btn btn-small add-on btn-warning" title="Пометить запись для удаления">
+                {{ f }}
+            </span>
             {% for f in form.hidden_fields %}
                 {{ f }}
             {% endfor %}
@@ -14,6 +12,11 @@
                     <strong>{{ e }}</strong>
                 </div>
             {% endfor %}
+        {% else %}
+            {{ f }}
         {% endif %}
+        {% for q in f.errors %}
+            <a rel="tooltip" class="badge badge-important" title="{{ q }}"><i class="icon-warning-sign"></i></a>
+        {% endfor %}
     </td>
 {% endfor %}

@@ -3,19 +3,15 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
-import django.forms as forms
-from django.http import QueryDict
+import floppyforms as forms
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
-from whs.models import Seller, Agent, Pallet, Sold, Bill, Add, Inventory, Man, Sorting, Write_off, Brick, make_label, make_css
+from whs.models import *
 from whs.validation import validate_transfer
-
-
 
 class DateForm(forms.Form):
     date = forms.DateField()
-
     @property
     def value(self):
         if self.is_valid():
@@ -34,10 +30,6 @@ class DateForm(forms.Form):
         return self.value + relativedelta(months=1)
 
 
-class NumberInput(forms.TextInput):
-    input_type = 'number'
-
-
 class BillForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
@@ -48,27 +40,10 @@ class BillForm(forms.ModelForm):
         model = Bill
         verbose_name_accusative = u"Накладную"
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
-        widgets = {
-            'number': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-            'reason': forms.Textarea(attrs={'rows': 2}),
-            'info': forms.Textarea(attrs={'rows': 2}),
-            }
-
 
 class SoldForm(forms.ModelForm):
     class Meta:
-        verbose_name = Sold._meta.verbose_name
-        verbose_name_plural = Sold._meta.verbose_name_plural
-        verbose_name_accusative = u"Отгрузку"
         model = Sold
-        widgets = {'brick': forms.TextInput(attrs={'data-widget': 'brick-select'}),
-                   'tara': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-                   'batch': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-                   'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-                   'price': NumberInput(attrs={'autocomplete': 'off', 'min': 1, 'step': 0.01}),
-                   'delivery': NumberInput(attrs={'autocomplete': 'off', 'step': 0.01}),
-                   'info': forms.Textarea(attrs={'rows': 2}),
-        }
 
     def clean(self):
         data = self.cleaned_data
@@ -87,17 +62,9 @@ class SoldForm(forms.ModelForm):
 class PalletForm(forms.ModelForm):
     class Meta:
         model = Pallet
-        verbose_name = Pallet._meta.verbose_name
-        verbose_name_plural = Pallet._meta.verbose_name_plural
-        verbose_name_accusative = u"Поддон"
 
-        widgets = {
-            'amount': NumberInput(attrs={'autocomplete': 'off', 'min': 1}),
-            'info': forms.Textarea(attrs={'rows': 2}),
-            }
-
-SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=0)
-PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
+SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=2)
+PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=2)
 
 class SoldFactory(SoldFactory):
     def clean(self):
@@ -139,27 +106,6 @@ class BillFilter(forms.Form):
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
     rpp = forms.ChoiceField(choices=records_per_page,initial='',required=False)
 
-    def url_next(self):
-        q = QueryDict('',mutable=True)
-        if self.is_valid() and self.is_bound:
-            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',1)+1))
-        else:
-            q['page']=2
-        return q.urlencode()
-
-    def url_prev(self):
-        q = QueryDict('',mutable=True)
-        if self.is_valid() and self.is_bound:
-            q.update(self.cleaned_data.update(page=self.cleaned_data.get('page',1)+1))
-        else:
-            q['page']=2
-        return q.urlencode()
-
-    def __init__(self, *args, **kwargs):
-        """ Изменение пустой ичейки для подсказки. """
-        super(BillFilter, self).__init__(*args, **kwargs)
-        self.fields['agent'].empty_label = u'Выберите контрагента'
-
     class Meta:
         dates = Bill.objects.dates('date','month').reverse()
 
@@ -178,88 +124,42 @@ class BillAggregateFilter(BillFilter):
 
 class AgentForm(forms.ModelForm):
     class Meta:
-        message = 'Внимательно заполняйте значения имя и полное имя.'
         model=Agent
-        verbose_name_accusative =u'Контрагента'
-        widgets = {
-            'name': forms.Textarea(attrs=dict(rows=2)),
-            'bank': forms.Textarea(attrs=dict(rows=2)),
-            'address': forms.Textarea(attrs=dict(rows=2)),
-            }
 
 agent_choices = (
     (0,'Выбрать'),
     (1,'Создать'),
 )
+
 class AgentCreateOrSelectForm(forms.Form):
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False,)
 
 class SellerForm(forms.ModelForm):
     class Meta:
-        message = 'Внимательно заполняйте значения имя и полное имя.'
         model=Seller
-        verbose_name__accusative = u'Продавца'
-        widgets = {
-            'name': forms.Textarea(attrs=dict(rows=2)),
-            'bank': forms.Textarea(attrs=dict(rows=2)),
-            'address': forms.Textarea(attrs=dict(rows=2)),
-            }
-
 
 class AddForm(forms.ModelForm):
     class Meta:
-        name = 'Add'
         model = Add
-        fields = ('brick', 'amount')
-        verbose_name = Add._meta.verbose_name
-        verbose_name_plural = Add._meta.verbose_name_plural
-
 
 class InventoryForm(forms.ModelForm):
     class Meta:
-        name = 'Inventory'
         model = Inventory
-        verbose_name = Inventory._meta.verbose_name
-        verbose_name_plural = Inventory._meta.verbose_name_plural
-
-
-class ManForm(forms.ModelForm):
-    class Meta:
-        name = 'Man'
-        model = Man
-        verbose_name = Man._meta.verbose_name
-        verbose_name_plural = Man._meta.verbose_name_plural
-
 
 class SortingForm(forms.ModelForm):
     class Meta:
-        name = 'Sorting'
         model = Sorting
-#        fields = ('brick', 'amount', 'poddon', 'tara', 'info')
-        verbose_name = Sorting._meta.verbose_name
-        verbose_name_plural = Sorting._meta.verbose_name_plural
-
 
 class Write_offForm(forms.ModelForm):
     class Meta:
-        name = 'Write_off'
         model = Write_off
-        verbose_name = Write_off._meta.verbose_name
-        verbose_name_plural = Write_off._meta.verbose_name_plural
 
-
-AddFactory = inlineformset_factory(Man, Add, extra=0, form=AddForm, )
 Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Write_offForm, )
 
 class BrickForm(forms.ModelForm):
     class Meta:
         model=Brick
-        fields = ('name','nomenclature','cavitation','width','view','color','ctype','mark','defect','refuse','features',)
         exclude = ('total','css','label')
-        widgets = {
-            'name':         forms.TextInput(attrs={'class':'input-xxlarge'}),
-            'nomenclature': forms.Select(attrs={'class':'input-xxlarge'}),
-            }
 
     def clean(self):
         b = self.save(commit=False)

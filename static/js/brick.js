@@ -7,7 +7,6 @@
 $(function () {
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
     $('#brick-select-buttons').on('toggle','a', function (e) {
-        console.log(e,this)
         $('input',this).trigger('click')
         var data = $(e.delegateTarget).serializeArray()
         var filter = _(data).chain().pluck('value').reduce(function(m,n){ return m+'.'+n},' ').value()

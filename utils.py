@@ -20,14 +20,15 @@ def app_urlpatterns(app_name):
 #        elif hasattr(forms,name+'FlatForm'):
 #            form = getattr(forms,name+'FlatForm',False)
         else: continue
+        verbose_name = ''.join([x.capitalize() for x in model._meta.verbose_name.split(' ')])
         view = getattr(views,name+'CreateView',CreateView).as_view(form_class=form,model=model)
-        u = url(ur'%s/Создать$' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-add')
+        u = url(ur'%s/Создать$' % verbose_name, view, name=name+'-add')
         urls.append(u)
         view = getattr(views,name+'UpdateView',UpdateView).as_view(form_class=form,model=model)
-        u = url(ur'%s/(?P<pk>\d+)$' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-change')
+        u = url(ur'%s/(?P<pk>\d+)$' % verbose_name, view, name=name+'-change')
         urls.append(u)
         view = getattr(views,name+'DeleteView',DeleteView).as_view(model=model,success_url=reverse_lazy('%s:index'%app_name),template_name = 'core/delete.html')
-        u = url(ur'%s/(?P<pk>\d+)/Удалить$' % model._meta.verbose_name.replace(' ','_'), view, name=name+'-delete')
+        u = url(ur'%s/(?P<pk>\d+)/Удалить$' % verbose_name, view, name=name+'-delete')
         urls.append(u)
     return urls
 
@@ -35,9 +36,12 @@ class UrlMixin(object):
     @permalink
     def get_absolute_url(self):
         url = '%s:%s' % (self._meta.app_label,self._meta.object_name)
-        if self.pk:url+='-change'
-        else:url+='-add'
-        return (url, (), {'pk':self.pk})
+        if self.pk:
+            url+='-change'
+            return (url, (), {'pk':self.pk})
+        else:
+            url+='-add'
+            return (url,)
 
     @permalink
     def get_delete_url(self):
