@@ -2,84 +2,62 @@
 {% load floppyforms %}
 {% load class_name %}
 {% block title %}
+    {% if form.instance.pk %}
+        {{ form.instance|model_verbose_name|safe }}
+    {% endif %}
+    {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
-<div class="container">
-<form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
-    {% csrf_token %}
-<div class="row">
-    <div class="span5">
-        <fieldset>
-            <legend>
-                <h1>{% if form.instance.pk %}{{ form.Meta.model|model_verbose_name }} {% endif %}
-                    {{ form.instance }}
-                </h1>
-            </legend>
-        {% form form %}
-        </fieldset>
-    </div>
-    <div class="span7">
-    {% if solds and pallets %}
-{#            <legend>#}
-{#                <h2>#}
-{#                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить кирпич</a>#}
-{#                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить поддоны</a>#}
-{#                </h2>#}
-{#            </legend>#}
-            <div class="navbar navbar-static">
-                <div class="navbar-inner">
-                    <div class="container" style="width: auto">
-                        <a class="brand" href="#">Операции</a>
-                        <ul class="nav">
-                            <li class=""><a href="#">@fat</a></li>
-                        </ul>
-                        <ul class="nav pull-right">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-plus-sign"></i> Добавить <b class="caret"></b>
-                                </a>
-                            <ul class="dropdown-menu">
-                                <li><a>Кирпич</a></li>
-                                <li><a>Поддоны</a></li>
-                            </ul>
-                            </li>
-                        </ul>
+    <div class="container">
+        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="span5">
+                    <fieldset>
+                        <legend>
+                            <h1>{% if form.instance.pk %}{{ form.Meta.model|model_verbose_name }} {% endif %}
+                                {{ form.instance }}
+                            </h1>
+                        </legend>
+                        {% form form %}
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="icon-ok icon-white"></i> Сохранить
+                        </button>
                     </div>
                 </div>
+                <div class="span7">
+                    {% if solds and pallets %}
+                        <fieldset>
+                            <legend>
+                                <h2>
+                                    Операции
+                                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить
+                                        отгрузку</a>
+                                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить
+                                        поддоны</a>
+                                </h2>
+                            </legend>
+                        </fieldset>
+                        <div class="accordion">
+                            {#  solds  #}
+                            {% include 'whs/bill_opers.html' with form=solds.empty_form hide=1 %}
+                            {% for form in solds %}
+                                {% include 'whs/bill_opers.html' %}
+                            {% endfor %}
+                            {#  pallets  #}
+                            {% include 'whs/bill_opers.html' with form=pallets.empty_form hide=1 %}
+                            {% for form in pallets %}
+                                {% include 'whs/bill_opers.html' %}
+                            {% endfor %}
+                        </div>
+                        {{ solds.management_form }}
+                        {{ pallets.management_form }}
+                    {% endif %}
+                </div>
             </div>
-        <div data-spy="scroll" style='overflow: auto;height: 450px;'>
-        {#  solds  #}
-        <fieldset style="display: none">
-            {% form solds.empty_form %}
-        </fieldset>
-        {{ solds.management_form }}
-        {% for form in solds %}
-            <fieldset>
-                <legend>
-                    <h3> {{ form.instance }} </h3>
-                </legend>
-                {% form form %}
-            </fieldset>
-        {% endfor %}
-        {#  pallets  #}
-        <fieldset style="display: none">
-            {% form pallets.empty_form %}
-        </fieldset>
-        {{ pallets.management_form }}
-        {% for form in pallets %}
-            <fieldset>
-                {% form form %}
-            </fieldset>
-        {% endfor %}
-        </div>
-    {% endif %}
+
+        </form>
     </div>
-</div>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary btn-large">
-            <i class="icon-ok icon-white"></i> Сохранить
-        </button>
-    </div>
-</form>
-</div>
 {% endblock %}

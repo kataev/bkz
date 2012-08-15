@@ -71,7 +71,7 @@
         </div>
 </div>
 {% endblock %}
-<div class="container-fluid" id="footer">
+<div class="container" id="footer">
     <div class="span4">
         <blockquote>
             <ul class="unstyled">
@@ -125,11 +125,12 @@
 <script src="/static/js/bootstrap/bootstrap-collapse.js"></script>
 <script src="/static/js/bootstrap/bootstrap-carousel.js"></script>
 {#<script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>#}
-{% block script %}
+{#{% block script %}#}
     <script type="text/javascript">
         $('.carousel').carousel()
+        $('.collapse').collapse({toggle:false})
     </script>
-    <script src="/static/js/lab.js"></script>
-{% endblock %}
+{#    <script src="/static/js/lab.js"></script>#}
+{#{% endblock %}#}
 </body>
 </html>

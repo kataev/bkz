@@ -8,9 +8,7 @@
             {% block widget %}{% formfield field %}{% endblock %}
             {% block help_text %}{% if help_text %}
                 <div class="help-inline">
-                    <span class="badge badge-info" title='{{ help_text }}'>
-                        <i class="icon-info-sign"></i>
-                    </span>
+                        <i class="icon-info-sign" title='{{ help_text }}'></i>
                 </div>
             {% endif %}{% endblock %}
             {% block hidden_fields %}{% for field in hidden_fields %}{{ field.as_hidden }}{% endfor %}{% endblock %}

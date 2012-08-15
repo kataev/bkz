@@ -64,7 +64,7 @@ class PalletForm(forms.ModelForm):
         model = Pallet
 
 SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=2)
-PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=2)
+PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
     def clean(self):
