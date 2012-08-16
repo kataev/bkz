@@ -1,0 +1,10 @@
+<div class="input-append brickselect">
+        <span class="uneditable-input input-large"><span>Выберете кирпич</span>
+            {% if not required %}
+                <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
+            {% endif %}
+        </span>
+    <a class="btn btn-info add-on" data-toggle="modal" data-backdrop='false'
+       title='Шелкните для выбора кирпича' href="#brick-select"> <i class="icon-search icon-white"></i></a>
+    {% include 'floppyforms/input.html' %}
+</div>

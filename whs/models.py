@@ -157,12 +157,10 @@ class Pallet(PalletMixin, models.Model):
             return u'Продажа поддонов'
 
 class Sold(OperationsMixin,models.Model):
-    batch = models.ForeignKey('lab.Batch', related_name='sold',verbose_name=u'Партия')
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
-    batch_from = models.CommaSeparatedIntegerField(u'Номера партий до перевода', blank=True, null=True,max_length=600)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
-    batch = models.IntegerField(u'Номер партии',null=True, blank=True)
+    batch = models.IntegerField(u'№ партии',null=True, blank=True)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')

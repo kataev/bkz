@@ -10,7 +10,11 @@ div.controls ul {list-style: none}
 
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
-
+@media (min-width:767px) {
+    fieldset.Bill .control-label {width: 100px}
+    fieldset.Bill .controls {margin-left: 110px}
+    fieldset.Bill .form-actions {padding-left: 110px}
+}
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}
 form fieldset.Batch div.limit .controls {margin-left: 110px}
@@ -18,6 +22,13 @@ form fieldset.Batch div.limit .controls {margin-left: 110px}
 .input-mini {width: 60px}
 
 .add-on input[type='checkbox'] { vertical-align:baseline}
+#brickselect tr {cursor: pointer;}
+#brickselect tr:hover td.name {text-decoration: underline;}
+.moneyselect input {width:174px}
+.moneyselect span {width:36px}
+.taraselect input {width:174px}
+.taraselect span input {width:26px}
+
 #Bricks a, #Jurnal a, #Verification a {color:#333}
 #Energy thead tr th {vertical-align: top !important;}
 #Energy tbody a {display: none}

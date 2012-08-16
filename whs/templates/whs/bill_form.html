@@ -13,22 +13,28 @@
             {% csrf_token %}
             <div class="row">
                 <div class="span5">
-                    <fieldset>
+                    <fieldset class="Bill">
                         <legend>
                             <h1>{% if form.instance.pk %}{{ form.Meta.model|model_verbose_name }} {% endif %}
-                                {{ form.instance }}
+                                <small>{{ form.instance }}</small>
                             </h1>
                         </legend>
-                        {% form form %}
-{#                    {{ form }}#}
+                        {{ form.as_table }}
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <i class="icon-ok icon-white"></i> Сохранить
+                            </button>
+                            {% if form.instance.pk %}
+                            <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+                                <i class="icon-print icon-white"></i>
+                                Печать
+                            </a>
+                            {% endif %}
+                        </div>
                     </fieldset>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-large">
-                            <i class="icon-ok icon-white"></i> Сохранить
-                        </button>
-                    </div>
+
                 </div>
-                <div class="span7">
+                <div class="span7" id="brickselect-fade">
                     {% if solds and pallets %}
                         <fieldset>
                             <legend>
@@ -41,7 +47,7 @@
                                 </h2>
                             </legend>
                         </fieldset>
-                        <div class="accordion">
+                        <div class="accordion" id="opers">
                             {#  solds  #}
                             {% include 'whs/bill_opers.html' with form=solds.empty_form hide=1  only %}
                             {% for form in solds %}
@@ -56,6 +62,18 @@
                         {{ solds.management_form }}
                         {{ pallets.management_form }}
                     {% endif %}
+                </div>
+                <div class="span7" style="display: none;" id="brickselect">
+                    <fieldset>
+                        <legend>
+                            <h3>Выбор кирпича
+                                <a class="btn btn-success">Назад</a>
+                            </h3>
+                        </legend>
+                        <div style='overflow: auto;height: 450px'>
+                            {% include 'whs/widgets/brick-select-table.html' %}
+                        </div>
+                    </fieldset>
                 </div>
             </div>
 

@@ -10,6 +10,38 @@ from django.core.exceptions import ValidationError
 from whs.models import *
 from whs.validation import validate_transfer
 
+
+class AgentSelect(forms.Select):
+    template_name='floppyforms/agentselect.html'
+
+class BrickSelect(forms.widgets.Input):
+    template_name = 'floppyforms/brickselect.html'
+    input_type = 'hidden'
+
+class TaraSelect(forms.NumberInput):
+    template_name = 'floppyforms/taraselect.html'
+
+class MoneySelect(forms.NumberInput):
+    template_name = 'floppyforms/moneyselect.html'
+
+class BatchYearWidget(forms.widgets.MultiWidget):
+    def __init__(self, attrs={}):
+        widgets = (forms.NumberInput(attrs={'placeholder':u'Номер','style':'width:146px'}),
+                   forms.NumberInput(attrs={'placeholder':u'Год','style':'width:50px','min':1989}))
+        super(forms.MultiWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return map(int,value.split('/'))
+        return [None, None]
+
+class BatchYearField(forms.MultiValueField):
+    widget = BatchYearWidget
+#    hidden_widget = BatchYearWidget
+    def compress(self, data_list):
+        return '%d/%d' % data_list
+
+
 class DateForm(forms.Form):
     date = forms.DateField()
     @property
@@ -40,10 +72,25 @@ class BillForm(forms.ModelForm):
         model = Bill
         verbose_name_accusative = u"Накладную"
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
+        widgets = {
+            'date':forms.DateInput,
+            'number':forms.NumberInput(attrs={'min':1,'step':1}),
+            'agent':AgentSelect,
+            'seller':AgentSelect,
+            'info':forms.Textarea(attrs={'rows':1}),
+        }
 
 class SoldForm(forms.ModelForm):
+    batch = BatchYearField(label=u'Партия')
     class Meta:
         model = Sold
+        widgets = {
+            'brick':BrickSelect,
+            'brick_from':BrickSelect,
+            'tara':TaraSelect,
+            'price':MoneySelect,
+            'delivery':MoneySelect,
+        }
 
     def clean(self):
         data = self.cleaned_data
@@ -63,8 +110,8 @@ class PalletForm(forms.ModelForm):
     class Meta:
         model = Pallet
 
-SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=4)
-PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=2)
+SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=2)
+PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
     def clean(self):

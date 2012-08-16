@@ -3,10 +3,10 @@
     <div class="accordion-heading">
         <a class="accordion-toggle {{ form.instance.css }}" data-toggle="collapse" href="#{{ form.prefix }}">{{ form.instance|safe }}</a>
     </div>
-    <div class="accordion-body collapse" id='{{ form.prefix }}'>
+    <div class="accordion-body collapse in" id='{{ form.prefix }}'>
         <div class="accordion-inner">
             <fieldset>
-                {% form form %}
+                {{ form.as_table }}
             </fieldset>
         </div>
     </div>

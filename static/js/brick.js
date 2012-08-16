@@ -39,25 +39,32 @@ function Filter(css){
 }
 
 $(function () {
-    $('.brick-select').on('click','a.close',function (e) {
+    $('.brickselect').on('click','a.close',function (e) {
         var target = e.delegateTarget
         $('>span',target).attr('class','uneditable-input input-large').removeAttr('title')
             .children('span').text('Выберете кирпич')
         $('input',target).val(null)
     })
 
-    $('.brick-select').on('click','a.btn',function(e){
+    $('.brickselect').on('click','a.btn',function(e){
         var input = $('input', e.delegateTarget)
         var val = $(input).val()
         if (val) $('#brick-'+val+' input').attr('checked',true);
-        $('#brick-select').data('target',e.delegateTarget)
-        $('#brick-select').data('val',val)
+        $('#brickselect').data('target',e.delegateTarget)
+        $('#brickselect').data('val',val)
         val = $('#'+input.attr('id')+'_from').val()
         var filter = Filter($('#brick-'+val).attr('class'))
         $('#Bricks tbody tr').hide().filter(filter).show()
+        $('#brickselect-fade').hide()
+        $('#brickselect').show()
     })
 
-    $('#brick-select').on('click','tr',function(e){
+    $('#brickselect').on('click','a',function(e){
+        $('#brickselect-fade').show()
+        $('#brickselect').hide()
+    })
+
+    $('#brickselect').on('click','tr',function(e){
         var target = $(e.delegateTarget).data('target')
         $('input:radio',this).attr('checked',true)
         $('>span',target).attr('class','uneditable-input input-large '+$(this).attr('class'))
@@ -65,7 +72,7 @@ $(function () {
             .children('span').text($('.name',this).text().trim())
         $('input',target).val($('input:radio',this).val())
     })
-    $('#brick-select').on('shown',function(e){
+    $('#brickselect').on('shown',function(e){
         var val = $(this).data('val')
         if (val) {
             window.location.hash = 'brick-'+val

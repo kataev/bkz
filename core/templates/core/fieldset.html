@@ -35,12 +35,8 @@
                 {% elif f.name == 'tara' %}
                     <div class="input-append">
                         {{ f }}
-                        <span class="add-on btn" title='Рассчитывать по поддонам кол-во кирпича'>
-                            <input type="checkbox" name='tara-calculate' checked="checked">
-                        </span>
+
                     </div>
-                {% elif f.name == 'agent' or f.name == 'seller' %}
-                    {% include 'whs/widgets/agent-select.html' %}
                 {% elif f.name == 'cartridge' or f.name == 'printer' or f.name == 'device' %}
                     {% include 'it/cartridge-select.html' %}
                 {% else %}
