@@ -184,6 +184,13 @@ class Sold(OperationsMixin,models.Model):
         else:
             return u'Новая отгрузка'
 
+    @property
+    def css(self):
+        if self.brick_from:
+            return self.brick_from.css
+        else:
+            return self.brick.css
+
 
 class Nomenclature(models.Model, UrlMixin):
     title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)

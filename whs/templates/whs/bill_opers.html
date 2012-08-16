@@ -1,0 +1,13 @@
+{% load floppyforms %}
+<div class="accordion-group" {% if hide %}style="display: none"{% endif %}>
+    <div class="accordion-heading">
+        <a class="accordion-toggle {{ form.instance.css }}" data-toggle="collapse" href="#{{ form.prefix }}">{{ form.instance|safe }}</a>
+    </div>
+    <div class="accordion-body collapse" id='{{ form.prefix }}'>
+        <div class="accordion-inner">
+            <fieldset>
+                {% form form %}
+            </fieldset>
+        </div>
+    </div>
+</div>
