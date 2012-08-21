@@ -2,9 +2,9 @@
 .idea
 *.json
 bkz
-static/css/ui-darkness/
-static/css/ui-lightness/
+static/css/bo*
 static/js/bootstrap/
 static/js/jquery-ui/
 static/js/libs/
+static/img/
 logger.py
