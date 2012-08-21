@@ -62,11 +62,13 @@ class BillUpdateView(UpdateView):
 
     def form_valid(self, form):
         instance = form.save()
-        opers = self.get_context_data()['opers']
+
+        context = self.get_context_data()
+        opers = [context[factory.fk.related_query_name()] for factory in self.opers]
 
         for factory in opers:
             if factory.is_valid():
-                a = factory.save()
+                factory.save()
         if all([f.is_valid() for f in opers]):
             return redirect(instance.get_absolute_url())
 

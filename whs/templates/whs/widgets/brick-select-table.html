@@ -8,7 +8,7 @@
     </thead>
     <tbody>
     {% for b in Bricks %}
-        <tr class="brick {{ b.css }}" id='brick-{{ b.pk }}'>
+        <tr class="{{ b.css }}" id='brick-{{ b.pk }}'>
             <td><input value="{{ b.pk }}" name='br_select' type="radio"></td>
             <td class='name'> {{ b.label|safe }} </td>
             <td class="total"> {{ b.total }} </td>

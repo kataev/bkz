@@ -1,5 +1,4 @@
 {% extends 'core/index.html' %}
-{% load floppyforms %}
 {% load class_name %}
 {% block title %}
     {% if form.instance.pk %}
@@ -8,59 +7,73 @@
     {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
+    <div style='display: none'>
+    {% include 'whs/bill_opers.html' with form=solds.empty_form hide=1  only %}
+    {% include 'whs/bill_opers.html' with form=pallets.empty_form hide=1 only %}
+    </div>
     <div class="container">
         <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
             {% csrf_token %}
+            {{ solds.management_form }}
+            {{ pallets.management_form }}
             <div class="row">
                 <div class="span5">
                     <fieldset class="Bill">
                         <legend>
-                            <h1>{% if form.instance.pk %}{{ form.Meta.model|model_verbose_name }} {% endif %}
-                                <small>{{ form.instance }}</small>
+                            <h1>
+                                {% if form.instance.pk %}
+                                    {{ form.Meta.model|model_verbose_name }}
+                                    <small>{{ form.instance|safe }}</small>
+                                {% else %}
+                                    {{ form.instance|safe }}
+                                {% endif %}
                             </h1>
                         </legend>
-                        {{ form.as_table }}
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-large">
-                                <i class="icon-ok icon-white"></i> Сохранить
-                            </button>
-                            {% if form.instance.pk %}
-                            <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
-                                <i class="icon-print icon-white"></i>
-                                Печать
-                            </a>
-                            {% endif %}
-                        </div>
+                        {{ form.as_div }}
                     </fieldset>
-
-                </div>
-                <div class="span7" id="brickselect-fade">
                     {% if solds and pallets %}
-                        <fieldset>
-                            <legend>
-                                <h2>
-                                    Операции
-                                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить
-                                        отгрузку</a>
-                                    <a class="btn btn-primary"><i class="icon-plus-sign icon-white"></i> Добавить
-                                        поддоны</a>
-                                </h2>
-                            </legend>
-                        </fieldset>
-                        <div class="accordion" id="opers">
+                    <ul class="nav nav-list" id="opers">
+                        <li class="nav-header">
+                            <h4>Операции </h4>
+                            <div class="btn-group">
+                                <a class="btn btn-primary btn-success btn-mini">Добавить
+                                    <i class="icon-arrow-right icon-white"></i></a>
+                                <a class="btn btn-primary btn-mini form-add" data-append=".tabbable .tab-content" data-prefix='Sold'>отгрузку</a>
+                                <a class="btn btn-primary btn-mini form-add" data-append='.tabbable .tab-content' data-prefix='Pallet'>поддоны</a>
+                            </div>
+                        </li>
+                        {% for s in solds %}
+                            <li class="Sold"><a data-toggle='tab' href='#{{ s.prefix }}'>{{ s.instance|safe }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                </div>
+                <div class="span6 offset1" id="brickselect-fade">
+                    {% if solds and pallets %}
+                        {% for e in solds.non_form_errors %}
+                            <div class="alert alert-error">
+                                <i class="icon-warning-sign"></i>
+                                <strong>{{ e|safe }}</strong>
+                            </div>
+                        {% endfor %}
+                        {% for e in pallets.non_form_errors %}
+                            <div class="alert alert-error">
+                                <i class="icon-warning-sign"></i>
+                                <strong>{{ e|safe }}</strong>
+                            </div>
+                        {% endfor %}
+                        <div class="tabbable">
                             {#  solds  #}
-                            {% include 'whs/bill_opers.html' with form=solds.empty_form hide=1  only %}
-                            {% for form in solds %}
-                                {% include 'whs/bill_opers.html' with form=form only %}
-                            {% endfor %}
-                            {#  pallets  #}
-                            {% include 'whs/bill_opers.html' with form=pallets.empty_form hide=1 only %}
-                            {% for form in pallets %}
-                                {% include 'whs/bill_opers.html' with form=form only %}
-                            {% endfor %}
+                            <div class="tab-content">
+                                {% for form in solds %}
+                                    {% include 'whs/bill_opers.html' with form=form only %}
+                                {% endfor %}
+                                {#  pallets  #}
+                                {% for form in pallets %}
+                                    {% include 'whs/bill_opers.html' with form=form only %}
+                                {% endfor %}
+                            </div>
                         </div>
-                        {{ solds.management_form }}
-                        {{ pallets.management_form }}
                     {% endif %}
                 </div>
                 <div class="span7" style="display: none;" id="brickselect">
@@ -76,7 +89,19 @@
                     </fieldset>
                 </div>
             </div>
-
+        <div class="row">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large">
+                    <i class="icon-ok icon-white"></i> Сохранить
+                </button>
+                {% if form.instance.pk %}
+                    <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+                        <i class="icon-print icon-white"></i>
+                        Печать
+                    </a>
+                {% endif %}
+            </div>
+        </div>
         </form>
     </div>
 {% endblock %}

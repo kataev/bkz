@@ -176,7 +176,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'pytils',
     'devserver',
-    'south',
+#    'south',
     'trml2pdf',
     'gunicorn',
 #    'piston',
@@ -193,7 +193,7 @@ INSTALLED_APPS = (
     'bkz.energy',
     'bkz.it',
 
-    'floppyforms',
+    'bootstrap',
     'linaro_django_pagination',
 #    graphite
     'tagging',

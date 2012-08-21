@@ -114,7 +114,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),db_index=True)
-    agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents',help_text=u'')
+    agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents',help_text=u'',default=1)
     seller = models.ForeignKey(Seller, verbose_name=u'Продавец', help_text=u'', default=350,related_name='bill_sallers')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     reason = models.CharField(u'Основание', max_length=300, blank=True,
@@ -160,10 +160,11 @@ class Sold(OperationsMixin,models.Model):
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
-    batch = models.IntegerField(u'№ партии',null=True, blank=True)
+    batch_number = models.PositiveSmallIntegerField(u'№ партии',null=True, blank=True)
+    batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
-    price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.')
+    price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=0)
     delivery = models.FloatField(u"Цена доставки", default=0, help_text=u'0 если доставки нет')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
     doc = models.ForeignKey(Bill, related_name="solds", verbose_name=u'Накладная')

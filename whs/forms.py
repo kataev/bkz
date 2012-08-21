@@ -1,95 +1,107 @@
 # -*- coding: utf-8 -*-
-import datetime
-from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
-import floppyforms as forms
+import django.forms as forms
+from bootstrap.forms import BootstrapMixin
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 from whs.models import *
 from whs.validation import validate_transfer
 
+from django.utils.encoding import force_unicode
+from itertools import chain
+from django.utils.html import escape
 
 class AgentSelect(forms.Select):
-    template_name='floppyforms/agentselect.html'
+    def render_options(self, choices, selected_choices):
+        # Normalize to strings.
+        selected_choices = set(force_unicode(v) for v in selected_choices)
+        output = []
+        letter = u''
+        for option_value, option_label in chain(self.choices, choices):
+            if isinstance(option_label, (list, tuple)):
+                output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
+                for option in option_label:
+                    output.append(self.render_option(selected_choices, *option))
+                output.append(u'</optgroup>')
+            else:
+                current_letter = option_label[0:1].capitalize()
+                if letter != current_letter:
+                    output.append(u'<optgroup label="%s">' % escape(force_unicode(current_letter)))
+                    output.append(self.render_option(selected_choices, option_value, option_label))
+                    output.append(u'</optgroup>')
+                else:
+                    output.append(self.render_option(selected_choices, option_value, option_label))
+                letter = current_letter
+        return u'\n'.join(output)
 
 class BrickSelect(forms.widgets.Input):
-    template_name = 'floppyforms/brickselect.html'
     input_type = 'hidden'
 
-class TaraSelect(forms.NumberInput):
-    template_name = 'floppyforms/taraselect.html'
+class NumberInput(forms.TextInput):
+    input_type = 'number'
+    def __init__(self, attrs=None):
+        super(NumberInput,self).__init__(attrs=attrs)
+        self.attrs['autocomplete'] = 'off'
 
-class MoneySelect(forms.NumberInput):
-    template_name = 'floppyforms/moneyselect.html'
+class BatchInput(forms.TextInput):
+    input_type = 'number'
+    def __init__(self, attrs=None):
+        super(BatchInput,self).__init__(attrs=attrs)
+        self.attrs['step'] = 1
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
 
-class BatchYearWidget(forms.widgets.MultiWidget):
-    def __init__(self, attrs={}):
-        widgets = (forms.NumberInput(attrs={'placeholder':u'Номер','style':'width:146px'}),
-                   forms.NumberInput(attrs={'placeholder':u'Год','style':'width:50px','min':1989}))
-        super(forms.MultiWidget, self).__init__(widgets, attrs)
+class DateInput(forms.TextInput):
+    input_type = 'date'
 
-    def decompress(self, value):
-        if value:
-            return map(int,value.split('/'))
-        return [None, None]
+class TaraInput(forms.TextInput):
+    input_type = 'number'
+    def __init__(self, attrs=None):
+        super(TaraInput,self).__init__(attrs=attrs)
+        self.attrs['step'] = 1
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
 
-class BatchYearField(forms.MultiValueField):
-    widget = BatchYearWidget
-#    hidden_widget = BatchYearWidget
-    def compress(self, data_list):
-        return '%d/%d' % data_list
+
+class MoneyInput(forms.TextInput):
+    input_type = 'number'
+    def __init__(self, attrs=None):
+        super(MoneyInput,self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.01
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
 
 
 class DateForm(forms.Form):
     date = forms.DateField()
-    @property
-    def value(self):
-        if self.is_valid():
-            return self.cleaned_data['date']
-        else:
-            return datetime.date.today()
 
-    def prev(self):
-        return self.value - datetime.timedelta(1)
-    def next(self):
-        return self.value + datetime.timedelta(1)
-
-    def prev_month(self):
-        return self.value - relativedelta(months=1)
-    def next_month(self):
-        return self.value + relativedelta(months=1)
-
-
-class BillForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
-        self.legend = self.Meta.model._meta.verbose_name
-        self.auto_id = 'doc_%s'
-
+class BillForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Bill
-        verbose_name_accusative = u"Накладную"
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
         widgets = {
-            'date':forms.DateInput,
-            'number':forms.NumberInput(attrs={'min':1,'step':1}),
+            'date':DateInput,
+            'number':NumberInput(attrs={'min':1,'step':1}),
             'agent':AgentSelect,
             'seller':AgentSelect,
             'info':forms.Textarea(attrs={'rows':1}),
         }
 
-class SoldForm(forms.ModelForm):
-    batch = BatchYearField(label=u'Партия')
+class SoldForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Sold
         widgets = {
             'brick':BrickSelect,
             'brick_from':BrickSelect,
-            'tara':TaraSelect,
-            'price':MoneySelect,
-            'delivery':MoneySelect,
+            'batch_number':BatchInput(attrs={'placeholder':'Номер',}),
+            'batch_year':BatchInput(attrs={'placeholder':'Год',}),
+            'tara':TaraInput,
+            'amount':NumberInput,
+            'price':MoneyInput,
+            'delivery':MoneyInput,
+            'info':forms.Textarea(attrs={'rows':1}),
         }
 
     def clean(self):
@@ -106,11 +118,17 @@ class SoldForm(forms.ModelForm):
         return data
 
 
-class PalletForm(forms.ModelForm):
+class PalletForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Pallet
+        widgets = {
+            'amount':NumberInput,
+            'price':MoneyInput,
+            'info':forms.Textarea(attrs={'rows':1}),
+            }
 
-SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=2)
+
+SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=0)
 PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
@@ -119,12 +137,12 @@ class SoldFactory(SoldFactory):
             return
         bricks, amounts = {},defaultdict(int)
         for form in self.forms:
-            brick_from, brick, amount = form.cleaned_data['brick_from'],form.cleaned_data['brick'],form.cleaned_data['amount']
-            if brick_from:
-                id = brick_from.pk
+            if not form.cleaned_data: continue
+            if form.cleaned_data.get('brick_from',None):
+                id = form.cleaned_data['brick_from'].pk
             else:
-                id = brick.pk
-            amounts[id] += amount
+                id = form.cleaned_data['brick'].pk
+            amounts[id] += form.cleaned_data['amount']
             if form.instance.pk:
                 amounts[id] -= form.instance.amount
         for id in bricks:

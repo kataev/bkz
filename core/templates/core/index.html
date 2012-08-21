@@ -10,21 +10,15 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
-    <style> body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-    } </style>
-    <script type="text/javascript" src="/static/js/libs/less-1.2.1.min.js"></script>
+    <style> body { padding-top: 60px; } </style>
+    <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
     <link href="/static/css/style.css" rel="stylesheet">
     <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="/static/css/brick.css" rel="stylesheet">
-    <style type="text/css" media="print"> .navbar {
-        display: none
-    } </style>
     {% block head %}
     {% endblock %}
-    <link rel="shortcut icon" href="/static/img/cargo/cargo3.png">
+{#    <link rel="shortcut icon" href="/static/img/cargo/cargo3.png">#}
 </head>
-
 <body>
 {% include 'core/navbar.html' %}
 {% block brick-select %} {% endblock %}
@@ -105,26 +99,13 @@
 <!-- Placed at the end of the document so the pages load faster -->
 
 {#<script type="text/javascript" src="/static/js/libs/modernizr.custom.68085.js"></script>#}
-<script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
+{#<script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>#}
 <script type="text/javascript" src="/static/js/libs/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="/static/js/libs/accounting.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="/static/js/brick.js"></script>
 <script type="text/javascript" src="/static/js/script.js"></script>
-<script type="text/javascript" src="/static/js/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
-
-{#<script src="/static/js/bootstrap/bootstrap-transition.js"></script>#}
-<script src="/static/js/bootstrap/bootstrap-alert.js"></script>
-<script src="/static/js/bootstrap/bootstrap-modal.js"></script>
-<script src="/static/js/bootstrap/bootstrap-dropdown.js"></script>
-{#<script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>#}
-<script src="/static/js/bootstrap/bootstrap-tab.js"></script>
-<script src="/static/js/bootstrap/bootstrap-tooltip.js"></script>
-<script src="/static/js/bootstrap/bootstrap-popover.js"></script>
-<script src="/static/js/bootstrap/bootstrap-button.js"></script>
-<script src="/static/js/bootstrap/bootstrap-collapse.js"></script>
-<script src="/static/js/bootstrap/bootstrap-carousel.js"></script>
-{#<script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>#}
 {#{% block script %}#}
     <script type="text/javascript">
         $('.carousel').carousel()

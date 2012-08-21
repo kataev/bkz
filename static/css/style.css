@@ -24,10 +24,13 @@ form fieldset.Batch div.limit .controls {margin-left: 110px}
 .add-on input[type='checkbox'] { vertical-align:baseline}
 #brickselect tr {cursor: pointer;}
 #brickselect tr:hover td.name {text-decoration: underline;}
-.moneyselect input {width:174px}
-.moneyselect span {width:36px}
-.taraselect input {width:174px}
-.taraselect span input {width:26px}
+.brickselect .uneditable-input {width:182px}
+.batchinput input {width:90px;}
+.moneyinput span {width:36px}
+.moneyinput input {width:174px}
+.moneyinput span {width:36px}
+.tarainput input {width:174px}
+.tarainput span input {width:26px}
 
 #Bricks a, #Jurnal a, #Verification a {color:#333}
 #Energy thead tr th {vertical-align: top !important;}

@@ -13,6 +13,7 @@ nav = dict(
         ('lab:index', 'icon-fullscreen icon-white', u'Лаборатория'),
         ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
         ('it:index', 'icon-hdd icon-white', u'ИТ'),
+        ('price', 'icon-shopping-cart icon-white', u'Прайс'),
     ),
     whs=(
         ('whs:index', 'icon-align-justify icon-white', u'Склад'),

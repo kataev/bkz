@@ -5,6 +5,16 @@
  */
 "use strict";
 $(function () {
+    $('.brickselect').each(function(id){
+        var val = $('input', this).val()
+        if (val){
+            var tr = $('#brick-'+val)
+            $('>span',this).attr('class','uneditable-input '+$(tr).attr('class'))
+                .attr('title','Остаток: '+$('.total',tr).text().trim())
+                .children('span').text($('.name',tr).text().trim())
+        }
+    })
+
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
     $('#brick-select-buttons').on('toggle','a', function (e) {
         $('input',this).trigger('click')
@@ -41,7 +51,7 @@ function Filter(css){
 $(function () {
     $('.brickselect').on('click','a.close',function (e) {
         var target = e.delegateTarget
-        $('>span',target).attr('class','uneditable-input input-large').removeAttr('title')
+        $('>span',target).attr('class','uneditable-input ').removeAttr('title')
             .children('span').text('Выберете кирпич')
         $('input',target).val(null)
     })
@@ -67,7 +77,7 @@ $(function () {
     $('#brickselect').on('click','tr',function(e){
         var target = $(e.delegateTarget).data('target')
         $('input:radio',this).attr('checked',true)
-        $('>span',target).attr('class','uneditable-input input-large '+$(this).attr('class'))
+        $('>span',target).attr('class','uneditable-input '+$(this).attr('class'))
             .attr('title','Остаток: '+$('.total',this).text().trim())
             .children('span').text($('.name',this).text().trim())
         $('input',target).val($('input:radio',this).val())

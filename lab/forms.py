@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import floppyforms as forms
+import django.forms as forms
 from django.forms.models import inlineformset_factory
 
 from bkz.lab.models import *
@@ -73,7 +73,6 @@ class SplitSizeWidget(forms.widgets.MultiWidget):
 
 class SplitSizeField(forms.MultiValueField):
     widget = SplitSizeWidget
-    hidden_widget = SplitSizeWidget
     def compress(self, data_list):
         return '%dx%dx%d' % data_list
 

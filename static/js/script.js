@@ -8,6 +8,7 @@ $(function () {
     $('.form-add').click(function (e) {
         var prefix = $(this).data('prefix')
         var append_to = $(this).data('append')
+        var place_to = $(this).data('place') || $(this).parents('ul')
         if (!append_to) throw "Куда приклеплять?!"
         var node = $('#' + prefix + '-__prefix__').clone(true).appendTo(append_to)
         var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
@@ -18,24 +19,13 @@ $(function () {
         $(node).attr('id', rep)
         $('input, select', node).attr('name', rep).attr('id', rep)
         $('label[for]', node).attr('for', rep)
-
-        $('div.DELETE', node).remove()
+        $('*', node).attr('id', rep)
         var menu = $('<li><a href="#__prefix__" data-toggle="tab"><span></span></a></li>'
             .replace(/__prefix__/g, total.attr('value')))
-        $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1))
-        $('span', menu).text($(this).attr('title'))
+        $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1)).appendTo(place_to)
+        $('span', menu).text($('legend',node).text())
 
-        var del = $(' <i title="Удалить" class="icon-trash"></i>')
-        $('span', menu).after(del)
 
-        $('li.' + prefix[0].toUpperCase() + prefix.slice(1)).last().after(menu)
-
-        $(del).click(function (e) {
-            $(menu).remove()
-            $(node).remove()
-            $('.form-nav li:first a').tab('show')
-            $(total).val(parseInt($(total).val()) - 1)
-        })
         $(total).val(parseInt($(total).val()) + 1)
         tara_amount()
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
