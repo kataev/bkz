@@ -4,6 +4,9 @@
  * Time: 11:01
  */
 "use strict";
+$('.carousel').carousel()
+$('.collapse').collapse()
+
 $(function () {
     $('.form-add').click(function (e) {
         var prefix = $(this).data('prefix')

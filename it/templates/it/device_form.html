@@ -1,6 +1,5 @@
 {% extends 'core/flat-form.html' %}
-{% block container %}
-    {{ block.super }}
+{% block right %}
     <div class="span6">
         {% if object.type.pk == 1 %}
             <table class="table">

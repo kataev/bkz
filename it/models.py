@@ -14,10 +14,7 @@ class Device(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            if self.type and self.place:
-                return u'%s,\t%s' % (self.name,self.place)
-            else:
-                return self.name
+            return u'%s\t%s' % (self.name,self.place)
         else:
             return u'Новый девайс'
 

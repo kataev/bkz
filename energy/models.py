@@ -3,8 +3,9 @@ import pytils
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from bkz.utils import UrlMixin
 
-class Energy(models.Model):
+class Energy(UrlMixin,models.Model):
     date_time=models.DateTimeField(u"Дата и время",auto_now=True)
     date=models.DateField(u"Дата")
     elec4=models.FloatField(u"Электр 4 ячейка")
@@ -25,11 +26,7 @@ class Energy(models.Model):
         else:
             return u'Новые показания энергоресурсов'
 
-    def get_absolute_url(self):
-        return reverse('energy:Energy-pk',kwargs=dict(id=self.pk or ''))
-
-
-class Teplo(models.Model):
+class Teplo(UrlMixin,models.Model):
     date_time=models.DateTimeField(u"Дата и время",auto_now=True)
     date=models.DateField(u"Дата")
     henergy=models.FloatField(u"ТЭнергия кал")
@@ -49,6 +46,3 @@ class Teplo(models.Model):
             return u'%s' % date
         else:
             return u'Новые показания тепла'
-
-    def get_absolute_url(self):
-        return reverse('energy:Teplo-pk',kwargs=dict(id=self.pk or ''))

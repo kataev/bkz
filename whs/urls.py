@@ -27,7 +27,6 @@ urlpatterns += patterns('',
     url(ur'^Статистика/Кирпичи/$', total_handler, name='total_handler'),
 )
 
-
 urlpatterns += patterns('',
     url(ur'^Кирпич/(?P<pk>\d+)/(?P<model>.+)/$', brick_handler),
 )

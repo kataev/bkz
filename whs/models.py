@@ -224,11 +224,9 @@ class Add(models.Model,UrlMixin):
     part = models.ForeignKey('lab.Part',related_name='add',verbose_name=u'Партия')
     brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич")
 
-
     class Meta():
         verbose_name = u"Партия"
         verbose_name_plural = u"Партия"
-        ordering = ('-doc__date', )
 
     def __unicode__(self):
         if self.pk:
@@ -244,11 +242,11 @@ class Sorting(models.Model,UrlMixin):
     brick & sourse - бой
     """
     source = models.ForeignKey('self',null=True,blank=True)
-    part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия')
+    part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
 
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
 
     class Meta():
         verbose_name = u"Сортировка"

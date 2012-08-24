@@ -10,15 +10,11 @@ class Access(CommonMiddleware):
             name = url.url_name
             namespace = url.namespace
             request.namespace = namespace
-#            if not request.user.has_perm('view-%s' % name):
-#                response = render(request,'core/denied.html')
-#                response.code_status = 504
-#                return response
-#            if request.method =='GET' and 'add' in name and request.user.has_perm('add_%s' % name.split('-')[0].lower()):
-#                response = render(request,'core/denied.html')
-#                response.code_status = 504
-#                return response
-#            if request.method != 'GET' and request.user.has_perm('view-%s' % name):
-#                pass
+            if '-' in name:
+                model,action = name.split('-')
+                if not request.user.has_perm('%s.%s_%s'%(namespace,action,name)):
+                    response = render(request,'core/denied.html')
+                    response.code_status = 504
+                    return response
         except Resolver404:
             request.namespace = None

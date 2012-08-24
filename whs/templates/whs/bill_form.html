@@ -7,88 +7,89 @@
     {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
-    <div style='display: none'>
-    {% include 'whs/bill_opers.html' with form=solds.empty_form hide=1  only %}
-    {% include 'whs/bill_opers.html' with form=pallets.empty_form hide=1 only %}
-    </div>
-    <div class="container">
-        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
-            {% csrf_token %}
-            {{ solds.management_form }}
-            {{ pallets.management_form }}
-            <div class="row">
-                <div class="span5">
-                    <fieldset class="Bill">
-                        <legend>
-                            <h1>
-                                {% if form.instance.pk %}
-                                    {{ form.Meta.model|model_verbose_name }}
-                                    <small>{{ form.instance|safe }}</small>
-                                {% else %}
-                                    {{ form.instance|safe }}
-                                {% endif %}
-                            </h1>
-                        </legend>
-                        {{ form.as_div }}
-                    </fieldset>
-                    {% if solds and pallets %}
+<div style='display: none'>
+    {% for k,o in opers.iteritems %}
+        {% include 'whs/bill_opers.html' with form=o.empty_form hide=1 only %}
+    {% endfor %}
+</div>
+<div class="container">
+    <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+        {% csrf_token %}
+        {% for k,o in opers.iteritems %}
+            {{ o.management_form }}
+        {% endfor %}
+        <div class="row">
+            <div class="span5">
+                <fieldset class="Bill">
+                    <legend>
+                        <h1>
+                            {% if form.instance.pk %}
+                                {{ form.Meta.model|model_verbose_name }}
+                                <small>{{ form.instance|safe }}</small>
+                            {% else %}
+                                {{ form.instance|safe }}
+                            {% endif %}
+                        </h1>
+                    </legend>
+                    {{ form.as_div }}
+                </fieldset>
+                {% if opers %}
                     <ul class="nav nav-list" id="opers">
                         <li class="nav-header">
                             <h4>Операции </h4>
+
                             <div class="btn-group">
                                 <a class="btn btn-primary btn-success btn-mini">Добавить
                                     <i class="icon-arrow-right icon-white"></i></a>
-                                <a class="btn btn-primary btn-mini form-add" data-append=".tabbable .tab-content" data-prefix='Sold'>отгрузку</a>
-                                <a class="btn btn-primary btn-mini form-add" data-append='.tabbable .tab-content' data-prefix='Pallet'>поддоны</a>
+                                {% for k,o in opers.iteritems %}
+                                        <a class="btn btn-primary btn-mini form-add" data-append=".tabbable .tab-content"
+                                           data-prefix='{{ o.prefix }}'>{{ o.model|model_verbose_name_plural }}</a>
+                                {% endfor %}
                             </div>
                         </li>
-                        {% for s in solds %}
-                            <li class="Sold"><a data-toggle='tab' href='#{{ s.prefix }}'>{{ s.instance|safe }}</a></li>
+                        {% for k,o in opers.iteritems %}
+                        {% for s in o %}
+                            <li><a data-toggle='tab' href='#{{ s.prefix }}'>{{ s.instance|safe }}</a></li>
+                        {% endfor %}
                         {% endfor %}
                     </ul>
                 {% endif %}
-                </div>
-                <div class="span6 offset1" id="brickselect-fade">
-                    {% if solds and pallets %}
-                        {% for e in solds.non_form_errors %}
-                            <div class="alert alert-error">
-                                <i class="icon-warning-sign"></i>
-                                <strong>{{ e|safe }}</strong>
-                            </div>
-                        {% endfor %}
-                        {% for e in pallets.non_form_errors %}
-                            <div class="alert alert-error">
-                                <i class="icon-warning-sign"></i>
-                                <strong>{{ e|safe }}</strong>
-                            </div>
-                        {% endfor %}
-                        <div class="tabbable">
-                            {#  solds  #}
-                            <div class="tab-content">
-                                {% for form in solds %}
-                                    {% include 'whs/bill_opers.html' with form=form only %}
-                                {% endfor %}
-                                {#  pallets  #}
-                                {% for form in pallets %}
-                                    {% include 'whs/bill_opers.html' with form=form only %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="span7" style="display: none;" id="brickselect">
-                    <fieldset>
-                        <legend>
-                            <h3>Выбор кирпича
-                                <a class="btn btn-success">Назад</a>
-                            </h3>
-                        </legend>
-                        <div style='overflow: auto;height: 450px'>
-                            {% include 'whs/widgets/brick-select-table.html' %}
-                        </div>
-                    </fieldset>
-                </div>
             </div>
+            <div class="span6 offset1" id="brickselect-fade">
+                {% if opers %}
+                    {% for k,o in opers.iteritems %}
+                        {% for e in o.non_form_errors %}
+                            <div class="alert alert-error">
+                                <i class="icon-warning-sign"></i>
+                                <strong>{{ e|safe }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                <div class="tabbable">
+                    {#  solds  #}
+                    <div class="tab-content">
+                        {% for k,o in opers.iteritems %}
+                            {% for form in o %}
+                                {% include 'whs/bill_opers.html' with form=form only %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="span7" style="display: none;" id="brickselect">
+                <fieldset>
+                    <legend>
+                        <h3>Выбор кирпича
+                            <a class="btn btn-success">Назад</a>
+                        </h3>
+                    </legend>
+                    <div style='overflow: auto;height: 450px'>
+                        {% include 'whs/widgets/brick-select-table.html' %}
+                    </div>
+                </fieldset>
+            </div>
+        </div>
         <div class="row">
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary btn-large">
@@ -102,6 +103,6 @@
                 {% endif %}
             </div>
         </div>
-        </form>
-    </div>
+    </form>
+</div>
 {% endblock %}

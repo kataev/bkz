@@ -132,6 +132,10 @@ SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=0)
 PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
+    select_related = ('brick', 'brick_from')
+    def get_queryset(self):
+        return self.model.objects.select_related(*self.select_related)
+
     def clean(self):
         if any(self.errors):
             return
@@ -211,9 +215,48 @@ class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
 
-class SortingForm(forms.ModelForm):
+class SortingForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Sorting
+        exclude = ('source',)
+        widgets = {
+            'date':DateInput,
+            'brick':BrickSelect,
+            'amount':NumberInput,
+            'info':forms.Textarea(attrs={'rows':1}),
+            }
+
+class SortedForm(SortingForm):
+    class Meta(SortingForm.Meta):
+        exclude = ('source','part')
+
+class BrockenForm(SortingForm):
+    class Meta(SortingForm.Meta):
+        exclude = ('source','part')
+
+SortingFactory = inlineformset_factory(Sorting, Sorting,form=SortingForm,extra=0)
+
+class SortedFactory(SortingFactory):
+    select_related = tuple()
+    form = SortedForm
+
+    def get_queryset(self):
+        return self.model.objects.select_related(*self.select_related).filter(source__isnull=False, part__isnull=False)
+
+    @classmethod
+    def get_default_prefix(cls):
+        return 'sorted'
+
+class BrockenFactory(SortingFactory):
+    select_related = tuple()
+    form = BrockenForm
+
+    def get_queryset(self):
+        return self.model.objects.select_related(*self.select_related).filter(source__isnull=False, part__isnull=True)
+
+    @classmethod
+    def get_default_prefix(cls):
+        return 'brocken'
 
 class Write_offForm(forms.ModelForm):
     class Meta:
