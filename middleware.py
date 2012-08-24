@@ -11,7 +11,7 @@ class Access(CommonMiddleware):
             namespace = url.namespace
             request.namespace = namespace
             if '-' in name:
-                model,action = name.split('-')
+                model,action = name.split('-') # TODO права на прresосмотр
                 if not request.user.has_perm('%s.%s_%s'%(namespace,action,name)):
                     response = render(request,'core/denied.html')
                     response.code_status = 504

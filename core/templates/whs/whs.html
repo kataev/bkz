@@ -1,7 +1,12 @@
 {% extends 'core/index.html' %}
 {% load class_name %}
 {% block title %}Остатки{% endblock %}
+{% block head %}
+    <link href="/static/css/responsive-tables.css" rel="stylesheet">
+{% endblock %}
 {% block container %}
+    <div class="container">
+        <div class="row">
         <div class="span4 offset4" style='text-align: center'>
             <h1 class="">
                 {{ begin|date:'Y F' }}
@@ -61,4 +66,6 @@
         </tr>
         </tfoot>
     </table>
+    </div>
+    </div>
 {% endblock %}
