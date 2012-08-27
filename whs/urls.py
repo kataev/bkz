@@ -6,11 +6,11 @@ from bkz.whs.handlers import TransferMarkHandler,TotalHandler, BrickHandler
 from piston.resource import Resource
 
 urlpatterns = patterns('bkz.whs.views',
-    url(ur'^Реализация$', BillListView.as_view(), name='sale'),
-    url(ur'^Статистика$', 'stats', name='statistics'),
-    url(ur'^Контрагенты$', 'agents', name='agents'),
-    url(ur'^$', 'brick_main', name='index'),
-    url(ur'^Журнал$', 'man_main', name='man'),
+    url(ur'^Реализация$', BillListView.as_view(), name='Bill-list'),
+#    url(ur'^Статистика$', 'stats', name='statistics'),
+    url(ur'^Контрагенты$', 'agents', name='Agent-list'),
+    url(ur'^$', 'brick_main', name='Brick-list'),
+    url(ur'^Журнал$', 'man_main', name='Add-list'),
     url(ur'^Сверка$', 'verification', name='verification'),
 
     url(ur'^Накладная/Мастер$', 'agent_select_or_create', name='Bill-wizard'),

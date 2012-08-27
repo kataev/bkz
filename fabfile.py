@@ -20,3 +20,4 @@ def push():
     commit()
     merge()
     local('git push')
+    local('git checkout %s' % env.dev_branch)

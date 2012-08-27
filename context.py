@@ -9,19 +9,19 @@ def bricks(request):
 
 nav = dict(
     main= (
-        ('whs:index', 'icon-align-justify icon-white', u'Склад'),
+        ('whs:Brick-list', 'icon-align-justify icon-white', u'Склад'),
         ('lab:index', 'icon-fullscreen icon-white', u'Лаборатория'),
         ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
         ('it:index', 'icon-hdd icon-white', u'ИТ'),
         ('price', 'icon-shopping-cart icon-white', u'Прайс'),
     ),
     whs=(
-        ('whs:index', 'icon-align-justify icon-white', u'Склад'),
+        ('whs:Brick-list', 'icon-align-justify icon-white', u'Склад'),
         ('divider',),
-        ('whs:sale', 'icon-whs icon-white', u'Реализация'),
-        ('whs:man', 'icon-man icon-white', u'Производство'),
+        ('whs:Bill-list', 'icon-whs icon-white', u'Реализация'),
+        ('whs:Add-list', 'icon-man icon-white', u'Производство'),
         ('divider',),
-        ('whs:agents', 'icon-Agent icon-white', u'Контрагенты'),
+        ('whs:Agent-list', 'icon-Agent icon-white', u'Контрагенты'),
         ),
     it=(
         ('it:index', 'icon-hdd icon-white', u'ИТ'),
