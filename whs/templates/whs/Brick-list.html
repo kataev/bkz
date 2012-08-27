@@ -7,65 +7,69 @@
 {% block container %}
     <div class="container">
         <div class="row">
-        <div class="span4 offset4" style='text-align: center'>
-            <h1 class="">
-                {{ begin|date:'Y F' }}
-                {% if begin.year != end.year or begin.month != end.month %}
-                    &mdash; {{ end|date:'Y F' }}
-                {% endif %}
-            </h1>
+            <div class="span4 offset4" style='text-align: center'>
+                <h1 class="">
+                    {{ begin|date:'Y F' }}
+                    {% if begin.year != end.year or begin.month != end.month %}
+                        &mdash; {{ end|date:'Y F' }}
+                    {% endif %}
+                </h1>
+            </div>
+            <div class="span4">
+                <form method="GET" action="" class="form form-inline">
+                    {% with year=form.date__year month=form.date__month %}
+                        {% include 'whs/widgets/year-month-select.html' %}
+                    {% endwith %}
+                    <input type="submit" class="">
+                </form>
+            </div>
         </div>
-        <div class="span4">
-            <form method="GET" action="" class="form form-inline">
-                {% with year=form.date__year month=form.date__month %}
-                    {% include 'whs/widgets/year-month-select.html' %}
-                {% endwith %}
-                <input type="submit" class="">
-            </form>
+        <div class="row">
+            <div class="span12">
+                {% include 'whs/widgets/brick-select-buttons.html' %}
+                <table id='Bricks' class="table table-bordered table-condensed">
+                    <colgroup>
+                        <col span=1>
+                        <col span="10" style='width:70px;'>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Начало</th>
+                        <th>Приход</th>
+                        <th>Пер-д из</th>
+                        <th>Пер-д в</th>
+                        <th>Продажи</th>
+                        <th>В цех</th>
+                        <th>Из цеха</th>
+                        <th>Списанно</th>
+                        <th>Инв</th>
+                        <th>Остатки</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in Bricks %}
+                        <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}"
+                            class="{{ b.css }} {% if b.opers %}zero{% endif %}">
+                            <td class="name"><a title='{{ b.name }}'
+                                                href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
+                            {% for o in b.order %}
+                                <td {% if b|hash:o %}data-name="{{ o }}" rel="popover" data-placement='bottom'
+                                    data-trigger='manual'{% endif %}> {{ b|hash:o }} </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th></th>
+                        {% for o in order %}
+                            <th> {{ Bricks|sum_pluck:o }} </th>
+                        {% endfor %}
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row">
-    {% include 'whs/widgets/brick-select-buttons.html' %}
-    <table id='Bricks' class="span12 table table-bordered table-condensed">
-        <colgroup>
-            <col span=1>
-            <col span="10" style='width:70px;'>
-        </colgroup>
-        <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Начало</th>
-            <th>Приход</th>
-            <th>Пер-д из</th>
-            <th>Пер-д в</th>
-            <th>Продажи</th>
-            <th>В цех</th>
-            <th>Из цеха</th>
-            <th>Списанно</th>
-            <th>Инв</th>
-            <th>Остатки</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for b in Bricks %}
-            <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}" class="{{ b.css }} {% if b.opers %}zero{% endif %}">
-                <td class="name"><a title='{{ b.name }}' href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
-                {% for o in b.order %}
-                    <td {% if b|hash:o %}data-name="{{ o }}" rel="popover" data-placement='bottom'
-                        data-trigger='manual'{% endif %}> {{ b|hash:o }} </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <th></th>
-            {% for o in order %}
-                <th> {{ Bricks|sum_pluck:o }} </th>
-            {% endfor %}
-        </tr>
-        </tfoot>
-    </table>
-    </div>
     </div>
 {% endblock %}
