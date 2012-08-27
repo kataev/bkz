@@ -50,3 +50,19 @@ class UrlMixin(object):
 
 def ru_date(date):
     return pytils.dt.ru_strftime(u'%d %B %Y',inflected=True,date=date)
+
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.forms import ValidationError
+def view_permisions(apps = ['whs','lab','energy','it']):
+    for app in apps:
+        for c in ContentType.objects.filter(app_label=app):
+            if issubclass(c.model_class(),UrlMixin):
+                p = Permission(codename='view_%s' % c.model, name=u'Можно просматривать %s' % c.name, content_type=c)
+                print c.name,c.model
+                try:
+                    p.validate_unique()
+                except ValidationError:
+                    pass
+                else:
+                    p.save()
