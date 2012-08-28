@@ -281,7 +281,7 @@ def brick_main(request):
                    + b.m_from - b.m_to # + b.m_rmv # Перебор кирпича в цехе
             )
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
-    return render(request, 'whs/whs.html',
+    return render(request, 'whs/brick-list.html',
         dict(Bricks=Bricks, order=Brick.order, form=form, begin=begin, end=end - datetime.timedelta(1)))
 
 

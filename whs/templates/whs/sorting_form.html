@@ -1,1 +1,115 @@
-{% extends 'whs/bill_form.html' %}
+{% extends 'core/index.html' %}
+{% load class_name %}
+{% block title %}
+    {% if form.instance.pk %}
+        {{ form.instance|model_verbose_name|safe }}
+    {% endif %}
+    {{ form.instance|striptags }}
+{% endblock %}
+{% block container %}
+    <div style='display: none'>
+        {% for k,o in opers.iteritems %}
+            {% include 'whs/bill_opers.html' with form=o.empty_form hide=1 only %}
+        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <h1 class="well">Сортировка</h1>
+            </div>
+        </div>
+        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+            {% csrf_token %}
+            {% for k,o in opers.iteritems %}
+                {{ o.management_form }}
+            {% endfor %}
+            <div class="row">
+                <div class="span5">
+                    <fieldset class="{{ form.Meta.model|class_name }}">
+                        {% block main-fieldset %}
+                            <legend>
+                                <h2>
+                                    {% if form.instance.pk %}
+                                        В цех
+                                        <small>{{ form.instance|safe }}</small>
+                                    {% else %}
+                                        {{ form.instance|safe }}
+                                    {% endif %}
+                                </h2>
+                            </legend>
+                            <div class="control-group">
+                                <label class="control-label" for="{{ label_id }}">Партия</label>
+                                <div class="controls">
+                                    <span class="uneditable-input span2">
+                                        {{ form.instance.part.batch }}, {{ form.instance.part }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {{ form.as_div }}
+                        {% endblock %}
+                    </fieldset>
+                </div>
+                <div class="span7" id="brickselect-fade">
+                    {% if opers %}
+                        <fieldset>
+                        <legend>
+                            <h2>Из цеха</h2>
+                        </legend>
+                        {% for k,o in opers.iteritems %}
+                            {% for e in o.non_form_errors %}
+                                <div class="alert alert-error">
+                                    <i class="icon-warning-sign"></i>
+                                    <strong>{{ e|safe }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    <table>
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Партия</th>
+                        <th>Кирпич</th>
+                        <th>Кол-во</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for k,o in opers.iteritems %}
+                            {% for form in o %}
+                                {% include 'whs/sort_opers.html' with form=form only %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                        </fieldset>
+                    {% endif %}
+                </div>
+                <div class="span7" style="display: none;" id="brickselect">
+                    <fieldset>
+                        <legend>
+                            <h3>Выбор кирпича
+                                <a class="btn btn-success">Назад</a>
+                            </h3>
+                        </legend>
+                        <div style='overflow: auto;height: 450px'>
+                            {% include 'whs/widgets/brick-select-table.html' %}
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="icon-ok icon-white"></i> Сохранить
+                    </button>
+                    {% if form.instance.pk %}
+                        <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+                            <i class="icon-print icon-white"></i>
+                            Печать
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -218,7 +218,7 @@ class InventoryForm(forms.ModelForm):
 class SortingForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Sorting
-        exclude = ('source',)
+        exclude = ('source','part')
         widgets = {
             'date':DateInput,
             'brick':BrickSelect,
@@ -227,14 +227,20 @@ class SortingForm(BootstrapMixin,forms.ModelForm):
             }
 
 class SortedForm(SortingForm):
-    class Meta(SortingForm.Meta):
-        exclude = ('source','part')
+    class Meta():
+        template_base = 'bootstrap/table'
+        model = Sorting
+        exclude = ('source')
+        widgets = {
+            'part':NumberInput(attrs={'class':'span1'}),
+            'date':DateInput(attrs={'style':'width:80px'}),
+            'brick':BrickSelect,
+            'amount':NumberInput(attrs={'class':'span1'}),
+            'info':forms.Textarea(attrs={'rows':1}),
+            }
 
-class BrockenForm(SortingForm):
-    class Meta(SortingForm.Meta):
-        exclude = ('source','part')
 
-SortingFactory = inlineformset_factory(Sorting, Sorting,form=SortingForm,extra=0)
+SortingFactory = inlineformset_factory(Sorting, Sorting,form=SortingForm,extra=2)
 
 class SortedFactory(SortingFactory):
     select_related = tuple()
@@ -249,7 +255,7 @@ class SortedFactory(SortingFactory):
 
 class BrockenFactory(SortingFactory):
     select_related = tuple()
-    form = BrockenForm
+    form = SortedForm
 
     def get_queryset(self):
         return self.model.objects.select_related(*self.select_related).filter(source__isnull=False, part__isnull=True)
