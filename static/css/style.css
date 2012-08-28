@@ -14,6 +14,9 @@ div.controls ul {list-style: none}
     .span4 fieldset .control-label {width: 100px}
     .span4 fieldset .controls {margin-left: 110px}
     .span4 fieldset .form-actions {padding-left: 110px}
+    .span5 fieldset .control-label {width: 100px}
+    .span5 fieldset .controls {margin-left: 110px}
+    .span5 fieldset .form-actions {padding-left: 110px}
 }
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}
@@ -65,13 +68,8 @@ span.dot { position:absolute; text-indent: -1000em; }
 
 span.input {overflow: hidden;}
 
-fieldset.Bill div.control-group {
-    /*float:left;*/
-}
-
 .navbar form button, .navbar form select {
     margin: auto !important;
-    /*padding: 0;*/
 }
 
 .nav.nav-tabs li.active span.label, nav.nav-tabs li:hover span.label {

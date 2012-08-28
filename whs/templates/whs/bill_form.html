@@ -19,8 +19,10 @@
             {{ o.management_form }}
         {% endfor %}
         <div class="row">
+
             <div class="span5">
-                <fieldset class="Bill">
+                <fieldset class="{{ form.Meta.model|class_name }}">
+                    {% block main-fieldset %}
                     <legend>
                         <h1>
                             {% if form.instance.pk %}
@@ -32,6 +34,7 @@
                         </h1>
                     </legend>
                     {{ form.as_div }}
+                        {% endblock %}
                 </fieldset>
                 {% if opers %}
                     <ul class="nav nav-list" id="opers">

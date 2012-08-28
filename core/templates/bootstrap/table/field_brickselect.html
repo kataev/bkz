@@ -1,0 +1,14 @@
+<td id="div_{{ label_id }}"
+     class="{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
+        <div class="input-append brickselect">
+        <span class="uneditable-input"><span>Выберете кирпич</span>
+            {% if not bf_raw.field.required %}
+                <a class="close" title="Очистить значение" style='float:right;'>&times;</a>
+            {% endif %}
+        </span>
+            {{ bf }}
+            <a class="btn btn-info add-on" title='Шелкните для выбора кирпича' href="#brick-select">
+            <i class="icon-search icon-white"></i>
+        </a>
+        </div>
+</td>
