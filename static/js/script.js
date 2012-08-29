@@ -198,7 +198,7 @@ function tara_amount() {
 $(tara_amount)
 
 $(function () {
-    $("td[rel='popover']").click(function (e) {
+    $("#Bricks td[rel='popover']").click(function (e) {
         if (parseInt($(this).text()) <= 0)
             return
         var name = $(this).data('name')

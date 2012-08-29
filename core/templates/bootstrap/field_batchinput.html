@@ -1,18 +1,12 @@
 {% if bf_raw.name == 'batch_number' %}
-<div id="div_{{ label_id }}"
+<div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
      class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %} batchinput">
     <label class="control-label" for="{{ label_id }}">{{ label }}</label>
     <div class="controls">
 {% endif %}
         {{ bf }}
         <div class="help-inline">
-            {% if help_text %}
-                <i class="icon-info-sign" data-content='{{ help_text }}' data-title='Информация' rel='popover' data-trigger='hover'></i>
-                </span>
-            {% endif %}
-            {% if errors %}
-                <i class="icon-warning-sign" data-content='{{ errors }}' data-title='Ошибка' rel='popover' data-trigger='hover'></i>
-            {% endif %}
+            {% include 'bootstrap/help_text.html' %}
         </div>
 {% if bf_raw.name == 'batch_year' %}
     </div>

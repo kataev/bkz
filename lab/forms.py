@@ -91,6 +91,9 @@ class FlexionForm(forms.ModelForm):
 class PartForm(forms.ModelForm):
     class Meta:
         model = Part
+        widgets = {
+            'brock':forms.HiddenInput
+        }
 
 
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=0)

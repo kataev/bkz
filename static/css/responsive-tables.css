@@ -24,7 +24,7 @@
         border: none;
         border-bottom: 1px solid #eee;
         position: relative;
-        padding-left: 40% !important;
+        padding-left: 25% !important;
     }
 
     td:before {
@@ -33,7 +33,7 @@
         /* Top/left values mimic padding */
         top: 6px;
         left: 6px;
-        width: 45%;
+        width: 30%;
         padding-right: 10px;
         white-space: nowrap;
     }
@@ -41,17 +41,20 @@
     /*
          Label the data
          */
-    td:nth-of-type(1):before { content: "Имя"; }
-    td:nth-of-type(2):before { content: "Начало"; }
-    td:nth-of-type(3):before { content: "Приход"; }
-    td:nth-of-type(4):before { content: "Пер-д из"; }
-    td:nth-of-type(5):before { content: "Пер-д в"; }
-    td:nth-of-type(6):before { content: "Продажи"; }
-    td:nth-of-type(7):before { content: "В цех"; }
-    td:nth-of-type(8):before { content: "Из цеха"; }
-    td:nth-of-type(9):before { content: "Списанно"; }
-    td:nth-of-type(10):before { content: "Инв"; }
-    td:nth-of-type(11):before { content: "Остатки"; }
+    #Bricks td:nth-of-type(1):before { content: "Имя"; }
+    #Bricks td:nth-of-type(2):before { content: "Начало"; }
+    #Bricks td:nth-of-type(3):before { content: "Приход"; }
+    #Bricks td:nth-of-type(4):before { content: "Пер-д из"; }
+    #Bricks td:nth-of-type(5):before { content: "Пер-д в"; }
+    #Bricks td:nth-of-type(6):before { content: "Продажи"; }
+    #Bricks td:nth-of-type(7):before { content: "В цех"; }
+    #Bricks td:nth-of-type(8):before { content: "Из цеха"; }
+    #Bricks td:nth-of-type(9):before { content: "Списанно"; }
+    #Bricks td:nth-of-type(10):before { content: "Инв"; }
+    #Bricks td:nth-of-type(11):before { content: "Остатки"; }
 
-
+    #Sorted td:nth-of-type(1):before { content: "Партия"; }
+    #Sorted td:nth-of-type(2):before { content: "Дата"; }
+    #Sorted td:nth-of-type(3):before { content: "Кирпич"; }
+    #Sorted td:nth-of-type(4):before { content: "Кол-во"; }
 }

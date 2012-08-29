@@ -1,5 +1,8 @@
 {% extends 'core/index.html' %}
 {% load class_name %}
+{% block head %}
+    <link href="/static/css/responsive-tables.css" rel="stylesheet">
+{% endblock %}
 {% block title %}
     {% if form.instance.pk %}
         {{ form.instance|model_verbose_name|safe }}
@@ -7,17 +10,7 @@
     {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
-    <div style='display: none'>
-        {% for k,o in opers.iteritems %}
-            {% include 'whs/bill_opers.html' with form=o.empty_form hide=1 only %}
-        {% endfor %}
-    </div>
     <div class="container">
-        <div class="row">
-            <div class="span12">
-                <h1 class="well">Сортировка</h1>
-            </div>
-        </div>
         <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
             {% csrf_token %}
             {% for k,o in opers.iteritems %}
@@ -37,15 +30,6 @@
                                     {% endif %}
                                 </h2>
                             </legend>
-                            <div class="control-group">
-                                <label class="control-label" for="{{ label_id }}">Партия</label>
-                                <div class="controls">
-                                    <span class="uneditable-input span2">
-                                        {{ form.instance.part.batch }}, {{ form.instance.part }}
-                                    </span>
-                                </div>
-                            </div>
-
                             {{ form.as_div }}
                         {% endblock %}
                     </fieldset>
@@ -53,34 +37,46 @@
                 <div class="span7" id="brickselect-fade">
                     {% if opers %}
                         <fieldset>
-                        <legend>
-                            <h2>Из цеха</h2>
-                        </legend>
-                        {% for k,o in opers.iteritems %}
-                            {% for e in o.non_form_errors %}
-                                <div class="alert alert-error">
-                                    <i class="icon-warning-sign"></i>
-                                    <strong>{{ e|safe }}</strong>
-                                </div>
+                            <legend>
+                                <h2>Из цеха
+                                    {% for k,o in opers.iteritems %}
+                                        <a class="btn btn-primary btn-mini form-add" data-append="#Sorted tbody:visible"
+                                           data-prefix='{{ o.prefix }}'>Добавить</a>
+                                    {% endfor %}
+
+                                </h2>
+                            </legend>
+                            {% for k,o in opers.iteritems %}
+                                {% for e in o.non_form_errors %}
+                                    <div class="alert alert-error">
+                                        <i class="icon-warning-sign"></i>
+                                        <strong>{{ e|safe }}</strong>
+                                    </div>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    <table>
-                    <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Партия</th>
-                        <th>Кирпич</th>
-                        <th>Кол-во</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for k,o in opers.iteritems %}
-                            {% for form in o %}
-                                {% include 'whs/sort_opers.html' with form=form only %}
-                            {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                    </table>
+                            <table id='Sorted' class="table">
+                                <thead>
+                                <tr>
+                                    <th>Партия</th>
+                                    <th>Дата</th>
+                                    <th>Кирпич</th>
+                                    <th>Бой</th>
+                                    <th>Кол-во</th>
+                                    <th><i class="icon-trash"></i></th>
+                                </tr>
+                                </thead>
+                                {% for k,o in opers.iteritems %}
+                                    <tbody style='display: none'>
+                                    {% include 'whs/sort_opers.html' with form=o.empty_form only %}
+                                    </tbody>
+                                    <tbody>
+                                    {% for form in o %}
+                                        {% include 'whs/sort_opers.html' with form=form only %}
+                                    {% endfor %}
+                                    </tbody>
+                                {% endfor %}
+
+                            </table>
                         </fieldset>
                     {% endif %}
                 </div>
