@@ -3,7 +3,7 @@ body { background-image: url('/static/img/whitediamond.png') }
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
 .icon-logo {
-    background: url('/static/img/log.png') no-repeat;
+    background: url('/static/img/logo.png') no-repeat;
     vertical-align: 0px;
     background-position: 4px 0px;
 }
