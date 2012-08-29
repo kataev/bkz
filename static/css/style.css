@@ -10,6 +10,7 @@ div.controls ul {list-style: none}
 
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
+.badge-round { padding:  1px 3px 2px;}
 @media (min-width:767px) {
     .span4 fieldset .control-label {width: 100px}
     .span4 fieldset .controls {margin-left: 110px}

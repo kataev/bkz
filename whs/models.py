@@ -244,8 +244,8 @@ class Sorting(models.Model,UrlMixin):
     source = models.ForeignKey('self',null=True,blank=True)
     part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
-    brock = models.BooleanField(u'Бой')
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
+    brock = models.BooleanField(u'Бой')
     amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
 
     class Meta():

@@ -4,8 +4,8 @@
     <div class="input-append brickselect">
         <span class="uneditable-input">
             <span>Выберете кирпич</span>
-            {% if bf_raw.form.brock %}
-                <input type='checkbox' class="pull-right" title='Бой?' name='{{ bf_raw.form.brock.html_name }}'>
+            {% if not bf_raw.field.required %}
+                <a class="close pull-right" title="Очистить значение">&times;</a>
             {% endif %}
         </span>
         {{ bf }}

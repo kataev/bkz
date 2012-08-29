@@ -342,6 +342,7 @@ class Part(models.Model):
     cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c,blank=True)
     brocken = models.IntegerField(u'Бой',default=0)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+    sorted = models.BooleanField(u'Сортирован',default=False)
 
     def __unicode__(self):
         if self.pk: return u'Выход %s c телег %s' % (self.get_defect_display().lower(),self.tto)
