@@ -6,7 +6,6 @@ from django.db.models import Model
 
 register = template.Library()
 
-
 @register.filter(name='class_name')
 def class_name(value):
     if not value:

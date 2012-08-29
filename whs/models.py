@@ -242,8 +242,9 @@ class Sorting(models.Model,UrlMixin):
     brick & sourse - бой
     """
     source = models.ForeignKey('self',null=True,blank=True)
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
+    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
+    brock = models.BooleanField(u'Бой')
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
 

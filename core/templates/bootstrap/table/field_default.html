@@ -1,4 +1,5 @@
-<td id="td_{{ label_id }}"
-     class="{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
-        {{ bf }}
+<td id="td_{{ label_id }}" class="{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}"
+    {% if errors %}data-placement="top"  data-content='{{ errors }}' data-title='Ошибка' rel='popover'
+    data-trigger='hover'{% endif %}>
+    {{ bf }}
 </td>

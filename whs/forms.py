@@ -36,30 +36,42 @@ class AgentSelect(forms.Select):
                 letter = current_letter
         return u'\n'.join(output)
 
+
 class BrickSelect(forms.widgets.Input):
     input_type = 'hidden'
 
+    @property
+    def brock_label(self):
+        self.html_name.replace('brick','brock')
+
+
 class NumberInput(forms.TextInput):
     input_type = 'number'
+
     def __init__(self, attrs=None):
-        super(NumberInput,self).__init__(attrs=attrs)
+        super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
+
 
 class BatchInput(forms.TextInput):
     input_type = 'number'
+
     def __init__(self, attrs=None):
-        super(BatchInput,self).__init__(attrs=attrs)
+        super(BatchInput, self).__init__(attrs=attrs)
         self.attrs['step'] = 1
         self.attrs['min'] = 0
         self.attrs['autocomplete'] = 'off'
 
+
 class DateInput(forms.TextInput):
     input_type = 'date'
 
+
 class TaraInput(forms.TextInput):
     input_type = 'number'
+
     def __init__(self, attrs=None):
-        super(TaraInput,self).__init__(attrs=attrs)
+        super(TaraInput, self).__init__(attrs=attrs)
         self.attrs['step'] = 1
         self.attrs['min'] = 0
         self.attrs['autocomplete'] = 'off'
@@ -67,8 +79,9 @@ class TaraInput(forms.TextInput):
 
 class MoneyInput(forms.TextInput):
     input_type = 'number'
+
     def __init__(self, attrs=None):
-        super(MoneyInput,self).__init__(attrs=attrs)
+        super(MoneyInput, self).__init__(attrs=attrs)
         self.attrs['step'] = 0.01
         self.attrs['min'] = 0
         self.attrs['autocomplete'] = 'off'
@@ -77,54 +90,56 @@ class MoneyInput(forms.TextInput):
 class DateForm(forms.Form):
     date = forms.DateField()
 
-class BillForm(BootstrapMixin,forms.ModelForm):
+
+class BillForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Bill
         fields = ('date', 'number', 'agent', 'seller', 'reason', 'info')
         widgets = {
-            'date':DateInput,
-            'number':NumberInput(attrs={'min':1,'step':1}),
-            'agent':AgentSelect,
-            'seller':AgentSelect,
-            'info':forms.Textarea(attrs={'rows':1}),
-        }
+            'date': DateInput,
+            'number': NumberInput(attrs={'min': 1, 'step': 1}),
+            'agent': AgentSelect,
+            'seller': AgentSelect,
+            'info': forms.Textarea(attrs={'rows': 1}),
+            }
 
-class SoldForm(BootstrapMixin,forms.ModelForm):
+
+class SoldForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Sold
         widgets = {
-            'brick':BrickSelect,
-            'brick_from':BrickSelect,
-            'batch_number':BatchInput(attrs={'placeholder':'Номер',}),
-            'batch_year':BatchInput(attrs={'placeholder':'Год',}),
-            'tara':TaraInput,
-            'amount':NumberInput,
-            'price':MoneyInput,
-            'delivery':MoneyInput,
-            'info':forms.Textarea(attrs={'rows':1}),
-        }
+            'brick': BrickSelect,
+            'brick_from': BrickSelect,
+            'batch_number': BatchInput(attrs={'placeholder': 'Номер', }),
+            'batch_year': BatchInput(attrs={'placeholder': 'Год', }),
+            'tara': TaraInput,
+            'amount': NumberInput,
+            'price': MoneyInput,
+            'delivery': MoneyInput,
+            'info': forms.Textarea(attrs={'rows': 1}),
+            }
 
     def clean(self):
         data = self.cleaned_data
-        brick_from, brick, amount = data['brick_from'],data['brick'],data['amount']
+        brick_from, brick, amount = data['brick_from'], data['brick'], data['amount']
         total = brick.total
         if brick_from:
-            validate_transfer(brick_from,brick)
+            validate_transfer(brick_from, brick)
             total = brick_from.total
         if self.instance.pk:
-            total +=self.instance.amount
+            total += self.instance.amount
         if total < amount:
             raise ValidationError(u'На складе нету столько кирпича')
         return data
 
 
-class PalletForm(BootstrapMixin,forms.ModelForm):
+class PalletForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Pallet
         widgets = {
-            'amount':NumberInput,
-            'price':MoneyInput,
-            'info':forms.Textarea(attrs={'rows':1}),
+            'amount': NumberInput,
+            'price': MoneyInput,
+            'info': forms.Textarea(attrs={'rows': 1}),
             }
 
 
@@ -133,16 +148,17 @@ PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 
 class SoldFactory(SoldFactory):
     select_related = ('brick', 'brick_from')
+
     def get_queryset(self):
         return self.model.objects.select_related(*self.select_related)
 
     def clean(self):
         if any(self.errors):
             return
-        bricks, amounts = {},defaultdict(int)
+        bricks, amounts = {}, defaultdict(int)
         for form in self.forms:
             if not form.cleaned_data: continue
-            if form.cleaned_data.get('brick_from',None):
+            if form.cleaned_data.get('brick_from', None):
                 id = form.cleaned_data['brick_from'].pk
             else:
                 id = form.cleaned_data['brick'].pk
@@ -154,18 +170,20 @@ class SoldFactory(SoldFactory):
             if b.total < amounts[id]:
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
 
+
 class YearMonthFilter(forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
+
     class Meta:
-        dates = Bill.objects.dates('date','month')[::-1]
+        dates = Bill.objects.dates('date', 'month')[::-1]
 
 records_per_page = (
-    (10,'10 записей на странице'),
-    ('','20 записей на странице'),
-    (50,'50 записей на странице'),
-    (100,'100 записей на странице'),
-)
+    (10, '10 записей на странице'),
+    ('', '20 записей на странице'),
+    (50, '50 записей на странице'),
+    (100, '100 записей на странице'),
+    )
 
 class BillFilter(forms.Form):
     page = forms.IntegerField(required=False)
@@ -173,17 +191,17 @@ class BillFilter(forms.Form):
     month = forms.IntegerField(required=False)
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
     brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
-    rpp = forms.ChoiceField(choices=records_per_page,initial='',required=False)
+    rpp = forms.ChoiceField(choices=records_per_page, initial='', required=False)
 
     class Meta:
-        dates = Bill.objects.dates('date','month').reverse()
+        dates = Bill.objects.dates('date', 'month').reverse()
 
 bill_group_by = (
-    ('seller',u'Продавцу'),
-    ('agent',u'Покупателю'),
-    ('brick',u'Кирпичу'),
-    ('brick_from',u'Кирпичу перевода'),
-)
+    ('seller', u'Продавцу'),
+    ('agent', u'Покупателю'),
+    ('brick', u'Кирпичу'),
+    ('brick_from', u'Кирпичу перевода'),
+    )
 
 
 class BillAggregateFilter(BillFilter):
@@ -193,38 +211,43 @@ class BillAggregateFilter(BillFilter):
 
 class AgentForm(forms.ModelForm):
     class Meta:
-        model=Agent
+        model = Agent
 
 agent_choices = (
-    (0,'Выбрать'),
-    (1,'Создать'),
-)
+    (0, 'Выбрать'),
+    (1, 'Создать'),
+    )
 
 class AgentCreateOrSelectForm(forms.Form):
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False,)
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False, )
+
 
 class SellerForm(forms.ModelForm):
     class Meta:
-        model=Seller
+        model = Seller
+
 
 class AddForm(forms.ModelForm):
     class Meta:
         model = Add
 
+
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
 
-class SortingForm(BootstrapMixin,forms.ModelForm):
+
+class SortingForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Sorting
-        exclude = ('source','part')
+        exclude = ('source','brock')
         widgets = {
-            'date':DateInput,
-            'brick':BrickSelect,
-            'amount':NumberInput,
-            'info':forms.Textarea(attrs={'rows':1}),
+            'date': DateInput,
+            'brick': BrickSelect,
+            'amount': NumberInput,
+            'info': forms.Textarea(attrs={'rows': 1}),
             }
+
 
 class SortedForm(SortingForm):
     class Meta():
@@ -232,37 +255,19 @@ class SortedForm(SortingForm):
         model = Sorting
         exclude = ('source')
         widgets = {
-            'part':NumberInput(attrs={'class':'span1'}),
-            'date':DateInput(attrs={'style':'width:80px'}),
-            'brick':BrickSelect,
-            'amount':NumberInput(attrs={'class':'span1'}),
-            'info':forms.Textarea(attrs={'rows':1}),
+            'part': forms.TextInput(attrs={'class': 'span1', 'disabled': 'disabled'}),
+            'date': DateInput(attrs={'style': 'width:80px'}),
+            'brick': BrickSelect,
+#            'brock':forms.HiddenInput,
+            'amount': forms.TextInput(attrs={'class': 'span1'}),
+            'info': forms.Textarea(attrs={'rows': 1}),
             }
 
+SortedFactory = inlineformset_factory(Sorting, Sorting, form=SortedForm, extra=0)
 
-SortingFactory = inlineformset_factory(Sorting, Sorting,form=SortingForm,extra=2)
-
-class SortedFactory(SortingFactory):
+class SortedFactory(SortedFactory):
     select_related = tuple()
     form = SortedForm
-
-    def get_queryset(self):
-        return self.model.objects.select_related(*self.select_related).filter(source__isnull=False, part__isnull=False)
-
-    @classmethod
-    def get_default_prefix(cls):
-        return 'sorted'
-
-class BrockenFactory(SortingFactory):
-    select_related = tuple()
-    form = SortedForm
-
-    def get_queryset(self):
-        return self.model.objects.select_related(*self.select_related).filter(source__isnull=False, part__isnull=True)
-
-    @classmethod
-    def get_default_prefix(cls):
-        return 'brocken'
 
 class Write_offForm(forms.ModelForm):
     class Meta:
@@ -272,8 +277,8 @@ Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Wri
 
 class BrickForm(forms.ModelForm):
     class Meta:
-        model=Brick
-        exclude = ('total','css','label')
+        model = Brick
+        exclude = ('total', 'css', 'label')
 
     def clean(self):
         b = self.save(commit=False)
@@ -284,7 +289,8 @@ class BrickForm(forms.ModelForm):
         else:
             raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
 
+
 class VerificationForm(forms.Form):
     csv = forms.FileField(label=u'Файл в формате csv')
-    id = forms.IntegerField(initial=1,label=u'Номер столбца с УИД')
-    field = forms.IntegerField(initial=10,label=u'Номер столбца для сверки')
+    id = forms.IntegerField(initial=1, label=u'Номер столбца с УИД')
+    field = forms.IntegerField(initial=10, label=u'Номер столбца для сверки')

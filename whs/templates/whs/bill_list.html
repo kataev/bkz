@@ -28,14 +28,14 @@
                 <tr>
                     <th width=15px>#</th>
                     <th width="auto">Дата</th>
-                    <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in"></i></th>
+                    <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
                     <th style='width:60px;'>Кол-во</th>
                     <th style='width:100px;'>Цена</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for b in object_list %}
-                        {% include 'whs/Bill_tr.html' %}
+                        {% include 'whs/bill_tr.html' %}
                 {% endfor %}
                 </tbody>
                 <tfoot>

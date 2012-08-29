@@ -19,7 +19,7 @@ from bkz.whs.forms import BillFilter, YearMonthFilter
 
 from bkz.whs.pdf import pdf_render_to_response
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
-from whs.forms import SoldFactory, PalletFactory, SortedFactory,BrockenFactory
+from whs.forms import SoldFactory, PalletFactory, SortedFactory
 from whs.models import *
 
 from whs.utils import operations, calc
@@ -86,8 +86,20 @@ class BillUpdateView(UpdateView):
         return context
 
 
+class SortingCreateView(CreateView):
+    def get_initial(self):
+        """
+        Returns the initial data to use for forms on this view.
+        """
+        initial = self.initial.copy()
+        part = self.request.GET.get('part',None)
+        if part:
+            initial['part']=part
+        return initial
+
+
 class SortingUpdateView(BillUpdateView):
-    opers = [SortedFactory, BrockenFactory]
+    opers = [SortedFactory]
 
 
 class BillCreateView(CreateView):

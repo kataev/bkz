@@ -6,7 +6,7 @@
 "use strict";
 $(function () {
     $('.brickselect').each(function(id){
-        var val = $('input', this).val()
+        var val = $('input[type=hidden]', this).val()
         if (val){
             var tr = $('#brick-'+val)
             $('>span',this).attr('class','uneditable-input '+$(tr).attr('class'))
@@ -17,7 +17,7 @@ $(function () {
 
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
     $('#brick-select-buttons').on('toggle','a', function (e) {
-        $('input',this).trigger('click')
+        $('input[type=hidden]',this).trigger('click')
         var data = $(e.delegateTarget).serializeArray()
         var filter = _(data).chain().pluck('value').reduce(function(m,n){ return m+'.'+n},' ').value()
         var nodes = $('#Bricks tbody tr').hide().filter(filter).show()
@@ -53,11 +53,11 @@ $(function () {
         var target = e.delegateTarget
         $('>span',target).attr('class','uneditable-input ').removeAttr('title')
             .children('span').text('Выберете кирпич')
-        $('input',target).val(null)
+        $('input[type=hidden]',target).val(null)
     })
 
     $('.brickselect').on('click','a.btn',function(e){
-        var input = $('input', e.delegateTarget)
+        var input = $('input[type=hidden]', e.delegateTarget)
         var val = $(input).val()
         if (val) $('#brick-'+val+' input').attr('checked',true);
         $('#brickselect').data('target',e.delegateTarget)
@@ -80,7 +80,7 @@ $(function () {
         $('>span',target).attr('class','uneditable-input '+$(this).attr('class'))
             .attr('title','Остаток: '+$('.total',this).text().trim())
             .children('span').text($('.name',this).text().trim())
-        $('input',target).val($('input:radio',this).val())
+        $('input[type=hidden]',target).val($('input:radio',this).val())
     })
     $('#brickselect').on('shown',function(e){
         var val = $(this).data('val')
