@@ -225,6 +225,17 @@ def stats(request):
     return render(request, 'whs/stats.html', dict(form=form))
 
 
+def journal(request):
+    form = DateForm(request.GET or None)
+    if form.is_valid():
+        date = form.cleaned_data.get('date')
+    else:
+        date = datetime.date.today()
+    sorting = Sorting.objects.filter(source__isnull=True).filter(date=date)
+    bills = Bill.objects.filter(date=date).select_related('solds','solds__brick')
+    adds = Add.objects.filter(part__batch__date=date)
+    return render(request, 'whs/journal.html',dict(sorting=sorting,bills=bills,adds=adds,date=date))
+
 def man_main(request):
     form = DateForm(request.GET or None)
     if form.is_valid():
@@ -234,7 +245,7 @@ def man_main(request):
     man = Add.objects.select_related().filter(part__batch__date__year=date.year, part__batch__date__month=date.month)
     sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
     opers = {}
-    return render(request, 'whs/jurnal.html', dict(man=man, sorting=sorting, form=form))
+    return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
 
 
 def brick_flat_form(request, Form, id):

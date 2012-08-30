@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 __author__ = 'bteam'
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
@@ -68,10 +69,9 @@ def get_name(brick):
             c = u'о'
         else:
             c = u'у'
-        return u'К<b>%s</b>%sП%s' % (brick.get_width_display()[0], brick.view,c)
+        return u'К%s%sП%s' % (brick.get_width_display()[0], brick.view,c)
 
-
-def make_label(brick): # Код для вывода имени
+def make_label(brick): # Функция для вывода имени
     label = get_name(brick) + ' %s' % brick.get_mark_display()
     if brick.color:
         label += ' %s' % brick.get_color_display()
@@ -83,7 +83,7 @@ def make_label(brick): # Код для вывода имени
         label += ' %s' % brick.features.lower()
     if brick.refuse:
         label += ' %s' % brick.refuse
-    return label
+    return re.sub(' +',' ',label)
 
 
 def make_css(brick):

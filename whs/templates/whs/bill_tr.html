@@ -28,4 +28,7 @@
 {% for s in b.solds.all %}
     {% include 'whs/sold_tr.html' %}
 {% endfor %}
+{% for p in b.pallets.all %}
+    {% include 'whs/pallete_tr.html' %}
+{% endfor %}
 </tbody>

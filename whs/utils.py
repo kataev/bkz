@@ -3,8 +3,8 @@ from whs.models import Sorting, Add, Sold, Write_off
 
 def operations(filter):
     m_from = Sorting.objects.filter(source__isnull=True)#.filter(**filter)
-    m_to = Sorting.objects.filter(source__isnull=False,brick__isnull=False)#.filter(**filter)
-    m_rmv = Sorting.objects.filter(source__isnull=False,brick__isnull=True)#.filter(**filter)
+    m_to = Sorting.objects.filter(source__isnull=False,brock=False)#.filter(**filter)
+    m_rmv = Sorting.objects.filter(source__isnull=False,brock=True)#.filter(**filter)
     filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
     sold = Sold.objects.filter(**filter)
     t_from = Sold.objects.filter(**filter).filter(brick_from__isnull=False)
@@ -17,7 +17,7 @@ def operations(filter):
         t_from=dict(t_from.values_list('brick_from__id').annotate(Sum('amount')).order_by()),
         t_to=dict(t_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
         m_from=dict(m_from.values_list('brick__id').annotate(Sum('part__amount')).order_by()),
-        m_to=dict(m_to.values_list('brick__id').annotate(Sum('part__amount')).order_by()),
+        m_to=dict(m_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
         m_rmv=dict(m_rmv.values_list('source__brick__id').annotate(Sum('amount')).order_by()),
         inv=dict(inv.values_list('brick__id').annotate(Sum('amount')).order_by()))
 

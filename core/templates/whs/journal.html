@@ -1,0 +1,29 @@
+{% extends 'core/index.html' %}
+{% block title %}Журнал{% endblock %}
+{% load class_name %}
+{% block container %}
+    <div class="container">
+    <h1>Журнал за день <small>{{ date }}</small></h1>
+        <div class="row">
+            <div class="span12">
+                <h2>Накладные</h2>
+                <table id='Bills' class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th width=15px>#</th>
+                        <th width="auto">Дата</th>
+                        <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
+                        <th style='width:60px;'>Кол-во</th>
+                        <th style='width:100px;'>Цена</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in bills %}
+                        {% include 'whs/bill_tr.html' %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

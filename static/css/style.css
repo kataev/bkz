@@ -12,12 +12,9 @@ div.controls ul {list-style: none}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
 @media (min-width:767px) {
-    .span4 fieldset .control-label {width: 100px}
-    .span4 fieldset .controls {margin-left: 110px}
-    .span4 fieldset .form-actions {padding-left: 110px}
-    .span5 fieldset .control-label {width: 100px}
-    .span5 fieldset .controls {margin-left: 110px}
-    .span5 fieldset .form-actions {padding-left: 110px}
+    fieldset.less .control-label {width: 100px}
+    fieldset.less .controls {margin-left: 110px}
+    fieldset.less .form-actions {padding-left: 110px}
 
     .brickselect .uneditable-input {width:182px}
     .batchinput input {width:90px;}

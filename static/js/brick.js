@@ -55,7 +55,7 @@ function css_to_dict(prefix,val,from){
     if (prefix == 'sorting') {
         var t = ''
         for (var i in marks){
-            if (marks[i] < brick.mark){
+            if (marks[i] <= brick.mark){
                 t+=' .mark-'+marks[i]+base+','
             }
         }
