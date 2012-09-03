@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 __author__ = 'bteam'
+from collections import OrderedDict
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
@@ -40,21 +41,30 @@ mark_c = ((100, u'100'),
         (300, u'300'),
         (9000, u'брак'))
 
-color_type_c = (('', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
+ctype_c = (('', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
 defect_c = ((u' ', u'Гост'), (u'<20', u'До 20%'), (u'>20', u'Более 20%'))
 refuse_c = (
 (u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
 (u'П', u'Полосы'))
 
-css_dict = dict(
-    color=[u'bc-red', u'bc-yellow', u'bc-brown', u'bc-light', u'bc-white'],
-    width={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
-    view={u'Л': u'v-facial', u'Р': u'v-common'},
-    ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
-    defect={u'': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'},
-    mark=0,
-    features=0
-)
+css_dict = OrderedDict()
+css_dict['color']=[u'bc-red', u'bc-yellow', u'bc-brown', u'bc-light', u'bc-white']
+css_dict['width']={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'}
+css_dict['view']={u'Л': u'v-facial', u'Р': u'v-common'}
+css_dict['mark']=0
+css_dict['defect']={u' ': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'}
+css_dict['ctype']={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'}
+css_dict['features']=0
+
+def get_menu(brick,css_dict=css_dict):
+    result = OrderedDict()
+    names = dict([(f.name,f.verbose_name) for f in brick._meta.fields])
+    for name,items in css_dict.items():
+        if name=='features': continue
+        if name=='mark':
+            items = dict([(m,'mark-%d'%m) for m,l in mark_c])
+        result[names[name]] = ([(items[v],l) for v,l in eval('%s_c'%name)])
+    return result
 
 def get_name(brick):
     if brick.width == 0.8:

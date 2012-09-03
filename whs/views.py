@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView, CreateView, DeleteView, ListView
+from django.views.generic.dates import DayArchiveView,MonthArchiveView
 
 from bkz.core.templatetags.class_name import class_name
 from bkz.whs.forms import BillFilter, YearMonthFilter
@@ -220,9 +221,15 @@ def agents(request):
     return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
 
 
-def stats(request):
-    form = YearMonthFilter(request.GET or None)
-    return render(request, 'whs/stats.html', dict(form=form))
+class BillMonthArchiveView(MonthArchiveView):
+    model = Bill
+    month_format = '%m'
+    date_field = 'date'
+    template_name_suffix = '_list'
+
+class AddMonthArchiveView(MonthArchiveView):
+    model = Sorting
+    month_format = '%m'
 
 
 def journal(request):

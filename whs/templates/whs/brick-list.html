@@ -16,7 +16,7 @@
                 </h1>
             </div>
             <div class="span4">
-                <form method="GET" action="" class="form form-inline">
+                <form method="GET" action="" class="form-inline" style='margin-top: 10px'>
                     {% with year=form.date__year month=form.date__month %}
                         {% include 'whs/widgets/year-month-select.html' %}
                     {% endwith %}
@@ -27,6 +27,15 @@
         <div class="row">
             <div class="span12">
                 {% include 'whs/widgets/brick-select-buttons.html' %}
+            {% for b in Bricks %}
+                {% if b.begin < 0 %}
+                <div class="alert">
+                    <button type='button' class="close" data-dismiss='alert'>x</button>
+                    <strong>Внимание!</strong> <a href='#brick_{{ b.pk }}'>{{ b }}</a>
+                    имеет остаток на начало месяца меньше нуля.
+                </div>
+                {% endif %}
+            {% endfor %}
                 <table id='Bricks' class="table table-bordered table-condensed">
                     <colgroup>
                         <col span=1>

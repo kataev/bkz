@@ -1,39 +1,41 @@
 # -*- coding: utf-8 -*-
-from whs.models import Brick
+from whs.models import Brick,get_menu
+
+brick_menu = get_menu(Brick())
 
 def bricks(request):
     if getattr(request,'namespace',None) == 'whs':
         Bricks = Brick.objects.all()
-        return dict(Bricks=Bricks)
+        return dict(Bricks=Bricks,brick_menu=brick_menu)
     return {}
 
 nav = dict(
     main= (
-        ('whs:Brick-list', 'icon-align-justify icon-white', u'Склад'),
-        ('lab:index', 'icon-fullscreen icon-white', u'Лаборатория'),
-        ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
-        ('it:index', 'icon-hdd icon-white', u'ИТ'),
-        ('price', 'icon-shopping-cart icon-white', u'Прайс'),
+        ('whs:Brick-list', 'icon-align-justify', u'Склад'),
+        ('lab:index', 'icon-fullscreen', u'Лаборатория'),
+        ('energy:index', 'icon-energy', u'Энергоресурсы'),
+        ('it:index', 'icon-hdd', u'ИТ'),
+        ('price', 'icon-shopping-cart', u'Прайс'),
     ),
     whs=(
-        ('whs:Brick-list', 'icon-align-justify icon-white', u'Склад'),
+        ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('divider',),
-        ('whs:Bill-list', 'icon-whs icon-white', u'Реализация'),
-        ('whs:Add-list', 'icon-man icon-white', u'Производство'),
+        ('whs:Bill-list', 'icon-whs', u'Реализация'),
+        ('whs:Add-list', 'icon-man', u'Производство'),
         ('divider',),
-        ('whs:Agent-list', 'icon-Agent icon-white', u'Контрагенты'),
+        ('whs:Agent-list', 'icon-Agent', u'Контрагенты'),
         ),
     it=(
-        ('it:index', 'icon-hdd icon-white', u'ИТ'),
+        ('it:index', 'icon-hdd', u'ИТ'),
         ),
     energy=(
-        ('energy:index', 'icon-energy icon-white', u'Энергоресурсы'),
+        ('energy:index', 'icon-energy', u'Энергоресурсы'),
         ('divider',),
-        ('energy:Energy', 'icon-Energy icon-white', u'Энергия'),
-        ('energy:Teplo', 'icon-Teplo icon-white', u'Тепло'),
+        ('energy:Energy', 'icon-Energy', u'Энергия'),
+        ('energy:Teplo', 'icon-Teplo', u'Тепло'),
         ),
     lab = (
-        ('lab:index','icon-white icon-fullscreen', u'Лаборатория'),
+        ('lab:index',' icon-fullscreen', u'Лаборатория'),
     )
 )
 menu = dict(

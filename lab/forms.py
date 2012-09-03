@@ -81,8 +81,6 @@ class PressureForm(forms.ModelForm):
     class Meta:
         model = Pressure
 
-
-
 class FlexionForm(forms.ModelForm):
 #    size = SplitSizeField()
     class Meta:

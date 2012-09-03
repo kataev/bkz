@@ -6,6 +6,7 @@
 "use strict";
 $('.carousel').carousel()
 $('.collapse').collapse()
+$('#navbar').scrollspy()
 
 $(function () {
     $('.form-add').click(function (e) {
@@ -41,7 +42,7 @@ $(function () {
 })
 
 $(function () {
-    $('tr.Bill i.icon-zoom-in').click(function (e) {
+    $('tr[data-opers] i.icon-zoom-in').click(function (e) {
         var i = $(this).parent().parent().data('opers')
         $(this).toggleClass('zoom')
         $('#' + i).toggle('blind', null, 500)
@@ -60,7 +61,6 @@ $(function () {
             $(tbodys).show('blind', null, 500)
             $(icons).addClass('zoom')
         }
-
         $(this).toggleClass('zoom')
     })
 })

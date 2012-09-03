@@ -14,11 +14,14 @@ $(function () {
                 .children('span').text($('.name',tr).text().trim())
         }
     })
-
+    $('#brick-select-buttons').on('submit',function(e){
+        e.preventDefault()
+        alert('submited')
+    })
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
-    $('#brick-select-buttons').on('toggle','a', function (e) {
+    $('#brick-select-buttons').on('click','a', function (e) {
         //Фильтр при нажатии на кнопки
-        $('input[type=hidden]',this).trigger('click')
+        if (!$('input',this).trigger('click').length){return}
         var data = $(e.delegateTarget).serializeArray()
         var filter = _(data).chain().pluck('value').reduce(function(m,n){ return m+'.'+n},' ').value()
         var nodes = $('#Bricks tbody tr').hide().filter(filter).show()

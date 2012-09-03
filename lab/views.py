@@ -38,7 +38,6 @@ class BatchUpdateView(BillUpdateView):
             instance.tto = ''.join([x.cleaned_data.get('tto')+',' for x in opers[-1]])[:-1]
             instance.save()
             return redirect(instance.get_absolute_url())
-
         return self.render_to_response(dict(form=form,opers=opers))
 
 def index(request):

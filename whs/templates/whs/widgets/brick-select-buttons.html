@@ -1,114 +1,25 @@
 <form id='brick-select-buttons'>
-    <ul class="unstyled subnav">
-        <li class="btn-group" data-toggle="buttons-radio">
-            <a class="btn btn-success ">
-                <input type="reset" style="display: none">
-                Весь
+<ul class="nav nav-pills">
+    {% for label,m in brick_menu.items %}
+        <li class="dropdown">
+            <a href="#bc" class="dropdown-toggle" role='button' data-toggle="dropdown">
+                {{ label }} <b class="caret"></b>
             </a>
-        </li>
-        <li class="btn-group" data-toggle="buttons-radio">
-            <a href="#bc-red" class="btn bc-red">Красный
-                <input type="radio" value="bc-red" name='bc' style="display: none">
-            </a><a href="#bc-yellow" class="btn bc-yellow">Желтый
-            <input type="radio" value="bc-yellow" name='bc' style="display: none">
-        </a><a href="#bc-brown" class="btn bc-brown">Коричневый
-            <input type="radio" value="bc-brown" name='bc' style="display: none">
-        </a>
-            <a class="btn dropdown-toggle" style="margin-left: -5px" data-toggle="dropdown" href="#"><span
-                    class="caret"></span></a>
-            <ul class="dropdown-menu">
-                <li><a class='bc-light' href="#bc-light">
-                    <input type="radio" value="bc-light" name='bc' style="display: none">
-                    Светлый
-                </a>
-                </li>
-                <li><a class='bc-white' href="#bc-white">
-                    <input type="radio" value="bc-white" name='bc' style="display: none">
-                    Белый
-                </a>
-                </li>
+            <ul class="dropdown-menu" role='menu' aria-labelledby='bc'>
+                {% for value,l in m %}
+                    <li>
+                        <label class="radio {{ value }}"> <input type='checkbox' name='{{ value|cut:'-' }}' value='{{ value }}'>
+                            {{ l }}
+                        </label>
+                    </li>
+                {% endfor %}
             </ul>
         </li>
-        <li class="btn-group mark" data-toggle="buttons-radio">
-            <a href="#mark-100" class="btn">100
-                <input type="radio" value="mark-100" name='mark' style="display: none">
-            </a><a href="#mark-125" class="btn">125
-            <input type="radio" value="mark-125" name='mark' style="display: none">
-        </a><a href="#mark-150" class="btn">150
-            <input type="radio" value="mark-150" name='mark' style="display: none">
-        </a><a href="#mark-175" class="btn">175
-            <input type="radio" value="mark-175" name='mark' style="display: none">
-        </a><a href="#mark-200" class="btn">200
-            <input type="radio" value="mark-200" name='mark' style="display: none">
-        </a><a href="#mark-250" class="btn">250
-            <input type="radio" value="mark-250" name='mark' style="display: none">
-        </a>
-        </li>
-        <li class="btn-group" data-toggle="buttons-radio">
-            <a href="#w-thickened" class="btn btn-warning ">Утолщенный
-                <input type="radio" value="w-thickened" name='w' style="display: none">
-            </a><a href="#w-single" class="btn btn-info ">Одинарный
-            <input type="radio" value="w-single" name='w' style="display: none">
-        </a><a href="#w-euro" class="btn btn-success ">Евро
-            <input type="radio" value="w-euro" name='w' style="display: none">
-        </a>
-        </li>
-        <li class="btn-group" data-toggle="buttons-radio">
-            <a href="#v-facial" class="btn btn-info ">Лицевой
-                <input type="radio" value="v-facial" name='v' style="display: none">
-            </a><a href="#v-common" class="btn btn-warning ">Рядовой
-            <input type="radio" value="v-common" name='v' style="display: none">
-        </a>
-        </li>
-        <li class="btn-group">
-            <a class="btn" href="#"><i class="icon-bookmark"></i></a>
-            <a class="btn dropdown-toggle" style="margin-left: -5px" data-toggle="dropdown" href="#"><span
-                    class="caret"></span></a>
-            <ul class="dropdown-menu" style="text-align: left;left:-100px;">
-                <li><a href="#nofeatures" data-toggle="buttons-radio">
-                    <input type="radio" value="nofeatures" name='features'>
-                    Только люкс
-                </a></li>
-                <li><a href="#features" data-toggle="buttons-radio">
-                    <input type="radio" value="features" name='features'>
-                    Прочие
-                </a></li>
-                <li class="divider"></li>
-                <li><a href="#d-g20" data-toggle="buttons-radio">
-                    <input type="radio" value="d-g20" name='d'>
-                    Больше 20%
-                </a></li>
-                <li><a href="#d-l20" data-toggle="buttons-radio">
-                    <input type="radio" value="d-l20" name='d'>
-                    Меньше 20%
-                </a></li>
+    {% endfor %}
+<li class="dropdown">
+    <button class='btn btn-primary' type='submit'>Показать</button>
+    <button class='btn btn-small' type='reset'>Сбросить</button>
+</li>
+</ul>
 
-                <li class="divider"></li>
-                <li><a href="#ctype-0" data-toggle="buttons-radio">
-                    <input type="radio" value="ctype-0" name='ctype'>
-                    Без типа
-                </a></li>
-                <li><a href="#ctype-1" data-toggle="buttons-radio">
-                    <input type="radio" value="ctype-1" name='ctype'>
-                    Тип 1
-                </a></li>
-                <li><a href="#ctype-2" data-toggle="buttons-radio">
-                    <input type="radio" value="ctype-2" name='ctype'>
-                    Тип 2
-                </a></li>
-                <li><a href="#ctype-3" data-toggle="buttons-radio">
-                    <input type="radio" value="ctype-3" name='ctype'>
-                    Тип 3
-                </a></li>
-
-                <li class="divider"></li>
-                <li><a class="" href="#zero" data-toggle="buttons-radio">
-                    <input type="checkbox" value="zero" name='zero'>
-                    С операциями
-                </a>
-                </li>
-
-            </ul>
-        </li>
-    </ul>
 </form>

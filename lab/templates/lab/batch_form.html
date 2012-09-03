@@ -13,7 +13,7 @@
         {% endfor %}
     {% endfor %}
     <div style='display: none'>
-        {% for factory in opers %}
+        {% for k,factory in opers.iterintems %}
                 {% include factory.model|form_name with form=factory.empty_form %}
         {% endfor %}
     </div>
@@ -80,7 +80,7 @@
                 </div>
                 </fieldset>
                 {% if opers %}
-                            {% include 'lab/part_list.html' with factory=opers|last %}
+                            {% include 'lab/part_list.html' with factory=opers.part %}
                     </div>
                     <div class="tab-pane" id='Tests'>
                     {% for factory in opers|slice:':-1' %}

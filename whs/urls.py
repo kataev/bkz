@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from bkz.utils import app_urlpatterns,url,patterns
-from bkz.whs.views import BillListView
+from bkz.whs.views import BillListView,BillMonthArchiveView
 from bkz.whs.handlers import TransferMarkHandler,TotalHandler, BrickHandler
 
 from piston.resource import Resource
 
 urlpatterns = patterns('bkz.whs.views',
-    url(ur'^Реализация$', BillListView.as_view(), name='Bill-list'),
-#    url(ur'^Статистика$', 'stats', name='statistics'),
-    url(ur'^Контрагенты$', 'agents', name='Agent-list'),
     url(ur'^$', 'brick_main', name='Brick-list'),
+    url(ur'^Контрагенты$', 'agents', name='Agent-list'),
+    url(ur'^Реализация/$', BillMonthArchiveView.as_view(), {'year':datetime.date.today().year,'month':datetime.date.today().month},name='Bill-list'),
+    url(ur'^Реализация/(?P<year>\d+)/(?P<month>\d+)$', BillMonthArchiveView.as_view(), name='Bill-list'),
+
     url(ur'^Производство', 'man_main', name='Add-list'),
     url(ur'^Журнал', 'journal', name='journal'),
     url(ur'^Сверка$', 'verification', name='verification'),
