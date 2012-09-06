@@ -257,7 +257,6 @@ def man_main(request):
 
 def brick_flat_form(request, Form, id):
     """ Форма  """
-    #    id = args[0]
     if id: instance = get_object_or_404(Form._meta.model, pk=id)
     else: instance = None
     if request.method == 'POST':
@@ -271,6 +270,10 @@ def brick_flat_form(request, Form, id):
     else:
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
+
+from webodt.shortcuts import render_to_response
+def test_webodt(request):
+    return render_to_response('webodt.odt',{'test':['asd','olo','olotest2']},format='pdf',inline=True)
 
 
 def brick_main(request):

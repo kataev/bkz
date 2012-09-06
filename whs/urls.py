@@ -9,6 +9,7 @@ from piston.resource import Resource
 
 urlpatterns = patterns('bkz.whs.views',
     url(ur'^$', 'brick_main', name='Brick-list'),
+    url(ur'^test$', 'test_webodt'),
     url(ur'^Контрагенты$', 'agents', name='Agent-list'),
     url(ur'^Реализация/$', BillMonthArchiveView.as_view(), {'year':datetime.date.today().year,'month':datetime.date.today().month},name='Bill-list'),
     url(ur'^Реализация/(?P<year>\d+)/(?P<month>\d+)$', BillMonthArchiveView.as_view(), name='Bill-list'),

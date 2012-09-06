@@ -20,7 +20,6 @@ urlpatterns += patterns('',
     url(ur'^Лаборатория/', include('bkz.lab.urls', namespace='lab')),
     url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
     url(ur'^ИТ/', include('bkz.it.urls', namespace='it'), name='it'),
-    url(ur'^ЦПУ/Датчики/?', include('graphite.render.urls',namespace='carbon')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
