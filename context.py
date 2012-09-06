@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from whs.models import Brick,get_menu
 
-brick_menu = get_menu(Brick())
+brick_menu = get_menu()
 
 def bricks(request):
     if getattr(request,'namespace',None) == 'whs':

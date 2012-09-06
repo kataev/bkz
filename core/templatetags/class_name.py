@@ -23,12 +23,6 @@ def class_name(value):
     else:
         return 'unknow'
 
-@register.filter(name='value_split')
-def value_split(value):
-    return str(value).split('-')
-
-
-
 @register.filter(name='form_name')
 def form_name(value):
     print type(value)

@@ -1,15 +1,15 @@
 <form id='brick-select-buttons'>
 <ul class="nav nav-pills">
-    {% for label,m in brick_menu.items %}
+    {% for item in brick_menu %}
         <li class="dropdown">
-            <a href="#bc" class="dropdown-toggle" role='button' data-toggle="dropdown">
-                {{ label }} <b class="caret"></b>
+            <a href="#{{ item.name }}" class="dropdown-toggle" role='button' data-toggle="dropdown">
+                {{ item.verbose_name }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu" role='menu' aria-labelledby='bc'>
-                {% for value,l in m %}
+                {% for k,v in item.items %}
                     <li>
-                        <label class="radio {{ value }}"> <input type='checkbox' name='{{ value|cut:'-' }}' value='{{ value }}'>
-                            {{ l }}
+                        <label class="radio {{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>
+                            {{ v }}
                         </label>
                     </li>
                 {% endfor %}

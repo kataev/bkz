@@ -3,7 +3,7 @@
  * Date: 02.02.12
  * Time: 16:24
  */
-"use strict";
+//"use strict";
 $(function () {
     $('.brickselect').each(function(id){
         var val = $('input[type=hidden]', this).val()
@@ -14,9 +14,23 @@ $(function () {
                 .children('span').text($('.name',tr).text().trim())
         }
     })
+    bricks = $('#Bricks tbody tr').map(function(e,tr){
+        var td = $('td', tr).slice(1).map(function (id, td) { return parseInt(td.innerHTML) })
+        return {'css':$(tr).attr('class'),'node':tr,'td':td}
+    })
+
     $('#brick-select-buttons').on('submit',function(e){
         e.preventDefault()
-        alert('submited')
+        var data = $(e.delegateTarget).serializeArray()
+        for (k in data) {
+            for (v in data[k]){
+
+            }
+        }
+        for (i in bricks){
+
+        }
+
     })
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
     $('#brick-select-buttons').on('click','a', function (e) {
@@ -64,7 +78,6 @@ function css_to_dict(prefix,val,from){
         }
         base = t.slice(0,-1)
     }
-    console.log(arguments,css,brick,base);
     return base
 }
 
