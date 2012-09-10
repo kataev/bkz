@@ -1,0 +1,10 @@
+<tr class='Sorting {{ s.brick.css }}' data-opers='Sorting_{{ s.pk }}'>
+    <td colspan="2"> {{ s.date|date:'j M Y' }} </td>
+    <td>{{ s.brick }} <i class="icon-zoom-in pull-right" ></i></td>
+    <td>{{ s.amount }}</td>
+</tr>
+<tbody class="opers" style='display: none' id='Sorting_{{ s.pk }}'>
+{% for so in s.sorted.all %}
+    {% include 'whs/sorted_tr.html' %}
+{% endfor %}
+</tbody>

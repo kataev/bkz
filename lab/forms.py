@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory
+from bootstrap.forms import BootstrapMixin
 
 from bkz.lab.models import *
+from bkz.whs.forms import BatchInput,DateInput
 
 class ClayForm(forms.ModelForm):
     class Meta:
@@ -55,9 +57,28 @@ class DensityForm(forms.ModelForm):
 class DateHTML5Input(forms.DateInput):
     input_type = 'date'
 
-class BatchForm(forms.ModelForm):
+
+class BrickChechboxInput(forms.CheckboxInput):
+    pass
+
+class BrickInput(forms.Select):
+    pass
+
+
+class BatchDateInput(DateInput):
+    pass
+
+class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
+        fields = ('number','date','cavitation','width','color')
+        widgets = {
+            'number':BatchInput(),
+            'date':BatchDateInput(),
+            'cavitation':BrickChechboxInput(attrs={'title':'Пустотелый?'}),
+            'width':BrickInput(),
+            'color':BrickInput()
+        }
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):
@@ -80,8 +101,6 @@ class PressureForm(forms.ModelForm):
 #    size = SplitSizeField(label=u'Размеры',widget=SplitSizeWidget(attrs={'autocomplete':'off','class':'input-micro','min':0}))
     class Meta:
         model = Pressure
-
-
 
 class FlexionForm(forms.ModelForm):
 #    size = SplitSizeField()

@@ -53,13 +53,13 @@ class DispJurnal(models.Model):
         if self.minus:
             return u'minus %d' % self.minus
         elif self.plus:
-            return u'plus %d' % self.minus
+            return u'plus %d' % self.plus
         elif self.akt:
-            return u'akt %d' % self.minus
+            return u'akt %d' % self.akt
         elif self.spis:
-            return u'spis %d' % self.minus
+            return u'spis %d' % self.spis
         elif self.no_con:
-            return u'no_con %d' % self.minus
+            return u'no_con %d' % self.no_con
         elif self.workshop:
             return u'workshop %d' % self.workshop
         else:

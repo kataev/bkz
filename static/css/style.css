@@ -1,26 +1,28 @@
 body { background-image: url('/static/img/whitediamond.png') }
+body { background-image: url('/static/img/whitediamond.png') }
 #brick-select-buttons input {vertical-align: top}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
+.brand { font-family: Verdana; }
 .icon-logo {
+    width: 9px;
+    background-color: #990d0d !important;
     background: url('/static/img/logo.png') no-repeat;
     vertical-align: 0px;
-    background-position: 4px 0px;
+    background-position: 0;
 }
-
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
 @media (min-width:767px) {
-    .span4 fieldset .control-label {width: 100px}
-    .span4 fieldset .controls {margin-left: 110px}
-    .span4 fieldset .form-actions {padding-left: 110px}
-    .span5 fieldset .control-label {width: 100px}
-    .span5 fieldset .controls {margin-left: 110px}
-    .span5 fieldset .form-actions {padding-left: 110px}
+    fieldset.less .control-label {width: 100px}
+    fieldset.less .controls {margin-left: 110px}
+    fieldset.less .form-actions {padding-left: 110px}
 
     .brickselect .uneditable-input {width:182px}
     .batchinput input {width:90px;}
+    .brickinput select[name="color"] {width:90px;padding-left: 0;}
+    .brickinput select[name="width"] {width:110px;padding-left: 0;}
     .moneyinput span {width:36px}
     .moneyinput input {width:174px}
     .moneyinput span {width:36px}
@@ -68,50 +70,6 @@ span.dborder { top: -1.5ex; left: 0; width:.9ex; border-bottom: 0.16ex solid #33
 span.dot { position:absolute; text-indent: -1000em; }
 
 span.input {overflow: hidden;}
-
-.navbar form button, .navbar form select {
-    margin: auto !important;
-}
-
-.nav.nav-tabs li.active span.label, nav.nav-tabs li:hover span.label {
-    background-color: #F89406;
-}
-
-.subnav {
-    margin-bottom: 5px;
-    width: 100%;
-    text-align: center;
-    padding: 2px;
-    text-align: center;
-    line-height: 200%;
-}
-.subnav .btn-group {
-    white-space: nowrap;
-}
-
-.subnav>li {
-    display: inline-block;
-
-}
-.subnav a.btn.active i, .subnav a.btn-group.active i {
-    background-position: -288px 0;
-}
-
-.subnav a.btn {
-    float: none;
-    /*position: */
-}
-
-/* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */
-@media (min-width: 980px) {
-    .subnav-fixed {
-        position: fixed;
-        top: 45px;
-        left: 0;
-        right: 0;
-        z-index: 1030;
-    }
-}
 
 tr.Bill {border-top-width:2px}
 .Sold .transfer p.help-block {display: none}

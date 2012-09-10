@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
-import pytils
 
 from django.db import models
 
 from constants import *
-from bkz.utils import UrlMixin
-from whs.pdf import PalletMixin, OperationsMixin, BillMixin
+from bkz.utils import UrlMixin,ru_date
+from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
 class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
@@ -16,7 +15,7 @@ class Brick(models.Model,UrlMixin):
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
     width = models.FloatField(u"Ширина", choices=width_c, default=width_c[0][0])
     view = models.CharField(u"Вид", max_length=60, choices=view_c, default=view_c[0][0])
-    ctype = models.CharField(u"Тип цвета", max_length=6, choices=color_type_c, default=color_type_c[0][0],blank=True)
+    ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
     refuse = models.CharField(u"Особенности", max_length=10, choices=refuse_c, default=refuse_c[0][0],blank=True)
     features = models.CharField(u"Редкие особенности", max_length=60, blank=True, help_text=u'Oттенки, тычки и прочее')
@@ -92,11 +91,8 @@ class Agent(models.Model,UrlMixin):
             return u'Новый контрагент'
 
 class Seller(Agent,UrlMixin):
-    director_name = models.CharField(u'Должность директора',max_length=200)
     director = models.CharField(u'Директор',max_length=200)
-    buhgalter_name = models.CharField(u'Должность бухгалтер',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
-    dispetcher_name = models.CharField(u'Должность диспечера',max_length=200)
     dispetcher = models.CharField(u'Диспечер',max_length=200)
     nds = models.FloatField(u'НДС',default=0.18)
 
@@ -152,15 +148,15 @@ class Pallet(PalletMixin, models.Model):
 
     def __unicode__(self):
         if self.pk:
-            return u'Поддоны %d шт' % self.amount
+            return u'Поддоны - %d шт' % self.amount
         else:
             return u'Продажа поддонов'
 
-class Sold(OperationsMixin,models.Model):
+class Sold(SoldMixin,models.Model):
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
-    batch_number = models.PositiveSmallIntegerField(u'№ партии',null=True, blank=True)
+    batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
     batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
@@ -177,9 +173,9 @@ class Sold(OperationsMixin,models.Model):
     def __unicode__(self):
         if self.pk:
             if self.brick_from:
-                return u'%s < %s, %d шт' % (self.brick,self.brick_from, self.amount)
+                return u'%s < %s - %d шт' % (self.brick,self.brick_from, self.amount)
             else:
-                return u'%s, %d шт' % (self.brick, self.amount)
+                return u'%s - %d шт' % (self.brick, self.amount)
         else:
             return u'Новая отгрузка'
 
@@ -201,24 +197,6 @@ class Nomenclature(models.Model, UrlMixin):
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
-class Man(models.Model, UrlMixin):
-    """Класс документа для учета прихода кирпича с производства"""
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
-    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-
-    class Meta():
-        verbose_name = u"Производство"
-        verbose_name_plural = u"Производства"
-        permissions = (("view_man", u"Может просматривать производсво"),)
-        ordering = ('-date', )
-
-    def __unicode__(self):
-        if self.pk:
-            date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-            return u'%s' % date
-        else:
-            return u'Новая партия с производства'
-
 class Add(models.Model,UrlMixin):
     """Класс операций для документа"""
     part = models.ForeignKey('lab.Part',related_name='add',verbose_name=u'Партия')
@@ -230,7 +208,7 @@ class Add(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u'%s, %d шт' % (self.brick, self.amount)
+            return u'%s - %d шт' % (self.brick, self.amount)
         else:
             return u'Новая партия'
 
@@ -241,7 +219,7 @@ class Sorting(models.Model,UrlMixin):
     brick & sourse & part - из цеха
     brick & sourse - бой
     """
-    source = models.ForeignKey('self',null=True,blank=True)
+    source = models.ForeignKey('self',null=True,blank=True,related_name='sorted')
     part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
@@ -252,7 +230,16 @@ class Sorting(models.Model,UrlMixin):
         verbose_name = u"Сортировка"
 
     def __unicode__(self):
-        return u'Новая сортировка'
+        if self.pk:
+            if not self.source_id:
+                return u'В сортировку %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
+            else:
+                if not self.brock:
+                    return u'Отсортированно %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
+                else:
+                    return u'Бой %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
+        else:
+            return u'Новая сортировка'
 
 class Inventory(models.Model, UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
@@ -279,5 +266,5 @@ class Write_off(models.Model):
         verbose_name_plural = u"Списания"
 
     def __unicode__(self):
-        if self.pk: return u'%s, %d шт' % (self.brick, self.amount)
+        if self.pk: return u'%s - %d шт' % (self.brick, self.amount)
         else: return u'Списание'

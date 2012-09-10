@@ -19,6 +19,7 @@
     </div>
 {% endblock %}
 {% block container %}
+    <div class="container">
     {% load pagination_tags %}
 {#    {% autopaginate object_list %}#}
     <div class="row">
@@ -49,7 +50,7 @@
         </div>
         <div class="span4">
         {{ form.errors }}
-            <form class="form-vertical filter" action="" method="GET">
+            <form class="filter" action="" method="GET">
                 <fieldset>
                     <legend><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр для поиска накладных
                     </legend>
@@ -92,5 +93,6 @@
     </div>
     <div class="span12">
         {% paginate using 'pagination/pagination.html' %}
+    </div>
     </div>
 {% endblock %}

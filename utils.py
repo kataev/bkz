@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from functools import partial
+
 from django.conf.urls import url,patterns
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import get_models,get_app
@@ -6,7 +8,7 @@ from django.utils.importlib import import_module
 from django.views.generic import CreateView,UpdateView,DeleteView
 from django.db.models import permalink
 
-import pytils
+from pytils.dt import ru_strftime
 
 def app_urlpatterns(app_name):
     urls = patterns('')
@@ -48,8 +50,7 @@ class UrlMixin(object):
         url = '%s:%s-delete' % (self._meta.app_label,self._meta.object_name)
         return (url, (), {'pk':self.pk})
 
-def ru_date(date):
-    return pytils.dt.ru_strftime(u'%d %B %Y',inflected=True,date=date)
+ru_date = partial(ru_strftime,u'%d %B %Y',inflected=True)
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
@@ -59,7 +60,6 @@ def view_permisions(apps = ['whs','lab','energy','it']):
         for c in ContentType.objects.filter(app_label=app):
             if issubclass(c.model_class(),UrlMixin):
                 p = Permission(codename='view_%s' % c.model, name=u'Можно просматривать %s' % c.name, content_type=c)
-                print c.name,c.model
                 try:
                     p.validate_unique()
                 except ValidationError:

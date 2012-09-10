@@ -21,7 +21,7 @@
         <div class="row">
 
             <div class="span5">
-                <fieldset class="{{ form.Meta.model|class_name }}">
+                <fieldset class="{{ form.Meta.model|class_name }} less">
                     {% block main-fieldset %}
                     <legend>
                         <h1>
@@ -40,7 +40,8 @@
                     <ul class="nav nav-list" id="opers">
                         <li class="nav-header">
                             <h4>Операции </h4>
-
+                        </li>
+                    <li>
                             <div class="btn-group">
                                 <a class="btn btn-primary btn-success btn-mini">Добавить
                                     <i class="icon-arrow-right icon-white"></i></a>

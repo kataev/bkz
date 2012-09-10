@@ -13,11 +13,10 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView, CreateView, DeleteView, ListView
+from django.views.generic.dates import DayArchiveView,MonthArchiveView
 
-from bkz.core.templatetags.class_name import class_name
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
-from bkz.whs.pdf import pdf_render_to_response
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
 from whs.forms import SoldFactory, PalletFactory, SortedFactory
 from whs.models import *
@@ -170,12 +169,6 @@ def BrickFlatForm(request, Form, id):
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
 
-
-def bill_print(request, pk):
-    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
-    return pdf_render_to_response('whs/rml/torg-12.rml', {'doc': doc})
-
-
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
         'agent').select_related()
@@ -220,10 +213,27 @@ def agents(request):
     return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
 
 
-def stats(request):
-    form = YearMonthFilter(request.GET or None)
-    return render(request, 'whs/stats.html', dict(form=form))
+class BillMonthArchiveView(MonthArchiveView):
+    model = Bill
+    month_format = '%m'
+    date_field = 'date'
+    template_name_suffix = '_list'
 
+class AddMonthArchiveView(MonthArchiveView):
+    model = Sorting
+    month_format = '%m'
+
+
+def journal(request):
+    form = DateForm(request.GET or None)
+    if form.is_valid():
+        date = form.cleaned_data.get('date')
+    else:
+        date = datetime.date.today()
+    sorting = Sorting.objects.filter(source__isnull=True).filter(date=date)
+    bills = Bill.objects.filter(date=date).select_related('solds','solds__brick')
+    adds = Add.objects.filter(part__batch__date=date)
+    return render(request, 'whs/journal.html',dict(sorting=sorting,bills=bills,adds=adds,date=date))
 
 def man_main(request):
     form = DateForm(request.GET or None)
@@ -234,12 +244,11 @@ def man_main(request):
     man = Add.objects.select_related().filter(part__batch__date__year=date.year, part__batch__date__month=date.month)
     sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
     opers = {}
-    return render(request, 'whs/jurnal.html', dict(man=man, sorting=sorting, form=form))
+    return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
 
 
 def brick_flat_form(request, Form, id):
     """ Форма  """
-    #    id = args[0]
     if id: instance = get_object_or_404(Form._meta.model, pk=id)
     else: instance = None
     if request.method == 'POST':
@@ -253,6 +262,12 @@ def brick_flat_form(request, Form, id):
     else:
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
+
+
+from webodt.shortcuts import render_to_response
+def bill_print(request, pk):
+    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
+    return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)
 
 
 def brick_main(request):

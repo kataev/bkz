@@ -5,8 +5,8 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-
-from bkz.whs.constants import defect_c,color_c,mark_c
+from bkz.whs.models import Brick
+from bkz.whs.constants import defect_c,color_c,mark_c,cavitation_c
 from bkz.utils import UrlMixin,ru_date
 
 
@@ -108,9 +108,9 @@ class Sand(models.Model,UrlMixin):
 
 
 width_c = (
-    (0.8,u'КЕРПу'),
-    (1.0,u'КОРПу'),
-    (1.4,u'КУРПу'),
+    (0.8,u'Евро'),
+    (1.0,u'Одинарный'),
+    (1.4,u'Утолщенный'),
 )
 
 class Bar(models.Model,UrlMixin):
@@ -256,11 +256,17 @@ class HeatConduction(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Теплопроводность"
 
+cavitation = (
+    (True,u'Пустотелый'),
+    (False,u'Полнотелый')
+)
+
 
 class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
+    cavitation = models.BooleanField(u"Пустотелость",default=True,choices=cavitation_c)
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
 
@@ -347,6 +353,17 @@ class Part(models.Model):
     def __unicode__(self):
         if self.pk: return u'Выход %s c телег %s' % (self.get_defect_display().lower(),self.tto)
         else: return u'Новый выход с производства'
+
+    @property
+    def get_name(self):
+        if not self.batch.color:
+            return self.batch.get_width_display()
+        else:
+            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
+
+    @property
+    def count_exit(self):
+        return self.amount
 
     class Meta():
         verbose_name = u"Часть партии"

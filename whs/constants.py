@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import re
+
 __author__ = 'bteam'
+from collections import OrderedDict
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
@@ -15,45 +18,62 @@ width_c = (
     )
 
 mass_c = {1.4: 3.5,
-         1.0: 2.5,
-         0.8: 2.5,
-         0.0: 5.0
+          1.0: 2.5,
+          0.8: 2.5,
+          0.0: 5.0
 }
 
 cavitation_c = ((0, u'Пустотелый'),
-           (1, u'Полнотелый'),
-)
+                (1, u'Полнотелый'),
+    )
 
 color_c = ((0, u'Красный'),
-         (1, u'Желтый'),
-         (2, u'Коричневый'),
-         (3, u'Светлый'),
-         (4, u'Белый'))
+           (1, u'Желтый'),
+           (2, u'Коричневый'),
+           (3, u'Светлый'),
+           (4, u'Белый'))
 
 mark_c = ((100, u'100'),
-        (125, u'125'),
-        (150, u'150'),
-        (175, u'175'),
-        (200, u'200'),
-        (250, u'250'),
-        (300, u'300'),
-        (9000, u'брак'))
+          (125, u'125'),
+          (150, u'150'),
+          (175, u'175'),
+          (200, u'200'),
+          (250, u'250'),
+          (300, u'300'),
+          (9000, u'брак'))
 
-color_type_c = (('', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
+ctype_c = (('', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
 defect_c = ((u' ', u'Гост'), (u'<20', u'До 20%'), (u'>20', u'Более 20%'))
 refuse_c = (
-(u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
-(u'П', u'Полосы'))
+    (u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
+    (u'П', u'Полосы'))
 
-css_dict = dict(
-    color=[u'bc-red', u'bc-yellow', u'bc-brown', u'bc-light', u'bc-white'],
-    width={1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'},
-    view={u'Л': u'v-facial', u'Р': u'v-common'},
-    ctype={'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'},
-    defect={u'': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'},
-    mark=0,
-    features=0
-)
+css_dict = OrderedDict()
+css_dict['color'] = {0: u'bc-red', 1: u'bc-yellow', 2: u'bc-brown', 3: u'bc-light', 4: u'bc-white'}
+css_dict['width'] = {1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'}
+css_dict['view'] = {u'Л': u'v-facial', u'Р': u'v-common'}
+css_dict['mark'] = {100: 'mark-100', 125: 'mark-125', 150: 'mark-150', 175: 'mark-175',
+                    200: 'mark-200', 250: 'mark-250' , 300: 'mark-300', 9000: 'mark-9000'}
+css_dict['defect'] = {u' ': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'}
+css_dict['ctype'] = {'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'}
+css_dict['features'] = {}
+
+
+from django.db.models import get_model
+
+def get_menu(css_dict=css_dict):
+    Brick = get_model('whs','brick')
+    result = []
+    for name,items in css_dict.iteritems():
+        field = Brick._meta.get_field_by_name(name)[0]
+        choices = dict(field.choices)
+        o = dict(verbose_name=field.verbose_name)
+        if name == 'features':
+            continue
+        o['name']=name
+        o['items'] = [(css_dict[name][k],v) for k,v in field.choices]
+        result.append(o)
+    return result
 
 def get_name(brick):
     if brick.width == 0.8:
@@ -68,10 +88,10 @@ def get_name(brick):
             c = u'о'
         else:
             c = u'у'
-        return u'К<b>%s</b>%sП%s' % (brick.get_width_display()[0], brick.view,c)
+        return u'К%s%sП%s' % (brick.get_width_display()[0], brick.view, c)
 
 
-def make_label(brick): # Код для вывода имени
+def make_label(brick): # Функция для вывода имени
     label = get_name(brick) + ' %s' % brick.get_mark_display()
     if brick.color:
         label += ' %s' % brick.get_color_display()
@@ -83,7 +103,7 @@ def make_label(brick): # Код для вывода имени
         label += ' %s' % brick.features.lower()
     if brick.refuse:
         label += ' %s' % brick.refuse
-    return label
+    return re.sub(' +', ' ', label)
 
 
 def make_css(brick):

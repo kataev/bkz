@@ -2,17 +2,16 @@
 import os, sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
-sys.path.insert(0,'/opt/graphite/webapp/')
-from cpu.graphite_settings_defaults import *
-from cpu.graphite_settings import *
-
 DEBUG = True
 TEMPLATE_DEBUG = True
 
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2',)
-DEBUG_TOOLBAR_CONFIG = dict(INTERCEPT_REDIRECTS = False)
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS' : False}
 
 DEVSERVER_MODULES = ()
+
+WEBODT_CONVERTER = 'webodt.converters.openoffice.OpenOfficeODFConverter'
+WEBODT_TEMPLATE_PATH = 'core/templates/'
 
 ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
@@ -177,10 +176,10 @@ INSTALLED_APPS = (
     'pytils',
     'devserver',
     'south',
-    'trml2pdf',
     'gunicorn',
 #    'piston',
     'selenium',
+    'webodt',
 
     'bkz.ipaccess',
 
@@ -195,11 +194,6 @@ INSTALLED_APPS = (
 
     'bootstrap',
     'linaro_django_pagination',
-#    graphite
-    'tagging',
-#    'graphite',
-    'graphite.render',
-    'graphite.account',
     )
 
 # A sample logging configuration. The only tangible logging

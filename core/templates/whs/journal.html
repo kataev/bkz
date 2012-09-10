@@ -1,0 +1,78 @@
+{% extends 'core/index.html' %}
+{% block title %}Журнал{% endblock %}
+{% load class_name %}
+{% block container %}
+    <div class="container">
+    <div class="row">
+        <div class="span8">
+            <h1>
+                Журнал за день
+                <a class="btn btn-small"><i class="icon-chevron-left"></i> </a>
+                <small>{{ date }}</small>
+                <a class="btn btn-small"><i class="icon-chevron-right"></i> </a>
+            </h1>
+        </div>
+    </div>
+        <div class="row">
+            <div class="span12">
+                <h2>Накладные</h2>
+                <table id='Bills' class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th width=15px>#</th>
+                        <th width="auto">Дата</th>
+                        <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
+                        <th style='width:60px;'>Кол-во</th>
+                        <th style='width:100px;'>Цена</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in bills %}
+                        {% include 'whs/bill_tr.html' %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="span12">
+                <h2>Производство</h2>
+                <table id='Add' class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Партия</th>
+                        <th>Кирпич</th>
+                        <th style='width:60px;'>Кол-во</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    {% for a in adds %}
+                        {% include 'whs/add_tr.html' %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="span12">
+                <h2>Сортировка</h2>
+                <table id='Sorting' class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th width=20px>#</th>
+                        <th width="auto">Дата</th>
+                        <th>Кирпич <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
+                        <th style='width:60px;'>Кол-во</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in sorting %}
+                        {% include 'whs/sorting_tr.html' %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

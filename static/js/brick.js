@@ -3,7 +3,7 @@
  * Date: 02.02.12
  * Time: 16:24
  */
-"use strict";
+//"use strict";
 $(function () {
     $('.brickselect').each(function(id){
         var val = $('input[type=hidden]', this).val()
@@ -14,11 +14,28 @@ $(function () {
                 .children('span').text($('.name',tr).text().trim())
         }
     })
+    bricks = $('#Bricks tbody tr').map(function(e,tr){
+        var td = $('td', tr).slice(1).map(function (id, td) { return parseInt(td.innerHTML) })
+        return {'css':$(tr).attr('class'),'node':tr,'td':td}
+    })
 
+    $('#brick-select-buttons').on('submit',function(e){
+        e.preventDefault()
+        var data = $(e.delegateTarget).serializeArray()
+        for (k in data) {
+            for (v in data[k]){
+
+            }
+        }
+        for (i in bricks){
+
+        }
+
+    })
     $('#brick-select-buttons').on('click','input',function(e){ e.stopPropagation()})
-    $('#brick-select-buttons').on('toggle','a', function (e) {
+    $('#brick-select-buttons').on('click','a', function (e) {
         //Фильтр при нажатии на кнопки
-        $('input[type=hidden]',this).trigger('click')
+        if (!$('input',this).trigger('click').length){return}
         var data = $(e.delegateTarget).serializeArray()
         var filter = _(data).chain().pluck('value').reduce(function(m,n){ return m+'.'+n},' ').value()
         var nodes = $('#Bricks tbody tr').hide().filter(filter).show()
@@ -55,13 +72,12 @@ function css_to_dict(prefix,val,from){
     if (prefix == 'sorting') {
         var t = ''
         for (var i in marks){
-            if (marks[i] < brick.mark){
+            if (marks[i] <= brick.mark){
                 t+=' .mark-'+marks[i]+base+','
             }
         }
         base = t.slice(0,-1)
     }
-    console.log(arguments,css,brick,base);
     return base
 }
 

@@ -23,9 +23,9 @@ def class_name(value):
     else:
         return 'unknow'
 
-
 @register.filter(name='form_name')
 def form_name(value):
+    print type(value)
     return 'lab/%s_form.html' % class_name(value).lower()
 
 @register.filter(name='model_verbose_name')

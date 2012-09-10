@@ -18,17 +18,10 @@
             {% endfor %}
             <div class="row">
                 <div class="span5">
-                    <fieldset class="{{ form.Meta.model|class_name }}">
+                    <fieldset class="{{ form.Meta.model|class_name }} less">
                         {% block main-fieldset %}
                             <legend>
-                                <h2>
-                                    {% if form.instance.pk %}
-                                        В цех
-                                        <small>{{ form.instance|safe }}</small>
-                                    {% else %}
-                                        {{ form.instance|safe }}
-                                    {% endif %}
-                                </h2>
+                                <h2> В сортировку </h2>
                             </legend>
                             {{ form.as_div }}
                         {% endblock %}
@@ -38,12 +31,11 @@
                     {% if opers %}
                         <fieldset>
                             <legend>
-                                <h2>Из цеха
+                                <h2>После сортировки
                                     {% for k,o in opers.iteritems %}
                                         <a class="btn btn-primary btn-mini form-add" data-append="#Sorted tbody:visible"
                                            data-prefix='{{ o.prefix }}'>Добавить</a>
                                     {% endfor %}
-
                                 </h2>
                             </legend>
                             {% for k,o in opers.iteritems %}
