@@ -11,8 +11,7 @@ DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS' : False}
 DEVSERVER_MODULES = ()
 
 WEBODT_CONVERTER = 'webodt.converters.openoffice.OpenOfficeODFConverter'
-OOFFICE_SERVER = ('127.0.0.1', 2002)
-WEBODT_TEMPLATE_PATH = 'core/templates/webodt/'
+WEBODT_TEMPLATE_PATH = 'core/templates/'
 
 ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
@@ -177,7 +176,6 @@ INSTALLED_APPS = (
     'pytils',
     'devserver',
     'south',
-    'trml2pdf',
     'gunicorn',
 #    'piston',
     'selenium',

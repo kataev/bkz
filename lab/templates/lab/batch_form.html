@@ -4,128 +4,19 @@
     {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
-    {% for factory in opers %}
-        {% for e in factory.non_object_errors %}
-            <div class="alert alert-error">
-                <i class="icon-warning-sign"></i>
-                <strong>{{ e|safe }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-    <div style='display: none'>
-        {% for k,factory in opers.iterintems %}
-                {% include factory.model|form_name with form=factory.empty_form %}
-        {% endfor %}
-    </div>
-    <h1>{{ form.instance }}</h1>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#Batch" data-toggle='tab'>Характеристики</a></li>
-{#        {% if form.instance.pk %}#}
-        <li><a href="#Tests" data-toggle='tab'>Испытания</a></li>
-        <li><a href="#Info" data-toggle='tab'>Периодические испытания</a></li>
-{#    {% endif %}#}
-    </ul>
-    <form method="POST" action="" class='form-horizontal'>
-        <fieldset style='display: none'>
-            {% csrf_token %}
-            {% for factory in opers %}
-                {{ factory.management_object }}
-                {{ factory.management_form }}
-            {% endfor %}
-        </fieldset>
-        <div class="tab-content">
-            <div class="tab-pane active" id='Batch'>
-                <div class="span3">
-                    {% for hidden in form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-                    {% include 'core/field.html' with f=form.date %}
-                    {% include 'core/field.html' with f=form.number %}
-                    {% include 'core/field.html' with f=form.width %}
-                    {% include 'core/field.html' with f=form.color %}
-                </div>
-                <div class="span9">
-                    <div class="row">
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.tto %}
-                        </div>
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.amount %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.pressure state='warning' %}
-                        </div>
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.flexion state='warning' %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.chamfer %}
-                        </div>
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.density %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.mark %}
-                        </div>
-                        <div class="span3">
-                            {% include 'core/field.html' with f=form.weight %}
-                        </div>
-                    </div>
-                </div>
-                </fieldset>
-                {% if opers %}
-                            {% include 'lab/part_list.html' with factory=opers.part %}
-                    </div>
-                    <div class="tab-pane" id='Tests'>
-                    {% for factory in opers|slice:':-1' %}
-                        <div class="span12">
-                            {% if factory.non_form_errors %}
-                                <fieldset>
-                                    <legend>
-                                        <h3>Ошибки</h3>
-                                    </legend>
-                                    {% for e in factory.non_form_errors %}
-                                        <div class="alert alert-error">
-                                            <i class="icon-warning-sign"></i>
-                                            <strong>{{ e|safe }}</strong>
-                                        </div>
-                                        </fieldset>
-                                    {% endfor %}
-                            {% endif %}
-                            <fieldset class="{{ factory.empty_form.instance|class_name }}">
-                                <legend>
-                                    <h2>{{ factory.empty_form.instance|model_verbose_name_plural }}</h2>
-                                </legend>
-                                {% include 'lab/test_list.html' %}
-                            </fieldset>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                </div>
+    <div class="container-fluid">
+        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+        <div class="span5">
+            <fieldset class="less">
+                <legend>
+                    <h1>
+                    {{ form.instance }}
+                    </h1>
+                </legend>
+                {{ form.as_div }}
+            </fieldset>
         </div>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary btn-large">
-                <i class="icon-ok icon-white"></i> Сохранить
-            </button>
-            {% if form.instance|class_name == 'Bill' and form.instance.pk %}
-                <a href="печать" target="_blank" class="btn btn-info">
-                    <i class='icon-print icon-white'></i> Печать
-                </a>
-            {% endif %}
-            <button type="reset" class="btn">
-                <i class="icon-ban-circle"></i> Сбросить
-            </button>
-            {% if form.instance.pk %}
-                <a href="{{ form.instance.get_delete_url }}" style='float:right' class="btn btn-danger">
-                <i class='icon-remove icon-white'></i> Удалить
-            {% endif %}
-            </a>
-        </div>
+        <div class="span7"></div>
     </form>
+    </div>
 {% endblock %}

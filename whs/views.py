@@ -15,10 +15,8 @@ from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView, CreateView, DeleteView, ListView
 from django.views.generic.dates import DayArchiveView,MonthArchiveView
 
-from bkz.core.templatetags.class_name import class_name
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
-from bkz.whs.pdf import pdf_render_to_response
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
 from whs.forms import SoldFactory, PalletFactory, SortedFactory
 from whs.models import *
@@ -171,12 +169,6 @@ def BrickFlatForm(request, Form, id):
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
 
-
-def bill_print(request, pk):
-    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
-    return pdf_render_to_response('whs/rml/torg-12.rml', {'doc': doc})
-
-
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
         'agent').select_related()
@@ -271,9 +263,11 @@ def brick_flat_form(request, Form, id):
         form = Form(instance=instance)
     return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
 
+
 from webodt.shortcuts import render_to_response
-def test_webodt(request):
-    return render_to_response('webodt.odt',{'test':['asd','olo','olotest2']},format='pdf',inline=True)
+def bill_print(request, pk):
+    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
+    return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)
 
 
 def brick_main(request):

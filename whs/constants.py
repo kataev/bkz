@@ -71,7 +71,6 @@ def get_menu(css_dict=css_dict):
         if name == 'features':
             continue
         o['name']=name
-        print name,choices
         o['items'] = [(css_dict[name][k],v) for k,v in field.choices]
         result.append(o)
     return result

@@ -3,7 +3,8 @@
 *.json
 bkz
 static/css/bo*
-static/js/bootstrap/
+static/bootstrap/
 static/js/jquery-ui/
 static/js/libs/
+static/img/
 logger.py

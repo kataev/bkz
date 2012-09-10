@@ -1,0 +1,6 @@
+<div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
+     class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %} brickinput">
+    <label class="control-label" for="{{ label_id }}">{{ label }}</label>
+    <div class="controls">
+        <div class="input-prepend">
+             <span class='add-on'> {{ bf }} </span>

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
-import pytils
 
 from django.db import models
 
 from constants import *
 from bkz.utils import UrlMixin,ru_date
-from whs.pdf import PalletMixin, OperationsMixin, BillMixin
+from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
 class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
@@ -92,11 +91,8 @@ class Agent(models.Model,UrlMixin):
             return u'Новый контрагент'
 
 class Seller(Agent,UrlMixin):
-    director_name = models.CharField(u'Должность директора',max_length=200)
     director = models.CharField(u'Директор',max_length=200)
-    buhgalter_name = models.CharField(u'Должность бухгалтер',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
-    dispetcher_name = models.CharField(u'Должность диспечера',max_length=200)
     dispetcher = models.CharField(u'Диспечер',max_length=200)
     nds = models.FloatField(u'НДС',default=0.18)
 
@@ -156,11 +152,11 @@ class Pallet(PalletMixin, models.Model):
         else:
             return u'Продажа поддонов'
 
-class Sold(OperationsMixin,models.Model):
+class Sold(SoldMixin,models.Model):
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
-    batch_number = models.PositiveSmallIntegerField(u'№ партии',null=True, blank=True)
+    batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
     batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
@@ -200,23 +196,6 @@ class Nomenclature(models.Model, UrlMixin):
 
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
-
-class Man(models.Model, UrlMixin):
-    """Класс документа для учета прихода кирпича с производства"""
-    date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),unique=True)
-    info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-
-    class Meta():
-        verbose_name = u"Производство"
-        verbose_name_plural = u"Производства"
-        ordering = ('-date', )
-
-    def __unicode__(self):
-        if self.pk:
-            date = pytils.dt.ru_strftime(u"%d %B %Y", inflected=True, date=self.date)
-            return u'%s' % date
-        else:
-            return u'Новая партия с производства'
 
 class Add(models.Model,UrlMixin):
     """Класс операций для документа"""
