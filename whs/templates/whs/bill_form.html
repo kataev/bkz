@@ -1,5 +1,5 @@
 {% extends 'core/index.html' %}
-{% load class_name %}
+{% load bkz %}
 {% block title %}
     {% if form.instance.pk %}
         {{ form.instance|model_verbose_name|safe }}

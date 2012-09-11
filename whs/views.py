@@ -156,21 +156,6 @@ class BrickUpdateView(UpdateView):
         return super(UpdateView, self).form_valid(form)
 
 
-def BrickFlatForm(request, Form, id):
-    if id: instance = get_object_or_404(Form._meta.model, pk=id)
-    else: instance = None
-    if request.method == 'POST':
-        form = Form(request.POST, instance=instance)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.label = make_label(instance)
-            instance.css = make_css(instance)
-            instance.save()
-            return redirect(instance.get_absolute_url())
-    else:
-        form = Form(instance=instance)
-    return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
-
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
         'agent').select_related()
@@ -247,24 +232,6 @@ def man_main(request):
     sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
     opers = {}
     return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
-
-
-def brick_flat_form(request, Form, id):
-    """ Форма  """
-    if id: instance = get_object_or_404(Form._meta.model, pk=id)
-    else: instance = None
-    if request.method == 'POST':
-        form = Form(request.POST, instance=instance)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.label = make_label(instance)
-            instance.css = make_css(instance)
-            instance.save()
-            return redirect(instance.get_absolute_url())
-    else:
-        form = Form(instance=instance)
-    return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
-
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):
