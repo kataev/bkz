@@ -17,6 +17,7 @@ class BatchCreateView(BillCreateView):
         self.water_absorption = WaterAbsorption.objects.filter().latest('date')
         self.object.save()
         return redirect(self.object.get_absolute_url())
+
 class BatchUpdateView(BillUpdateView):
     form_class=BatchForm
     model=Batch

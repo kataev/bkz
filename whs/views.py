@@ -131,13 +131,15 @@ def bill_pk_redirect(request, pk):
     b = get_object_or_404(Bill, pk=pk)
     return redirect(b.get_absolute_url())
 
-
+from django.core.exceptions import ValidationError
 class BrickCreateView(CreateView):
     model = Brick
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.label = make_label(self.object)
+        if Brick.objects.exclude(pk=b.pk).get(label=self.object.label):
+            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
         self.object.css = make_css(self.object)
         self.object.save()
         return super(CreateView, self).form_valid(form)
@@ -153,21 +155,6 @@ class BrickUpdateView(UpdateView):
         self.object.save()
         return super(UpdateView, self).form_valid(form)
 
-
-def BrickFlatForm(request, Form, id):
-    if id: instance = get_object_or_404(Form._meta.model, pk=id)
-    else: instance = None
-    if request.method == 'POST':
-        form = Form(request.POST, instance=instance)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.label = make_label(instance)
-            instance.css = make_css(instance)
-            instance.save()
-            return redirect(instance.get_absolute_url())
-    else:
-        form = Form(instance=instance)
-    return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
 
 class BillListView(ListView):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
@@ -210,6 +197,8 @@ def agents(request):
     letter = request.GET.get('b', '')
     if letter:
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
+    else:
+        Agents = Agents[:20]
     return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
 
 
@@ -245,24 +234,6 @@ def man_main(request):
     sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
     opers = {}
     return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
-
-
-def brick_flat_form(request, Form, id):
-    """ Форма  """
-    if id: instance = get_object_or_404(Form._meta.model, pk=id)
-    else: instance = None
-    if request.method == 'POST':
-        form = Form(request.POST, instance=instance)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.label = make_label(instance)
-            instance.css = make_css(instance)
-            instance.save()
-            return redirect(instance.get_absolute_url())
-    else:
-        form = Form(instance=instance)
-    return render(request, 'flat-form.html', dict(form=form, success=request.GET.get('success', False)))
-
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):

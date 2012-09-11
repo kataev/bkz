@@ -40,11 +40,6 @@ class AgentSelect(forms.Select):
 class BrickSelect(forms.widgets.Input):
     input_type = 'hidden'
 
-    @property
-    def brock_label(self):
-        self.html_name.replace('brick','brock')
-
-
 class NumberInput(forms.TextInput):
     input_type = 'number'
 
@@ -209,7 +204,7 @@ class BillAggregateFilter(BillFilter):
     group_by = forms.MultipleChoiceField(choices=bill_group_by)
 
 
-class AgentForm(forms.ModelForm):
+class AgentForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Agent
 
@@ -275,20 +270,10 @@ class Write_offForm(forms.ModelForm):
 
 Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Write_offForm, )
 
-class BrickForm(forms.ModelForm):
+class BrickForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Brick
         exclude = ('total', 'css', 'label')
-
-    def clean(self):
-        b = self.save(commit=False)
-        try:
-            b = Brick.objects.exclude(pk=b.pk).get(label=make_label(b))
-        except Brick.DoesNotExist:
-            return self.cleaned_data
-        else:
-            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
-
 
 class VerificationForm(forms.Form):
     csv = forms.FileField(label=u'Файл в формате csv')

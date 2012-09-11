@@ -37,6 +37,9 @@ def app_urlpatterns(app_name):
 class UrlMixin(object):
     @permalink
     def get_absolute_url(self):
+        return self.get_url()
+
+    def get_url(self):
         url = '%s:%s' % (self._meta.app_label,self._meta.object_name)
         if self.pk:
             url+='-change'

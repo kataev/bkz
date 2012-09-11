@@ -7,6 +7,11 @@ from constants import *
 from bkz.utils import UrlMixin,ru_date
 from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
+
+class Features(models.Model):
+    name = models.CharField(u'Имя',max_length=30)
+
+
 class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
     Содержит информацию о характеристиках кирпича и текушем остатке """

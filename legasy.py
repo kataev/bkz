@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from whs.models import Brick,OldBrick
+from whs.models import *
 
 __author__ = 'bteam'
 from old.models import *
@@ -97,23 +97,6 @@ def agents(path):
             a.full_clean()
             a.save()
             print a.pk
-
-
-def man():
-    """
-    Импорт "приходов" из старой базы
-    """
-    m = Man()
-    for j in DispJurnal.objects.filter(plus__gt=0).order_by('date'):
-        try:
-            brick = OldBrick.objects.get(old=j.tov.pk)
-        except:
-            continue
-        if j.date != m.date:
-            m = Man(date=j.date)
-            m.save()
-        a = Add(brick=brick, amount=j.plus, doc=m)
-        a.save()
 
 
 def totals():
@@ -376,17 +359,6 @@ def sorting():
             s.full_clean()
             s.save()
 
-
-def srted():
-    s = Sorted()
-    for j in DispJurnal.objects.filter(workshop__gt=0).order_by('-date'):
-        if s.date != j.date:
-            s = Sorting()
-            s.date = j.date
-            s.brick = OldBrick.objects.get(old=j.tov.pk)
-            s.amount = j.mws
-            s.full_clean()
-            s.save()
 
 
 def excell():

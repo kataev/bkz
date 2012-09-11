@@ -8,3 +8,4 @@ static/js/jquery-ui/
 static/js/libs/
 static/img/
 logger.py
+*/migrations/

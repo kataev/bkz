@@ -36,27 +36,3 @@ def main(request,year=None,month=None):
         prev = v
 
     return render(request,'energy/chart.html',dict(opers=[energy]))
-
-def data(request,Form,id=None,date=None):
-    """ Форма  """
-    #    id = args[0]
-    if id:
-        model = get_object_or_404(Form._meta.model,pk=id)
-        if request.method == 'POST':
-            form = Form(request.POST,instance=model)
-            if form.is_valid():
-                model = form.save()
-                return redirect(model.get_absolute_url())
-        else:
-            form = Form(initial=request.GET.dict() or {'date':datetime.date.today()},instance=model)
-            return render(request, 'flat-form.html',dict(form=form))
-    else:
-        if request.method == 'POST':
-            form = Form(request.POST)
-            if form.is_valid():
-                model = form.save()
-                return redirect(reverse('energy:%s' % Form._meta.model.__name__))
-        else:
-            form = Form(initial=request.GET.dict() or {'date':datetime.date.today()})
-    data = Form._meta.model.objects.all()[:31]
-    return render(request, 'energy/energy.html',dict(form=form,data=data))

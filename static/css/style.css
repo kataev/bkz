@@ -22,13 +22,28 @@ div.controls ul {list-style: none}
     .brickselect .uneditable-input {width:182px}
     .batchinput input {width:90px;}
     .brickinput select[name="color"] {width:90px;padding-left: 0;}
-    .brickinput select[name="width"] {width:110px;padding-left: 0;}
+    .brickinput select[name="width"] {width:110px;padding-left: 0;border-radius: 0}
+    .weightinput input {width:42px;}
+    .weightinput span {margin-left: 2px; margin-right: 2px;}
+    .flexioninput input {width:90px}
+
     .moneyinput span {width:36px}
     .moneyinput input {width:174px}
     .moneyinput span {width:36px}
     .tarainput input {width:174px}
     .tarainput span input {width:26px}
 }
+
+
+fieldset.Part input[name*="tto"] {width:60px}
+fieldset.Part input[name*="amount"] {width:60px}
+fieldset.Part select[name*="defect"] {width:70px}
+fieldset.Part input[name*="dnumber"] {width:50px}
+fieldset.Part input[name*="half"] {width:50px}
+fieldset.Part input[name*="brocken"] {width:70px}
+fieldset.Part input[name*="test"] {width:70px}
+fieldset.Part td, fieldset.Part th {text-align: center;}
+
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}
 form fieldset.Batch div.limit .controls {margin-left: 110px}

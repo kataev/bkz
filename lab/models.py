@@ -266,7 +266,7 @@ class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
-    cavitation = models.BooleanField(u"Пустотелость",default=True,choices=cavitation_c)
+    cavitation = models.BooleanField(u"Кирпич",default=True)
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
 

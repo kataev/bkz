@@ -1,5 +1,5 @@
 {% extends 'core/index.html' %}
-{% load class_name %}
+{% load bkz %}
 {% block title %}Сверка{% endblock %}
 {% block container %}
     <div class="row">
@@ -8,8 +8,8 @@
         {% csrf_token %}
         <fieldset>
             <legend><h1>Сверка</h1></legend>
+            {{ form }}
         </fieldset>
-        {% include 'core/fieldset.html' %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary"><i class="icon-white icon-upload"></i> Отправить
             </button>
