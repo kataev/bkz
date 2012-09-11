@@ -21,7 +21,7 @@ div.controls ul {list-style: none}
 
     .brickselect .uneditable-input {width:182px}
     .batchinput input {width:90px;}
-    .brickinput select[name="color"] {width:90px;padding-left: 0;}
+    .brickinput select[name="color"] {width:90px;padding-left: 0;border-radius: 0}
     .brickinput select[name="width"] {width:110px;padding-left: 0;}
     .moneyinput span {width:36px}
     .moneyinput input {width:174px}

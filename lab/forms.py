@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory
-from bootstrap.forms import BootstrapMixin
+from bootstrap.forms import BootstrapMixin,Fieldset
 
 from bkz.lab.models import *
 from bkz.whs.forms import BatchInput,DateInput
@@ -71,7 +71,6 @@ class BatchDateInput(DateInput):
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ('number','date','cavitation','width','color')
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
@@ -79,6 +78,10 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'width':BrickInput(),
             'color':BrickInput()
         }
+        layout = (
+            Fieldset(u'Партия','number','date','cavitation','width','color','info',css_class='less'),
+            Fieldset(u'Партия','heatconduction','seonr','frost_resistance','water_absorption','density','weight'),
+        )
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):

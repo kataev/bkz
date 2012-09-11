@@ -1,9 +1,42 @@
-{% extends 'core/flat-form.html' %}
+{% extends 'core/index.html' %}
 {% load class_name %}
 {% load url from future %}
-{% block bonus-button %}
-    {% if object.pk %}
-        <a href="{% url 'whs:Brick-change' pk=object.pk|add:1 %}" class="btn"><i class="icon-chevron-right"></i>
-            Следующий {{ object|model_verbose_name }}</a>
-    {% endif %}
+{% block title %}
+    {% if form.insntace.pk %} {{ form.instance|striptags }}
+        {% else %}{{ form.instance|model_verbose_name }} {% endif %}
+{% endblock %}
+{% block container %}
+    <div class="container">
+            <form method="POST" action="" class='form-horizontal'>
+                {% csrf_token %}
+            <div class="row">
+                <div class='span6'>
+                    <fieldset>
+                        <legend>
+                            <h1> {{ form.instance }} </h1>
+                        </legend>
+                        {{ form.as_div|default:form }}
+                    </fieldset>
+                </div>
+                {% block right %}
+                {% endblock %}
+            </div>
+                <div class="row">
+                    <div class="span12">
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
+                                изменения
+                            </button>
+                            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+                            {% block bonus-button %}
+                                {% if object.pk %}
+                                    <a href="{% url 'whs:Brick-change' pk=object.pk|add:1 %}" class="btn"><i
+                                            class="icon-chevron-right"></i>
+                                        Следующий {{ object|model_verbose_name }}</a>
+                                {% endif %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </form>
 {% endblock %}

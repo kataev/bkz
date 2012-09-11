@@ -131,13 +131,15 @@ def bill_pk_redirect(request, pk):
     b = get_object_or_404(Bill, pk=pk)
     return redirect(b.get_absolute_url())
 
-
+from django.core.exceptions import ValidationError
 class BrickCreateView(CreateView):
     model = Brick
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.label = make_label(self.object)
+        if Brick.objects.exclude(pk=b.pk).get(label=self.object.label):
+            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
         self.object.css = make_css(self.object)
         self.object.save()
         return super(CreateView, self).form_valid(form)

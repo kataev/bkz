@@ -6,17 +6,8 @@
 {% block container %}
     <div class="container-fluid">
         <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
-        <div class="span5">
-            <fieldset class="less">
-                <legend>
-                    <h1>
-                    {{ form.instance }}
-                    </h1>
-                </legend>
-                {{ form.as_div }}
-            </fieldset>
-        </div>
-        <div class="span7"></div>
+            {{ form.as_div }}
     </form>
+
     </div>
 {% endblock %}
