@@ -197,6 +197,8 @@ def agents(request):
     letter = request.GET.get('b', '')
     if letter:
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
+    else:
+        Agents = Agents[:20]
     return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
 
 

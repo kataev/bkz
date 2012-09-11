@@ -24,14 +24,12 @@
                 <fieldset class="{{ form.Meta.model|class_name }} less">
                     {% block main-fieldset %}
                     <legend>
-                        <h1>
                             {% if form.instance.pk %}
                                 {{ form.Meta.model|model_verbose_name }}
                                 <small>{{ form.instance|safe }}</small>
                             {% else %}
                                 {{ form.instance|safe }}
                             {% endif %}
-                        </h1>
                     </legend>
                     {{ form.as_div }}
                         {% endblock %}

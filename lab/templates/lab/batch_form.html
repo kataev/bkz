@@ -1,13 +1,33 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
+{% load url from future %}
 {% block title %}
     {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
     <div class="container-fluid">
         <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
-            {{ form.as_div }}
-    </form>
-
+            {% csrf_token %}
+            {% for factory in opers.values %}
+                {{ factory.management_object }}
+                {{ factory.management_form }}
+            {% endfor %}
+            <div class="row">
+                {{ form.as_div }}
+                {% include 'lab/part_list.html' %}
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
+                            изменения
+                        </button>
+                        <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+                        {% block bonus-button %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock %}

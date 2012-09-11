@@ -40,11 +40,6 @@ class AgentSelect(forms.Select):
 class BrickSelect(forms.widgets.Input):
     input_type = 'hidden'
 
-    @property
-    def brock_label(self):
-        self.html_name.replace('brick','brock')
-
-
 class NumberInput(forms.TextInput):
     input_type = 'number'
 

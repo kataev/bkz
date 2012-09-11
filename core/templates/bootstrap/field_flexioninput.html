@@ -1,0 +1,13 @@
+<div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
+     class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %} flexioninput">
+    <label class="control-label" for="{{ label_id }}">Предел прочности</label>
+    <div class="controls">
+        <table class="table table-condensed table-bordered" style=" width: 230px; ">
+{#            <caption><h6>Предел прочности</h6> </caption>#}
+            <tbody>
+            <tr>
+                <td>При изгибе</td>
+                <td>При сжатии</td>
+            </tr>
+            <tr>
+                <td>{{ bf }}</td>

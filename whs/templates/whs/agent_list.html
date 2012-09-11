@@ -3,6 +3,7 @@
 {% block title %}Контрагенты{% endblock %}
 
 {% block container %}
+    <div class="container">
     <div class="pagination pagination-centered">
         <ul>
             {% for a in alphabet %}
@@ -30,7 +31,7 @@
                         <span class='label label-success'>{{ a.get_form_display }}</span>
                     {% endif %}
                     <span class='label'>
-                        <a title='Показать накладные этого агента' href="{% url whs:index %}?agent={{ a.pk }}"><i
+                        <a title='Показать накладные этого агента' href="{% url whs:Bill-list %}?agent={{ a.pk }}"><i
                                 class="icon-eye-open icon-white"></i></a>
                     </span>
                 <span class="label">
@@ -46,4 +47,5 @@
     </table>
     </tbody>
     </table>
+    </div>
 {% endblock %}

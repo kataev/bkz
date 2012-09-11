@@ -30,7 +30,7 @@
                             <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
                             {% block bonus-button %}
                                 {% if object.pk %}
-                                    <a href="{% url 'whs:Brick-change' pk=object.pk|add:1 %}" class="btn"><i
+                                    <a href="{% url object.get_url.0 pk=object.pk|add:1 %}" class="btn"><i
                                             class="icon-chevron-right"></i>
                                         Следующий {{ object|model_verbose_name }}</a>
                                 {% endif %}

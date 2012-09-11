@@ -2,14 +2,12 @@
     <div class="tab-pane" id='{{ form.prefix }}'>
             <fieldset>
                 <legend>
-                    <h2>
                     {% if form.instance.pk %}
                         {{ form.Meta.model|model_verbose_name }}
                         <small>{{ form.instance|safe }}</small>
                     {% else %}
                         {{ form.instance|safe }}
                     {% endif %}
-                    </h2>
                 </legend>
                 {{ form.as_div }}
             </fieldset>

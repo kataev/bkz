@@ -4,7 +4,7 @@ from django.forms.models import inlineformset_factory
 from bootstrap.forms import BootstrapMixin,Fieldset
 
 from bkz.lab.models import *
-from bkz.whs.forms import BatchInput,DateInput
+from bkz.whs.forms import BatchInput,DateInput,NumberInput
 
 class ClayForm(forms.ModelForm):
     class Meta:
@@ -68,6 +68,30 @@ class BrickInput(forms.Select):
 class BatchDateInput(DateInput):
     pass
 
+class WeightInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(WeightInput, self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.01
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
+
+class DensityInput(NumberInput):
+    pass
+
+class FlexionInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(FlexionInput, self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.01
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
+
+class PressureInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(PressureInput, self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.01
+        self.attrs['min'] = 0
+        self.attrs['autocomplete'] = 'off'
+
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
@@ -76,11 +100,15 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'date':BatchDateInput(),
             'cavitation':BrickChechboxInput(attrs={'title':'Пустотелый?'}),
             'width':BrickInput(),
-            'color':BrickInput()
+            'color':BrickInput(),
+            'weight':WeightInput(),
+            'density':DensityInput(attrs={'readonly':'readonly'}),
+            'flexion':FlexionInput(),
+            'pressure':PressureInput()
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','info',css_class='less'),
-            Fieldset(u'Партия','heatconduction','seonr','frost_resistance','water_absorption','density','weight'),
+            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','flexion','pressure',css_class='less span5'),
+#            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
@@ -88,7 +116,7 @@ class SplitSizeWidget(forms.widgets.MultiWidget):
         get_widget = lambda name:forms.widgets.Input(attrs={'title':name})
         names = (u'Длина',u'Ширина',u'Толщина')
         self.widgets = map(get_widget,names)
-        super(forms.MultiWidget, self).__init__(attrs)
+        super(SplitSizeWidget, self).__init__(attrs)
 
     def decompress(self, value):
         if value:
@@ -110,14 +138,20 @@ class FlexionForm(forms.ModelForm):
     class Meta:
         model = Flexion
 
-class PartForm(forms.ModelForm):
+class PartForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Part
         widgets = {
+            'amount':NumberInput(),
+            'half':NumberInput(attrs={'title':'Половняк','placeholder':'Половняк'}),
+            'dnumber':NumberInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
+            'brocken':NumberInput(),
+            'test':NumberInput(),
+            'info':forms.Textarea(attrs={'rows':1}),
             'brock':forms.HiddenInput
         }
 
 
-PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=0)
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6)
-FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=6)
+PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=1)
+PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=0)
+FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=0)
