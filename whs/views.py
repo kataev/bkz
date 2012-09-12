@@ -12,8 +12,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
-from django.views.generic import UpdateView, CreateView, DeleteView, ListView
-from django.views.generic.dates import DayArchiveView,MonthArchiveView
+from django.views.generic import UpdateView, CreateView, ListView
 
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
@@ -69,7 +68,7 @@ class BillUpdateView(UpdateView):
             if factory.is_valid():
                 factory.save()
         if all([f.is_valid() for k,f in opers.items()]):
-            return redirect(instance.get_absolute_url())
+            return redirect(self.get_success_url())
 
         return self.render_to_response(dict(form=form, opers=opers))
 
@@ -138,8 +137,8 @@ class BrickCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.label = make_label(self.object)
-        if Brick.objects.exclude(pk=b.pk).get(label=self.object.label):
-            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % b.pk)
+        if Brick.objects.exclude(pk=self.object.pk).get(label=self.object.label):
+            raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % self.object.pk)
         self.object.css = make_css(self.object)
         self.object.save()
         return super(CreateView, self).form_valid(form)
@@ -201,18 +200,6 @@ def agents(request):
         Agents = Agents[:20]
     return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
 
-
-class BillMonthArchiveView(MonthArchiveView):
-    model = Bill
-    month_format = '%m'
-    date_field = 'date'
-    template_name_suffix = '_list'
-
-class AddMonthArchiveView(MonthArchiveView):
-    model = Sorting
-    month_format = '%m'
-
-
 def journal(request):
     form = DateForm(request.GET or None)
     if form.is_valid():
@@ -232,7 +219,6 @@ def man_main(request):
         date = datetime.date.today()
     man = Add.objects.select_related().filter(part__batch__date__year=date.year, part__batch__date__month=date.month)
     sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
-    opers = {}
     return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
 
 from webodt.shortcuts import render_to_response

@@ -2,7 +2,6 @@
 import pytils
 
 from django.db import models
-from django.core.urlresolvers import reverse
 from bkz.utils import UrlMixin
 
 class Energy(UrlMixin,models.Model):

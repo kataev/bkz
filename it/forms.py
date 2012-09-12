@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
 import django.forms as forms
-from django.db.models import Count,F,Sum
 
 from bkz.it.models import Device, Buy, Work, Plug
 
 class DeviceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(DeviceForm, self).__init__(*args, **kwargs)
         self.fields['type'].queryset = Device.objects.filter(type__isnull=True)
 
     class Meta:
@@ -16,7 +15,7 @@ class DeviceForm(forms.ModelForm):
 
 class BuyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(BuyForm, self).__init__(*args, **kwargs)
         self.fields['cartridge'].queryset = Device.objects.filter(type__name=u'Картриджи')
     class Meta:
         name = 'Buy'
@@ -42,7 +41,7 @@ class WorkForm(forms.ModelForm):
 
 class PlugForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        super(PlugForm, self).__init__(*args, **kwargs)
         self.fields['bill'].queryset = Buy.objects.filter(cartridge__type__name=u'Картриджи')
         self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
 

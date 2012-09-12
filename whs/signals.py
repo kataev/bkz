@@ -41,20 +41,6 @@ def add_post_save(instance, *args, **kwargs):
     brick.save()
 
 
-@receiver(pre_delete, sender=Add)
-@receiver(pre_save, sender=Add)
-def add_pre_save(instance, *args, **kwargs):
-    """
-    Сигнал для производства.
-    Убирает изменения операции на остатки
-    """
-    if instance.pk:
-        origin = Add.objects.get(pk=instance.pk)
-        brick = Brick.objects.get(pk=origin.brick.pk)
-        brick.total -= origin.amount
-        brick.save()
-
-
 @receiver(post_save, sender=Sorting)
 def sorting_post_save(instance, *args, **kwargs):
     """

@@ -119,7 +119,7 @@ def get_agent(name):
     for i, n in enumerate(name):
         q = q.filter(name__icontains=n)
         try:
-            a = q.get()
+            q.get()
         except Agent.DoesNotExist:
 #            print 'DNE','%s ' * len(name) % tuple(name)
             return None
@@ -261,7 +261,6 @@ def old_agents():
                 a = q.get()
                 ok+=1
                 try:
-                    a.oldagent
                     if a.oldagent.old == o.pk:
                         print '=='
                     else:

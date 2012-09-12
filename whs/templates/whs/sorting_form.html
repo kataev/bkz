@@ -21,7 +21,7 @@
                     <fieldset class="{{ form.Meta.model|class_name }} less">
                         {% block main-fieldset %}
                             <legend>
-                                <h2> В сортировку </h2>
+                                 В сортировку
                             </legend>
                             {{ form.as_div }}
                         {% endblock %}
@@ -31,12 +31,12 @@
                     {% if opers %}
                         <fieldset>
                             <legend>
-                                <h2>После сортировки
+                                После сортировки
                                     {% for k,o in opers.iteritems %}
                                         <a class="btn btn-primary btn-mini form-add" data-append="#Sorted tbody:visible"
                                            data-prefix='{{ o.prefix }}'>Добавить</a>
                                     {% endfor %}
-                                </h2>
+
                             </legend>
                             {% for k,o in opers.iteritems %}
                                 {% for e in o.non_form_errors %}
@@ -75,9 +75,9 @@
                 <div class="span7" style="display: none;" id="brickselect">
                     <fieldset>
                         <legend>
-                            <h3>Выбор кирпича
+                            Выбор кирпича
                                 <a class="btn btn-success">Назад</a>
-                            </h3>
+
                         </legend>
                         <div style='overflow: auto;height: 450px'>
                             {% include 'whs/widgets/brick-select-table.html' %}

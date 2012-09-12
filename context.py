@@ -78,7 +78,6 @@ menu = dict(
         ('cpu:Position-add','',u'Канал')
     )
 )
-from django.core.urlresolvers import reverse
 def namespace(request):
     namespace = getattr(request,'namespace',None) or 'main'
     return dict(nav=nav.get(namespace), menu=menu.get(namespace),current_app=namespace)

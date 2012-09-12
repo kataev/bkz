@@ -5,8 +5,7 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.models import Brick
-from bkz.whs.constants import defect_c,color_c,mark_c,cavitation_c
+from bkz.whs.constants import defect_c,color_c,mark_c
 from bkz.utils import UrlMixin,ru_date
 
 

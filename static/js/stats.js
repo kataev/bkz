@@ -37,7 +37,7 @@ function transfer(data,param,node) {
         .enter().append('text')
         .attr('width', z)
         .attr('height', 2 * z)
-        .attr('y', function (d) { return z * ++j + 32 })
+        .attr('y', function () { return z * ++j + 32 })
         .attr('x', 25)
         .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
         .attr("text-anchor", "left")
@@ -56,8 +56,8 @@ function transfer(data,param,node) {
         .enter().append('text')
         .attr('width', z)
         .attr('height', 2 * z)
-        .attr('y', function (d) { return 6+z+(z)*++i })
-        .attr('x', function (d) { return z * ++j})
+        .attr('y', function () { return 6+z+(z)*++i })
+        .attr('x', function () { return z * ++j})
         .attr("text-anchor", "right")
         .text(String)
 
@@ -118,12 +118,12 @@ function total(data,param,node){
         .text(function(d){ return weight_c[d] })
         .attr("text-anchor", "middle")
 
-    j=0
+    var j=0
     var view_label = svg.selectAll('text.view')
         .data(view_c)
         .enter().append('text')
         .attr('y',10)
-        .attr('x',function(d){return -j++*(label.length) * z - (label.length) * z / 2 })
+        .attr('x',function(){return -j++*(label.length) * z - (label.length) * z / 2 })
         .attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
         .attr('class','view')
         .text(String)
@@ -133,8 +133,8 @@ function total(data,param,node){
         .attr("x", 0)
         .attr("y", 20)
     var q = 0
-    for (w in weight_c){
-        for (v in view_c) {
+    for (var w in weight_c){
+        for (var v in view_c) {
             values.append('rect')
                 .attr('x',w * z * color_c.length+10)
                 .attr('y',label.length * z * v + 10)

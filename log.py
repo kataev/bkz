@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __builtin__ import object
+
 __author__ = 'bteam'
 
 from django.utils.translation import ugettext as _
@@ -81,7 +83,7 @@ def log_deletion(request, object, object_repr):
 
     LogEntry.objects.log_action(
         user_id         = request.user.id,
-        content_type_id = ContentType.objects.get_for_model(self.model).pk,
+        content_type_id = ContentType.objects.get_for_model(object).pk,
         object_id       = object.pk,
         object_repr     = object_repr,
         action_flag     = DELETION

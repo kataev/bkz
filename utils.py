@@ -43,22 +43,23 @@ class UrlMixin(object):
         url = '%s:%s' % (self._meta.app_label,self._meta.object_name)
         if self.pk:
             url+='-change'
-            return (url, (), {'pk':self.pk})
+            return url, (), {'pk':self.pk}
         else:
             url+='-add'
-            return (url,)
+            return url,
 
     @permalink
     def get_delete_url(self):
         url = '%s:%s-delete' % (self._meta.app_label,self._meta.object_name)
-        return (url, (), {'pk':self.pk})
+        return url, (), {'pk':self.pk}
 
 ru_date = partial(ru_strftime,u'%d %B %Y',inflected=True)
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.forms import ValidationError
-def view_permisions(apps = ['whs','lab','energy','it']):
+def view_permisions(apps=None):
+    if not apps: apps = ['whs', 'lab', 'energy', 'it']
     for app in apps:
         for c in ContentType.objects.filter(app_label=app):
             if issubclass(c.model_class(),UrlMixin):

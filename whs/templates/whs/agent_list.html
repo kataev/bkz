@@ -31,8 +31,7 @@
                         <span class='label label-success'>{{ a.get_form_display }}</span>
                     {% endif %}
                     <span class='label'>
-                        <a title='Показать накладные этого агента' href="{% url whs:Bill-list %}?agent={{ a.pk }}"><i
-                                class="icon-eye-open icon-white"></i></a>
+                        <a title='Показать накладные этого агента' href="{% url whs:Bill-list %}?agent={{ a.pk }}"><i class="icon-eye-open icon-white"></i></a>
                     </span>
                 <span class="label">
                     <a title='Создать накладную с этим контрагентом' href="{% url whs:Bill-add %}?agent={{ a.pk }}"><i

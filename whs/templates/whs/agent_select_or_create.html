@@ -3,17 +3,17 @@
 {% load url from future %}
 {% block title %} Покупатель кипича {% endblock %}
 {% block container %}
+    <div class="container">
     {% for c in select.fields.choice.choices %}
         <div class="span6"><h2>{{ c.1 }}</h2></div>
     {% endfor %}
-    </div>
     <form method="POST" action="" class='form-horizontal'>
         {% csrf_token %}
         <div class="row">
             <div class="span6">
             <fieldset>
             <legend>
-                <h2>Выбрать контрагента</h2>
+                Выбрать контрагента
             </legend>
                 {% with f=select.agent %}
                     <select name='{{ f.html_name }}' id='{{ f.id_for_label }}' class="span6" size='20'>
@@ -45,4 +45,5 @@
             {% block bonus-button %} {% endblock %}
         </div>
     </form>
+    </div>
 {% endblock %}

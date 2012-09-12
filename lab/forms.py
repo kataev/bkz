@@ -107,7 +107,7 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'pressure':PressureInput()
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','flexion','pressure',css_class='less span5'),
+            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure',css_class='less span5'),
 #            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 

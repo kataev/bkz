@@ -1,14 +1,11 @@
-body { background-image: url('/static/img/whitediamond.png') }
-body { background-image: url('/static/img/whitediamond.png') }
 #brick-select-buttons input {vertical-align: top}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
-.brand { font-family: Verdana; }
 .icon-logo {
     width: 9px;
     background-color: #990d0d !important;
     background: url('/static/img/logo.png') no-repeat;
-    vertical-align: 0px;
+    vertical-align: 0;
     background-position: 0;
 }
 .nav.nav-list .create {margin-top: 2px;}

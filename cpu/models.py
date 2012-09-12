@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models.loading import get_models
 
 places = (
     (u'firing',u'Обжиг'),

@@ -2,9 +2,9 @@
 import datetime
 from copy import deepcopy
 
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render
 
-from bkz.energy.models import Energy, Teplo, reverse
+from bkz.energy.models import Energy
 
 
 def delta(queryset,fields):

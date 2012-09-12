@@ -213,7 +213,7 @@ class Add(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u'%s - %d шт' % (self.brick, self.amount)
+            return u'%s шт' % (self.brick,)
         else:
             return u'Новая партия'
 

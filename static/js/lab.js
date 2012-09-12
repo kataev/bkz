@@ -1,9 +1,9 @@
 $(function () {
-    $('td.create .form-add').click(function (e) {
+    $('td.create .form-add').click(function () {
         var prefix = $(this).data('prefix')
         var node = $('#' + prefix + '-__prefix__').clone(true).appendTo()
         var total = $('#id_' + prefix + '-TOTAL_FORMS') //0
-        var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
+//        var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
         var v = total.attr('value')
         var rep = function (index, value) { if (value) return value.replace(/__prefix__/g, v) }

@@ -9,7 +9,7 @@ $('.collapse').collapse()
 $('#navbar').scrollspy()
 
 $(function () {
-    $('.form-add').click(function (e) {
+    $('.form-add').click(function () {
         var prefix = $(this).data('prefix')
         var append_to = $(this).data('append')
         var place_to = $(this).data('place') || $(this).parents('ul')
@@ -42,13 +42,13 @@ $(function () {
 })
 
 $(function () {
-    $('tr[data-opers] i.icon-zoom-in').click(function (e) {
+    $('tr[data-opers] i.icon-zoom-in').click(function () {
         var i = $(this).parent().parent().data('opers')
         $(this).toggleClass('zoom')
         $('#' + i).toggle('blind', null, 500)
     })
 
-    $('th i.icon-zoom-in').click(function (e) {
+    $('th i.icon-zoom-in').click(function () {
         var table = $(this).parents('table')
         var tbodys = $(table).find('tbody.opers')
 
@@ -121,7 +121,7 @@ $(function () {
 })
 
 $(function () {
-    $('[name=agent],[name=seller]').change(function (e) {
+    $('[name=agent],[name=seller]').change(function () {
         var val = $(this).val()
         var div = $(this).parent()
         var a = $(div).children("a")
@@ -198,7 +198,7 @@ function tara_amount() {
 $(tara_amount)
 
 $(function () {
-    $("#Bricks td[rel='popover']").click(function (e) {
+    $("#Bricks td[rel='popover']").click(function () {
         if (parseInt($(this).text()) <= 0)
             return
         var name = $(this).data('name')
@@ -213,7 +213,7 @@ $(function () {
         $(this).data('popover').$element.attr('data-content', '<p><img src="/static/img/loader.gif"><p><span class="label">Загрузка</span></p></p>')
 
         $(this).popover('show')
-        $(this).data('popover').$tip.on('click.close', $.proxy(function (e) {
+        $(this).data('popover').$tip.on('click.close', $.proxy(function () {
             $(this).popover('hide')
         }, this))
         url += '/' + name + '/' + window.location.search
@@ -237,14 +237,14 @@ $(function () {
                 var tr = $('<tr>').appendTo(tfoot)
                 $('<th>').appendTo(tr).text('Итого:').attr('style', 'text-align:right')
                 $('<td>').appendTo(tr).text(sum)
-            }).error(function (e) {
+            }).error(function () {
                 $('<p><span class="label label-important"><i class="icon-warning-sign"></i>Что-то пошло не так</span></p>')
                     .addClass('alert alert-error')
                     .appendTo($(this).data('popover').$tip.find('.popover-content').empty())
             })
     })
 })
-$('[name="month"],[name*="month"]').change(function (e) {
+$('[name="month"],[name*="month"]').change(function () {
     var year = $(':selected', this).parent().attr('label')
     $(this).parents('form').find('[name="'+($(this).attr('name').replace('month','year'))+'"]').val(year)
 })
@@ -260,8 +260,8 @@ function avg_on_input(input,to_fixed){
     return (v.reduce(function(m,v){return m+parseFloat(v) },0)/v.length).toFixed(to_fixed || 2)
 }
 
-$('.SlashSeparatedFloatField').each(function(e){
+$('.SlashSeparatedFloatField').each(function(){
     $(this).wrap($('<div>').addClass('input-append').attr('title','Среднее арифметическое'))
     var addon = $('<span>').addClass('add-on').text(avg_on_input(this)).insertAfter(this)
-    $(this).change(function(e){ $(addon).text(avg_on_input(this)) })
+    $(this).change(function(){ $(addon).text(avg_on_input(this)) })
 })
