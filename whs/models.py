@@ -219,11 +219,7 @@ class Add(models.Model,UrlMixin):
 
 
 class Sorting(models.Model,UrlMixin):
-    """ Класс документа для учета сортировки кипича из одного товара в другой
-    brick & part - в цех
-    brick & sourse & part - из цеха
-    brick & sourse - бой
-    """
+    """ Класс документа для учета сортировки кипича из одного товара в другой """
     source = models.ForeignKey('self',null=True,blank=True,related_name='sorted')
     part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())

@@ -285,7 +285,7 @@ class Batch(UrlMixin,models.Model):
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
-        if self.pk: return u'Партия № %d, %d' % (self.number,self.date.year)
+        if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
         else: return u'Новая партия'
 
     class Meta():
@@ -350,7 +350,7 @@ class Part(models.Model):
     sorted = models.BooleanField(u'Сортирован',default=False)
 
     def __unicode__(self):
-        if self.pk: return u'Выход %s c телег %s' % (self.get_defect_display().lower(),self.tto)
+        if self.pk: return u'%s, %s c телег %s' % (self.batch,self.get_defect_display().lower(),self.tto)
         else: return u'Новый выход с производства'
 
     @property
@@ -367,3 +367,4 @@ class Part(models.Model):
     class Meta():
         verbose_name = u"Часть партии"
         verbose_name_plural = u"Часть партии"
+        ordering = ('batch__date','batch__number','defect')

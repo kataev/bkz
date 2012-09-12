@@ -7,6 +7,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 from whs.models import *
+from lab.models import Part
 from whs.validation import validate_transfer
 
 from django.utils.encoding import force_unicode
@@ -19,21 +20,15 @@ class AgentSelect(forms.Select):
         selected_choices = set(force_unicode(v) for v in selected_choices)
         output = []
         letter = u''
+        output.append(u'<optgroup label="%s">' % escape(force_unicode(u'Выбор контрагента:')))
         for option_value, option_label in chain(self.choices, choices):
-            if isinstance(option_label, (list, tuple)):
-                output.append(u'<optgroup label="%s">' % escape(force_unicode(option_value)))
-                for option in option_label:
-                    output.append(self.render_option(selected_choices, *option))
+            current_letter = option_label[0:1].capitalize()
+            if letter != current_letter:
                 output.append(u'</optgroup>')
-            else:
-                current_letter = option_label[0:1].capitalize()
-                if letter != current_letter:
-                    output.append(u'<optgroup label="%s">' % escape(force_unicode(current_letter)))
-                    output.append(self.render_option(selected_choices, option_value, option_label))
-                    output.append(u'</optgroup>')
-                else:
-                    output.append(self.render_option(selected_choices, option_value, option_label))
-                letter = current_letter
+                output.append(u'<optgroup label="%s">' % escape(force_unicode(current_letter)))
+            output.append(self.render_option(selected_choices, option_value, option_label))
+            letter = current_letter
+        output.append(u'</optgroup>')
         return u'\n'.join(output)
 
 
@@ -232,11 +227,36 @@ class InventoryForm(forms.ModelForm):
         model = Inventory
 
 
+class PartSelect(forms.Select):
+    def render_options(self, choices, selected_choices):
+        # Normalize to strings.
+        selected_choices = set(force_unicode(v) for v in selected_choices)
+        output = []
+        letter = u''
+        output.append(u'<optgroup label="%s">' % escape(force_unicode(u'Выбор партии:')))
+        for option_value, option_label in chain(self.choices, choices):
+            current_letter = option_label.split(u'г')[0][-4:]
+            if letter != current_letter:
+                output.append(u'</optgroup>')
+                output.append(u'<optgroup label="%s">' % escape(force_unicode(current_letter)))
+            output.append(self.render_option(selected_choices, option_value, option_label))
+            letter = current_letter
+        output.append(u'</optgroup>')
+        del output[2:4]
+        return u'\n'.join(output)
+
 class SortingForm(BootstrapMixin, forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super(SortingForm,self).__init__(*args,**kwargs)
+        self.fields['part'].queryset = Part.objects.select_related('batch')
+        self.fields['part'].required = True
+
+
     class Meta:
         model = Sorting
         exclude = ('source','brock')
         widgets = {
+            'part':PartSelect,
             'date': DateInput,
             'brick': BrickSelect,
             'amount': NumberInput,
