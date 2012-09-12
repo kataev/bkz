@@ -10,6 +10,10 @@ from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)
+    type = models.CharField(u'тип',max_length=30,choices=defect_c)
+
+    def __unicode__(self):
+        return self.name
 
 
 class Brick(models.Model,UrlMixin):

@@ -193,7 +193,8 @@ INSTALLED_APPS = (
     'bkz.energy',
     'bkz.it',
 
-    'bootstrap',
+    'bkz.bootstrap',
+
     'linaro_django_pagination',
     )
 

@@ -1,6 +1,6 @@
 {% load bkz %}
 {% for form in opers.part_set %}
-    <fieldset class="span7 Part" xmlns="http://www.w3.org/1999/html">
+    <fieldset class="span7 Part {% if not forloop.first %}offset5{% endif %}" xmlns="http://www.w3.org/1999/html">
         {% if forloop.first %}
             <legend>Выход с производства</legend>
         {% endif %}
@@ -43,19 +43,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style='text-align: left;background: #F2DEDE;'>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Бой
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Изв. вкл. > 1 см п.5.2.2
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Трещины п.5.2.4
-                    </label>
+                <td colspan="2" style='text-align: left;background: #F2DEDE;' class="cause">
+                    {{ form.cause }}
                 </td>
                 <td colspan="3" style='text-align: left;background: #FCF8E3;'>
                     <label class="checkbox">

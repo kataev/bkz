@@ -344,7 +344,7 @@ class Part(models.Model):
     defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
     half = models.FloatField(u'Половняк',default=3)
     dnumber = models.FloatField(u'Брак.число',default=0)
-    cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c,blank=True)
+    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака')
     brocken = models.IntegerField(u'Бой',default=0)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
     sorted = models.BooleanField(u'Сортирован',default=False)

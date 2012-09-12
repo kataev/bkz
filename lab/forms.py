@@ -104,7 +104,8 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'weight':WeightInput(),
             'density':DensityInput(attrs={'readonly':'readonly'}),
             'flexion':FlexionInput(),
-            'pressure':PressureInput()
+            'pressure':PressureInput(),
+
         }
         layout = (
             Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure',css_class='less span5'),
@@ -148,7 +149,8 @@ class PartForm(BootstrapMixin, forms.ModelForm):
             'brocken':NumberInput(),
             'test':NumberInput(),
             'info':forms.Textarea(attrs={'rows':1}),
-            'brock':forms.HiddenInput
+            'brock':forms.HiddenInput,
+            'cause':forms.CheckboxSelectMultiple,
         }
 
 

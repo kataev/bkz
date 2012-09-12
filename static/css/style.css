@@ -13,6 +13,7 @@ div.controls ul {list-style: none}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
 input[name*="amount"] {background: #adff2f;}
+td.cause ul { list-style: none;}
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
     fieldset.less .controls {margin-left: 110px}
