@@ -9,6 +9,15 @@ $('.collapse').collapse()
 $('#navbar').scrollspy()
 
 $(function () {
+
+    $('select[name*="defect"]').change(function(e){
+        var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
+        if ($(this).val().length -1)
+            $cause.show();
+        else
+            $cause.hide()
+    })
+
     $('.form-add').click(function () {
         var prefix = $(this).data('prefix')
         var append_to = $(this).data('append')

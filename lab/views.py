@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from bkz.lab.models import *
 from bkz.lab.forms import *
 from bkz.whs.views import BillCreateView,BillUpdateView
+from django.views.generic import UpdateView, CreateView, ListView
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -18,32 +19,35 @@ class BatchCreateView(BillCreateView):
         self.object.save()
         return redirect(self.get_success_url())
 
-class BatchUpdateView(BillUpdateView):
+class BatchUpdateView(UpdateView):
     form_class=BatchForm
     model=Batch
-    opers=[PressureFactory,FlexionFactory,PartFactory]
-    redirect = {
-        'redirect':'whs:Brick-list'
-    }
     def form_valid(self, form):
-        instance = form.save(commit=False)
-        opers = self.get_context_data()['opers']
-        for factory in opers.values():
-            if factory.is_valid():
-                a = factory.save()
-        if all([f.is_valid() for f in opers.values()]):
-            instance.amount = sum([x.cleaned_data.get('amount',0) for x in opers['part_set']])
-            instance.tto = ','.join([x.cleaned_data.get('tto','') for x in opers['part_set']])
-            instance.save()
-            return redirect(self.get_success_url())
-        return self.render_to_response(dict(form=form,opers=opers))
-
-    def get_success_url(self):
-        for k in filter(lambda x:'redirect' in x,self.request.POST.keys()):
-            return self.redirect[k]
+        self.object = form.save()
+        parts = PartFactory(self.request.POST or None, instance=self.object)
+        error = False
+        if parts.is_valid():
+            for part,instance in zip(parts,parts.save()):
+                part.rows = RowFactory(self.request.POST or None, instance=instance,prefix=part.prefix+'-row')
+                if part.rows.is_valid():
+                     part.rows.save()
+                else:
+                    error = True
         else:
-            return super(BatchUpdateView,self).get_success_url()
+            return self.render_to_response(self.get_context_data(form=form))
+        if error:
+            return self.render_to_response(dict(form=form,parts=parts))
+        else:
+            return redirect(self.get_success_url())
 
+
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
+        for part in context['parts']:
+            part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+        return context
 
 def index(request):
     batch_list = Batch.objects.all()

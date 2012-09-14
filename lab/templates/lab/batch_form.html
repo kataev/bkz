@@ -8,11 +8,10 @@
     <div class="container-fluid">
         <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
             {% csrf_token %}
-            {% for factory in opers.values %}
-                {{ factory.management_object }}
-                {{ factory.management_form }}
-            {% endfor %}
             <div class="row">
+                {% for e in form.non_field_errors %}
+                    {{ e }}
+                {% endfor %}
                 {{ form.as_div }}
                 {% include 'lab/part_list.html' %}
             </div>

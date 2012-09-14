@@ -35,14 +35,17 @@ td.cause ul { list-style: none;}
 }
 
 
-fieldset.Part input[name*="tto"] {width:60px}
-fieldset.Part input[name*="amount"] {width:60px}
-fieldset.Part select[name*="defect"] {width:70px}
-fieldset.Part input[name*="dnumber"] {width:50px}
-fieldset.Part input[name*="half"] {width:50px}
-fieldset.Part input[name*="brocken"] {width:70px}
-fieldset.Part input[name*="test"] {width:70px}
-fieldset.Part td, fieldset.Part th {text-align: center;}
+fieldset.Part table input, fieldset.Part table textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    height: 30px;
+    border-radius: 0;
+}
+fieldset.Part input[name*='test']{width: 52px !important;}
+fieldset.Part input[name*='brocken']{width: 60px !important;}
+fieldset.Part input[name*='amount']{width: 70px !important;}
 
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}

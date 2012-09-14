@@ -274,7 +274,9 @@ class Batch(UrlMixin,models.Model):
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
     density = models.FloatField(u'Класс средней плотности')
+    half = models.FloatField(u'Половняк',default=0.0)
     weight = models.FloatField(u'Масса')
+
 
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
     amount = models.IntegerField(u'Кол-во',null=True,blank=True)
@@ -296,6 +298,44 @@ class Batch(UrlMixin,models.Model):
             return u'условно-эффективный'
         else:
             return u'эффективный'
+
+class Part(models.Model):
+    batch = models.ForeignKey(Batch,verbose_name=u'Партия')
+    tto = RangeField(u'№ телег',max_length=30,blank=True)
+    amount = models.IntegerField(u'Кол-во')
+    defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
+    dnumber = models.FloatField(u'Брак.число',default=0)
+    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака')
+    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk: return u'%s, %s c телег %s' % (self.batch,self.get_defect_display().lower(),self.tto)
+        else: return u'Новый выход с производства'
+
+    @property
+    def get_name(self):
+        if not self.batch.color:
+            return self.batch.get_width_display()
+        else:
+            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
+
+    @property
+    def count_exit(self):
+        return self.amount
+
+    class Meta():
+        verbose_name = u"Часть партии"
+        verbose_name_plural = u"Часть партии"
+        ordering = ('batch__date','batch__number','defect')
+
+
+class RowPart(models.Model):
+    part = models.ForeignKey(Part,related_name='rows')
+    tto = RangeField(u'№ телег',max_length=30,blank=True)
+    amount = models.IntegerField(u'Кол-во')
+    test = models.IntegerField(u'Расход на исп',default=0)
+    brocken = models.IntegerField(u'Бой',default=0)
+
 
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
@@ -328,43 +368,3 @@ class Flexion(models.Model):
     class Meta():
         verbose_name = u"Испытание на изгиб"
         verbose_name_plural = u"Испытания на изгиб"
-
-cause_c = (
-    ('0',u'Бой'),
-    ('1',u'Трешины'),
-    ('2',u'Извесняк.вкл >`1см²'),
-    ('3',u'Другое, указать в примечании'),
-    )
-
-class Part(models.Model):
-    batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = RangeField(u'№ телег',max_length=30,blank=True)
-    amount = models.IntegerField(u'Кол-во')
-    test = models.IntegerField(u'Расход на исп',default=0)
-    defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
-    half = models.FloatField(u'Половняк',default=3)
-    dnumber = models.FloatField(u'Брак.число',default=0)
-    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака')
-    brocken = models.IntegerField(u'Бой',default=0)
-    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
-    sorted = models.BooleanField(u'Сортирован',default=False)
-
-    def __unicode__(self):
-        if self.pk: return u'%s, %s c телег %s' % (self.batch,self.get_defect_display().lower(),self.tto)
-        else: return u'Новый выход с производства'
-
-    @property
-    def get_name(self):
-        if not self.batch.color:
-            return self.batch.get_width_display()
-        else:
-            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
-
-    @property
-    def count_exit(self):
-        return self.amount
-
-    class Meta():
-        verbose_name = u"Часть партии"
-        verbose_name_plural = u"Часть партии"
-        ordering = ('batch__date','batch__number','defect')

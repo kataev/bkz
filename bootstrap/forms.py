@@ -133,14 +133,12 @@ class BootstrapMixin(object):
                 'field_type' : mark_safe(field.__class__.__name__),
                 'label_id': bf._auto_id(),
             }
-
             if self.custom_fields.has_key(field):
                 template = get_template(self.custom_fields[field])
             else:
                 template = select_template([
                     os.path.join(self.template_base, 'field_%s.html' % type(field_instance.widget).__name__.lower()),
                     os.path.join(self.template_base, 'field_default.html'), ])
-
             # Finally render the field
             output = template.render(Context(field_hash))
 
