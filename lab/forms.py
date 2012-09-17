@@ -163,17 +163,14 @@ class SplitSizeField(forms.MultiValueField):
         return '%dx%dx%d' % data_list
 
 class PressureForm(forms.ModelForm):
-#    size = SplitSizeField(label=u'Размеры',widget=SplitSizeWidget(attrs={'autocomplete':'off','class':'input-micro','min':0}))
     class Meta:
+        exclude = ('timestamp',)
         model = Pressure
 
 class FlexionForm(forms.ModelForm):
-#    size = SplitSizeField()
     class Meta:
+        exclude = ('timestamp',)
         model = Flexion
 
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=0)
-FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=0)
-
-
-
+PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6,max_num=6)
+FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=6,max_num=6)

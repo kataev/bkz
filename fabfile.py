@@ -16,7 +16,6 @@ def merge():
     local('git merge --no-ff %s' % env.dev_branch)
 
 def push():
-    commit()
     merge()
     local('git push')
     local('git checkout %s' % env.dev_branch)

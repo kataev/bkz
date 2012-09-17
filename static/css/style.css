@@ -34,18 +34,29 @@ td.cause ul { list-style: none;}
     .tarainput span input {width:26px}
 }
 
-fieldset.Part table input, fieldset.Part table textarea {
+fieldset.Part table input, fieldset.Part table textarea,
+fieldset.Pressure table input, fieldset.Pressure table textarea,
+fieldset.Flexion table input, fieldset.Flexion table textarea
+{
     width: 100% !important;
     box-sizing: border-box;
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
     height: 30px;
     border-radius: 0;
+    margin: 0;
 }
 /*fieldset.Part input[name*='tto']{width: 100px !important;}*/
 fieldset.Part input[name*='test']{width: 52px !important;}
 fieldset.Part input[name*='brocken']{width: 60px !important;}
 fieldset.Part input[name*='amount']{width: 70px !important;}
+
+.tests input[name*='tto']{width: 52px !important;}
+.tests input[name*='row']{width: 52px !important;}
+.tests input[name*='size']{width: 96px !important;}
+.tests input[name*='area']{width: 52px !important;}
+.tests input[name*='readings']{width: 72px !important;}
+.tests input[name*='value']{width: 52px !important;}
 
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}

@@ -1,0 +1,106 @@
+{% extends 'core/index.html' %}
+{% block title %}
+    {{ batch }}
+{% endblock %}
+{% block container %}
+    <div class='container'>
+        <form>
+            <div class="row tests">
+
+                <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
+                <fieldset class='Flexion span6'>
+                    <table class="">
+                        <caption><h2>На изгиб</h2></caption>
+                        <thead>
+                        <tr>
+                            {% for f in flexion.empty_form.visible_fields %}
+                                {% if not forloop.last %}
+                                    <th>{{ f.label }}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for form in flexion %}
+                            <tr id='{{ form.prefix }}'>
+                                {% for f in form.visible_fields %}
+                                    {% if forloop.first %}
+                                        <td class="input-prepend">
+                                            <span class='add-on'>{{ forloop.parentloop.counter }}</span>
+                                            {{ f }}
+                                        </td>
+                                    {% elif forloop.last %}
+                                        <td class="input-append" title='Отметить для удаления'>
+                                            <span style='display: none;'>{{ f }}</span>
+                                            <a class="btn add-on delete btn-warning" href='#{{ form.prefix }}'
+                                               tabindex="1000">
+                                                <i class='icon-remove'></i></a>
+                                        </td>
+                                    {% else %}
+                                        <td>{{ f }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset class='Pressure span6'>
+                    <table class="">
+                        <caption><h2>На сжатие</h2></caption>
+                        <thead>
+                        <tr>
+                            {% for f in pressure.empty_form.visible_fields %}
+                                {% if not forloop.last %}
+                                    <th>{{ f.label }}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for form in pressure %}
+                            <tr id='{{ form.prefix }}'>
+                                {% for f in form.visible_fields %}
+                                    {% if forloop.first %}
+                                        <td class="input-prepend">
+                                            <span class='add-on'>{{ forloop.parentloop.counter }}</span>
+                                            {{ f }}
+                                        </td>
+                                    {% elif forloop.last %}
+                                        <td class="input-append" title='Отметить для удаления'>
+                                            <span style='display: none;'>{{ f }}</span>
+                                            <a class="btn add-on delete btn-warning" href='#{{ form.prefix }}'
+                                               tabindex="1000">
+                                                <i class='icon-remove'></i></a>
+                                        </td>
+                                    {% else %}
+                                        <td>{{ f }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="5"><span class="pull-right">Минимальное:</span></th>
+                            <th colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="5"><span class="pull-right">Среднее:</span></th>
+                            <th colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="5"><span class="pull-right">Максимальное:</span></th>
+                            <th colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="5"><span class="pull-right">Значение:</span></th>
+                            <th colspan="2"></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+            </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

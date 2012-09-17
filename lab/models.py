@@ -277,7 +277,6 @@ class Batch(UrlMixin,models.Model):
     half = models.FloatField(u'Половняк',default=3.0)
     weight = models.FloatField(u'Масса')
 
-
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
     amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
@@ -297,14 +296,14 @@ class Batch(UrlMixin,models.Model):
     class Meta():
         verbose_name = u"Готовая продукция"
         verbose_name_plural = u"Готовая продукция"
-        ordering = ('')
+        ordering = ('-date','number',)
     def get_density_display(self):
         if self.density > 1.4:
             return u'условно-эффективный'
         else:
             return u'эффективный'
 
-defect_c = (('',u'Выберете качество'),) + defect_c
+defect_c = (('',u'Выберете качество'),) + defect_c + ((u'no_cont',u'Не кондиция'),)
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
@@ -339,16 +338,15 @@ class RowPart(models.Model):
     test = models.IntegerField(u'Расход на исп',default=0)
     brocken = models.IntegerField(u'Бой',default=0)
 
-
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'pressure_tests')
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    area = models.FloatField(u'Площадь')
-    readings = models.FloatField(u'Показание прибора')
-    value = models.FloatField(u'Значение',default=0.0)
+    area = models.FloatField(u'S²')
+    readings = models.FloatField(u'Показание')
+    value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
         if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
@@ -364,9 +362,9 @@ class Flexion(models.Model):
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    area = models.FloatField(u'Площадь')
-    readings = models.FloatField(u'Показание прибора')
-    value = models.FloatField(u'Значение',default=0.0)
+    area = models.FloatField(u'S²')
+    readings = models.FloatField(u'Показание')
+    value = models.FloatField(u'Знач',default=0.0)
 
     class Meta():
         verbose_name = u"Испытание на изгиб"

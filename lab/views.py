@@ -66,4 +66,11 @@ def batch_print(request, pk):
 
 
 def batch_tests(request,pk):
-    return render(request,'lab/batch-tests.html')
+    batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
+    flexion = FlexionFactory(request.POST or None, instance=batch)
+    pressure = PressureFactory(request.POST or None, instance=batch)
+    if request.method == 'POST' and flexion.is_valid() and pressure.is_valid():
+        flexion.save()
+        pressure.save()
+        return batch.get_tests_url()
+    return render(request,'lab/batch-tests.html',{'flexion':flexion,'pressure':pressure,'batch':batch})
