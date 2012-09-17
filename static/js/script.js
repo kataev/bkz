@@ -48,6 +48,14 @@ $(function () {
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
     })
 
+    $('.delete').click(function(e){
+        e.preventDefault()
+        var dl = $($(this).attr('href')).find('[name*="DELETE"]')
+        dl.prop('checked',!dl.prop('checked'))
+        $(this).toggleClass('btn-warning').toggleClass('btn-danger')
+        $(this).find('i').toggleClass('icon-remove').toggleClass('icon-trash')
+    })
+
 //    $('nav.nav-list.form-nav').on('click.tab.data-api','[data-toggle="tab"',function(e){
 //        e.preventDefault()
 //        $(this).tab('show')

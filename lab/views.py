@@ -26,9 +26,11 @@ class BatchUpdateView(UpdateView):
         self.object = form.save()
         parts = PartFactory(self.request.POST or None, instance=self.object)
         error = False
+        print 'test'
         if parts.is_valid():
-            for part,instance in zip(parts,parts.save()):
-                part.rows = RowFactory(self.request.POST or None, instance=instance,prefix=part.prefix+'-row')
+            parts.save()
+            for part in parts:
+                part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
                 if part.rows.is_valid():
                      part.rows.save()
                 else:
@@ -40,16 +42,13 @@ class BatchUpdateView(UpdateView):
         if error:
             return self.render_to_response(dict(form=form,parts=parts))
         else:
-            return redirect(self.get_success_url())
+            return redirect(self.get_success_url()+'?success=True')
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
         if not context.has_key('parts'):
             context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
             for part in context['parts']:
-                RowFactory.extra = 0
-                if not part.instance.pk:
-                    RowFactory.extra = 1
                 part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
                 part.rows.clean()
         return context

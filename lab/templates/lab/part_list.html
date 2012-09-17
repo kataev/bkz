@@ -10,6 +10,9 @@
             {% for field in form.hidden_fields %}
                 {{ field }}
             {% endfor %}
+        {% for e in parts.non_form_errors %}
+            {{ e }}
+            {% endfor %}
             <table class='span4'>
                 <thead>
                 <tr>

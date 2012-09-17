@@ -273,8 +273,8 @@ class Batch(UrlMixin,models.Model):
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
-    density = models.FloatField(u'Класс средней плотности')
-    half = models.FloatField(u'Половняк',default=0.0)
+    density = models.FloatField(u'Класс средней плотности',default=1.0)
+    half = models.FloatField(u'Половняк',default=3.0)
     weight = models.FloatField(u'Масса')
 
 
@@ -297,6 +297,7 @@ class Batch(UrlMixin,models.Model):
     class Meta():
         verbose_name = u"Готовая продукция"
         verbose_name_plural = u"Готовая продукция"
+        ordering = ('')
     def get_density_display(self):
         if self.density > 1.4:
             return u'условно-эффективный'

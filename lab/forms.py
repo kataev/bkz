@@ -76,7 +76,11 @@ class WeightInput(NumberInput):
         self.attrs['autocomplete'] = 'off'
 
 class DensityInput(NumberInput):
-    pass
+    def __init__(self, attrs=None):
+        super(DensityInput, self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.1
+        self.attrs['min'] = 1
+        self.attrs['autocomplete'] = 'off'
 
 class FlexionInput(NumberInput):
     def __init__(self, attrs=None):
@@ -125,7 +129,7 @@ class PartForm(BootstrapMixin, forms.ModelForm):
             'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
         }
 
-PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=1)
+PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=2)
 
 class RowForm(forms.ModelForm):
     class Meta:
@@ -139,7 +143,7 @@ class RowForm(forms.ModelForm):
             }
 
 
-RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=0)
+RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=1,max_num=1)
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):
