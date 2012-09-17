@@ -1,0 +1,14 @@
+<tr id='{{ row.prefix }}'>
+    <td style='position: relative;' {% include 'bootstrap/errors.html' with errors=row.tto.errors %}>
+            <div class="input-prepend" style='position: absolute; left:-25px;' title='Удалить эту строку'>
+                <a class="btn add-on delete btn-warning" href='#' tabindex="1000"><i class='icon-remove'></i></a>
+            </div>
+        {{ row.tto }}
+        {% for field in row.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+    </td>
+    <td {% include 'bootstrap/errors.html' with errors=row.amount.errors %}>{{ row.amount }}</td>
+    <td {% include 'bootstrap/errors.html' with errors=row.brocken.errors %}>{{ row.brocken }}</td>
+    <td {% include 'bootstrap/errors.html' with errors=row.test.errors %}>{{ row.test }}</td>
+</tr>

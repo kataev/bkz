@@ -290,6 +290,10 @@ class Batch(UrlMixin,models.Model):
         if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
         else: return u'Новая партия'
 
+    @models.permalink
+    def get_tests_url(self):
+        return u'lab:Batch-tests', (), {'pk':self.pk}
+
     class Meta():
         verbose_name = u"Готовая продукция"
         verbose_name_plural = u"Готовая продукция"
@@ -299,13 +303,15 @@ class Batch(UrlMixin,models.Model):
         else:
             return u'эффективный'
 
+defect_c = (('',u'Выберете качество'),) + defect_c
+
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
     tto = RangeField(u'№ телег',max_length=30,blank=True)
-    amount = models.IntegerField(u'Кол-во')
+    amount = models.IntegerField(u'Кол-во',default=0)
     defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
     dnumber = models.FloatField(u'Брак.число',default=0)
-    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака')
+    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -319,10 +325,6 @@ class Part(models.Model):
         else:
             return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
 
-    @property
-    def count_exit(self):
-        return self.amount
-
     class Meta():
         verbose_name = u"Часть партии"
         verbose_name_plural = u"Часть партии"
@@ -331,7 +333,7 @@ class Part(models.Model):
 
 class RowPart(models.Model):
     part = models.ForeignKey(Part,related_name='rows')
-    tto = RangeField(u'№ телег',max_length=30,blank=True)
+    tto = RangeField(u'№ телег',max_length=30)
     amount = models.IntegerField(u'Кол-во')
     test = models.IntegerField(u'Расход на исп',default=0)
     brocken = models.IntegerField(u'Бой',default=0)

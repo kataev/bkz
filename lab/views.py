@@ -33,20 +33,25 @@ class BatchUpdateView(UpdateView):
                      part.rows.save()
                 else:
                     error = True
+                    print 'rows not valid',part.rows.errors
         else:
+            print 'parts not valid',parts.errors
             return self.render_to_response(self.get_context_data(form=form))
         if error:
             return self.render_to_response(dict(form=form,parts=parts))
         else:
             return redirect(self.get_success_url())
 
-
-
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
-        context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
-        for part in context['parts']:
-            part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+        if not context.has_key('parts'):
+            context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
+            for part in context['parts']:
+                RowFactory.extra = 0
+                if not part.instance.pk:
+                    RowFactory.extra = 1
+                part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+                part.rows.clean()
         return context
 
 def index(request):
@@ -59,3 +64,7 @@ from webodt.shortcuts import render_to_response
 def batch_print(request, pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     return render_to_response('webodt/akt-out.odt',{'batch':batch},format='pdf',inline=True)
+
+
+def batch_tests(request,pk):
+    return render(request,'lab/batch-tests.html')

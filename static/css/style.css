@@ -34,7 +34,6 @@ td.cause ul { list-style: none;}
     .tarainput span input {width:26px}
 }
 
-
 fieldset.Part table input, fieldset.Part table textarea {
     width: 100% !important;
     box-sizing: border-box;
@@ -43,6 +42,7 @@ fieldset.Part table input, fieldset.Part table textarea {
     height: 30px;
     border-radius: 0;
 }
+/*fieldset.Part input[name*='tto']{width: 100px !important;}*/
 fieldset.Part input[name*='test']{width: 52px !important;}
 fieldset.Part input[name*='brocken']{width: 60px !important;}
 fieldset.Part input[name*='amount']{width: 70px !important;}

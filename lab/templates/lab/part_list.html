@@ -6,52 +6,64 @@
     {% for form in parts %}
         {{ form.rows.management_object }}
         {{ form.rows.management_form }}
-    <div class="row">
-        <table class='span4'>
-            <thead>
-            <tr>
-                <th>ТТО</th>
-                <th>Кол-во</th>
-                <th>Бой</th>
-                <th>Исп</th>
-            </tr>
-            </thead>
-
-                <tbody>
+        <div class="row">
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <table class='span4'>
+                <thead>
+                <tr>
+                    <th>ТТО</th>
+                    <th>Кол-во</th>
+                    <th>Бой</th>
+                    <th>Исп</th>
+                </tr>
+                </thead>
+                <tbody id='{{ form.rows.prefix }}'>
                 {% for row in form.rows %}
-                    <tr>
-                        <td> {{ row.tto }} </td>
-                        <td>{{ row.amount }}</td>
-                        <td>{{ row.brocken }}</td>
-                        <td>{{ row.test }}</td>
-                    </tr>
+                    {% include 'lab/row_form.html' with row=row forloop=forloop only %}
                 {% endfor %}
                 </tbody>
-
-            <tfoot>
-            <tr>
-                <td colspan="4">{{ form.info }}</td>
-            </tr>
-            </tfoot>
-        </table>
-        <div class="span3">
-            <div class="row">
-                <div class="span2">
-                    <label>Качество
-                        {{ form.defect }}
-                    </label>
+                <tfoot style='display: none;'>
+                {% with row=form.rows.empty_form %}
+                    {% include 'lab/row_form.html' with row=row only %}
+                {% endwith %}
+                </tfoot>
+                <tfoot>
+                <tr>
+                    <td colspan="4"
+                        style='position: relative;' {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
+                        <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
+                            <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
+                               tabindex="1000"
+                               data-prefix='{{ form.rows.prefix }}'
+                               href='#'><i class='icon-plus-sign'></i></a>
+                        </div>
+                        {{ form.info }}</td>
+                </tr>
+                </tfoot>
+            </table>
+            <div class="span3">
+                <div class="row">
+                    <div class="span2">
+                        <label {% include 'bootstrap/errors.html' with errors=form.defect.errors %}>Качество
+                            {{ form.defect }}
+                        </label>
+                    </div>
+                    <div class="span1">
+                        <label {% include 'bootstrap/errors.html' with errors=form.dnumber.errors %}>
+                            <abbr title='Браковочное число'>Б.число</abbr>
+                            {{ form.dnumber }}
+                        </label>
+                    </div>
                 </div>
-                <div class="span1">
-                    <label><abbr title='Браковочное число'>Б.число</abbr>
-                        {{ form.dnumber }}
-                    </label>
-                </div>
+                <label {% if form.defect.value == ' ' or not form.defect.value %}style='display: none;'{% endif %} {% include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
+                    брака
+                    {{ form.cause }}
+                </label>
+            {{ form.errors }}
             </div>
-            <label {% if form.defect.value|length_is:1 %}style='display: none;'{% endif %}>Причина брака
-                {{ form.cause }}
-            </label>
         </div>
-    </div>
     {% endfor %}
 </fieldset>
 

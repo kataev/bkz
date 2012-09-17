@@ -12,7 +12,7 @@ $(function () {
 
     $('select[name*="defect"]').change(function(e){
         var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
-        if ($(this).val().length -1)
+        if ($(this).val().length != 1)
             $cause.show();
         else
             $cause.hide()
@@ -38,6 +38,10 @@ $(function () {
         $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1)).appendTo(place_to)
         $('span', menu).text($('legend',node).text())
 
+        $(node).on('click','a.delete',function(){
+            $(total).val(parseInt($(total).val()) - 1)
+            $(node).remove()
+        })
 
         $(total).val(parseInt($(total).val()) + 1)
         tara_amount()

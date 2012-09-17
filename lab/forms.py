@@ -118,13 +118,14 @@ info_list = ['5.3.2 Известняковые включения < 1см','5.3.
 class PartForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Part
+        exclude = ('amount','tto')
         widgets = {
             'defect':forms.Select(attrs={'class':'span2'}),
             'dnumber':forms.TextInput(attrs={'class':'span1'}),
             'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
         }
 
-PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2)
+PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=1)
 
 class RowForm(forms.ModelForm):
     class Meta:
@@ -138,7 +139,7 @@ class RowForm(forms.ModelForm):
             }
 
 
-RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=1)
+RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=0)
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):
