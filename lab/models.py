@@ -303,20 +303,32 @@ class Batch(UrlMixin,models.Model):
         else:
             return u'эффективный'
 
-defect_c = (('',u'Выберете качество'),) + defect_c + ((u'no_cont',u'Не кондиция'),)
+defect_c = defect_c + ((u'no_cont',u'Некондиция'),)
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
     tto = RangeField(u'№ телег',max_length=30,blank=True)
     amount = models.IntegerField(u'Кол-во',default=0)
-    defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
+    defect = models.CharField(u"Тип", max_length=60, choices=defect_c)
     dnumber = models.FloatField(u'Брак.число',default=0)
     cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+    brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'%s, %s c телег %s' % (self.batch,self.get_defect_display().lower(),self.tto)
+        if self.pk: return u'%s' % self.get_defect_display()
         else: return u'Новый выход с производства'
+
+    @property
+    def get_css_class(self):
+        if not self.pk:
+            return ''
+        if self.defect == u' ':
+            return 'success'
+        elif self.defect == u'<20':
+            return 'info'
+        else:
+            return 'error'
 
     @property
     def get_name(self):

@@ -109,22 +109,13 @@ $(function () {
 //Подсветка цветов селекта в редактировании кирпича
 $(function () {
     var color_select = function (select, val) {
-        $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
-        if (val == 0) {
-            $(select).addClass('bc-red')
-        }
-        if (val == 1) {
-            $(select).addClass('bc-yellow')
-        }
-        if (val == 2) {
-            $(select).addClass('bc-brown')
-        }
-        if (val == 3) {
-            $(select).addClass('bc-light')
-        }
-        if (val == 4) {
-            $(select).addClass('bc-white')
-        }
+        var $select = $(select)
+        $select.removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
+        if (val == 0) $select.addClass('bc-red');
+        if (val == 1) $select.addClass('bc-yellow');
+        if (val == 2) $select.addClass('bc-brown');
+        if (val == 3) $select.addClass('bc-light');
+        if (val == 4) $select.addClass('bc-white');
     }
     var select = $('#id_color')
     var val = parseInt($(select).val())
@@ -133,11 +124,14 @@ $(function () {
         $('div.ctype').hide()
     $(select).change(function () {
         var val = parseInt($(this).val())
-        if (val)
-            $('div.ctype').show()
-        else
-            $('div.ctype').hide()
+        if (val) $('div.ctype').show();
+        else $('div.ctype').hide();
         color_select(this, val)
+    })
+
+    $('fieldset.Part').on('click','a.show',function(e){
+        e.preventDefault()
+        if (!$(e.delegateTarget).find('.row:hidden:first').show().length) $(this).hide();
     })
 })
 

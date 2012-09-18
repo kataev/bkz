@@ -1,3 +1,10 @@
+body {
+    background-image: url('/static/img/background.png');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-attachment: fixed;
+    background-size: 11%;
+}
 #brick-select-buttons input {vertical-align: top}
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
@@ -33,6 +40,13 @@ td.cause ul { list-style: none;}
     .tarainput input {width:174px}
     .tarainput span input {width:26px}
 }
+
+
+fieldset.Part div.row {margin-bottom:10px;border-radius: 5px;padding-bottom: 2px;}
+fieldset.Part div.span3 {margin-left:10px}
+fieldset.Part div.success { background-color: #dff0d8; }
+fieldset.Part div.error { background-color: #fcf8e3; }
+fieldset.Part div.info { background-color: #d9edf7; }
 
 fieldset.Part table input, fieldset.Part table textarea,
 fieldset.Pressure table input, fieldset.Pressure table textarea,

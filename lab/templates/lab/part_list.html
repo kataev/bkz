@@ -4,9 +4,9 @@
     {{ parts.management_object }}
     {{ parts.management_form }}
     {% for form in parts %}
-        {{ form.rows.management_object }}
-        {{ form.rows.management_form }}
-        <div class="row">
+        <div class="row {{ form.instance.get_css_class }}" {% if not forloop.first and not form.instance.pk %}style='display: none;'{% endif %}>
+            {{ form.rows.management_object }}
+            {{ form.rows.management_form }}
             {% for field in form.hidden_fields %}
                 {{ field }}
             {% endfor %}
@@ -68,5 +68,6 @@
             </div>
         </div>
     {% endfor %}
+    <a href="#" class="show btn btn-mini btn-info">Добавить еще акт</a>
 </fieldset>
 

@@ -10,82 +10,107 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="{{ STATIC_URL }}bootstrap/bootstrap.css" rel="stylesheet">
-{#    <style> body { padding-top: 60px; position: relative;} </style>#}
-    <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
+    {#    <style> body { padding-top: 60px; position: relative;} </style>#}
+    <style type="text/css" media="print"> .navbar, #footer {
+        display: none
+    } </style>
     <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}bootstrap/bootstrap-responsive.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/brick.css" rel="stylesheet">
     {% block head %}
+        <style>
+            .masthead {
+                text-align: center;
+                font-size: 38px;
+                padding: 20px;
+            }
+
+            .masthead h1 {
+                font-size: 50px;
+                font-family: Helvetica, Arial;
+                font-weight: 200;
+                line-height: 1.25;
+            }
+
+            .masthead h1 small {
+                font-size: 40px;
+                display: block;
+            }
+
+            .masthead p {
+                font-size: 24px;
+                font-weight: 200;
+                line-height: 1.25;
+            }
+
+            .masthead .btn {
+                padding: 14px 24px;
+                font-size: 24px;
+                font-weight: 200;
+                color: #fff; /* redeclare to override the `.jumbotron a` */
+                border: 0;
+                -webkit-border-radius: 6px;
+                -moz-border-radius: 6px;
+                border-radius: 6px;
+                -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+                -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+                -webkit-transition: none;
+                -moz-transition: none;
+                transition: none;
+            }
+            .masthead .btn:hover {
+                -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+                -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+            }
+            .masthead .btn:active {
+                -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
+                -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
+                box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
+            }
+        </style>
     {% endblock %}
-{#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
+    {#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
 </head>
 <body data-spy='scroll' data-target='.navbar' data-offset='40'>
 {% include 'core/navbar.html' %}
 {% block brick-select %} {% endblock %}
 {% block container %}
-<div class="container">
-        <div class="row">
-            <div id="bkz-carousel" class="span5 carousel slide">
-                <div class="carousel-inner">
-                    <div class="active item">
-                        <img src="{{ STATIC_URL }}/img/carousel/brick.jpg">
-
-                        <div class="carousel-caption">
-                            <h4>Обжиговая телега</h4>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="{{ STATIC_URL }}/img/carousel/IMG_20120626_143949.jpg">
-
-                        <div class="carousel-caption">
-                            <h4>Участок отрузки</h4>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="{{ STATIC_URL }}/img/carousel/IMG_20120627_103834.jpg">
-
-                        <div class="carousel-caption">
-                            <h4>Глина</h4>
-                        </div>
-                    </div>
-                </div>
-                <a class="carousel-control left" href="#bkz-carousel" data-slide='prev'>&lsaquo;</a>
-                <a class="carousel-control right" href="#bkz-carousel" data-slide='next'>&rsaquo;</a>
-            </div>
-            <div class="span6 well">
-                <h1>Корпоративный портал</h1>
-                Включает в себя:
-                <ul>
-                    <li>Лаборатория</li>
-                    <li>Склад</li>
-                    <li>Учет энергоресурсов</li>
-                    <li>Учет расходников ИТ</li>
-                </ul>
-            </div>
-        </div>
-</div>
+    <div class="container masthead">
+        <h1>
+            Корпоративный портал
+            <small>ООО "Березниковский кирпичный завод"</small>
+        </h1>
+        <p>Предоставляет доступ к системе поддержки принятия решения для отделов: производства, склада говоой продукции,
+            службы энергетика, ИТ отдел.
+        </p>
+        <p>
+            <a class="btn btn-primary" href="{% url price %}">Прайс-лист цен</a>
+        </p>
+    </div>
 {% endblock %}
 <div class="container" id="footer">
     <div class="row-fluid">
-    <div class="span6">
-        <blockquote>
-            <ul class="unstyled">
-                <li><b>ООО &laquo;Березниковский кирпичный завод&raquo;</b></li>
-                <li>Корпоративный портал</li>
-            </ul>
-        </blockquote>
-    </div>
-    <div class="span6">
-        <blockquote>
-            <ul class="unstyled">
-                <li>
-                    <i class="icon-star"></i>
-                    <a title="Разработчик" href="https://plus.google.com/u/0/101946326841894739802/about">Катаев
-                        Денис</a>
-                </li>
-            </ul>
-        </blockquote>
-    </div>
+        <div class="span6">
+            <blockquote>
+                <ul class="unstyled">
+                    <li><b>ООО &laquo;Березниковский кирпичный завод&raquo;</b></li>
+                    <li>Корпоративный портал</li>
+                </ul>
+            </blockquote>
+        </div>
+        <div class="span6">
+            <blockquote>
+                <ul class="unstyled">
+                    <li>
+                        <i class="icon-star"></i>
+                        <a title="Разработчик" href="https://plus.google.com/u/0/101946326841894739802/about">Катаев
+                            Денис</a>
+                    </li>
+                </ul>
+            </blockquote>
+        </div>
     </div>
 </div>
 

@@ -176,7 +176,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'pytils',
 #    'devserver',
-#    'south',
+    'south',
     'gunicorn',
 #    'piston',
     'selenium',

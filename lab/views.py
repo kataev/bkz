@@ -23,26 +23,23 @@ class BatchUpdateView(UpdateView):
     form_class=BatchForm
     model=Batch
     def form_valid(self, form):
-        self.object = form.save()
-        parts = PartFactory(self.request.POST or None, instance=self.object)
-        error = False
-        print 'test'
-        if parts.is_valid():
-            parts.save()
-            for part in parts:
-                part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+        context = self.get_context_data(form=form)
+        self.object = form.save(commit=False)
+        self.parts = context.get('parts')
+        if self.parts.is_valid():
+            self.parts.save(commit=False)
+            for part in self.parts.initial_forms:
                 if part.rows.is_valid():
-                     part.rows.save()
-                else:
-                    error = True
-                    print 'rows not valid',part.rows.errors
-        else:
-            print 'parts not valid',parts.errors
-            return self.render_to_response(self.get_context_data(form=form))
-        if error:
-            return self.render_to_response(dict(form=form,parts=parts))
-        else:
-            return redirect(self.get_success_url()+'?success=True')
+                    part.rows.save()
+                    part.instance.amount = sum([r.instance.amount for r in part.rows.initial_forms])
+                    part.instance.tto = ','.join([r.instance.tto for r in part.rows.initial_forms])
+            self.parts.save()
+            self.object.amount = sum([r.instance.amount for r in self.parts.initial_forms])
+            self.object.tto = ','.join([r.instance.tto for r in self.parts.initial_forms])
+            self.object.save()
+            if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
+                return redirect(self.get_success_url())
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
@@ -50,7 +47,6 @@ class BatchUpdateView(UpdateView):
             context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
             for part in context['parts']:
                 part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
-                part.rows.clean()
         return context
 
 def index(request):

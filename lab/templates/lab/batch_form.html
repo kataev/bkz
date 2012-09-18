@@ -21,9 +21,10 @@
                         <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
                             изменения
                         </button>
-                        <input type='submit' name="redirect">
+{#                        <input type='submit' name="redirect">#}
                         <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
                         {% block bonus-button %}
+                            <a href="{{ form.instance.get_delete_url }}" class='btn btn-danger pull-right'>Удалить</a>
                         {% endblock %}
                     </div>
                 </div>
