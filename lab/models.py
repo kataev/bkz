@@ -7,6 +7,7 @@ from django.db import models
 
 from bkz.whs.constants import defect_c,color_c,mark_c
 from bkz.utils import UrlMixin,ru_date
+from bkz.lab.utils import get_tto
 
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
@@ -289,6 +290,10 @@ class Batch(UrlMixin,models.Model):
         if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
         else: return u'Новая партия'
 
+    @property
+    def get_tto(self):
+        return get_tto(self.tto)
+
     @models.permalink
     def get_tests_url(self):
         return u'lab:Batch-tests', (), {'pk':self.pk}
@@ -320,6 +325,10 @@ class Part(models.Model):
         else: return u'Новый выход с производства'
 
     @property
+    def get_tto(self):
+        return get_tto(self.tto)
+
+    @property
     def get_css_class(self):
         if not self.pk:
             return ''
@@ -349,6 +358,10 @@ class RowPart(models.Model):
     amount = models.IntegerField(u'Кол-во')
     test = models.IntegerField(u'Расход на исп',default=0)
     brocken = models.IntegerField(u'Бой',default=0)
+
+    @property
+    def out(self):
+        return self.amount - self.test - self.brocken
 
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
