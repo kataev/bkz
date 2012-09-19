@@ -97,7 +97,7 @@ def make_label(brick): # Функция для вывода имени
         label += ' %s' % brick.get_color_display()
     if brick.ctype:
         label += ' %s' % brick.get_ctype_display()
-    if brick.defect:
+    if brick.defect and not brick.defect=='gost':
         label += ' %s' % brick.defect
     if brick.features:
         label += ' %s' % brick.features.lower()
