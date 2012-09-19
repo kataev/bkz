@@ -25,28 +25,29 @@ class BatchUpdateView(UpdateView):
     def form_valid(self, form):
         context = self.get_context_data(form=form)
         self.object = form.save(commit=False)
-        self.parts = context.get('parts')
         if self.parts.is_valid():
             self.parts.save(commit=False)
             for part in self.parts.initial_forms:
                 if part.rows.is_valid():
-                    part.rows.save()
-                    part.instance.amount = sum([r.instance.amount for r in part.rows.initial_forms])
+                    part.instance.amount = sum([r.instance.out for r in part.rows.initial_forms])
                     part.instance.tto = ','.join([r.instance.tto for r in part.rows.initial_forms])
+                    part.instance.save()
+                    part.rows.save()
             self.parts.save()
             self.object.amount = sum([r.instance.amount for r in self.parts.initial_forms])
             self.object.tto = ','.join([r.instance.tto for r in self.parts.initial_forms])
             self.object.save()
             if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
-                return redirect(self.get_success_url())
+                return redirect(self.get_success_url()+'?s=t')
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
-        if not context.has_key('parts'):
-            context['parts'] = PartFactory(self.request.POST or None, instance=self.object)
-            for part in context['parts']:
-                part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+        self.parts = PartFactory(self.request.POST or None, instance=self.object)
+        for part in self.parts:
+            part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
+        context['parts'] = self.parts
+        context['success']= self.request.GET.get('s',False)
         return context
 
 def index(request):

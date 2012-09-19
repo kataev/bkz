@@ -17,6 +17,7 @@
                 <th>Кирпич</th>
                 <th>Марка</th>
                 <th>Кол-во</th>
+                <th>Телеги</th>
             </tr>
             </thead>
             <tbody>
@@ -27,6 +28,7 @@
                     <td>{{ b.get_width_display }} {{ b.get_color_display|lower }}</td>
                     <td>{{ b.get_mark_display }}</td>
                     <td>{{ b.amount }}</td>
+                    <td>{{ b.tto }}</td>
                 </tr>
             {% endfor %}
             </tbody>
