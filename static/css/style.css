@@ -1,19 +1,26 @@
-body { background-image: url('/static/img/whitediamond.png') }
-body { background-image: url('/static/img/whitediamond.png') }
+body {
+    background-image: url('/static/img/background.png');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-attachment: fixed;
+    background-size: 11%;
+}
 #brick-select-buttons input {vertical-align: top}
+ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
-.brand { font-family: Verdana; }
 .icon-logo {
     width: 9px;
     background-color: #990d0d !important;
     background: url('/static/img/logo.png') no-repeat;
-    vertical-align: 0px;
+    vertical-align: 0;
     background-position: 0;
 }
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
+input[name*="amount"] {background: #adff2f;}
+td.cause ul { list-style: none;}
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
     fieldset.less .controls {margin-left: 110px}
@@ -35,14 +42,35 @@ div.controls ul {list-style: none}
 }
 
 
-fieldset.Part input[name*="tto"] {width:60px}
-fieldset.Part input[name*="amount"] {width:60px}
-fieldset.Part select[name*="defect"] {width:70px}
-fieldset.Part input[name*="dnumber"] {width:50px}
-fieldset.Part input[name*="half"] {width:50px}
-fieldset.Part input[name*="brocken"] {width:70px}
-fieldset.Part input[name*="test"] {width:70px}
-fieldset.Part td, fieldset.Part th {text-align: center;}
+fieldset.Part div.row {margin-bottom:10px;border-radius: 5px;padding-bottom: 2px;}
+fieldset.Part div.span3 {margin-left:10px}
+fieldset.Part div.success { background-color: #dff0d8; }
+fieldset.Part div.error { background-color: #fcf8e3; }
+fieldset.Part div.info { background-color: #d9edf7; }
+
+fieldset.Part table input, fieldset.Part table textarea,
+fieldset.Pressure table input, fieldset.Pressure table textarea,
+fieldset.Flexion table input, fieldset.Flexion table textarea
+{
+    width: 100% !important;
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    height: 30px;
+    border-radius: 0;
+    margin: 0;
+}
+/*fieldset.Part input[name*='tto']{width: 100px !important;}*/
+fieldset.Part input[name*='test']{width: 52px !important;}
+fieldset.Part input[name*='brocken']{width: 60px !important;}
+fieldset.Part input[name*='amount']{width: 70px !important;}
+
+.tests input[name*='tto']{width: 52px !important;}
+.tests input[name*='row']{width: 52px !important;}
+.tests input[name*='size']{width: 96px !important;}
+.tests input[name*='area']{width: 52px !important;}
+.tests input[name*='readings']{width: 72px !important;}
+.tests input[name*='value']{width: 52px !important;}
 
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}

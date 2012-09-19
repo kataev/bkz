@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, get_object_or_404,redirect
-from django.views.generic import CreateView,UpdateView,DeleteView
+from django.shortcuts import render
+from django.views.generic import CreateView
 
 from bkz.it.models import *
-from django.db.models import F,Count,Sum
+from django.db.models import Count,Sum
 
 def main(request):
     """ Главная страница """

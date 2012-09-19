@@ -7,7 +7,7 @@
     <form action="{% url whs:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
         {% csrf_token %}
         <fieldset>
-            <legend><h1>Сверка</h1></legend>
+            <legend>Сверка</legend>
             {{ form }}
         </fieldset>
         <div class="form-actions">

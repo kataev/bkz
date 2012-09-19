@@ -8,12 +8,13 @@ from string import rjust
 
 import socket
 import cPickle
+from operator import xor
 
 con = psycopg2.connect(user='django', host='server', database='cpu', password='django')
 cur = con.cursor()
 
 def sm(c):
-    return ":" + c + hex(255 - reduce(operator.xor, map(ord, c)) - 1)[-2:] + "\r\n"
+    return ":" + c + hex(255 - reduce(xor, map(ord, c)) - 1)[-2:] + "\r\n"
 
 
 def bin(s):
@@ -23,7 +24,7 @@ def bin(s):
 
 def tb(int_type, offset):
     mask = 1 << offset
-    return(int_type ^ mask)
+    return int_type ^ mask
 
 
 def inv(q):
@@ -140,7 +141,7 @@ def crc16(data):
         uIndex = uchCRCLo ^ ord(ch)
         uchCRCLo = uchCRCHi ^ auchCRCHi[uIndex]
         uchCRCHi = auchCRCLo[uIndex]
-    return (uchCRCHi << 8 | uchCRCLo)
+    return uchCRCHi << 8 | uchCRCLo
 
 
 devices = [21, 22] # Список девайсов

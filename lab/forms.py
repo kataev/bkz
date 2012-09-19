@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory
-from bootstrap.forms import BootstrapMixin,Fieldset
+from bkz.bootstrap.forms import BootstrapMixin,Fieldset
 
 from bkz.lab.models import *
 from bkz.whs.forms import BatchInput,DateInput,NumberInput
@@ -76,7 +76,11 @@ class WeightInput(NumberInput):
         self.attrs['autocomplete'] = 'off'
 
 class DensityInput(NumberInput):
-    pass
+    def __init__(self, attrs=None):
+        super(DensityInput, self).__init__(attrs=attrs)
+        self.attrs['step'] = 0.1
+        self.attrs['min'] = 1
+        self.attrs['autocomplete'] = 'off'
 
 class FlexionInput(NumberInput):
     def __init__(self, attrs=None):
@@ -102,14 +106,44 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'width':BrickInput(),
             'color':BrickInput(),
             'weight':WeightInput(),
-            'density':DensityInput(attrs={'readonly':'readonly'}),
+            'density':DensityInput(),
             'flexion':FlexionInput(),
-            'pressure':PressureInput()
+            'pressure':PressureInput(),
+
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','flexion','pressure',css_class='less span5'),
+            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure','half',css_class='less span5'),
 #            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
+
+info_list = ['5.3.2 Известняковые включения < 1см','5.3.4 Размеры, дефекты','5.3.3 Высолы','5.2.6 Половняк более 5%','5.2.5 Черная сердцевина, пятна']
+
+
+class PartForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Part
+        exclude = ('amount','tto','brick')
+        widgets = {
+            'defect':forms.Select(attrs={'class':'span2'}),
+            'dnumber':forms.TextInput(attrs={'class':'span1'}),
+            'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
+        }
+
+PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
+
+class RowForm(forms.ModelForm):
+    class Meta:
+        model = RowPart
+        widgets = {
+            'tto':forms.TextInput(attrs={'placeholder':'Номера тто'}),
+            'amount':NumberInput(),
+            'dnumber':NumberInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
+            'brocken':NumberInput(),
+            'test':NumberInput(),
+            }
+
+
+RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=1,max_num=1)
 
 class SplitSizeWidget(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):
@@ -129,29 +163,14 @@ class SplitSizeField(forms.MultiValueField):
         return '%dx%dx%d' % data_list
 
 class PressureForm(forms.ModelForm):
-#    size = SplitSizeField(label=u'Размеры',widget=SplitSizeWidget(attrs={'autocomplete':'off','class':'input-micro','min':0}))
     class Meta:
+        exclude = ('timestamp',)
         model = Pressure
 
 class FlexionForm(forms.ModelForm):
-#    size = SplitSizeField()
     class Meta:
+        exclude = ('timestamp',)
         model = Flexion
 
-class PartForm(BootstrapMixin, forms.ModelForm):
-    class Meta:
-        model = Part
-        widgets = {
-            'amount':NumberInput(),
-            'half':NumberInput(attrs={'title':'Половняк','placeholder':'Половняк'}),
-            'dnumber':NumberInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
-            'brocken':NumberInput(),
-            'test':NumberInput(),
-            'info':forms.Textarea(attrs={'rows':1}),
-            'brock':forms.HiddenInput
-        }
-
-
-PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=1)
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=0)
-FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=0)
+PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6,max_num=6)
+FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=6,max_num=6)

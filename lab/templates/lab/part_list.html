@@ -1,75 +1,73 @@
 {% load bkz %}
-{% for form in opers.part_set %}
-    <fieldset class="span7 Part" xmlns="http://www.w3.org/1999/html">
-        {% if forloop.first %}
-            <legend>Выход с производства</legend>
-        {% endif %}
-        {% for field in form.hidden_fields %}
-            {{ field }}
-        {% endfor %}
-        <table class='table table-bordered'>
-            <thead>
-            <tr>
-                <th>ТТО</th>
-                <th>Кол-во</th>
-                <th>Качество</th>
-                <th colspan="2">Приемка кирпича</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ form.tto }}</td>
-                <td>{{ form.amount }}</td>
-                <td>{{ form.defect }}</td>
-                <td>
-                    {{ form.half }}
-                </td>
-                <td>
-                    {{ form.dnumber }}
-                </td>
-            </tr>
-            </tbody>
-            <tbody>
-            <tr>
-                <td colspan="2">
-                    <label>Бой кирпича
-                        {{ form.brocken }}
-                    </label>
-                </td>
-                <td colspan=3>
-                    <label>Расход на испытания
-                        {{ form.test }}
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style='text-align: left;background: #F2DEDE;'>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Бой
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Изв. вкл. > 1 см п.5.2.2
-                    </label>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Трещины п.5.2.4
-                    </label>
-                </td>
-                <td colspan="3" style='text-align: left;background: #FCF8E3;'>
-                    <label class="checkbox">
-                        <input type="checkbox" value="">
-                        Изв. вкл. < 1 см
-                    </label>
-                    <label>
-                        <input type="checkbox" value="" disabled="disabled">
-                        Другое:
-                        {{ form.info }}
-                    </label>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </fieldset>
-{% endfor %}
+<fieldset class="span7 Part">
+    <legend>Акты о выходе с производства</legend>
+    {{ parts.management_object }}
+    {{ parts.management_form }}
+    {% for form in parts %}
+        <div class="row {{ form.instance.get_css_class }}" {% if not forloop.first and not form.instance.pk %}style='display: none;'{% endif %}>
+            {{ form.rows.management_object }}
+            {{ form.rows.management_form }}
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+        {% for e in parts.non_form_errors %}
+            {{ e }}
+            {% endfor %}
+            <table class='span4'>
+                <thead>
+                <tr>
+                    <th>ТТО</th>
+                    <th>Кол-во</th>
+                    <th>Бой</th>
+                    <th>Исп</th>
+                </tr>
+                </thead>
+                <tbody id='{{ form.rows.prefix }}'>
+                {% for row in form.rows %}
+                    {% include 'lab/row_form.html' with row=row forloop=forloop only %}
+                {% endfor %}
+                </tbody>
+                <tfoot style='display: none;'>
+                {% with row=form.rows.empty_form %}
+                    {% include 'lab/row_form.html' with row=row only %}
+                {% endwith %}
+                </tfoot>
+                <tfoot>
+                <tr>
+                    <td colspan="4"
+                        style='position: relative;' {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
+                        <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
+                            <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
+                               tabindex="1000"
+                               data-prefix='{{ form.rows.prefix }}'
+                               href='#'><i class='icon-plus-sign'></i></a>
+                        </div>
+                        {{ form.info }}</td>
+                </tr>
+                </tfoot>
+            </table>
+            <div class="span3">
+                <div class="row">
+                    <div class="span2">
+                        <label {% include 'bootstrap/errors.html' with errors=form.defect.errors %}>Качество
+                            {{ form.defect }}
+                        </label>
+                    </div>
+                    <div class="span1">
+                        <label {% include 'bootstrap/errors.html' with errors=form.dnumber.errors %}>
+                            <abbr title='Браковочное число'>Б.число</abbr>
+                            {{ form.dnumber }}
+                        </label>
+                    </div>
+                </div>
+                <label {% if form.defect.value == ' ' or not form.defect.value %}style='display: none;'{% endif %} {% include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
+                    брака
+                    {{ form.cause }}
+                </label>
+            {{ form.errors }}
+            </div>
+        </div>
+    {% endfor %}
+    <a href="#" class="show btn btn-mini btn-info">Добавить еще акт</a>
+</fieldset>
+

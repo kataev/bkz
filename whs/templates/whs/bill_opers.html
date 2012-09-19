@@ -1,5 +1,5 @@
 {% load bkz %}
-    <div class="tab-pane" id='{{ form.prefix }}'>
+    <div class="tab-pane {% if forloop.parentloop.first and forloop.first %}active{% endif %}" id='{{ form.prefix }}'>
             <fieldset>
                 <legend>
                     {% if form.instance.pk %}

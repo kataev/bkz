@@ -9,7 +9,16 @@ $('.collapse').collapse()
 $('#navbar').scrollspy()
 
 $(function () {
-    $('.form-add').click(function (e) {
+
+    $('select[name*="defect"]').change(function(e){
+        var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
+        if ($(this).val().length != 1)
+            $cause.show();
+        else
+            $cause.hide()
+    })
+
+    $('.form-add').click(function () {
         var prefix = $(this).data('prefix')
         var append_to = $(this).data('append')
         var place_to = $(this).data('place') || $(this).parents('ul')
@@ -29,10 +38,22 @@ $(function () {
         $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1)).appendTo(place_to)
         $('span', menu).text($('legend',node).text())
 
+        $(node).on('click','a.delete',function(){
+            $(total).val(parseInt($(total).val()) - 1)
+            $(node).remove()
+        })
 
         $(total).val(parseInt($(total).val()) + 1)
         tara_amount()
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
+    })
+
+    $('.delete').click(function(e){
+        e.preventDefault()
+        var dl = $($(this).attr('href')).find('[name*="DELETE"]')
+        dl.prop('checked',!dl.prop('checked'))
+        $(this).toggleClass('btn-warning').toggleClass('btn-danger')
+        $(this).find('i').toggleClass('icon-remove').toggleClass('icon-trash')
     })
 
 //    $('nav.nav-list.form-nav').on('click.tab.data-api','[data-toggle="tab"',function(e){
@@ -42,13 +63,13 @@ $(function () {
 })
 
 $(function () {
-    $('tr[data-opers] i.icon-zoom-in').click(function (e) {
+    $('tr[data-opers] i.icon-zoom-in').click(function () {
         var i = $(this).parent().parent().data('opers')
         $(this).toggleClass('zoom')
         $('#' + i).toggle('blind', null, 500)
     })
 
-    $('th i.icon-zoom-in').click(function (e) {
+    $('th i.icon-zoom-in').click(function () {
         var table = $(this).parents('table')
         var tbodys = $(table).find('tbody.opers')
 
@@ -88,22 +109,13 @@ $(function () {
 //Подсветка цветов селекта в редактировании кирпича
 $(function () {
     var color_select = function (select, val) {
-        $(select).removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
-        if (val == 0) {
-            $(select).addClass('bc-red')
-        }
-        if (val == 1) {
-            $(select).addClass('bc-yellow')
-        }
-        if (val == 2) {
-            $(select).addClass('bc-brown')
-        }
-        if (val == 3) {
-            $(select).addClass('bc-light')
-        }
-        if (val == 4) {
-            $(select).addClass('bc-white')
-        }
+        var $select = $(select)
+        $select.removeClass('bc-red bc-yellow bc-brown bc-light bc-white')
+        if (val == 0) $select.addClass('bc-red');
+        if (val == 1) $select.addClass('bc-yellow');
+        if (val == 2) $select.addClass('bc-brown');
+        if (val == 3) $select.addClass('bc-light');
+        if (val == 4) $select.addClass('bc-white');
     }
     var select = $('#id_color')
     var val = parseInt($(select).val())
@@ -112,16 +124,19 @@ $(function () {
         $('div.ctype').hide()
     $(select).change(function () {
         var val = parseInt($(this).val())
-        if (val)
-            $('div.ctype').show()
-        else
-            $('div.ctype').hide()
+        if (val) $('div.ctype').show();
+        else $('div.ctype').hide();
         color_select(this, val)
+    })
+
+    $('fieldset.Part').on('click','a.show',function(e){
+        e.preventDefault()
+        if (!$(e.delegateTarget).find('.row:hidden:first').show().length) $(this).hide();
     })
 })
 
 $(function () {
-    $('[name=agent],[name=seller]').change(function (e) {
+    $('[name=agent],[name=seller]').change(function () {
         var val = $(this).val()
         var div = $(this).parent()
         var a = $(div).children("a")
@@ -198,7 +213,7 @@ function tara_amount() {
 $(tara_amount)
 
 $(function () {
-    $("#Bricks td[rel='popover']").click(function (e) {
+    $("#Bricks td[rel='popover']").click(function () {
         if (parseInt($(this).text()) <= 0)
             return
         var name = $(this).data('name')
@@ -213,7 +228,7 @@ $(function () {
         $(this).data('popover').$element.attr('data-content', '<p><img src="/static/img/loader.gif"><p><span class="label">Загрузка</span></p></p>')
 
         $(this).popover('show')
-        $(this).data('popover').$tip.on('click.close', $.proxy(function (e) {
+        $(this).data('popover').$tip.on('click.close', $.proxy(function () {
             $(this).popover('hide')
         }, this))
         url += '/' + name + '/' + window.location.search
@@ -237,14 +252,14 @@ $(function () {
                 var tr = $('<tr>').appendTo(tfoot)
                 $('<th>').appendTo(tr).text('Итого:').attr('style', 'text-align:right')
                 $('<td>').appendTo(tr).text(sum)
-            }).error(function (e) {
+            }).error(function () {
                 $('<p><span class="label label-important"><i class="icon-warning-sign"></i>Что-то пошло не так</span></p>')
                     .addClass('alert alert-error')
                     .appendTo($(this).data('popover').$tip.find('.popover-content').empty())
             })
     })
 })
-$('[name="month"],[name*="month"]').change(function (e) {
+$('[name="month"],[name*="month"]').change(function () {
     var year = $(':selected', this).parent().attr('label')
     $(this).parents('form').find('[name="'+($(this).attr('name').replace('month','year'))+'"]').val(year)
 })
@@ -260,8 +275,8 @@ function avg_on_input(input,to_fixed){
     return (v.reduce(function(m,v){return m+parseFloat(v) },0)/v.length).toFixed(to_fixed || 2)
 }
 
-$('.SlashSeparatedFloatField').each(function(e){
+$('.SlashSeparatedFloatField').each(function(){
     $(this).wrap($('<div>').addClass('input-append').attr('title','Среднее арифметическое'))
     var addon = $('<span>').addClass('add-on').text(avg_on_input(this)).insertAfter(this)
-    $(this).change(function(e){ $(addon).text(avg_on_input(this)) })
+    $(this).change(function(){ $(addon).text(avg_on_input(this)) })
 })

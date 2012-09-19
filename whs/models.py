@@ -10,6 +10,12 @@ from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)
+    type = models.CharField(u'тип',max_length=30)
+
+    def __unicode__(self):
+        return '%s %s' % (self.type,self.name)
+    class Meta:
+        ordering = ('type',)
 
 
 class Brick(models.Model,UrlMixin):
@@ -213,17 +219,13 @@ class Add(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u'%s - %d шт' % (self.brick, self.amount)
+            return u'%s шт' % (self.brick,)
         else:
             return u'Новая партия'
 
 
 class Sorting(models.Model,UrlMixin):
-    """ Класс документа для учета сортировки кипича из одного товара в другой
-    brick & part - в цех
-    brick & sourse & part - из цеха
-    brick & sourse - бой
-    """
+    """ Класс документа для учета сортировки кипича из одного товара в другой """
     source = models.ForeignKey('self',null=True,blank=True,related_name='sorted')
     part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())

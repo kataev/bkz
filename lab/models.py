@@ -5,9 +5,9 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.models import Brick
-from bkz.whs.constants import defect_c,color_c,mark_c,cavitation_c
+from bkz.whs.constants import defect_c,color_c,mark_c
 from bkz.utils import UrlMixin,ru_date
+from bkz.lab.utils import get_tto
 
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
@@ -274,7 +274,8 @@ class Batch(UrlMixin,models.Model):
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
-    density = models.FloatField(u'Класс средней плотности')
+    density = models.FloatField(u'Класс средней плотности',default=1.0)
+    half = models.FloatField(u'Половняк',default=3.0)
     weight = models.FloatField(u'Масса')
 
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
@@ -286,17 +287,81 @@ class Batch(UrlMixin,models.Model):
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
-        if self.pk: return u'Партия № %d, %d' % (self.number,self.date.year)
+        if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
         else: return u'Новая партия'
+
+    @property
+    def get_tto(self):
+        return get_tto(self.tto)
+
+    @models.permalink
+    def get_tests_url(self):
+        return u'lab:Batch-tests', (), {'pk':self.pk}
 
     class Meta():
         verbose_name = u"Готовая продукция"
         verbose_name_plural = u"Готовая продукция"
+        ordering = ('-date','number',)
     def get_density_display(self):
         if self.density > 1.4:
             return u'условно-эффективный'
         else:
             return u'эффективный'
+
+defect_c = defect_c + ((u'no_cont',u'Некондиция'),)
+
+class Part(models.Model):
+    batch = models.ForeignKey(Batch,verbose_name=u'Партия')
+    tto = RangeField(u'№ телег',max_length=30,blank=True)
+    amount = models.IntegerField(u'Кол-во',default=0)
+    defect = models.CharField(u"Тип", max_length=60, choices=defect_c)
+    dnumber = models.FloatField(u'Брак.число',default=0)
+    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака',null=True,blank=True)
+    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+    brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk: return u'%s' % self.get_defect_display()
+        else: return u'Новый выход с производства'
+
+    @property
+    def get_tto(self):
+        return get_tto(self.tto)
+
+    @property
+    def get_css_class(self):
+        if not self.pk:
+            return ''
+        if self.defect == u' ':
+            return 'success'
+        elif self.defect == u'<20':
+            return 'info'
+        else:
+            return 'error'
+
+    @property
+    def get_name(self):
+        if not self.batch.color:
+            return self.batch.get_width_display()
+        else:
+            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
+
+    class Meta():
+        verbose_name = u"Часть партии"
+        verbose_name_plural = u"Часть партии"
+        ordering = ('batch__date','batch__number','defect')
+
+
+class RowPart(models.Model):
+    part = models.ForeignKey(Part,related_name='rows')
+    tto = RangeField(u'№ телег',max_length=30)
+    amount = models.IntegerField(u'Кол-во')
+    test = models.IntegerField(u'Расход на исп',default=0)
+    brocken = models.IntegerField(u'Бой',default=0)
+
+    @property
+    def out(self):
+        return self.amount - self.test - self.brocken
 
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
@@ -304,9 +369,9 @@ class Pressure(models.Model):
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    area = models.FloatField(u'Площадь')
-    readings = models.FloatField(u'Показание прибора')
-    value = models.FloatField(u'Значение',default=0.0)
+    area = models.FloatField(u'S²')
+    readings = models.FloatField(u'Показание')
+    value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
         if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
@@ -322,49 +387,10 @@ class Flexion(models.Model):
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размер',max_length=20)
-    area = models.FloatField(u'Площадь')
-    readings = models.FloatField(u'Показание прибора')
-    value = models.FloatField(u'Значение',default=0.0)
+    area = models.FloatField(u'S²')
+    readings = models.FloatField(u'Показание')
+    value = models.FloatField(u'Знач',default=0.0)
 
     class Meta():
         verbose_name = u"Испытание на изгиб"
         verbose_name_plural = u"Испытания на изгиб"
-
-cause_c = (
-    ('0',u'Бой'),
-    ('1',u'Трешины'),
-    ('2',u'Извесняк.вкл >`1см²'),
-    ('3',u'Другое, указать в примечании'),
-    )
-
-class Part(models.Model):
-    batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = RangeField(u'№ телег',max_length=30,blank=True)
-    amount = models.IntegerField(u'Кол-во')
-    test = models.IntegerField(u'Расход на исп',default=0)
-    defect = models.CharField(u"Тип", max_length=60, choices=defect_c,default=defect_c[0][0])
-    half = models.FloatField(u'Половняк',default=3)
-    dnumber = models.FloatField(u'Брак.число',default=0)
-    cause = models.TextField(u'Причина брака',max_length=600,choices=cause_c,blank=True)
-    brocken = models.IntegerField(u'Бой',default=0)
-    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
-    sorted = models.BooleanField(u'Сортирован',default=False)
-
-    def __unicode__(self):
-        if self.pk: return u'Выход %s c телег %s' % (self.get_defect_display().lower(),self.tto)
-        else: return u'Новый выход с производства'
-
-    @property
-    def get_name(self):
-        if not self.batch.color:
-            return self.batch.get_width_display()
-        else:
-            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
-
-    @property
-    def count_exit(self):
-        return self.amount
-
-    class Meta():
-        verbose_name = u"Часть партии"
-        verbose_name_plural = u"Часть партии"

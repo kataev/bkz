@@ -105,6 +105,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'static/'),
+    'static/'
     )
 
 # List of finder classes that know how to find static files in
@@ -174,7 +175,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
-    'devserver',
+#    'devserver',
     'south',
     'gunicorn',
 #    'piston',
@@ -192,7 +193,8 @@ INSTALLED_APPS = (
     'bkz.energy',
     'bkz.it',
 
-    'bootstrap',
+    'bkz.bootstrap',
+
     'linaro_django_pagination',
     )
 

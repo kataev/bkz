@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 import datetime
 from bkz.utils import UrlMixin,ru_date
 
