@@ -308,7 +308,7 @@ class Batch(UrlMixin,models.Model):
         else:
             return u'эффективный'
 
-defect_c = defect_c + ((u'no_cont',u'Некондиция'),)
+defect_c += ((u'no_cont',u'Некондиция'),)
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
