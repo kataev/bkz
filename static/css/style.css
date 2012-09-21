@@ -5,6 +5,8 @@ body {
     background-attachment: fixed;
     background-size: 11%;
 }
+.popover .alert {margin: 0;padding: 2px;}
+.popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 #brick-select-buttons input {vertical-align: top}
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}

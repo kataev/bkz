@@ -104,6 +104,11 @@ $(function () {
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
     $(".collapse").collapse()
+
+    var $messages = $('#messages').popover('show')
+
+    setTimeout(function(e){$messages.popover('hide')},10000)
+
 })
 
 //Подсветка цветов селекта в редактировании кирпича

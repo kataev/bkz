@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.constants import defect_c,color_c,mark_c
+from bkz.whs.constants import defect_c, color_c, mark_c, css_dict
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import get_tto
 
@@ -294,6 +294,10 @@ class Batch(UrlMixin,models.Model):
     def get_tto(self):
         return get_tto(self.tto)
 
+    @property
+    def css(self):
+        return css_dict['color'].get(self.color,'None')
+
     @models.permalink
     def get_tests_url(self):
         return u'lab:Batch-tests', (), {'pk':self.pk}
@@ -308,7 +312,7 @@ class Batch(UrlMixin,models.Model):
         else:
             return u'эффективный'
 
-defect_c = defect_c + ((u'no_cont',u'Некондиция'),)
+defect_c += ((u'no_cont',u'Некондиция'),)
 
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')

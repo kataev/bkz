@@ -9,3 +9,4 @@ static/js/libs/
 static/img/
 logger.py
 bkz.sublime-workspace
+*/migrations/
