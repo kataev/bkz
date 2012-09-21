@@ -11,7 +11,6 @@
                 <i class="icon-logo"></i>
                 <abbr style="border: none" title="Березниковский кирпичный завод'">BKZ</abbr>
             </a>
-
             <div class="nav-collapse">
                 <ul class="nav">
                     <li class="divider-vertical"></li>
@@ -26,6 +25,10 @@
                 {% block navbar-form %}
                 {% endblock %}
                 <ul class="nav pull-right">
+                {% if messages %}
+                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-original-title="<i class='icon-info-sign'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
+                {% endif %}
+
                     {% include 'core/auth.html' %}
                 {% if menu|length %}
                     <li class="divider-vertical"></li>

@@ -135,7 +135,7 @@ class RowForm(forms.ModelForm):
     class Meta:
         model = RowPart
         widgets = {
-            'tto':forms.TextInput(attrs={'placeholder':'Номера тто'}),
+            'tto':forms.TextInput(attrs={'placeholder':'Номера тто','autocomplete':'off'}),
             'amount':NumberInput(),
             'dnumber':NumberInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
             'brocken':NumberInput(),

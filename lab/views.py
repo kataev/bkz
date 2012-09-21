@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
+
+from bkz.whs.views import BillCreateView
+from django.views.generic import UpdateView
+
 from bkz.lab.models import *
 from bkz.lab.forms import *
-from bkz.whs.views import BillCreateView,BillUpdateView
-from django.views.generic import UpdateView, CreateView, ListView
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -32,13 +35,15 @@ class BatchUpdateView(UpdateView):
                     part.instance.amount = sum([r.instance.out for r in part.rows.initial_forms])
                     part.instance.tto = ','.join([r.instance.tto for r in part.rows.initial_forms])
                     part.instance.save()
-                    part.rows.save()
+                    print part.instance.pk
+                    print [p.pk for p in part.rows.save()]
             self.parts.save()
             self.object.amount = sum([r.instance.amount for r in self.parts.initial_forms])
             self.object.tto = ','.join([r.instance.tto for r in self.parts.initial_forms])
             self.object.save()
             if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
-                return redirect(self.get_success_url()+'?s=t')
+                messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
+                return redirect(self.get_success_url())
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
@@ -47,7 +52,6 @@ class BatchUpdateView(UpdateView):
         for part in self.parts:
             part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
         context['parts'] = self.parts
-        context['success']= self.request.GET.get('s',False)
         return context
 
 def index(request):
