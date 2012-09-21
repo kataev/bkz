@@ -13,7 +13,9 @@
                     {{ e }}
                 {% endfor %}
                 {{ form.as_div }}
-                {% include 'lab/part_list.html' %}
+                {% if form.instance.pk %}
+                    {% include 'lab/part_list.html' %}
+                {% endif %}
             </div>
             <div class="row">
                 <div class="span12">

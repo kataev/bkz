@@ -48,7 +48,7 @@ refuse_c = (
     (u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
     (u'П', u'Полосы'))
 
-css_dict = OrderedDict()
+css_dict = OrderedDict()        
 css_dict['color'] = {0: u'bc-red', 1: u'bc-yellow', 2: u'bc-brown', 3: u'bc-light', 4: u'bc-white'}
 css_dict['width'] = {1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'}
 css_dict['view'] = {u'Л': u'v-facial', u'Р': u'v-common'}
