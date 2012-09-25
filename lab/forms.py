@@ -82,18 +82,14 @@ class DensityInput(NumberInput):
         self.attrs['min'] = 1
         self.attrs['autocomplete'] = 'off'
 
-class FlexionInput(NumberInput):
+class FlexionInput(forms.TextInput):
     def __init__(self, attrs=None):
         super(FlexionInput, self).__init__(attrs=attrs)
-        self.attrs['step'] = 0.01
-        self.attrs['min'] = 0
         self.attrs['autocomplete'] = 'off'
 
-class PressureInput(NumberInput):
+class PressureInput(forms.TextInput):
     def __init__(self, attrs=None):
         super(PressureInput, self).__init__(attrs=attrs)
-        self.attrs['step'] = 0.01
-        self.attrs['min'] = 0
         self.attrs['autocomplete'] = 'off'
 
 class BatchForm(BootstrapMixin,forms.ModelForm):
@@ -112,7 +108,7 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
 
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure','half',css_class='less span5'),
+            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure',css_class='less span5'),
 #            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 
@@ -124,9 +120,8 @@ class PartForm(BootstrapMixin, forms.ModelForm):
         model = Part
         exclude = ('amount','tto','brick')
         widgets = {
-            'defect':forms.Select(attrs={'class':'span2'}),
-            'dnumber':forms.TextInput(attrs={'class':'span1'}),
             'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
+            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО','autocomplete':'off'}),
         }
 
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
@@ -136,10 +131,7 @@ class RowForm(forms.ModelForm):
         model = RowPart
         widgets = {
             'tto':forms.TextInput(attrs={'placeholder':'Номера тто','autocomplete':'off'}),
-            'amount':NumberInput(),
-            'dnumber':NumberInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
-            'brocken':NumberInput(),
-            'test':NumberInput(),
+            'dnumber':forms.TextInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
             }
 
 

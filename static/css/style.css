@@ -44,28 +44,35 @@ td.cause ul { list-style: none;}
 }
 
 
+#batch-list th {text-align: center;}
+
 fieldset.Part div.row {margin-bottom:10px;border-radius: 5px;padding-bottom: 2px;}
 fieldset.Part div.span3 {margin-left:10px}
 fieldset.Part div.success { background-color: #dff0d8; }
 fieldset.Part div.error { background-color: #fcf8e3; }
 fieldset.Part div.info { background-color: #d9edf7; }
 
-fieldset.Part table input, fieldset.Part table textarea,
-fieldset.Pressure table input, fieldset.Pressure table textarea,
-fieldset.Flexion table input, fieldset.Flexion table textarea
+fieldset table input, fieldset table textarea { height: 30px !important;}
+fieldset table input, fieldset table textarea, fieldset table select
 {
-    width: 100% !important;
+    width: 100%;
     box-sizing: border-box;
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
-    height: 30px;
-    border-radius: 0;
+    border-radius: 0 !important;
     margin: 0;
 }
 /*fieldset.Part input[name*='tto']{width: 100px !important;}*/
-fieldset.Part input[name*='test']{width: 52px !important;}
-fieldset.Part input[name*='brocken']{width: 60px !important;}
-fieldset.Part input[name*='amount']{width: 70px !important;}
+fieldset table input[name*='test']{width: 52px !important;}
+fieldset table input[name*='brocken']{width: 60px !important;}
+fieldset table input[name*='amount']{width: 70px !important;}
+fieldset table select[name*='defect']{width: 120px !important;}
+fieldset table input[name*='half']{width: 34px !important;}
+fieldset table input[name*='dnumber']{width: 34px !important;}
+fieldset table input[name*='flexion']{width: 100%;}
+fieldset table input[name*='pressure']{width: 100%;}
+fieldset table input[name*='limestone']{width: 117px !important;}
+fieldset table textarea[name*='info']{width: 99% !important;}
 
 .tests input[name*='tto']{width: 52px !important;}
 .tests input[name*='row']{width: 52px !important;}
@@ -73,6 +80,7 @@ fieldset.Part input[name*='amount']{width: 70px !important;}
 .tests input[name*='area']{width: 52px !important;}
 .tests input[name*='readings']{width: 72px !important;}
 .tests input[name*='value']{width: 52px !important;}
+
 
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}
