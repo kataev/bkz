@@ -14,11 +14,14 @@ class BatchCreateView(BillCreateView):
     opers=[PressureFactory,FlexionFactory,PartFactory]
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.seonr = SEONR.objects.filter(color=self.object.color).latest('date')
-        self.efflorescence = Efflorescence.objects.filter().latest('date')
-        self.heatconduction = HeatConduction.objects.filter(width=self.object.width).latest('date')
-        self.frost_resistance = FrostResistance.objects.filter(color=self.object.color).latest('date')
-        self.water_absorption = WaterAbsorption.objects.filter().latest('date')
+        width = self.object.width
+        if width == 0.8:
+            width = 1.0
+        self.object.seonr = SEONR.objects.filter(color=self.object.color).latest('date')
+        self.object.efflorescence = Efflorescence.objects.filter().latest('date')
+        self.object.heatconduction = HeatConduction.objects.filter(width=width).latest('date')
+        self.object.frost_resistance = FrostResistance.objects.filter(color=self.object.color).latest('date')
+        self.object.water_absorption = WaterAbsorption.objects.filter().latest('date')
         self.object.save()
         return redirect(self.get_success_url())
 
@@ -28,22 +31,18 @@ class BatchUpdateView(UpdateView):
     def form_valid(self, form):
         context = self.get_context_data(form=form)
         self.object = form.save(commit=False)
-        if self.parts.is_valid():
-            self.parts.save(commit=False)
-            for part in self.parts.initial_forms:
-                if part.rows.is_valid():
-                    part.instance.amount = sum([r.instance.out for r in part.rows.initial_forms])
-                    part.instance.tto = ','.join([r.instance.tto for r in part.rows.initial_forms])
-                    part.instance.save()
-                    print part.instance.pk
-                    print [p.pk for p in part.rows.save()]
-            self.parts.save()
-            self.object.amount = sum([r.instance.amount for r in self.parts.initial_forms])
-            self.object.tto = ','.join([r.instance.tto for r in self.parts.initial_forms])
-            self.object.save()
-            if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
-                messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
-                return redirect(self.get_success_url())
+        for part in self.parts:
+            if part.is_valid() and part.has_changed():
+                part.save()
+            if part.rows.is_valid() and part.instance.pk:
+                part.rows.save()
+        self.object.amount = sum([r.instance.amount or 0 for r in self.parts])
+        self.object.tto = ','.join([r.instance.tto for r in self.parts])
+        self.object.save()
+        print self.object.tto,self.object.amount
+        if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
+            messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
+            return redirect(self.get_success_url())
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):

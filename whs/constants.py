@@ -90,6 +90,10 @@ def get_name(brick):
             c = u'у'
         return u'К%s%sП%s' % (brick.get_width_display()[0], brick.view, c)
 
+def get_full_name(brick):
+    name = get_name(brick)
+    return name + u' НФ/%d/1.4/50 ГОСТ 530-2007' % brick.mark
+
 
 def make_label(brick): # Функция для вывода имени
     label = get_name(brick) + ' %s' % brick.get_mark_display()
