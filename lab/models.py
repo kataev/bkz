@@ -322,12 +322,22 @@ class Batch(UrlMixin,models.Model):
 
 defect_c += ((u'no_cont',u'Некондиция'),)
 
+class Cause(models.Model):
+    name = models.CharField(u'Имя',max_length=30)
+    type = models.CharField(u'тип',max_length=30)
+
+    def __unicode__(self):
+        return '%s %s' % (self.type,self.name)
+    class Meta:
+        ordering = ('type',)
+
+
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
     defect = models.CharField(u"Тип", max_length=60, choices=defect_c, blank=False)
     dnumber = models.FloatField(u'Брак.число',default=0)
     half = models.FloatField(u'Половняк',default=3.0)
-    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака',null=True,blank=True)
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True)
     limestone = RangeField(u'№ телег c изв.вкл меньше 1см',max_length=30,null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
     brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)

@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
-BrickOrder = ('-width', 'color', '-view', 'ctype', 'defect', 'features', 'mark', 'refuse', 'id')
+BrickOrder = ('-width', 'color', '-view', 'ctype', '-defect', '-features__name', 'mark', 'refuse', 'id')
 
 view_c = ((u'Л', u'Лицевой'), (u'Р', u'Рядовой'))
 

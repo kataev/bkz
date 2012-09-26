@@ -21,7 +21,7 @@ nav = dict(
         ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('divider',),
         ('whs:Bill-list', 'icon-whs', u'Реализация'),
-        ('whs:Add-list', 'icon-man', u'Производство'),
+#        ('whs:Add-list', 'icon-man', u'Производство'),
         ('divider',),
         ('whs:Agent-list', 'icon-Agent', u'Контрагенты'),
         ),
@@ -51,7 +51,7 @@ menu = dict(
         ),
     whs=(
         ('whs:Bill-wizard', 'icon-Bill', u'Накладную'),
-        ('whs:Add-add', 'icon-Man', u'Производство'),
+#        ('whs:Add-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),

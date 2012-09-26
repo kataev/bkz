@@ -1,11 +1,11 @@
 from django.db.models import Sum
-from whs.models import Sorting, Add, Sold, Write_off
+from whs.models import Sorting, Sold, Write_off
 from lab.models import Part
 
 def operations(filter):
-    m_from = Sorting.objects.filter(source__isnull=True)#.filter(**filter)
-    m_to = Sorting.objects.filter(source__isnull=False,brock=False)#.filter(**filter)
-    m_rmv = Sorting.objects.filter(source__isnull=False,brock=True)#.filter(**filter)
+    m_from = Sorting.objects.filter(source__isnull=True)
+    m_to = Sorting.objects.filter(source__isnull=False)
+    m_rmv = Sorting.objects.filter(source__isnull=False)
     part_filter = dict([('batch__%s' % k, v) for k, v in filter.items()])
     add = Part.objects.filter(**part_filter)
     doc_filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
@@ -15,11 +15,11 @@ def operations(filter):
     inv = Write_off.objects.filter(**doc_filter)
 
 
-    return dict(add=dict(add.values_list('brick__id').annotate(Sum('amount')).order_by()),
+    return dict(add=dict(add.values_list('brick__id').annotate(Sum('rows__amount')).order_by()),
         sold=dict(sold.values_list('brick__id').annotate(Sum('amount')).order_by()),
         t_from=dict(t_from.values_list('brick_from__id').annotate(Sum('amount')).order_by()),
         t_to=dict(t_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        m_from=dict(m_from.values_list('brick__id').annotate(Sum('part__amount')).order_by()),
+        m_from=dict(m_from.values_list('brick__id').annotate(Sum('part__rows__amount')).order_by()),
         m_to=dict(m_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
         m_rmv=dict(m_rmv.values_list('source__brick__id').annotate(Sum('amount')).order_by()),
         inv=dict(inv.values_list('brick__id').annotate(Sum('amount')).order_by()))

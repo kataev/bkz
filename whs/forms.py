@@ -217,11 +217,6 @@ class SellerForm(forms.ModelForm):
         model = Seller
 
 
-class AddForm(forms.ModelForm):
-    class Meta:
-        model = Add
-
-
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
