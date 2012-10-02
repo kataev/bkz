@@ -175,7 +175,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
-#    'devserver',
+    'devserver',
     'south',
     'gunicorn',
 #    'piston',
