@@ -2,15 +2,19 @@
 {% block title %}
     {{ batch }}
 {% endblock %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
+{% endblock %}
 {% block container %}
     <div class='container'>
+        <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
+        <h3>Кирпич {{ batch.get_name }}</h3><input type="hidden" id='width' value='{{ batch.width }}'>
         <form>
             <div class="row tests">
-
-                <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
                 <fieldset class='Flexion span6'>
                     <table class="">
-                        <caption><h2>На изгиб</h2></caption>
+                        <caption><h4>На изгиб</h4></caption>
                         <thead>
                         <tr>
                             {% for f in flexion.empty_form.visible_fields %}
@@ -47,7 +51,7 @@
                 </fieldset>
                 <fieldset class='Pressure span6'>
                     <table class="">
-                        <caption><h2>На сжатие</h2></caption>
+                        <caption><h4>На сжатие</h4></caption>
                         <thead>
                         <tr>
                             {% for f in pressure.empty_form.visible_fields %}

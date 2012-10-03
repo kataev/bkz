@@ -60,7 +60,7 @@ fieldset table input, fieldset table textarea, fieldset table select
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
     border-radius: 0 !important;
-    margin: 0;
+    margin: 0 !important;
 }
 /*fieldset.Part input[name*='tto']{width: 100px !important;}*/
 fieldset table input[name*='test']{width: 52px !important;}
@@ -76,8 +76,8 @@ fieldset table textarea[name*='info']{width: 99% !important;}
 
 .tests input[name*='tto']{width: 52px !important;}
 .tests input[name*='row']{width: 52px !important;}
-.tests input[name*='size']{width: 96px !important;}
-.tests input[name*='area']{width: 52px !important;}
+.tests input[name*='size']{width: 145px !important;}
+.tests input[name*='area']{width: 58px !important;}
 .tests input[name*='readings']{width: 72px !important;}
 .tests input[name*='value']{width: 52px !important;}
 
