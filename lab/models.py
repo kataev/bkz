@@ -412,7 +412,7 @@ class Pressure(models.Model):
         else: return u'Новое испытание'
 
     class Meta():
-        verbose_name = u"Испытание еа сжатие"
+        verbose_name = u"Испытание на сжатие"
         verbose_name_plural = u"Испытания на сжатие"
 
 class Flexion(models.Model):

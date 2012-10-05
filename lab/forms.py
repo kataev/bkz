@@ -158,6 +158,9 @@ class PressureForm(forms.ModelForm):
     class Meta:
         exclude = ('timestamp',)
         model = Pressure
+        widgets = {
+            'area':forms.TextInput(attrs={'readonly':'readonly'}),
+            }
 
 class FlexionForm(forms.ModelForm):
     class Meta:
@@ -166,3 +169,10 @@ class FlexionForm(forms.ModelForm):
 
 PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6,max_num=6)
 FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=6,max_num=6)
+
+
+def get_pressure_mark(self):
+    return 100
+
+PressureFactory.get_mark = get_pressure_mark
+FlexionFactory.get_mark = get_pressure_mark

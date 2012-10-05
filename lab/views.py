@@ -7,6 +7,7 @@ from django.views.generic import UpdateView
 
 from bkz.lab.models import *
 from bkz.lab.forms import *
+from bkz.lab.utils import get_min_avg_max
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -70,7 +71,10 @@ def batch_tests(request,pk):
     flexion = FlexionFactory(request.POST or None, instance=batch)
     pressure = PressureFactory(request.POST or None, instance=batch)
     if request.method == 'POST' and flexion.is_valid() and pressure.is_valid():
-        flexion.save()
-        pressure.save()
-        return batch.get_tests_url()
-    return render(request,'lab/batch-tests.html',{'flexion':flexion,'pressure':pressure,'batch':batch})
+        f = get_min_avg_max(flexion.save())
+        p = get_min_avg_max(pressure.save())
+        print 'flexion',f
+        print 'pressure',p
+        return redirect(batch.get_tests_url())
+    tests = [pressure,flexion]
+    return render(request,'lab/batch-tests.html',{'tests':tests,'batch':batch})
