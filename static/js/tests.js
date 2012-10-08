@@ -1,7 +1,7 @@
 $(function(){
     $("input[name*='size']").mask('999.9 x 999.9 x 99.9').change(function(e){
         var id = $(this).attr('id')
-        var val = $.map($(this).val().split('x'),function(v){return Math.round(v)})
+        var val = $.map($(this).val().split('x'),function(v){return parseFloat(v)})
         var s = val[1]*val[id.indexOf('pressure') >= 0 ? 0 : 2 ]/1000
         if (id.indexOf('pressure') >= 0) s-=0.243;
         else s*=val[2]*2
