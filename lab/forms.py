@@ -108,7 +108,7 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
 
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','weight','density','mark','flexion','pressure',css_class='less span5'),
+            Fieldset(u'Партия','number','date','cavitation','width','color','flexion','pressure','mark','weight','density',css_class='less span5'),
 #            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 
@@ -159,20 +159,60 @@ class PressureForm(forms.ModelForm):
         exclude = ('timestamp',)
         model = Pressure
         widgets = {
-            'area':forms.TextInput(attrs={'readonly':'readonly'}),
+            'tto':forms.TextInput(attrs={'autocomplete':'off'}),
+            'row':forms.TextInput(attrs={'autocomplete':'off'}),
+            'size':forms.TextInput(attrs={'autocomplete':'off'}),
+            'area':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
+            'value':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
             }
 
 class FlexionForm(forms.ModelForm):
     class Meta:
         exclude = ('timestamp',)
         model = Flexion
+        widgets = {
+            'tto':forms.TextInput(attrs={'autocomplete':'off'}),
+            'row':forms.TextInput(attrs={'autocomplete':'off'}),
+            'size':forms.TextInput(attrs={'autocomplete':'off'}),
+            'area':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
+            'value':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
+            }
 
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6,max_num=6)
-FlexionFactory = inlineformset_factory(Batch, Flexion, FlexionForm, extra=6,max_num=6)
+PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6, max_num=6, can_delete=False)
+FlexionFactory  = inlineformset_factory(Batch, Flexion,  FlexionForm,  extra=6, max_num=6, can_delete=False)
+
+marks = [300, 250, 200, 175, 150, 125, 100]
+def get_pressure_value(self):
+    if len(self.queryset) == 6:
+        val = [ x.value for x in self.queryset]
+        avg = round(sum(val)/6,2)
+        avg_list = [30, 25, 20, 17.5, 15, 12.5, 10]
+        min_list = [25, 20, 17.5, 15, 12.5, 10, 7.5]
+        mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
+        return {'avgn':avg,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
+PressureFactory.get_value = property(get_pressure_value)
+
+def get_flexion_value(self):
+    if len(self.queryset) == 6:
+        val = [ x.value for x in self.queryset]
+        avg = round(sum(val)/6,2)
+        valn = filter(lambda x: avg*0.5 < x < avg*1.5, val)
+        avgn = round(sum(valn)/len(valn),2)
+        if not self.instance.width == 1.4:
+             avg_list = [3.4, 2.9, 2.5, 2.3, 2.1, 1.9, 1.6]
+             min_list = [1.7, 1.5, 1.3, 1.1, 1.0, 0.9, 0.8]
+        else:
+             avg_list = [2.9, 2.5, 2.3, 2.1, 1.8, 1.6, 1.4]
+             min_list = [1.5, 1.3, 1.0, 1.0, 0.9, 0.8, 0.7]
+        mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
+        return {'avgn':avgn,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
+FlexionFactory.get_value = property(get_flexion_value)
 
 
-def get_pressure_mark(self):
-    return 100
-
-PressureFactory.get_mark = get_pressure_mark
-FlexionFactory.get_mark = get_pressure_mark
+class BatchTestsForm(BootstrapMixin,forms.ModelForm):
+    class Meta:
+        model = Batch
+        layout = (
+            Fieldset(u'Прочее','pf','pct','chamfer',css_class='less span4 form-horizontal'),
+            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span5 form-horizontal'),
+        )

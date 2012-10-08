@@ -68,13 +68,22 @@ def batch_print(request, pk):
 
 def batch_tests(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
-    flexion = FlexionFactory(request.POST or None, instance=batch)
-    pressure = PressureFactory(request.POST or None, instance=batch)
-    if request.method == 'POST' and flexion.is_valid() and pressure.is_valid():
-        f = get_min_avg_max(flexion.save())
-        p = get_min_avg_max(pressure.save())
-        print 'flexion',f
-        print 'pressure',p
+    initial = [{'row':2},{'row':2},{'row':8},{'row':8},{'row':16},{'row':16}]
+    flexion = FlexionFactory(request.POST or None, instance=batch,initial=initial)
+    pressure = PressureFactory(request.POST or None, instance=batch,initial=initial)
+    form = BatchTestsForm(request.POST or None,instance=batch)
+    if request.method == 'POST' and flexion.is_valid() and pressure.is_valid() and form.is_valid():
+        batch = form.save(commit=False)
+        flexion.save()
+        pressure.save()
+        fle = flexion.get_value
+        pre = pressure.get_value
+        batch.mark = min((fle['mark'],pre['mark']))
+        batch.pressure = pre['avgn']
+        batch.flexion = fle['avgn']
+#        batch.save()
         return redirect(batch.get_tests_url())
+    pressure.value = form['pressure'].value()
+    flexion.value = form['flexion'].value()
     tests = [pressure,flexion]
-    return render(request,'lab/batch-tests.html',{'tests':tests,'batch':batch})
+    return render(request,'lab/batch-tests.html',{'tests':tests,'batch':batch,'form':form})

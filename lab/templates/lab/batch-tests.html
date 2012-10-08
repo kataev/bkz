@@ -1,7 +1,7 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
 {% block title %}
-    {{ batch }}
+    Испытания {{ batch|lower }}
 {% endblock %}
 {% block script %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
@@ -10,90 +10,83 @@
 {% block container %}
     <div class='container'>
         <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
-        <h3>Кирпич {{ batch.get_name }}</h3><input type="hidden" id='width' value='{{ batch.width }}'>
+        <h2>Кирпич {{ batch.get_name }}</h2><input type="hidden" id='width' value='{{ batch.width }}'>
         <form method="POST" action="{{ batch.get_tests_url }}">
             {% csrf_token %}
             <div class="row tests">
-                {% for t in tests  %}
-                <fieldset class='span6'>
-                    {{ t.management_object }}
-                    {{ t.management_form }}
-                    <table class="">
-                        <caption><h4>{{ t.model|model_verbose_name_plural }}</h4></caption>
-                        <thead>
-                        <tr>
-                            {% for f in t.empty_form.visible_fields %}
-                                {% if not forloop.last %}
-                                    <th>{{ f.label }}</th>
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for form in t %}
-                            <tr id='{{ form.prefix }}'>
-                                {% for f in form.visible_fields %}
-                                    {% if forloop.first %}
-                                        <td class="input-prepend">
-                                            <span class='add-on'>{{ forloop.parentloop.counter }}</span>
-                                            {{ f }}
-                                        </td>
-                                    {% elif forloop.last %}
-                                        <td class="input-append" title='Отметить для удаления'>
-                                            <span style='display: none;'>{{ f }}</span>
-                                            {% for f in form.hidden_fields %}
-                                                {{ f }}
-                                            {% endfor %}
-                                            <a class="btn add-on delete btn-warning" href='#{{ form.prefix }}'
-                                               tabindex="1000">
-                                                <i class='icon-remove'></i></a>
-                                        </td>
-                                    {% else %}
-                                        <td>{{ f }}</td>
+                {% for t in tests %}
+                    <fieldset class='span6 {{ t.model|class_name }}'>
+                        {{ t.management_object }}
+                        {{ t.management_form }}
+                        <table class="">
+                            <caption><h3>{{ t.model|model_verbose_name_plural }}</h3></caption>
+                            <thead>
+                            <tr>
+                                {% for f in t.empty_form.visible_fields %}
+                                    {% if not forloop.last %}
+                                        <th>{{ f.label }}</th>
                                     {% endif %}
                                 {% endfor %}
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th colspan="3" rowspan="4">
-                                <h2><small>Марка при сжатии:</small>
-                                    100
-                                </h2>
-                            </th>
-                            <th colspan="2"><label class="pull-right">Минимальное:</label></th>
-                            <td colspan="2"><input type='text' readonly="readonly"  name='value-min'></td>
-                        </tr>
-                        <tr>
-                            <th colspan="2"><label class="pull-right">Среднее:</label></th>
-                            <td colspan="2"><input type='text' readonly="readonly" name='value-avg'></td>
-                        </tr>
-                        <tr>
-                            <th colspan="2"><label class="pull-right">Максимальное:</label></th>
-                            <td colspan="2"><input type='text' readonly="readonly" name='value-max'></td>
-                        </tr>
-                        {% endwith %}
-                        <tr>
-                            <th colspan="2"><label class="pull-right">Значение:</label></th>
-                            <td colspan="2"><input type='text' readonly="readonly" name='value-final'></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-            </fieldset>
-            {% endfor %}
+                            </thead>
+                            <tbody>
+                            {% for form in t %}
+                                <tr id='{{ form.prefix }}'>
+                                    {% for f in form.visible_fields %}
+                                        {% if forloop.first %}
+                                            <td class="input-prepend">
+                                                <span class='add-on'>{{ forloop.parentloop.counter }}</span>
+                                                {% for f in form.hidden_fields %}
+                                                    {{ f }}
+                                                {% endfor %}
+                                                {{ f }}
+                                            </td>
+                                        {% else %}
+                                            <td>{{ f }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            {% with val=t.get_value %}
+                                {% if val %}
+                                <tr>
+                                    <th colspan="3" style='text-align: right;'>
+                                        <h4 style='margin: 0;'> <small>Марка:</small> {{ val.mark }} </h4>
+                                    </th>
+                                    <th colspan="2"><label class="pull-right">Среднее:</label></th>
+                                    <td colspan="2">
+                                        <input type='text' readonly="readonly" name='value-final' rel='popover'
+                                               title='<h5 style="margin:0:paddding:0">Марка {{ val.mark }}</h5>'
+                                               data-placement='bottom' data-trigger='hover'
+                                               data-content='
+                                               <table class="table" style="margin:0">
+                                               <tr><th>Минимальное</th> <td>{{ val.min }}</td></tr>
+                                               <tr><th>Среднее</th> <td>{{ val.avg }}</td></tr>
+                                               <tr><th>Максимальное</th> <td>{{ val.max }}</td></tr>
+                                               {% if val.avg != val.avgn %}
+                                               <tr><th>Среднее новое</th> <td>{{ val.avgn }}</td></tr>
+                                               {% endif %}
+                                               </table> '
+                                               value="{{ t.value }}">
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endwith %}
+                            </tfoot>
+                        </table>
+                    </fieldset>
+                {% endfor %}
+                    {{ form.as_div }}
             </div>
-            <div class="row">
-                <div class="span12">
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
-                            изменения
-                        </button>
-                        <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-                        {% block bonus-button %}
-                        {% endblock %}
-                    </div>
-                </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
+                    изменения
+                </button>
+                <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+                {% block bonus-button %}
+                {% endblock %}
             </div>
         </form>
     </div>

@@ -37,7 +37,7 @@
                     <td style='position: relative;' colspan="4" {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
                         <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
                             <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
-                               tabindex="1000"
+                               tabindex="0"
                                data-prefix='{{ form.rows.prefix }}'
                                href='#'><i class='icon-plus-sign'></i></a>
                         </div>
