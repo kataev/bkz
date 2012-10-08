@@ -267,7 +267,7 @@ class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
-    cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
+    cavitation = models.PositiveIntegerField(u"Кирпич", choices=cavitation_c, default=cavitation_c[0][0])
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
 
@@ -275,15 +275,19 @@ class Batch(UrlMixin,models.Model):
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
-    density = models.FloatField(u'Класс средней плотности',default=1.0)
-    weight = models.FloatField(u'Масса')
+
+    density = models.FloatField(u'Класс средней плотности',null=True,blank=True)
+    weight = models.FloatField(u'Масса',null=True,blank=True)
 
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
     amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
     flexion = models.FloatField(u'При изгибе',null=True,blank=True)
-    mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],default=mark_c[0][0])
+    mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],null=True,blank=True)
     chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
+
+    pf = models.FloatField(u'ПФ',null=True,blank=True)
+    pct = models.FloatField(u'Пст',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
@@ -404,7 +408,7 @@ class Pressure(models.Model):
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размеры',max_length=20)
     area = models.FloatField(u'S²')
-    readings = models.FloatField(u'Показание')
+    readings = models.FloatField(u'H')
     value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
@@ -422,8 +426,8 @@ class Flexion(models.Model):
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размеры',max_length=20)
     area = models.FloatField(u'2Bh²')
-    readings = models.FloatField(u'Показание')
-    value = models.FloatField(u'Знач',default=0.0)
+    readings = models.FloatField(u'Показ')
+    value = models.FloatField(u'P',default=0.0)
 
     class Meta():
         verbose_name = u"Испытание на изгиб"
