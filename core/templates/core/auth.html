@@ -2,5 +2,5 @@
 {% if user.is_authenticated %}
     <li><a href="#"> <i class='icon-flag'></i> {{ user.first_name }} {{ user.last_name }} </a></li>
 {% else %}
-    <li><a href="#"><i class='icon-flag'></i> Гость</a></li>
+    <li><a href="{% url login %}"><i class='icon-flag'></i> Гость</a></li>
 {% endif %}

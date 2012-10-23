@@ -17,9 +17,9 @@ limit = {
         'min': [25, 20, 17.5, 15, 12.5, 10, 7.5]
     },
     }
-marks = [300, 250, 200, 175, 150, 125, 100]
 
-class BatchMinxin(object):
+
+class BatchMixin(object):
     def get_mark_display(self):
         pass
 

@@ -139,9 +139,6 @@ PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
 class SoldFactory(SoldFactory):
     select_related = ('brick', 'brick_from')
 
-    def get_queryset(self):
-        return self.model.objects.select_related(*self.select_related)
-
     def clean(self):
         if any(self.errors):
             return
@@ -217,11 +214,6 @@ class SellerForm(forms.ModelForm):
         model = Seller
 
 
-class AddForm(forms.ModelForm):
-    class Meta:
-        model = Add
-
-
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
@@ -256,7 +248,6 @@ class SortingForm(BootstrapMixin, forms.ModelForm):
         model = Sorting
         exclude = ('source','brock')
         widgets = {
-            'part':PartSelect,
             'date': DateInput,
             'brick': BrickSelect,
             'amount': NumberInput,

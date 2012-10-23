@@ -34,38 +34,52 @@
                 </tfoot>
                 <tfoot>
                 <tr>
-                    <td colspan="4"
-                        style='position: relative;' {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
+                    <td style='position: relative;' colspan="4" {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
                         <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
                             <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
-                               tabindex="1000"
+                               tabindex="0"
                                data-prefix='{{ form.rows.prefix }}'
                                href='#'><i class='icon-plus-sign'></i></a>
                         </div>
-                        {{ form.info }}</td>
+                        {{ form.info }}
+                        </td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        № ТТО с изв.вкл. S < 1см&sup2;:
+                    </td>
+                    <td colspan="2">
+                        {{ form.limestone }}
+                    </td>
+                </tr>
+
                 </tfoot>
             </table>
-            <div class="span3">
-                <div class="row">
-                    <div class="span2">
-                        <label {% include 'bootstrap/errors.html' with errors=form.defect.errors %}>Качество
-                            {{ form.defect }}
-                        </label>
-                    </div>
-                    <div class="span1">
-                        <label {% include 'bootstrap/errors.html' with errors=form.dnumber.errors %}>
-                            <abbr title='Браковочное число'>Б.число</abbr>
-                            {{ form.dnumber }}
-                        </label>
-                    </div>
-                </div>
-                <label {% if form.defect.value == ' ' or not form.defect.value %}style='display: none;'{% endif %} {% include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
-                    брака
-                    {{ form.cause }}
-                </label>
-            {{ form.errors }}
-            </div>
+            <table class="span3" style='margin-left: 10px;'>
+            <thead>
+            <tr>
+                <th>Качество</th>
+                <th><abbr title='Половняк'>П.</abbr></th>
+                <th><abbr title='Браковочное число'>Б.ч.</abbr></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td> {{ form.defect }} </td>
+                <td> {{ form.half }} </td>
+                <td> {{ form.dnumber }} </td>
+            </tr>
+            <tr>
+                <td colspan='3'>
+                    <label {% if form.defect.value == 'gost' or not form.defect.value %}style='display: none;'{% endif %} {% include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
+                        брака
+                        {{ form.cause }}
+                    </label>
+                    {{ form.errors }}
+                </td>
+            </tr>
+            </tbody>
+            </table>
         </div>
     {% endfor %}
     <a href="#" class="show btn btn-mini btn-info">Добавить еще акт</a>

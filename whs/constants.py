@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
-BrickOrder = ('-width', 'color', '-view', 'ctype', 'defect', 'features', 'mark', 'refuse', 'id')
+BrickOrder = ('-width', 'color', '-view', 'ctype', '-defect', '-features__name', 'mark', 'refuse', 'id')
 
 view_c = ((u'Л', u'Лицевой'), (u'Р', u'Рядовой'))
 
@@ -90,6 +90,10 @@ def get_name(brick):
             c = u'у'
         return u'К%s%sП%s' % (brick.get_width_display()[0], brick.view, c)
 
+def get_full_name(brick):
+    name = get_name(brick)
+    return name + u' НФ/%d/1.4/%d ГОСТ 530-2007' % (brick.mark,brick.frost_resistance)
+
 
 def make_label(brick): # Функция для вывода имени
     label = get_name(brick) + ' %s' % brick.get_mark_display()
@@ -100,7 +104,7 @@ def make_label(brick): # Функция для вывода имени
     if brick.defect and not brick.defect=='gost':
         label += ' %s' % brick.defect
     if brick.features:
-        label += ' %s' % brick.features.lower()
+        label += ' ' + ' '.join([ f[0] for f in brick.features.values_list('name') ])
     if brick.refuse:
         label += ' %s' % brick.refuse
     return re.sub(' +', ' ', label)

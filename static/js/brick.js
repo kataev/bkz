@@ -85,33 +85,54 @@ $(function () {
     //Фильтер кирпича по кнопкам
     $('#brick-select-buttons').on('submit', function (e) {
         e.preventDefault()
-    })
-        .on('click', 'input', function (e) {
-            e.stopPropagation()
+        var data = $(this).serializeArray()
+        var $rows = $bricks.find('tbody tr').hide()
+        var dict = {}
+        for (var d in data) {
+            var ar = dict[data[d].name] || []
+            ar.push(data[d].value)
+            dict[data[d].name] = ar
+        }
+        for (d in dict){
+            $rows = $rows.filter(function(i,row){
+                var a
+                for (var i in dict[d]){
+                    a = a || $(row).hasClass(dict[d][i])
+                }
+                return a
+            })
+        }
+        $rows.show()
+    }).on('click','input',function(e){
+            var name = $(this).attr('name')
+            var span = $(e.delegateTarget).find('a[href="#'+name+'"]').find('span.label')
+            if ($(this).prop('checked')) $(span).text(parseInt($(span).text())+1).addClass('label-warning')
+            else $(span).text(parseInt($(span).text())-1)
+            if (!parseInt($(span).text())) $(span).removeClass('label-warning')
+        }).on('reset',function(e){
+            $(this).find('span.label').removeClass('label-warning').text(0)
         })
-        .on('click', 'a', function (e) {
-            //Фильтр при нажатии на кнопки
-            if (!$('input', this).trigger('click').length) return;
-            var data = $(e.delegateTarget).serializeArray()
-            var filter = _(data).chain().pluck('value').reduce(function (m, n) {
-                return m + '.' + n
-            }, ' ').value()
-            var nodes = $bricks.find('tbody tr').hide().filter(filter).show()
-            if (filter == ' ') $('a', e.delegateTarget).removeClass('active');
-            var tf = $bricks.find('tfoot th');
-            var names = $('a.active', e.delegateTarget).text().trim()
-            if (tf) {
-                $(tf[0]).html(names)
-                _(tf.slice(1)).each(function (node) {
-                    node.innerHTML = 0
-                })
-                _(nodes).each(function (node) {
-                    $('td', node).slice(1).each(function (id, td) {
-                        $(tf[id + 1]).text(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
-                    })
-                })
-            }
-        })
+//        .on('click', 'a', function (e) {
+//            //Фильтр при нажатии на кнопки
+//            if (!$('input', this).trigger('click').length) return;
+//            var data = $(e.delegateTarget).serializeArray()
+//            var filter = _(data).chain().pluck('value').reduce(function (m, n) { return m + '.' + n }, ' ').value()
+//            var nodes = $bricks.find('tbody tr').hide().filter(filter).show()
+//            if (filter == ' ') $('a', e.delegateTarget).removeClass('active');
+//            var tf = $bricks.find('tfoot th');
+//            var names = $('a.active', e.delegateTarget).text().trim()
+//            if (tf) {
+//                $(tf[0]).html(names)
+//                _(tf.slice(1)).each(function (node) {
+//                    node.innerHTML = 0
+//                })
+//                _(nodes).each(function (node) {
+//                    $('td', node).slice(1).each(function (id, td) {
+//                        $(tf[id + 1]).text(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
+//                    })
+//                })
+//            }
+//        })
 
     $brickselect.on('click', 'a', function (e) {
         $brickfade.show()

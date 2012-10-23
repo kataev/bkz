@@ -10,10 +10,8 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="{{ STATIC_URL }}bootstrap/bootstrap.css" rel="stylesheet">
-    {#    <style> body { padding-top: 60px; position: relative;} </style>#}
-    <style type="text/css" media="print"> .navbar, #footer {
-        display: none
-    } </style>
+    <style> body { padding-top: 0; position: relative;} </style>
+    <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
     <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}bootstrap/bootstrap-responsive.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/brick.css" rel="stylesheet">
@@ -114,13 +112,10 @@
     </div>
 </div>
 
-<!-- /container -->
-
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 
-{#<script type="text/javascript" src="{{ STATIC_URL }}/js/libs/modernizr.custom.68085.js"></script>#}
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/underscore-min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/accounting.min.js"></script>

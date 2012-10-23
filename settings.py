@@ -24,6 +24,10 @@ DATABASES = {
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5433', # Set to empty string for default. Not used with sqlite3.
     },
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': '../bkz.db', # Or path to database file if using sqlite3.
+#    },
     'old': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'disp', # Or path to database file if using sqlite3.
@@ -175,7 +179,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'debug_toolbar',
     'pytils',
-#    'devserver',
+    'devserver',
     'south',
     'gunicorn',
 #    'piston',

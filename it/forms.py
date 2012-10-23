@@ -3,6 +3,7 @@ import datetime
 import django.forms as forms
 
 from bkz.it.models import Device, Buy, Work, Plug
+from bkz.whs.forms import DateInput
 
 class DeviceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -22,6 +23,7 @@ class BuyForm(forms.ModelForm):
         model = Buy
         widgets = {
             'info': forms.Textarea(attrs={'rows': 2}),
+            'date': DateInput,
         }
 
 class WorkForm(forms.ModelForm):
@@ -31,6 +33,8 @@ class WorkForm(forms.ModelForm):
         widgets = {
             'name': forms.Textarea(attrs={'rows': 2}),
             'status': forms.RadioSelect(),
+            'date': DateInput,
+            'date_finished': DateInput,
             }
 
     def clean(self):
@@ -48,3 +52,6 @@ class PlugForm(forms.ModelForm):
     class Meta:
         model = Plug
         name = 'Plug'
+    	widgets = {
+            'date': DateInput,
+	    }

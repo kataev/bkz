@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import re
+from scipy.lib.blas import get_blas_funcs
 
 from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.constants import defect_c, color_c, mark_c, css_dict
+from bkz.whs.constants import get_name, get_full_name ,defect_c, color_c, mark_c, css_dict,cavitation_c
 from bkz.utils import UrlMixin,ru_date
-from bkz.lab.utils import get_tto
+from bkz.lab.utils import convert_tto
 
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
@@ -266,7 +267,7 @@ class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
-    cavitation = models.BooleanField(u"Кирпич",default=True)
+    cavitation = models.PositiveIntegerField(u"Кирпич", choices=cavitation_c, default=cavitation_c[0][0])
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
 
@@ -274,16 +275,19 @@ class Batch(UrlMixin,models.Model):
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
-    density = models.FloatField(u'Класс средней плотности',default=1.0)
-    half = models.FloatField(u'Половняк',default=3.0)
-    weight = models.FloatField(u'Масса')
+
+    density = models.FloatField(u'Класс средней плотности',null=True,blank=True)
+    weight = models.FloatField(u'Масса',null=True,blank=True)
 
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
     amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
     flexion = models.FloatField(u'При изгибе',null=True,blank=True)
-    mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],default=mark_c[0][0])
+    mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],null=True,blank=True)
     chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
+
+    pf = models.FloatField(u'Пуст. факт.',null=True,blank=True)
+    pct = models.FloatField(u'Пуст. прив. к факт.',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
@@ -292,11 +296,18 @@ class Batch(UrlMixin,models.Model):
 
     @property
     def get_tto(self):
-        return get_tto(self.tto)
+        return sorted(set(convert_tto(self.tto)))
 
     @property
     def css(self):
         return css_dict['color'].get(self.color,'None')
+
+    @property
+    def view(self):
+        return u'Р'
+
+    get_name = property(get_name)
+    get_full_name = property(get_full_name)
 
     @models.permalink
     def get_tests_url(self):
@@ -305,7 +316,8 @@ class Batch(UrlMixin,models.Model):
     class Meta():
         verbose_name = u"Готовая продукция"
         verbose_name_plural = u"Готовая продукция"
-        ordering = ('-date','number',)
+        ordering = ('-date','-number',)
+
     def get_density_display(self):
         if self.density > 1.4:
             return u'условно-эффективный'
@@ -314,23 +326,45 @@ class Batch(UrlMixin,models.Model):
 
 defect_c += ((u'no_cont',u'Некондиция'),)
 
+class Cause(models.Model):
+    name = models.CharField(u'Имя',max_length=30)
+    type = models.CharField(u'тип',max_length=30)
+
+    def __unicode__(self):
+        return '%s %s' % (self.type,self.name)
+    class Meta:
+        ordering = ('type',)
+
+
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    tto = RangeField(u'№ телег',max_length=30,blank=True)
-    amount = models.IntegerField(u'Кол-во',default=0)
-    defect = models.CharField(u"Тип", max_length=60, choices=defect_c)
+    defect = models.CharField(u"Тип", max_length=60, choices=defect_c, blank=False)
     dnumber = models.FloatField(u'Брак.число',default=0)
-    cause = models.ManyToManyField('whs.Features',verbose_name=u'Причина брака',null=True,blank=True)
+    half = models.FloatField(u'Половняк',default=3.0)
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True)
+    limestone = RangeField(u'№ телег c изв.вкл меньше 1см',max_length=30,null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
     brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'%s' % self.get_defect_display()
+        if self.pk: return u'%s, %s - %d' % (self.get_defect_display(),self.tto,self.amount)
         else: return u'Новый выход с производства'
 
     @property
     def get_tto(self):
-        return get_tto(self.tto)
+        return convert_tto(self.tto)
+
+    @property
+    def amount(self):
+        return sum([r.out for r in self.rows.all()])
+
+    @property
+    def tto(self):
+        return ','.join([r.tto for r in self.rows.all()])
+
+    @property
+    def get_limestone_tto(self):
+        return convert_tto(self.limestone)
 
     @property
     def get_css_class(self):
@@ -365,16 +399,16 @@ class RowPart(models.Model):
 
     @property
     def out(self):
-        return self.amount - self.test - self.brocken
+        return (self.amount or 0) - (self.test or 0) - (self.brocken or 0)
 
 class Pressure(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'pressure_tests')
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
-    size = models.CharField(u'Размер',max_length=20)
+    size = models.CharField(u'Размеры',max_length=20)
     area = models.FloatField(u'S²')
-    readings = models.FloatField(u'Показание')
+    readings = models.FloatField(u'H')
     value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
@@ -382,7 +416,7 @@ class Pressure(models.Model):
         else: return u'Новое испытание'
 
     class Meta():
-        verbose_name = u"Испытание еа сжатие"
+        verbose_name = u"Испытание на сжатие"
         verbose_name_plural = u"Испытания на сжатие"
 
 class Flexion(models.Model):
@@ -390,10 +424,10 @@ class Flexion(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'flexion_tests')
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
-    size = models.CharField(u'Размер',max_length=20)
-    area = models.FloatField(u'S²')
-    readings = models.FloatField(u'Показание')
-    value = models.FloatField(u'Знач',default=0.0)
+    size = models.CharField(u'Размеры',max_length=20)
+    area = models.FloatField(u'2Bh²')
+    readings = models.FloatField(u'Показ')
+    value = models.FloatField(u'P',default=0.0)
 
     class Meta():
         verbose_name = u"Испытание на изгиб"

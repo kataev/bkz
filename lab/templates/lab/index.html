@@ -7,59 +7,33 @@
     <div class="span12">
         <h1>Лаборатория</h1>
     </div>
-    <div class="span6">
+    <div>
         <h2>Готовая продукция</h2>
-        <table class="table table-bordered">
+        <table class="table table-bordered" id='batch-list'>
             <thead>
             <tr>
-                <th>Номер</th>
+                <th>№</th>
                 <th>Дата</th>
-                
-                <th>Марка</th>
+                <th>Кирпич</th>
+                <th><abbr title="Установленная марка">М</abbr></th>
                 <th>Кол-во</th>
-                
             </tr>
             </thead>
             <tbody>
             {% for b in batch_list %}
                 <tr title="{{ b.title }}" class='{{ b.css }}'>
-                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a></td>
+                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
                     <td>{{ b.date }}</td>
-                    
+                    <td>{{ b.get_width_display }}</td>
                     <td>{{ b.get_mark_display }}</td>
                     <td>{{ b.amount }} 
-                        <span class='badge' title='{{ b.tto }}'>{{ b.get_tto|length }}</span>
+                        <span class='badge' title='{{ b.get_tto }}'>{{ b.get_tto|length }}</span>
                     </td>
-                    
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="span6">
-        <h2>Сырец</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Номер</th>
-                <th>Кирпич</th>
-                <th>Телеги</th>
-                <th>Кол-во</th>
-                <th>Марка</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for b in raw_list %}
-                <tr title="{{ b.title }}">
-                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a></td>
-                    <td>{{ b.get_width_display }} {{ b.get_color_display|lower }}</td>
-                    <td>{{ b.tto }}</td>
-                    <td>{{ b.amount }}</td>
-                    <td>{{ b.mark }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
     </div>
 {% endblock %}

@@ -23,13 +23,8 @@ urlpatterns += patterns('',
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
-    url(ur'^Вход$', 'login', {'template_name': 'core/login.html'}),
-    url(ur'^Выход$', 'logout_then_login',name='logout'),
+    url(ur'^Вход$', 'login', {'template_name': 'core/login.html'}, name='login'),
+    url(ur'^Выход$', 'logout_then_login', name='logout'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
-
-
-
-
-

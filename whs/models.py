@@ -7,16 +7,14 @@ from constants import *
 from bkz.utils import UrlMixin,ru_date
 from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
-
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)
-    type = models.CharField(u'тип',max_length=30)
+    type = models.CharField(u'Сокрашение',max_length=30)
 
     def __unicode__(self):
-        return '%s %s' % (self.type,self.name)
+        return '%s (%s)' % (self.name,self.type)
     class Meta:
         ordering = ('type',)
-
 
 class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
@@ -29,7 +27,8 @@ class Brick(models.Model,UrlMixin):
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
     refuse = models.CharField(u"Особенности", max_length=10, choices=refuse_c, default=refuse_c[0][0],blank=True)
-    features = models.CharField(u"Редкие особенности", max_length=60, blank=True, help_text=u'Oттенки, тычки и прочее')
+    frost_resistance = models.PositiveIntegerField(u"Морозостойкость",default=50)
+    features = models.ManyToManyField(Features,verbose_name=u'Редкие особенности',null=True,blank=True)
     name = models.CharField(u"Имя", max_length=160, default='', help_text=u'Полное название продукции')
 
     css = models.CharField(u"Css", max_length=360, default=u'')
@@ -207,22 +206,6 @@ class Nomenclature(models.Model, UrlMixin):
 
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
-
-class Add(models.Model,UrlMixin):
-    """Класс операций для документа"""
-    part = models.ForeignKey('lab.Part',related_name='add',verbose_name=u'Партия')
-    brick = models.ForeignKey(Brick, related_name="man", verbose_name=u"Кирпич")
-
-    class Meta():
-        verbose_name = u"Партия"
-        verbose_name_plural = u"Партия"
-
-    def __unicode__(self):
-        if self.pk:
-            return u'%s шт' % (self.brick,)
-        else:
-            return u'Новая партия'
-
 
 class Sorting(models.Model,UrlMixin):
     """ Класс документа для учета сортировки кипича из одного товара в другой """

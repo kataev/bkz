@@ -12,10 +12,8 @@ $(function () {
 
     $('select[name*="defect"]').change(function(e){
         var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
-        if ($(this).val().length != 1)
-            $cause.show();
-        else
-            $cause.hide()
+        if ($(this).val() == 'gost')$cause.hide();
+         else $cause.show();
     })
 
     $('.form-add').click(function () {

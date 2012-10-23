@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
-from whs.models import *
-from lab.models import *
-from old.models import *
+from bkz.whs.models import *
+from bkz.lab.models import *
+from bkz.old.models import *
 
 class Command(BaseCommand):
     help = "Commands for lagasy db"
@@ -33,14 +33,20 @@ class Command(BaseCommand):
     def test_batch(self,year,month,day=None):
         pluss = DispJurnal.objects.filter(plus__gt=0).filter(date__year=year,date__month=month)
         if day: pluss = pluss.filter(date__day=day)
-        for plus in pluss.order_by('date'):
-            part = Part.objects.filter(batch__date=plus.date,amount=plus.plus)
+        for plus in pluss.order_by('-date'):
             old = OldBrick.objects.get(old=plus.tov_id)
+            part = Part.objects.filter(batch__date=plus.date,defect=old.defect)
             try:
                 part = part.get()
-            except Part.MultipleObjectsReturned:
-                part = part.filter(batch__mark = old.mark).get()
+                if old.mark != part.batch.mark and old.mark < 400:
+                    print 'mark not match', plus.date, old, part.batch.mark
+                    continue
+                if part.amount == plus.plus:
+                    part.brick = old
+                    part.save()
+                else:
+                    print 'amount not match', plus.date, old,plus.plus, '!=' ,part.amount, part.batch.mark
             except Part.DoesNotExist:
-                print 'DNE',plus.plus,plus.date,old
-            part.brick = old
-            part.save()
+                print 'DNE',plus.date,old,plus.plus
+            except Part.MultipleObjectsReturned:
+                print 'MOR',plus.date,old
