@@ -15,14 +15,12 @@
                     {% endif %}
                 </h1>
             </div>
-            <div class="span4">
-                <form method="GET" action="" class="form-inline" style='margin-top: 10px'>
-                    {% with year=form.date__year month=form.date__month %}
-                        {% include 'whs/widgets/year-month-select.html' %}
-                    {% endwith %}
-                    <input type="submit" class="">
-                </form>
-            </div>
+            <form method="GET" action="" class="form-inline span4" style='margin-top: 10px'>
+                {% with year=form.date__year month=form.date__month %}
+                    {% include 'whs/widgets/year-month-select.html' %}
+                {% endwith %}
+                <input type="submit" class="btn">
+            </form>
         </div>
         <div class="row">
             <div class="span12">
