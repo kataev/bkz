@@ -7,7 +7,6 @@ from django.views.generic import UpdateView
 
 from bkz.lab.models import *
 from bkz.lab.forms import *
-from bkz.lab.utils import get_min_avg_max
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm

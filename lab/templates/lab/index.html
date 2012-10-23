@@ -22,7 +22,7 @@
             <tbody>
             {% for b in batch_list %}
                 <tr title="{{ b.title }}" class='{{ b.css }}'>
-                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a></td>
+                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
                     <td>{{ b.date }}</td>
                     <td>{{ b.get_width_display }}</td>
                     <td>{{ b.get_mark_display }}</td>

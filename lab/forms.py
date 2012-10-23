@@ -213,6 +213,6 @@ class BatchTestsForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
         layout = (
-            Fieldset(u'Прочее','pf','pct','chamfer',css_class='less span4 form-horizontal'),
-            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span5 form-horizontal'),
+            Fieldset(u'Прочее','pf','pct','chamfer',css_class='span6 form-horizontal'),
+            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span6 form-horizontal'),
         )

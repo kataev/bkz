@@ -286,8 +286,8 @@ class Batch(UrlMixin,models.Model):
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],null=True,blank=True)
     chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
 
-    pf = models.FloatField(u'ПФ',null=True,blank=True)
-    pct = models.FloatField(u'Пст',null=True,blank=True)
+    pf = models.FloatField(u'Пуст. факт.',null=True,blank=True)
+    pct = models.FloatField(u'Пуст. прив. к факт.',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
