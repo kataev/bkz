@@ -50,7 +50,7 @@ menu = dict(
         ('it:Plug-add', 'icon-adjust', 'Замену'),
         ),
     whs=(
-        ('whs:Bill-wizard', 'icon-Bill', u'Накладную'),
+        ('whs:Bill-add', 'icon-Bill', u'Накладную'),
 #        ('whs:Add-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
         ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),

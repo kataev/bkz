@@ -69,7 +69,6 @@ class BillUpdateView(UpdateView):
                 factory.save()
         if all([f.is_valid() for k,f in opers.items()]):
             return redirect(self.get_success_url())
-
         return self.render_to_response(dict(form=form, opers=opers))
 
     def form_invalid(self, form):
@@ -80,9 +79,9 @@ class BillUpdateView(UpdateView):
         context['opers']={}
         for factory in self.opers:
             prefix = factory.get_default_prefix()
-            context['opers'][prefix] = factory(self.request.POST or None, instance=self.object)
+            print factory
+            context['opers'][prefix] = factory(self.request.POST or None, instance=Bill.objects.get(pk=3))
         return context
-
 
 class SortingCreateView(CreateView):
     def get_initial(self):
@@ -208,7 +207,7 @@ def journal(request):
         date = datetime.date.today()
     sorting = Sorting.objects.filter(source__isnull=True).filter(date=date)
     bills = Bill.objects.filter(date=date).select_related('solds','solds__brick')
-    adds = Add.objects.filter(part__batch__date=date)
+    adds = []
     return render(request, 'whs/journal.html',dict(sorting=sorting,bills=bills,adds=adds,date=date))
 
 def man_main(request):
@@ -217,9 +216,7 @@ def man_main(request):
         date = form.cleaned_data.get('date')
     else:
         date = datetime.date.today()
-    man = Add.objects.select_related().filter(part__batch__date__year=date.year, part__batch__date__month=date.month)
-    sorting = Sorting.objects.select_related().filter(date__year=date.year, date__month=date.month)
-    return render(request, 'whs/add-list.html', dict(man=man, sorting=sorting, form=form))
+    return render(request, 'whs/add-list.html', dict( form=form))
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):
