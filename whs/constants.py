@@ -92,7 +92,7 @@ def get_name(brick):
 
 def get_full_name(brick):
     name = get_name(brick)
-    return name + u' НФ/%d/1.4/50 ГОСТ 530-2007' % brick.mark
+    return name + u' НФ/%d/1.4/%d ГОСТ 530-2007' % (brick.mark,brick.frost_resistance)
 
 
 def make_label(brick): # Функция для вывода имени
@@ -104,7 +104,7 @@ def make_label(brick): # Функция для вывода имени
     if brick.defect and not brick.defect=='gost':
         label += ' %s' % brick.defect
     if brick.features:
-        label += ' %s' % brick.features.lower()
+        label += ' ' + ' '.join([ f[0] for f in brick.features.values_list('name') ])
     if brick.refuse:
         label += ' %s' % brick.refuse
     return re.sub(' +', ' ', label)

@@ -27,6 +27,7 @@ class Brick(models.Model,UrlMixin):
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
     refuse = models.CharField(u"Особенности", max_length=10, choices=refuse_c, default=refuse_c[0][0],blank=True)
+    frost_resistance = models.PositiveIntegerField(u"Морозостойкость",default=50)
     features = models.ManyToManyField(Features,verbose_name=u'Редкие особенности',null=True,blank=True)
     name = models.CharField(u"Имя", max_length=160, default='', help_text=u'Полное название продукции')
 
