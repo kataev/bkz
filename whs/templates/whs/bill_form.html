@@ -13,7 +13,7 @@
         {% endfor %}
     </div>
     <div class="container">
-        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
             {% csrf_token %}
             {% for k,o in opers.iteritems %}
                 {{ o.management_form }}
@@ -94,19 +94,22 @@
                     </fieldset>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <i class="icon-ok icon-white"></i> Сохранить
-                    </button>
-                    {% if form.instance.pk %}
-                        <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
-                            <i class="icon-print icon-white"></i>
-                            Печать
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
         </form>
+    </div>
+    <div class="form-actions">
+        <div class="container">
+            <button type="submit" class="btn btn-primary" form="form">
+                <i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+            <button type="reset" class="btn" form="form"><i class="icon-ban-circle"></i> Отменить</button>
+            {% block bonus-button %}
+                {% if form.instance.pk %}
+                    <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+                        <i class="icon-print icon-white"></i>
+                        Печать
+                    </a>
+                {% endif %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}
