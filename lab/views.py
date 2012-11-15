@@ -69,11 +69,17 @@ def batch_print_doc(request, pk):
     return render_to_response('webodt/document-the-quality-of.odt',{'batch':batch},format='pdf',inline=True)
 
 
+
 def batch_tests(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     initial = [{'row':2},{'row':2},{'row':8},{'row':8},{'row':16},{'row':16}]
-    flexion = FlexionFactory(request.POST or None, instance=batch,initial=initial)
-    pressure = PressureFactory(request.POST or None, instance=batch,initial=initial)
+    def preparation(a,w):
+        for d in a: d['type']=w
+        return a
+    flexion = FlexionFactory(request.POST or None, instance=batch,initial=preparation(initial,'flexion'),
+                            queryset=batch.tests.filter(type='flexion'),prefix='flexion')
+    pressure = PressureFactory(request.POST or None, instance=batch,initial=preparation(initial,'pressure'),
+                            queryset=batch.tests.filter(type='pressure'),prefix='pressure')
     form = BatchTestsForm(request.POST or None,instance=batch)
     if request.method == 'POST':
         if form.is_valid():
@@ -88,6 +94,12 @@ def batch_tests(request,pk):
             pre = pressure.get_value
             messages.add_message(request, messages.SUCCESS, u'Исптания на сжатие сохранены!')
         if pressure.is_valid() and flexion.is_valid():
+            volume = request.POST.get('volume','')
+            if volume:
+                factory, i = volume.split('-')
+                if factory in ['pressure','flexion']:
+                    batch.volume = eval(factory)[int(i)].instance
+                    batch.save()
             if pre and fle:
                 batch.mark = min((fle['mark'],pre['mark']))
                 batch.pressure = pre['avgn']

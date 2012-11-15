@@ -287,6 +287,7 @@ class Batch(UrlMixin,models.Model):
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
 
+    volume = models.ForeignKey(u'lab.Test',null=True,blank=True,related_name='volume')
     density = models.FloatField(u'Класс средней плотности',null=True,blank=True)
     weight = models.FloatField(u'Масса',null=True,blank=True)
 
@@ -425,9 +426,12 @@ class RowPart(models.Model):
     def out(self):
         return (self.amount or 0) - (self.test or 0) - (self.brocken or 0)
 
-class Pressure(models.Model):
+test_c = ((u'flexion',u'На изгиб'), (u'pressure',u'На сжатие'),)
+
+class Test(models.Model):
+    type = models.CharField(u'Тип',max_length=10,choices=test_c)
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
-    batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'pressure_tests')
+    batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'tests')
     tto = models.CharField(u'№ ТТО',max_length=20)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размеры',max_length=20)
@@ -436,23 +440,4 @@ class Pressure(models.Model):
     value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
-        if self.pk: return u'Испытания на сжатие партии № %d, %d г.' % (self.batch.number,self.batch.date.year)
-        else: return u'Новое испытание'
-
-    class Meta():
-        verbose_name = u"Испытание на сжатие"
-        verbose_name_plural = u"Испытания на сжатие"
-
-class Flexion(models.Model):
-    timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
-    batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'flexion_tests')
-    tto = models.CharField(u'№ ТТО',max_length=20)
-    row = models.IntegerField(u'Ряд')
-    size = models.CharField(u'Размеры',max_length=20)
-    area = models.FloatField(u'2Bh²')
-    readings = models.FloatField(u'Показ')
-    value = models.FloatField(u'P',default=0.0)
-
-    class Meta():
-        verbose_name = u"Испытание на изгиб"
-        verbose_name_plural = u"Испытания на изгиб"
+        return u'Испытания'

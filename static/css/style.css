@@ -82,14 +82,10 @@ fieldset table input[name*='pressure']{width: 100%;}
 fieldset table input[name*='limestone']{width: 117px;}
 
 fieldset table input::-webkit-outer-spin-button,
-fieldset table input::-webkit-inner-spin-button {
-    -webkit-appearance:none;
-    margin: 0;
-}
+fieldset table input::-webkit-inner-spin-button { -webkit-appearance:none; margin: 0; }
 
-
-.tests .Pressure input[name*='tto']{width: 52px;text-align: center;}
-.tests .Flexion  input[name*='tto']{width: 32px;text-align: center;}
+.tests .pressure input[name*='tto']{width: 52px;text-align: center;}
+.tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
 .tests input[name*='row']{width: 32px;text-align: center;}
 .tests input[name*='size']{width: 145px;text-align: center;}
 .tests input[name*='area']{width: 58px;text-align: center;}

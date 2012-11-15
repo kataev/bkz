@@ -91,9 +91,6 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
-            #'cavitation':BrickChechboxInput(attrs={'title':'Пустотелый?'}),
-            #'width':BrickInput(),
-            #'color':BrickInput(),
             'weight':WeightInput(),
             'density':DensityInput(),
             'flexion':FlexionInput(),
@@ -102,11 +99,9 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
         }
         layout = (
             Fieldset(u'Партия','number','date','cavitation','width','view','color','ctype','flexion','pressure','mark','weight','density', 'info',css_class='less span5'),
-#            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 
 info_list = ['5.3.2 Известняковые включения < 1см','5.3.4 Размеры, дефекты','5.3.3 Высолы','5.2.6 Половняк более 5%','5.2.5 Черная сердцевина, пятна']
-
 
 class PartForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -132,67 +127,57 @@ class RowForm(forms.ModelForm):
             'dnumber':forms.TextInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
             }
 
-
 RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=1,max_num=1)
-
-class SplitSizeWidget(forms.widgets.MultiWidget):
-    def __init__(self, attrs=None):
-        get_widget = lambda name:forms.widgets.Input(attrs={'title':name})
-        names = (u'Длина',u'Ширина',u'Толщина')
-        self.widgets = map(get_widget,names)
-        super(SplitSizeWidget, self).__init__(attrs)
-
-    def decompress(self, value):
-        if value:
-            return map(int,value.split('x'))
-        return [None, None, None]
-
-class SplitSizeField(forms.MultiValueField):
-    widget = SplitSizeWidget
-    def compress(self, data_list):
-        return '%dx%dx%d' % data_list
 
 class PressureForm(forms.ModelForm):
     class Meta:
         exclude = ('timestamp',)
-        model = Pressure
+        model = Test
         widgets = {
             'tto':forms.TextInput(attrs={'autocomplete':'off'}),
             'row':forms.TextInput(attrs={'autocomplete':'off'}),
             'size':forms.TextInput(attrs={'autocomplete':'off'}),
             'area':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
             'value':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
+            'type':forms.HiddenInput
             }
 
 class FlexionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FlexionForm, self).__init__(*args,**kwargs)
+        self['area'].label = u'2Bh²'
     class Meta:
         exclude = ('timestamp',)
-        model = Flexion
+        model = Test
         widgets = {
             'tto':forms.TextInput(attrs={'autocomplete':'off'}),
             'row':forms.TextInput(attrs={'autocomplete':'off'}),
             'size':forms.TextInput(attrs={'autocomplete':'off'}),
             'area':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
             'value':forms.TextInput(attrs={'readonly':'readonly','tabindex':-1}),
+            'type':forms.HiddenInput
             }
 
-PressureFactory = inlineformset_factory(Batch, Pressure, PressureForm, extra=6, max_num=6, can_delete=False)
-FlexionFactory  = inlineformset_factory(Batch, Flexion,  FlexionForm,  extra=6, max_num=6, can_delete=False)
+PressureFactory = inlineformset_factory(Batch, Test, PressureForm, extra=6, max_num=6, can_delete=False)
+FlexionFactory  = inlineformset_factory(Batch, Test,  FlexionForm,  extra=6, max_num=6, can_delete=False)
 
 marks = [300, 250, 200, 175, 150, 125, 100]
 def get_pressure_value(self):
-    if len(self.queryset) == 6:
-        val = [ x.value for x in self.queryset]
+    queryset = self.get_queryset()
+    if len(queryset) == 6:
+        val = [ x.value for x in queryset]
         avg = round(sum(val)/6,2)
         avg_list = [30, 25, 20, 17.5, 15, 12.5, 10]
         min_list = [25, 20, 17.5, 15, 12.5, 10, 7.5]
         mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
         return {'avgn':avg,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
 PressureFactory.get_value = property(get_pressure_value)
+PressureFactory.caption = u'Испытания на сжатие'
 
 def get_flexion_value(self):
-    if len(self.queryset) == 6:
-        val = [ x.value for x in self.queryset]
+    queryset = self.get_queryset()
+    if len(queryset) == 6:
+        val = [ x.value for x in queryset]
         avg = round(sum(val)/6,2)
         valn = filter(lambda x: avg*0.5 < x < avg*1.5, val)
         avgn = round(sum(valn)/len(valn),2)
@@ -205,14 +190,14 @@ def get_flexion_value(self):
         mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
         return {'avgn':avgn,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
 FlexionFactory.get_value = property(get_flexion_value)
-
+FlexionFactory.caption = u'Испытания на изгиб'
 
 class BatchTestsForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer','pressure','flexion')
+        fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer',
+            'pressure','flexion','weight','density',)
         widgets = {
             'flexion':forms.HiddenInput,
             'pressure':forms.HiddenInput,
             }
-        
