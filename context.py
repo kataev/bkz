@@ -13,7 +13,7 @@ nav = dict(
     main= (
         ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('lab:index', 'icon-fullscreen', u'Лаборатория'),
-        ('energy:index', 'icon-energy', u'Энергоресурсы'),
+#        ('energy:index', 'icon-energy', u'Энергоресурсы'),
         ('it:index', 'icon-hdd', u'ИТ'),
         ('price', 'icon-shopping-cart', u'Прайс'),
     ),
@@ -53,7 +53,7 @@ menu = dict(
         ('whs:Bill-add', 'icon-Bill', u'Накладную'),
 #        ('whs:Add-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
-        ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
+#        ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
         ('whs:Brick-add', 'icon-Brick', u'Кирпич'),
         ('whs:Agent-add', 'icon-Agent', u'Контрагента'),

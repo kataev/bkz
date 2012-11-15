@@ -23,6 +23,11 @@ div.controls ul {list-style: none}
 .badge-round { padding:  1px 3px 2px;}
 input[name*="amount"] {background: #adff2f;}
 td.cause ul { list-style: none;}
+
+@media (max-width:480px) {
+    .brickinput select, .batchinput input {width:auto !important;}
+}
+
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
     fieldset.less .controls {margin-left: 110px}
@@ -42,8 +47,6 @@ td.cause ul { list-style: none;}
     .tarainput input {width:174px}
     .tarainput span input {width:26px}
 }
-
-
 #batch-list th {text-align: center;}
 fieldset table th label {margin: 0;}
 fieldset.Part div.row {margin-bottom:10px;border-radius: 5px;padding-bottom: 2px;}
@@ -52,8 +55,14 @@ fieldset.Part div.success { background-color: #dff0d8; }
 fieldset.Part div.error { background-color: #fcf8e3; }
 fieldset.Part div.info { background-color: #d9edf7; }
 
+fieldset table td {margin: 0;}
+
+fieldset table input[type='date'], fieldset table input[type='number'],
 fieldset table input[type='text'], fieldset table textarea { height: 30px !important;}
-fieldset table input[type='text'], fieldset table textarea, fieldset table select
+
+fieldset table input[type='date'], fieldset table input[type='number'],
+fieldset table input[type='text'], fieldset table textarea,
+fieldset table select
 {
     width: 100%;
     box-sizing: border-box;
@@ -62,28 +71,29 @@ fieldset table input[type='text'], fieldset table textarea, fieldset table selec
     border-radius: 0 !important;
     margin: 0 !important;
 }
-/*fieldset.Part input[name*='tto']{width: 100px !important;}*/
-fieldset table input[name*='test']{width: 52px !important;}
-fieldset table input[name*='brocken']{width: 60px !important;}
-fieldset table input[name*='amount']{width: 70px !important;}
-fieldset table select[name*='defect']{width: 120px !important;}
-fieldset table input[name*='half']{width: 34px !important;}
-fieldset table input[name*='dnumber']{width: 34px !important;}
+fieldset table input[name*='test']{width: 52px;}
+fieldset table input[name*='brocken']{width: 60px;}
+fieldset table input[name*='amount']{width: 70px;}
+fieldset table select[name*='defect']{width: 120px;}
+fieldset table input[name*='half']{width: 34px;}
+fieldset table input[name*='dnumber']{width: 34px;}
 fieldset table input[name*='flexion']{width: 100%;}
 fieldset table input[name*='pressure']{width: 100%;}
-fieldset table input[name*='limestone']{width: 117px !important;}
-fieldset table textarea[name*='info']{width: 99% !important;}
-fieldset table td {margin: 0;}
-.tests .Pressure input[name*='tto']{width: 52px !important;text-align: center;}
-.tests .Flexion  input[name*='tto']{width: 32px !important;text-align: center;}
-.tests input[name*='row']{width: 32px !important;text-align: center;}
-.tests input[name*='size']{width: 145px !important;text-align: center;}
-.tests input[name*='area']{width: 58px !important;text-align: center;}
-.tests input[name*='readings']{width: 52px !important;text-align: center;}
-.tests input[name*='value']{width: 52px !important;}
-input[name*='pf']{width: 52px !important;}
-input[name*='pct']{width: 52px !important;}
-input[name*='chamfer']{width: 52px !important;}
+fieldset table input[name*='limestone']{width: 117px;}
+
+fieldset table input::-webkit-outer-spin-button,
+fieldset table input::-webkit-inner-spin-button { -webkit-appearance:none; margin: 0; }
+
+.tests .pressure input[name*='tto']{width: 52px;text-align: center;}
+.tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
+.tests input[name*='row']{width: 32px;text-align: center;}
+.tests input[name*='size']{width: 145px;text-align: center;}
+.tests input[name*='area']{width: 58px;text-align: center;}
+.tests input[name*='readings']{width: 52px;text-align: center;}
+.tests input[name*='value']{width: 52px;}
+input[name*='pf']{width: 52px;}
+input[name*='pct']{width: 52px;}
+input[name*='chamfer']{width: 52px;}
 
 
 form fieldset.Batch h3 { text-align: center}

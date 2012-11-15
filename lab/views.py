@@ -36,10 +36,9 @@ class BatchUpdateView(UpdateView):
                 part.save()
             if part.rows.is_valid() and part.instance.pk:
                 part.rows.save()
-        self.object.amount = sum([r.instance.amount or 0 for r in self.parts])
+        self.object.amount = sum([r.instance.out or 0 for r in self.parts])
         self.object.tto = ','.join([r.instance.tto for r in self.parts])
         self.object.save()
-        print self.object.tto,self.object.amount
         if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
             messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
             return redirect(self.get_success_url())
@@ -60,29 +59,55 @@ def index(request):
 
 
 from webodt.shortcuts import render_to_response
-def batch_print(request, pk):
+def batch_print_akt(request, pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     return render_to_response('webodt/akt-out.odt',{'batch':batch},format='pdf',inline=True)
+
+
+def batch_print_doc(request, pk):
+    batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
+    return render_to_response('webodt/document-the-quality-of.odt',{'batch':batch},format='pdf',inline=True)
+
 
 
 def batch_tests(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     initial = [{'row':2},{'row':2},{'row':8},{'row':8},{'row':16},{'row':16}]
-    flexion = FlexionFactory(request.POST or None, instance=batch,initial=initial)
-    pressure = PressureFactory(request.POST or None, instance=batch,initial=initial)
+    def preparation(a,w):
+        for d in a: d['type']=w
+        return a
+    flexion = FlexionFactory(request.POST or None, instance=batch,initial=preparation(initial,'flexion'),
+                            queryset=batch.tests.filter(type='flexion'),prefix='flexion')
+    pressure = PressureFactory(request.POST or None, instance=batch,initial=preparation(initial,'pressure'),
+                            queryset=batch.tests.filter(type='pressure'),prefix='pressure')
     form = BatchTestsForm(request.POST or None,instance=batch)
-    if request.method == 'POST' and flexion.is_valid() and pressure.is_valid() and form.is_valid():
-        batch = form.save(commit=False)
-        flexion.save()
-        pressure.save()
-        fle = flexion.get_value
-        pre = pressure.get_value
-        batch.mark = min((fle['mark'],pre['mark']))
-        batch.pressure = pre['avgn']
-        batch.flexion = fle['avgn']
-#        batch.save()
-        return redirect(batch.get_tests_url())
-    pressure.value = form['pressure'].value()
-    flexion.value = form['flexion'].value()
+    if request.method == 'POST':
+        if form.is_valid():
+            batch = form.save()
+            messages.add_message(request, messages.SUCCESS, u'Характеристики сохранены!')
+        if flexion.is_valid():
+            flexion.save()
+            fle = flexion.get_value
+            messages.add_message(request, messages.SUCCESS, u'Исптания на изгиб сохранены!')
+        if pressure.is_valid():
+            pressure.save()
+            pre = pressure.get_value
+            messages.add_message(request, messages.SUCCESS, u'Исптания на сжатие сохранены!')
+        if pressure.is_valid() and flexion.is_valid():
+            volume = request.POST.get('volume','')
+            if volume:
+                factory, i = volume.split('-')
+                if factory in ['pressure','flexion']:
+                    batch.volume = eval(factory)[int(i)].instance
+                    batch.save()
+            if pre and fle:
+                batch.mark = min((fle['mark'],pre['mark']))
+                batch.pressure = pre['avgn']
+                batch.flexion = fle['avgn']
+                batch.save()
+                messages.add_message(request, messages.SUCCESS, u'Марка определена!')
+                return redirect(batch.get_tests_url())
+            else:
+                messages.add_message(request, messages.WARNING, u'Не хватает данных для определения марки!')
     tests = [pressure,flexion]
     return render(request,'lab/batch-tests.html',{'tests':tests,'batch':batch,'form':form})

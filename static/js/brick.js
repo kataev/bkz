@@ -73,15 +73,12 @@ $(function () {
             $bricks.find('tbody tr').hide().filter(filter).show()
         })
 
-
     $bricks.find('tbody tr').map(function (e, tr) {
-        var td = $('td', tr).slice(1).map(function (id, td) {
-            return parseInt(td.innerHTML)
-        })
+        var td = $('td', tr).slice(1).map(function (id, td) { return parseInt(td.innerHTML)})
         return {'css':$(tr).attr('class'), 'node':tr, 'td':td}
     })
 
-
+    var $tfoot = $bricks.find('tfoot tr')
     //Фильтер кирпича по кнопкам
     $('#brick-select-buttons').on('submit', function (e) {
         e.preventDefault()
@@ -93,16 +90,19 @@ $(function () {
             ar.push(data[d].value)
             dict[data[d].name] = ar
         }
-        for (d in dict){
+        for (var d in dict){
             $rows = $rows.filter(function(i,row){
                 var a
-                for (var i in dict[d]){
-                    a = a || $(row).hasClass(dict[d][i])
-                }
+                for (var i in dict[d]){ a = a || $(row).hasClass(dict[d][i]) }
                 return a
             })
         }
-        $rows.show()
+        var totals = []
+        $rows.show().each(function(i,node) {
+             $(node).find('td').slice(1).each(function(i,node){totals[i]=(totals[i] || 0) + parseInt(this.innerHTML)})
+        })
+        $bricks.find('tfoot tr').find('th').slice(1).each(function(i,node){node.innerHTML = totals[i]})
+
     }).on('click','input',function(e){
             var name = $(this).attr('name')
             var span = $(e.delegateTarget).find('a[href="#'+name+'"]').find('span.label')

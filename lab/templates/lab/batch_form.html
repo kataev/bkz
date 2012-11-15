@@ -19,14 +19,27 @@
             </div>
             <div class="row">
                 <div class="span12">
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
-                            изменения
-                        </button>
-                        <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-                        {% block bonus-button %}
-                            <a href="{{ form.instance.get_delete_url }}" class='btn btn-danger pull-right'>Удалить</a>
-                        {% endblock %}
+                    <div class="form-actions row">
+                            <div class="span8"><button type="submit" class="btn btn-primary">
+                                <i class="icon-ok icon-white"></i> Сохранить изменения
+                            </button>
+                                <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
+                                {% if form.instance.pk %}
+                    <a class="btn btn-info" href={% url 'lab:Batch-print_akt' pk=form.instance.pk %}>
+                        <i class="icon-print icon-white"></i> Печать акта
+                    </a>
+                    <a class="btn btn-info" href={% url 'lab:Batch-print_doc' pk=form.instance.pk %}>
+                        <i class="icon-print icon-white"></i> Печать документа о качестве
+                    </a>
+                        {% endif %}
+                            </div>
+                                {% if form.instance.pk %}
+                                <div class="span2">
+                                    <a href="{{ form.instance.get_delete_url }}" class='btn btn-danger'>Удалить</a>
+                                </div>
+                                {% endif %}
+                                
+                        
                     </div>
                 </div>
             </div>

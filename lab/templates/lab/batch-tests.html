@@ -10,22 +10,22 @@
 {% block container %}
     <div class='container'>
         <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
+
         <h2>Кирпич {{ batch.get_name }}</h2><input type="hidden" id='width' value='{{ batch.width }}'>
-        <form method="POST" action="{{ batch.get_tests_url }}">
+
+        <form method="POST" action="{{ batch.get_tests_url }}" id='form'>
             {% csrf_token %}
             <div class="row tests">
                 {% for t in tests %}
-                    <fieldset class='span6 {{ t.model|class_name }}'>
+                    <fieldset class='span6 {{ t.prefix }}'>
                         {{ t.management_object }}
                         {{ t.management_form }}
                         <table class="">
-                            <caption><h3>{{ t.model|model_verbose_name_plural }}</h3></caption>
+                            <caption><h3>{{ t.caption }}</h3></caption>
                             <thead>
                             <tr>
                                 {% for f in t.empty_form.visible_fields %}
-                                    {% if not forloop.last %}
                                         <th>{{ f.label }}</th>
-                                    {% endif %}
                                 {% endfor %}
                             </tr>
                             </thead>
@@ -41,6 +41,14 @@
                                                 {% endfor %}
                                                 {{ f }}
                                             </td>
+                                        {% elif forloop.last %}
+                                        <td class='input-append'>
+                                            {{ f }}
+                                            <span class='add-on' title='Выберите образец по размерам котрого будет вычислятся плотность'>
+                                                <input name='volume' type='radio' value='{{ form.prefix }}' 
+                                                {% if form.instance.pk == batch.volume_id %}checked="checked"{% endif %} tabindex='-1'>
+                                            </span>
+                                        </td>
                                         {% else %}
                                             <td>{{ f }}</td>
                                         {% endif %}
@@ -51,16 +59,18 @@
                             <tfoot>
                             {% with val=t.get_value %}
                                 {% if val %}
-                                <tr>
-                                    <th colspan="3" style='text-align: right;'>
-                                        <h4 style='margin: 0;'> <small>Марка:</small> {{ val.mark }} </h4>
-                                    </th>
-                                    <th colspan="2"><label class="pull-right">Среднее:</label></th>
-                                    <td colspan="2">
-                                        <input type='text' readonly="readonly" name='value-final' rel='popover'
-                                               title='<h5 style="margin:0:paddding:0">Марка {{ val.mark }}</h5>'
-                                               data-placement='bottom' data-trigger='hover'
-                                               data-content='
+                                    <tr>
+                                        <th colspan="3" style='text-align: right;'>
+                                            <h4 style='margin: 0;'>
+                                                <small>Марка:</small>
+                                                {{ val.mark }} </h4>
+                                        </th>
+                                        <th colspan="2"><label class="pull-right">Среднее:</label></th>
+                                        <td colspan="2">
+                                            <input type='text' readonly="readonly" name='value-final' rel='popover'
+                                                   title='<h5 style="margin:0:paddding:0">Марка {{ val.mark }}</h5>'
+                                                   data-placement='bottom' data-trigger='hover' data-html='true'
+                                                   data-content='
                                                <table class="table" style="margin:0">
                                                <tr><th>Минимальное</th> <td>{{ val.min }}</td></tr>
                                                <tr><th>Среднее</th> <td>{{ val.avg }}</td></tr>
@@ -69,25 +79,41 @@
                                                <tr><th>Среднее новое</th> <td>{{ val.avgn }}</td></tr>
                                                {% endif %}
                                                </table> '
-                                               value="{{ t.value }}">
-                                    </td>
-                                </tr>
+                                                   value="{{ val.avgn }}">
+                                        </td>
+                                    </tr>
                                 {% endif %}
                             {% endwith %}
                             </tfoot>
                         </table>
                     </fieldset>
                 {% endfor %}
-                    {{ form.as_div }}
+            <fieldset class="span6">
+                <legend>Характеристики</legend>
+                <table class='table'>
+                    <thead>
+                    <tr>
+                        <th style='width:60%'>Название</th>
+                        <th>Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {{ form.as_table }}
+                    </tbody>
+                </table>
+            </fieldset>
             </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
-                    изменения
-                </button>
-                <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-                {% block bonus-button %}
-                {% endblock %}
-            </div>
+
         </form>
+    </div>
+    <div class="form-actions">
+        <div class="container">
+            <button type="submit" class="btn btn-primary" form="form">
+                <i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+            <button type="reset" class="btn" form="form"><i class="icon-ban-circle"></i> Отменить</button>
+            {% block bonus-button %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}

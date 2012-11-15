@@ -7,7 +7,7 @@
 {% endblock %}
 {% block container %}
     <div class="container">
-            <form method="POST" action="" class='form-horizontal'>
+            <form method="POST" action="" class='form-horizontal' id="form">
                 {% csrf_token %}
             <div class="row">
                 <div class='span6'>
@@ -21,22 +21,23 @@
                 {% block right %}
                 {% endblock %}
             </div>
-                <div class="row">
-                    <div class="span12">
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> Сохранить
-                                изменения
-                            </button>
-                            <button type="reset" class="btn"><i class="icon-ban-circle"></i> Отменить</button>
-                            {% block bonus-button %}
-                                {% if object.pk %}
-                                    <a href="{% url object.get_url.0 pk=object.pk|add:1 %}" class="btn"><i
-                                            class="icon-chevron-right"></i>
-                                        Следующий {{ object|model_verbose_name }}</a>
-                                {% endif %}
-                            {% endblock %}
-                        </div>
-                    </div>
-                </div>
             </form>
+    </div>
+    <div class="form-actions">
+    <div class="container">
+        <button type="submit" class="btn btn-primary" form="form">
+            <i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
+        <button type="reset" class="btn" form="form">
+            <i class="icon-ban-circle"></i> Отменить
+        </button>
+        {% block bonus-button %}
+            {% if object.pk %}
+                <a href="{% url object.get_url.0 pk=object.pk|add:1 %}" class="btn"><i
+                        class="icon-chevron-right"></i>
+                    Следующий {{ object|model_verbose_name }}</a>
+            {% endif %}
+        {% endblock %}
+    </div>
+    </div>
 {% endblock %}

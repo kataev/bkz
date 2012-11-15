@@ -9,14 +9,14 @@ $('.collapse').collapse()
 $('#navbar').scrollspy()
 
 $(function () {
-
     $('select[name*="defect"]').change(function(e){
         var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
         if ($(this).val() == 'gost')$cause.hide();
          else $cause.show();
     })
 
-    $('.form-add').click(function () {
+    $('.form-add').click(function (e) {
+        e.preventDefault()
         var prefix = $(this).data('prefix')
         var append_to = $(this).data('append')
         var place_to = $(this).data('place') || $(this).parents('ul')
@@ -53,11 +53,6 @@ $(function () {
         $(this).toggleClass('btn-warning').toggleClass('btn-danger')
         $(this).find('i').toggleClass('icon-remove').toggleClass('icon-trash')
     })
-
-//    $('nav.nav-list.form-nav').on('click.tab.data-api','[data-toggle="tab"',function(e){
-//        e.preventDefault()
-//        $(this).tab('show')
-//    })
 })
 
 $(function () {

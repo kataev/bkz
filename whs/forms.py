@@ -269,11 +269,7 @@ class SortedForm(SortingForm):
             'info': forms.Textarea(attrs={'rows': 1}),
             }
 
-SortedFactory = inlineformset_factory(Sorting, Sorting, form=SortedForm, extra=0)
-
-class SortedFactory(SortedFactory):
-    select_related = tuple()
-    form = SortedForm
+#SortedFactory = inlineformset_factory(Sorting, Sorting, form=SortedForm, extra=0)
 
 class Write_offForm(forms.ModelForm):
     class Meta:
