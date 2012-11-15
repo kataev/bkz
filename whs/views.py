@@ -17,7 +17,7 @@ from django.views.generic import UpdateView, CreateView, ListView
 from bkz.whs.forms import BillFilter, YearMonthFilter
 
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
-from whs.forms import SoldFactory, PalletFactory, SortedFactory
+from whs.forms import SoldFactory, PalletFactory
 from whs.models import *
 
 from whs.utils import operations, calc
@@ -79,8 +79,7 @@ class BillUpdateView(UpdateView):
         context['opers']={}
         for factory in self.opers:
             prefix = factory.get_default_prefix()
-            print factory
-            context['opers'][prefix] = factory(self.request.POST or None, instance=Bill.objects.get(pk=3))
+            context['opers'][prefix] = factory(self.request.POST or None, instance=self.object)
         return context
 
 class SortingCreateView(CreateView):
@@ -95,8 +94,8 @@ class SortingCreateView(CreateView):
         return initial
 
 
-class SortingUpdateView(BillUpdateView):
-    opers = [SortedFactory]
+#class SortingUpdateView(BillUpdateView):
+#    opers = [SortedFactory]
 
 
 class BillCreateView(CreateView):

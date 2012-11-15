@@ -26,7 +26,7 @@
                 {% endblock %}
                 <ul class="nav pull-right">
                 {% if messages %}
-                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-original-title="<i class='icon-info-sign'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
+                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-html='true' data-original-title="<i class='icon-info-sign'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
                 {% endif %}
 
                     {% include 'core/auth.html' %}
