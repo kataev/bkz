@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.constants import get_name, get_full_name ,defect_c, color_c, mark_c, css_dict,cavitation_c
+from bkz.whs.constants import get_name, get_full_name ,defect_c, color_c, view_c, ctype_c, mark_c, css_dict,cavitation_c
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto
 
@@ -198,12 +198,21 @@ class Efflorescence(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Высолы"
 
+frostresistance_c = (
+    (25,u'F25'),
+    (35,u'F35'),
+    (50,u'F50'),
+    (75,u'F75'),
+    (100,u'F100'),    
+    )
+
+
 class FrostResistance(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
-    value = models.FloatField(u'Значение')
+    value = models.IntegerField(u'Значение',choices=frostresistance_c)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -267,9 +276,11 @@ class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
-    cavitation = models.PositiveIntegerField(u"Кирпич", choices=cavitation_c, default=cavitation_c[0][0])
-    width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
+    cavitation = models.PositiveIntegerField(u"Пустотность", choices=cavitation_c, default=cavitation_c[0][0])
+    view = models.CharField(u"Вид кирпича", max_length=60, choices=view_c, default=view_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
+    ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
+    width = models.FloatField(u'Толщина',max_length=30,choices=width_c,default=width_c[0][0])
 
     heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность', null=True, blank=True)
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
@@ -302,10 +313,6 @@ class Batch(UrlMixin,models.Model):
     def css(self):
         return css_dict['color'].get(self.color,'None')
 
-    @property
-    def view(self):
-        return u'Р'
-
     get_name = property(get_name)
     get_full_name = property(get_full_name)
 
@@ -319,12 +326,16 @@ class Batch(UrlMixin,models.Model):
         ordering = ('-date','-number',)
 
     def get_density_display(self):
-        if self.density > 1.4:
+        if self.density == 0.8:
+            return u'высоко-эффективный'
+        elif self.density == 1.0:
+            return u'повышенной эффективности'
+        elif self.density == 1.4:
             return u'условно-эффективный'
-        else:
-            return u'эффективный'
+        elif self.density == 2.0:
+            return u'малоэффективный (обыкновенный)'
 
-defect_c += ((u'no_cont',u'Некондиция'),)
+
 
 class Cause(models.Model):
     name = models.CharField(u'Имя',max_length=30)
@@ -335,7 +346,7 @@ class Cause(models.Model):
     class Meta:
         ordering = ('type',)
 
-
+defect_c += ((u'no_cont',u'Некондиция'),)
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия')
     defect = models.CharField(u"Тип", max_length=60, choices=defect_c, blank=False)
@@ -356,11 +367,24 @@ class Part(models.Model):
 
     @property
     def amount(self):
+        return sum([r.amount for r in self.rows.all()])
+
+    @property
+    def out(self):
         return sum([r.out for r in self.rows.all()])
 
     @property
     def tto(self):
-        return ','.join([r.tto for r in self.rows.all()])
+        s = ''
+        if self.defect == u'gost':
+            s = ', '
+        elif self.defect == u'<20':
+            s = '<, '
+        elif self.defect == u'>20':
+            s = '>, '
+        elif self.defect == u'no_cont':
+            s = '*, '
+        return s.join([r.tto for r in self.rows.all()]) + s
 
     @property
     def get_limestone_tto(self):
