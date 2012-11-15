@@ -168,4 +168,3 @@ class Fieldset(object):
     def as_html(self, form):
         legend_html = self.legend and (u'<legend>%s</legend>' % self.legend) or ''
         return u'<fieldset class="%s">%s%s</fieldset>' % (self.css_class, legend_html, form.render_fields(self.fields))
-

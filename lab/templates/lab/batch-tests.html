@@ -82,7 +82,20 @@
                         </table>
                     </fieldset>
                 {% endfor %}
-                {{ form.as_div }}
+            <fieldset class="span6">
+                <legend>Характеристики</legend>
+                <table class='table'>
+                    <thead>
+                    <tr>
+                        <th style='width:60%'>Название</th>
+                        <th>Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {{ form.as_table }}
+                    </tbody>
+                </table>
+            </fieldset>
             </div>
 
         </form>

@@ -73,11 +73,8 @@ $(function () {
             $bricks.find('tbody tr').hide().filter(filter).show()
         })
 
-
     $bricks.find('tbody tr').map(function (e, tr) {
-        var td = $('td', tr).slice(1).map(function (id, td) {
-            return parseInt(td.innerHTML)
-        })
+        var td = $('td', tr).slice(1).map(function (id, td) { return parseInt(td.innerHTML)})
         return {'css':$(tr).attr('class'), 'node':tr, 'td':td}
     })
 
@@ -96,9 +93,7 @@ $(function () {
         for (var d in dict){
             $rows = $rows.filter(function(i,row){
                 var a
-                for (var i in dict[d]){
-                    a = a || $(row).hasClass(dict[d][i])
-                }
+                for (var i in dict[d]){ a = a || $(row).hasClass(dict[d][i]) }
                 return a
             })
         }

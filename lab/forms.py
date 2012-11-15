@@ -57,6 +57,11 @@ class DensityForm(forms.ModelForm):
 class DateHTML5Input(forms.DateInput):
     input_type = 'date'
 
+class FloatInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(NumberInput, self).__init__(attrs=attrs)
+        self.attrs['autocomplete'] = 'off'
+        self.attrs['step'] = 0.01
 
 class BrickChechboxInput(forms.CheckboxInput):
     pass
@@ -68,29 +73,17 @@ class BrickInput(forms.Select):
 class BatchDateInput(DateInput):
     pass
 
-class WeightInput(NumberInput):
-    def __init__(self, attrs=None):
-        super(WeightInput, self).__init__(attrs=attrs)
-        self.attrs['step'] = 0.01
-        self.attrs['min'] = 0
-        self.attrs['autocomplete'] = 'off'
+class WeightInput(FloatInput):
+    pass
 
-class DensityInput(NumberInput):
-    def __init__(self, attrs=None):
-        super(DensityInput, self).__init__(attrs=attrs)
-        self.attrs['step'] = 0.1
-        self.attrs['min'] = 1
-        self.attrs['autocomplete'] = 'off'
+class DensityInput(FloatInput):
+    pass
 
-class FlexionInput(forms.TextInput):
-    def __init__(self, attrs=None):
-        super(FlexionInput, self).__init__(attrs=attrs)
-        self.attrs['autocomplete'] = 'off'
+class FlexionInput(FloatInput):
+    pass
 
-class PressureInput(forms.TextInput):
-    def __init__(self, attrs=None):
-        super(PressureInput, self).__init__(attrs=attrs)
-        self.attrs['autocomplete'] = 'off'
+class PressureInput(FloatInput):
+    pass
 
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
@@ -98,17 +91,17 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
-            'cavitation':BrickChechboxInput(attrs={'title':'Пустотелый?'}),
-            'width':BrickInput(),
-            'color':BrickInput(),
+            #'cavitation':BrickChechboxInput(attrs={'title':'Пустотелый?'}),
+            #'width':BrickInput(),
+            #'color':BrickInput(),
             'weight':WeightInput(),
             'density':DensityInput(),
             'flexion':FlexionInput(),
             'pressure':PressureInput(),
-
+            'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','color','flexion','pressure','mark','weight','density',css_class='less span5'),
+            Fieldset(u'Партия','number','date','cavitation','width','view','color','ctype','flexion','pressure','mark','weight','density', 'info',css_class='less span5'),
 #            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span7'),
         )
 
@@ -121,7 +114,9 @@ class PartForm(BootstrapMixin, forms.ModelForm):
         exclude = ('amount','tto','brick')
         widgets = {
             'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
-            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО','autocomplete':'off'}),
+            'half':FloatInput,
+            'dnumber':FloatInput,
+            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с извесняком','autocomplete':'off'}),
         }
 
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
@@ -131,6 +126,9 @@ class RowForm(forms.ModelForm):
         model = RowPart
         widgets = {
             'tto':forms.TextInput(attrs={'placeholder':'Номера тто','autocomplete':'off'}),
+            'amount':NumberInput,
+            'brocken':NumberInput,
+            'test':NumberInput,
             'dnumber':forms.TextInput(attrs={'title':'Браковочное число','placeholder':'Брак.число'}),
             }
 
@@ -209,10 +207,12 @@ def get_flexion_value(self):
 FlexionFactory.get_value = property(get_flexion_value)
 
 
-class BatchTestsForm(BootstrapMixin,forms.ModelForm):
+class BatchTestsForm(forms.ModelForm):
     class Meta:
         model = Batch
-        layout = (
-            Fieldset(u'Прочее','pf','pct','chamfer',css_class='span6 form-horizontal'),
-            Fieldset(u'Характеристики','heatconduction','seonr','frost_resistance','water_absorption',css_class='span6 form-horizontal'),
-        )
+        fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer','pressure','flexion')
+        widgets = {
+            'flexion':forms.HiddenInput,
+            'pressure':forms.HiddenInput,
+            }
+        
