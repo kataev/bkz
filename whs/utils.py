@@ -19,7 +19,7 @@ def operations(filter):
         sold=dict(sold.values_list('brick__id').annotate(Sum('amount')).order_by()),
         t_from=dict(t_from.values_list('brick_from__id').annotate(Sum('amount')).order_by()),
         t_to=dict(t_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
-        m_from=dict(m_from.values_list('brick__id').annotate(Sum('part__rows__amount')).order_by()),
+        m_from=dict(m_from.values_list('brick__id').annotate(Sum('amount')).order_by()),
         m_to=dict(m_to.values_list('brick__id').annotate(Sum('amount')).order_by()),
         m_rmv=dict(m_rmv.values_list('source__brick__id').annotate(Sum('amount')).order_by()),
         inv=dict(inv.values_list('brick__id').annotate(Sum('amount')).order_by()))

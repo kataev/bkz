@@ -98,7 +98,9 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),
         }
         layout = (
-            Fieldset(u'Партия','number','date','cavitation','width','view','color','ctype','flexion','pressure','mark','weight','density', 'info',css_class='less span5'),
+            Fieldset(u'Партия', 'number', 'date', 'cavitation', 'width', 'view',
+                'color', 'ctype', 'flexion', 'pressure', 'mark', 'weight', 'density', 'cad', 'info',
+                css_class='less span5'),
         )
 
 info_list = ['5.3.2 Известняковые включения < 1см','5.3.4 Размеры, дефекты','5.3.3 Высолы','5.2.6 Половняк более 5%','5.2.5 Черная сердцевина, пятна']
@@ -111,16 +113,17 @@ class PartForm(BootstrapMixin, forms.ModelForm):
             'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
             'half':FloatInput,
             'dnumber':FloatInput,
-            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с извесняком','autocomplete':'off'}),
+            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с извесняком',
+                'title':u'Можно узкаывать через запятую или тире','autocomplete':'off'}),
         }
-
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
 
 class RowForm(forms.ModelForm):
     class Meta:
         model = RowPart
         widgets = {
-            'tto':forms.TextInput(attrs={'placeholder':'Номера тто','autocomplete':'off'}),
+            'tto':forms.TextInput(attrs={'placeholder':'Номера ТТО',
+                'title':u'Можно узкаывать через запятую или тире','autocomplete':'off'}),
             'amount':NumberInput,
             'brocken':NumberInput,
             'test':NumberInput,
@@ -196,8 +199,9 @@ class BatchTestsForm(forms.ModelForm):
     class Meta:
         model = Batch
         fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer',
-            'pressure','flexion','weight','density',)
-        widgets = {
+            'pressure','flexion','weight','density','cad')
+        widgets = { 
             'flexion':forms.HiddenInput,
             'pressure':forms.HiddenInput,
+            'chamfer':NumberInput,
             }

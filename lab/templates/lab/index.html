@@ -12,9 +12,9 @@
         <table class="table table-bordered" id='batch-list'>
             <thead>
             <tr>
-                <th>№</th>
-                <th>Дата</th>
-                <th>Кирпич</th>
+                <th style='width:100px'>Дата</th>
+                <th>Партия</th>
+                {# <th>Кирпич</th> #}
                 <th><abbr title="Установленная марка">М</abbr></th>
                 <th>Кол-во</th>
             </tr>
@@ -22,12 +22,17 @@
             <tbody>
             {% for b in batch_list %}
                 <tr title="{{ b.title }}" class='{{ b.css }}'>
-                    <td><a href="{{ b.get_absolute_url }}">{{ b }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
                     <td>{{ b.date }}</td>
-                    <td>{{ b.get_width_display }}</td>
+                    <td><a href="{{ b.get_absolute_url }}">{{ b }} , {{ b.get_full_name }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
+                    
+                    
                     <td>{{ b.get_mark_display }}</td>
-                    <td>{{ b.amount }} 
-                        <span class='badge' title='{{ b.get_tto }}'>{{ b.get_tto|length }}</span>
+                    
+                    <td><ol style='margin: 0 0 0 25px'>
+                        {% for p in b.parts.all %}
+                        <li title='{{ p.get_cause_display }}'>{{ p }}</li>
+                        {% endfor %}
+                    </ol>
                     </td>
                 </tr>
             {% endfor %}

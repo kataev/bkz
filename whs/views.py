@@ -222,7 +222,6 @@ def bill_print(request, pk):
     doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
     return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)
 
-
 def brick_main(request):
     """ Главная страница """
     Bricks = Brick.objects.all()

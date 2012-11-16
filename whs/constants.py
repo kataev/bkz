@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 poddon_c = ((288, u'Маленький поддон'), (352, u'Обычный поддон'))
 
-BrickOrder = ('-width', 'color', '-view', 'ctype', '-defect', '-features__name', 'mark', 'refuse', 'id')
+BrickOrder = ('width', 'color', '-view', 'ctype', '-defect', '-features__name', 'mark', 'refuse', 'id')
 
 view_c = ((u'Л', u'Лицевой'), (u'Р', u'Рядовой'))
 
@@ -42,7 +42,23 @@ mark_c = ((100, u'100'),
           (300, u'300'),
           (9000, u'брак'))
 
-ctype_c = (('', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
+cad_c = (
+    (0.8,u'0.8 - Высокой эффективности'),
+    (1.0,u'1.0 - Повышенной эффективности'),
+    (1.2,u'1.2 - Эффективный'),
+    (1.4,u'1.4 - Условно-эффективный'),
+    (2.0,u'2.0 - Малоэффективные')
+    )
+
+frostresistance_c = (
+    (25,u'F25'),
+    (35,u'F35'),
+    (50,u'F50'),
+    (75,u'F75'),
+    (100,u'F100'),    
+    )
+
+ctype_c = (('0', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
 defect_c = ((u'gost', u'Гост'), (u'<20', u'До 20%'), (u'>20', u'Более 20%'))
 refuse_c = (
     (u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
@@ -55,7 +71,7 @@ css_dict['view'] = {u'Л': u'v-facial', u'Р': u'v-common'}
 css_dict['mark'] = {100: 'mark-100', 125: 'mark-125', 150: 'mark-150', 175: 'mark-175',
                     200: 'mark-200', 250: 'mark-250' , 300: 'mark-300', 9000: 'mark-9000'}
 css_dict['defect'] = {u'gost': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'}
-css_dict['ctype'] = {'': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'}
+css_dict['ctype'] = {'0': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'}
 css_dict['features'] = {}
 
 
@@ -75,24 +91,21 @@ def get_menu(css_dict=css_dict):
         result.append(o)
     return result
 
-def get_name(brick):
-    if brick.width == 0.8:
-        if brick.view == u'Л':
-            return u'КЕ УЛ'
-        if brick.view == u'Р':
-            return u'КЕ'
-    elif brick.width == 0:
-        return u'КР'
-    else:
-        if brick.cavitation:
-            c = u'о'
-        else:
-            c = u'у'
-        return u'К%s%sП%s' % (brick.get_width_display()[0], brick.view, c)
+def get_name(self):
+    name = self.width.label + self.view + u'П' + (self.get_cavitation_display()[1:2]).lower()
+    return name
 
-def get_full_name(brick):
-    name = get_name(brick)
-    return name + u' НФ/%d/1.4/%d ГОСТ 530-2007' % (brick.mark,brick.frost_resistance)
+def get_full_name(self):
+    name = u'%s ' % get_name(self) 
+    if not self.mark == 9000:
+        name += '/'.join((self.width.value,self.get_mark_display() or '?',unicode(self.cad) or u'?'))
+    if self.frost_resistance: name += u'/%s ' % self.frost_resistance.value
+    else: name += '/? '
+    if hasattr(self,'defect') and self.defect == u'gost':
+        name += u' ГОСТ 530-2007 '
+    if self.color:
+        name += self.get_color_display()
+    return name
 
 
 def make_label(brick): # Функция для вывода имени
