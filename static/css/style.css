@@ -49,7 +49,7 @@ td.cause ul { list-style: none;}
 }
 #batch-list th {text-align: center;}
 fieldset table th label {margin: 0;}
-fieldset.Part div.row {margin-bottom:10px;border-radius: 5px;padding-bottom: 2px;}
+fieldset.Part div.row {margin-bottom:10px;padding-bottom: 2px;border:#2F96B4 solid 2px;}
 fieldset.Part div.span3 {margin-left:10px}
 fieldset.Part div.success { background-color: #dff0d8; }
 fieldset.Part div.error { background-color: #fcf8e3; }
@@ -74,16 +74,22 @@ fieldset table select
 fieldset table input[name*='test']{width: 52px;}
 fieldset table input[name*='brocken']{width: 60px;}
 fieldset table input[name*='amount']{width: 70px;}
-fieldset table select[name*='defect']{width: 120px;}
-fieldset table input[name*='half']{width: 34px;}
-fieldset table input[name*='dnumber']{width: 34px;}
+fieldset table td.input-box {width:34px;}
 fieldset table input[name*='flexion']{width: 100%;}
 fieldset table input[name*='pressure']{width: 100%;}
 fieldset table input[name*='limestone']{width: 117px;}
+[data-title='Ошибка']{border:red 1px dashed;}
 
-fieldset table input::-webkit-outer-spin-button,
-fieldset table input::-webkit-inner-spin-button { -webkit-appearance:none; margin: 0; }
+fieldset.pressure table input::-webkit-outer-spin-button,
+fieldset.pressure table input::-webkit-inner-spin-button,
+fieldset.flexion table input::-webkit-outer-spin-button,
+fieldset.flexion table input::-webkit-inner-spin-button,
+fieldset.Part table input::-webkit-outer-spin-button,
+fieldset.Part table input::-webkit-inner-spin-button 
+    { -webkit-appearance:none; margin: 0; }
 
+
+.tests .pressure table, .tests .flexion table {margin-right: auto;margin-left: auto;}
 .tests .pressure input[name*='tto']{width: 52px;text-align: center;}
 .tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
 .tests input[name*='row']{width: 32px;text-align: center;}

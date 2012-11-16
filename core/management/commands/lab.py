@@ -19,8 +19,8 @@ class Command(BaseCommand):
             p.tto = ','.join([r.tto for r in p.rows.all()])
             p.save()
         for b in Batch.objects.select_related('parts'):
-            b.amount = sum([p.amount for p in b.part_set.all()])
-            b.tto = ','.join([p.tto for p in b.part_set.all()])
+            b.amount = sum([p.amount for p in b.parts.all()])
+            b.tto = ','.join([p.tto for p in b.parts.all()])
             b.save()
         print 'ok'
 

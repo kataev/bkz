@@ -36,8 +36,10 @@ class BatchUpdateView(UpdateView):
                 part.save()
             if part.rows.is_valid() and part.instance.pk:
                 part.rows.save()
+        if self.parts.is_valid():
+            self.parts.save()
         self.object.amount = sum([r.instance.out or 0 for r in self.parts])
-        self.object.tto = ','.join([r.instance.tto for r in self.parts])
+        self.object.tto = ','.join([r.instance.tto or '' for r in self.parts])
         self.object.save()
         if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
             messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
@@ -53,7 +55,7 @@ class BatchUpdateView(UpdateView):
         return context
 
 def index(request):
-    batch_list = Batch.objects.all()
+    batch_list = Batch.objects.all().select_related().prefetch_related('parts','parts__rows','parts__cause')
     raw_list = Raw.objects.all()
     return render(request,'lab/index.html',dict(batch_list=batch_list,raw_list=raw_list))
 
@@ -72,13 +74,11 @@ def batch_print_doc(request, pk):
 
 def batch_tests(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
-    initial = [{'row':2},{'row':2},{'row':8},{'row':8},{'row':16},{'row':16}]
-    def preparation(a,w):
-        for d in a: d['type']=w
-        return a
-    flexion = FlexionFactory(request.POST or None, instance=batch,initial=preparation(initial,'flexion'),
+    def preparation(w):
+        return [{'type':w,'row':x} for x in sum(map(lambda x: [pow(2,x)]*2,[x for x in xrange(1,5) if x!=2]),[])]
+    flexion = FlexionFactory(request.POST or None, instance=batch,initial=preparation('flexion'),
                             queryset=batch.tests.filter(type='flexion'),prefix='flexion')
-    pressure = PressureFactory(request.POST or None, instance=batch,initial=preparation(initial,'pressure'),
+    pressure = PressureFactory(request.POST or None, instance=batch,initial=preparation('pressure'),
                             queryset=batch.tests.filter(type='pressure'),prefix='pressure')
     form = BatchTestsForm(request.POST or None,instance=batch)
     if request.method == 'POST':
@@ -88,11 +88,11 @@ def batch_tests(request,pk):
         if flexion.is_valid():
             flexion.save()
             fle = flexion.get_value
-            messages.add_message(request, messages.SUCCESS, u'Исптания на изгиб сохранены!')
+            messages.add_message(request, messages.SUCCESS, u'Испытания на изгиб сохранены!')
         if pressure.is_valid():
             pressure.save()
             pre = pressure.get_value
-            messages.add_message(request, messages.SUCCESS, u'Исптания на сжатие сохранены!')
+            messages.add_message(request, messages.SUCCESS, u'Испытания на сжатие сохранены!')
         if pressure.is_valid() and flexion.is_valid():
             volume = request.POST.get('volume','')
             if volume:
@@ -109,5 +109,4 @@ def batch_tests(request,pk):
                 return redirect(batch.get_tests_url())
             else:
                 messages.add_message(request, messages.WARNING, u'Не хватает данных для определения марки!')
-    tests = [pressure,flexion]
-    return render(request,'lab/batch-tests.html',{'tests':tests,'batch':batch,'form':form})
+    return render(request,'lab/batch-tests.html',{'tests':[pressure,flexion],'batch':batch,'form':form})

@@ -6,9 +6,10 @@ from django.core.validators import RegexValidator
 from django.utils import datetime_safe as datetime
 from django.db import models
 
-from bkz.whs.constants import get_name, get_full_name ,defect_c, color_c, view_c, ctype_c, mark_c, css_dict,cavitation_c
+from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto
+
 
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
@@ -198,14 +199,6 @@ class Efflorescence(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Высолы"
 
-frostresistance_c = (
-    (25,u'F25'),
-    (35,u'F35'),
-    (50,u'F50'),
-    (75,u'F75'),
-    (100,u'F100'),    
-    )
-
 
 class FrostResistance(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
@@ -217,7 +210,7 @@ class FrostResistance(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u'%.0f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
+            return u'%d от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
         else:
             return u'Новое значение морозостойкости'
 
@@ -266,11 +259,17 @@ class HeatConduction(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Теплопроводность"
 
-cavitation = (
-    (True,u'Пустотелый'),
-    (False,u'Полнотелый')
-)
-
+    def get_value_display(self):
+        if self.value < 0.20:
+            return u'Высокой эффективности'
+        elif 0.20 < self.value < 0.24:
+            return u'Повышенной эффективности'
+        elif 0.24 < self.value < 0.36:
+            return u'Эффективный'
+        elif 0.36 < self.value < 0.46:
+            return u'Условно-эффективные'
+        elif 0.46 < self.value:
+            return u'Малоэффективные'
 
 class Batch(UrlMixin,models.Model):
     date = models.DateField(u'Дата', default=datetime.date.today())
@@ -279,16 +278,17 @@ class Batch(UrlMixin,models.Model):
     cavitation = models.PositiveIntegerField(u"Пустотность", choices=cavitation_c, default=cavitation_c[0][0])
     view = models.CharField(u"Вид кирпича", max_length=60, choices=view_c, default=view_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
-    ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
-    width = models.FloatField(u'Толщина',max_length=30,choices=width_c,default=width_c[0][0])
+    ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default='0')
+    width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
     heatconduction = models.ForeignKey(HeatConduction,verbose_name=u'Теплопроводность', null=True, blank=True)
     seonr = models.ForeignKey(SEONR,verbose_name=u'Уд.эф.акт.ест.рад.', null=True, blank=True)
     frost_resistance = models.ForeignKey(FrostResistance, verbose_name=u'Морозостойкость', null=True, blank=True)
     water_absorption = models.ForeignKey(WaterAbsorption, verbose_name=u'Водопоглощение', null=True, blank=True)
 
-    volume = models.ForeignKey(u'lab.Test',null=True,blank=True,related_name='volume')
-    density = models.FloatField(u'Класс средней плотности',null=True,blank=True)
+    volume = models.ForeignKey(u'lab.Test',null=True,blank=True,related_name='volume_test')
+    cad = models.FloatField(u'Класс средней плотности',null=True,blank=True,choices=cad_c)
+    density = models.FloatField(u'Плотность',null=True,blank=True)
     weight = models.FloatField(u'Масса',null=True,blank=True)
 
     tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
@@ -298,8 +298,8 @@ class Batch(UrlMixin,models.Model):
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],null=True,blank=True)
     chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
 
-    pf = models.FloatField(u'Пуст. факт.',null=True,blank=True)
-    pct = models.FloatField(u'Пуст. прив. к факт.',null=True,blank=True)
+    pf = models.FloatField(u'Пустотность фактическая',null=True,blank=True)
+    pct = models.FloatField(u'Пустотность приведенная к фактической',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
@@ -326,14 +326,14 @@ class Batch(UrlMixin,models.Model):
         verbose_name_plural = u"Готовая продукция"
         ordering = ('-date','-number',)
 
-    def get_density_display(self):
-        if self.density == 0.8:
+    def get_cad_display(self):
+        if self.cad == 0.8:
             return u'высоко-эффективный'
-        elif self.density == 1.0:
+        elif self.cad == 1.0:
             return u'повышенной эффективности'
-        elif self.density == 1.4:
+        elif self.cad == 1.4:
             return u'условно-эффективный'
-        elif self.density == 2.0:
+        elif self.cad == 2.0:
             return u'малоэффективный (обыкновенный)'
 
 
@@ -349,17 +349,22 @@ class Cause(models.Model):
 
 defect_c += ((u'no_cont',u'Некондиция'),)
 class Part(models.Model):
-    batch = models.ForeignKey(Batch,verbose_name=u'Партия')
-    defect = models.CharField(u"Тип", max_length=60, choices=defect_c, blank=False)
+    batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name='parts')
+    defect = models.CharField(u"Качество", max_length=60, choices=defect_c, blank=False)
     dnumber = models.FloatField(u'Брак.число',default=0)
     half = models.FloatField(u'Половняк',default=3.0)
     cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True)
-    limestone = RangeField(u'№ телег c изв.вкл меньше 1см',max_length=30,null=True,blank=True)
+    limestone = RangeField(u'№ телег c изв.вкл меньше 1см²',max_length=30,null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
     brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'%s, %s - %d' % (self.get_defect_display(),self.tto,self.amount)
+        if self.pk: 
+            s = u'%s - %d шт, %d' % (self.get_defect_display(),self.amount or 0,len(self.get_tto))
+            if self.limestone:
+                s+= u'(%d)' % (len(self.get_limestone_tto))
+            s+= u' ТТО'
+            return s
         else: return u'Новый выход с производства'
 
     @property
@@ -376,20 +381,24 @@ class Part(models.Model):
 
     @property
     def tto(self):
-        s = ''
         if self.defect == u'gost':
-            s = ', '
+            s = '%s'
         elif self.defect == u'<20':
-            s = '<, '
+            s = '(%s)'
         elif self.defect == u'>20':
-            s = '>, '
-        elif self.defect == u'no_cont':
-            s = '*, '
-        return s.join([r.tto for r in self.rows.all()]) + s
+            s = '[%s]'
+        else:
+            s = '{%s}'
+        return s % ','.join([r.tto or '' for r in self.rows.all()])
 
     @property
     def get_limestone_tto(self):
-        return convert_tto(self.limestone)
+        if self.limestone: return convert_tto(self.limestone)
+        else: return []
+
+    @property
+    def get_cause_display(self):
+        return ', '.join([p.name for p in self.cause.all()])
 
     @property
     def get_css_class(self):
@@ -401,13 +410,6 @@ class Part(models.Model):
             return 'info'
         else:
             return 'error'
-
-    @property
-    def get_name(self):
-        if not self.batch.color:
-            return self.batch.get_width_display()
-        else:
-            return u'%s %s' % (self.batch.get_width_display(),self.batch.get_color_display())
 
     class Meta():
         verbose_name = u"Часть партии"
@@ -441,3 +443,8 @@ class Test(models.Model):
 
     def __unicode__(self):
         return u'Испытания'
+    @property
+    def volume(self):
+        if self.size:
+            size = map(float,self.size.split('x'))
+            return (size[0] * size[1] * size[2]) / pow(100*10,3)

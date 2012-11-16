@@ -7,6 +7,16 @@ from constants import *
 from bkz.utils import UrlMixin,ru_date
 from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
+class Width(models.Model):
+    name = models.CharField(u'Вид изделия',max_length=30)
+    label = models.CharField(u'Обозначение вида',max_length=6)
+    size = models.CharField(u'Номинальные размеры',max_length=20)
+    value = models.CharField(u'Обозначение размера',max_length=10)
+    type = models.BooleanField(u'Тип',choices=((False,u'Кирпич'),(True,u'Камень')),)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.name,self.value)
+
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)
     type = models.CharField(u'Сокрашение',max_length=30)
@@ -22,14 +32,16 @@ class Brick(models.Model,UrlMixin):
     cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
-    width = models.FloatField(u"Ширина", choices=width_c, default=width_c[0][0])
+    width = models.ForeignKey('whs.Width',verbose_name=u'Размер')
+    ww = models.FloatField(u"Размер", choices=width_c, default=width_c[0][0])
     view = models.CharField(u"Вид", max_length=60, choices=view_c, default=view_c[0][0])
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
     refuse = models.CharField(u"Особенности", max_length=10, choices=refuse_c, default=refuse_c[0][0],blank=True)
-    frost_resistance = models.PositiveIntegerField(u"Морозостойкость",default=50)
+    frost_resistance = models.PositiveIntegerField(u"Морозостойкость",default=50,choices=frostresistance_c)
+    cad = models.FloatField(u'Класс средней плотности',choices=cad_c)
     features = models.ManyToManyField(Features,verbose_name=u'Редкие особенности',null=True,blank=True)
-    name = models.CharField(u"Имя", max_length=160, default='', help_text=u'Полное название продукции')
+    name = models.CharField(u"Наименование", max_length=160, default='', help_text=u'Введите полное название продукции, для проверки')
 
     css = models.CharField(u"Css", max_length=360, default=u'')
     label = models.CharField(u"Ярлык", max_length=660, default='')
@@ -208,25 +220,26 @@ class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
 class Sorting(models.Model,UrlMixin):
-    """ Класс документа для учета сортировки кипича из одного товара в другой """
-    source = models.ForeignKey('self',null=True,blank=True,related_name='sorted')
-    part = models.ForeignKey('lab.Part',related_name='sorting', verbose_name=u'Партия',null=True,blank=True)
+    """ Класс документа для учета сортировки кипича из одного товара в другой
+        В цех - кирпич, кол-во, дата, номер и год партии. (ajax проверка)
+        Из цеха - кирпич, кол-во, дата, источники ( сортировки в цех ), нормер и год партии ( ajax проверка и кнопка для создания)
+        Списание - кол-во, дата, источник ( сортировки в цех ), номер акта о списании?
+    """
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
+
+    batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
+    batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
+
+    source = models.ManyToManyField('self',null=True,blank=True,related_name='sorted')
 
     class Meta():
         verbose_name = u"Сортировка"
 
     def __unicode__(self):
         if self.pk:
-            if not self.source_id:
-                return u'В сортировку %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
-            else:
-                if not self.brock:
-                    return u'Отсортированно %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
-                else:
-                    return u'Бой %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
+            return u'В сортировку %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
         else:
             return u'Новая сортировка'
 

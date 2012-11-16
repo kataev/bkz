@@ -65,9 +65,9 @@
             </thead>
             <tbody>
             <tr>
-                <td> {{ form.defect }} </td>
-                <td> {{ form.half }} </td>
-                <td> {{ form.dnumber }} </td>
+                <td {% include 'bootstrap/errors.html' with errors=form.defect.errors %}> {{ form.defect }} </td>
+                <td class='input-box'> {{ form.half }} </td>
+                <td class='input-box'> {{ form.dnumber }} </td>
             </tr>
             <tr>
                 <td colspan='3'>
@@ -75,11 +75,15 @@
                         брака
                         {{ form.cause }}
                     </label>
-                    {{ form.errors }}
                 </td>
             </tr>
             </tbody>
             </table>
+            {% if form.instance.pk %}
+            <div style='margin-top:-4px;'>
+            {{ form.DELETE }}
+            </div>
+            {% endif %}
         </div>
     {% endfor %}
     <a href="#" class="show btn btn-mini btn-info">Добавить еще акт</a>

@@ -5,7 +5,8 @@ $(function(){
         var s = val[1]*val[id.indexOf('pressure') >= 0 ? 0 : 2 ]/1000
         if (id.indexOf('pressure') >= 0) s-=0.243;
         else s*=val[2]*2
-        $('#'+id.replace('size','area')).val(s)
+        var v = val[0] * val[1] * val[2] / Math.pow(100*10,3)
+        $('#'+id.replace('size','area')).val(s).attr('title','Объем м³: '+v)
     })
     $("input[name*='readings']").change(function(e){
         var id = $(this).attr('id')
