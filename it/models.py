@@ -10,6 +10,7 @@ class Device(models.Model,UrlMixin):
     type = models.ForeignKey('self',null=True, blank=True, verbose_name=u'Тип')
     value = models.IntegerField(u'Числовая характеристика')
     info = models.CharField(u'Примечание', max_length=600, blank=True, help_text=u'Любая полезная информация')
+    allowed = models.ManyToManyField('self',verbose_name=u'Девайс',null=True,blank=True)
 
     def __unicode__(self):
         if self.pk:
@@ -41,7 +42,7 @@ class Buy(models.Model,UrlMixin):
     class Meta:
         verbose_name = u"Накладная по покупке расходников"
         verbose_name_plural = u"Накладные по покупке расходников"
-        ordering = ['-date']
+        ordering = ('-date',)
 
 class Plug(models.Model,UrlMixin):
     bill = models.ForeignKey(Buy,verbose_name=u'Расходник',related_name=u'plug')
@@ -57,30 +58,4 @@ class Plug(models.Model,UrlMixin):
     class Meta:
         verbose_name = u'Замена'
         verbose_name_plural = u'Замены'
-        ordering = ('date',)
-
-statuses = (
-    (u'info',u'Созданно'),
-    (u'warning',u'В работе'),
-    (u'success',u'Завершенно'),
-)
-
-class Work(models.Model,UrlMixin):
-    device = models.ForeignKey(Device,verbose_name=u'Устройство',null=False,blank=False)
-    name = models.CharField(u'Описание проблемы', max_length=300)
-    date = models.DateField(u'Дата', help_text=u'Дата', default=datetime.date.today())
-    people = models.ForeignKey(User,verbose_name=u'Человек', null=True, blank=True)
-    status = models.CharField(u'Статус', max_length=300, choices=statuses,default=u'info')
-    date_finished = models.DateField(u'Дата выполнения', null=True, blank=True)
-
-    def __unicode__(self):
-        if self.pk:
-            return u'%s на %s'% (self.name,self.device)
-        else:
-            return u'Новая заявка'
-
-    class Meta:
-        verbose_name = u"Заявка"
-        verbose_name_plural = u"Заявки"
-        ordering = ['-date']
-
+        ordering = ('-date',)

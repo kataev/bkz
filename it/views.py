@@ -8,7 +8,7 @@ from django.db.models import Count,Sum
 def main(request):
     """ Главная страница """
     d = Device.objects.all()
-    w = Work.objects.all().select_related()[:10]
+    
     c = Buy.objects.all().select_related()[:10]
     replaces = Plug.objects.order_by('-date').all().select_related()[:10]
 
@@ -17,7 +17,7 @@ def main(request):
 
     totals = dict([(pk,v-plug.get(pk,0)) for pk,v in buy.items()])
 
-    return render(request, 'it/it.html',dict(divices=d,works=w,cons=c,totals=totals,replaces=replaces))
+    return render(request, 'it/it.html',dict(divices=d,cons=c,totals=totals,replaces=replaces))
 
 
 class PlugCreateView(CreateView):

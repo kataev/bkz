@@ -6,30 +6,7 @@
 {% block title %}ИТ{% endblock %}
 {% block container %}
     <div class="container">
-        <div class="row">
-            <table class="span12 table table-bordered">
-                <caption><h2>Заявки</h2></caption>
-                <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Устройство</th>
-                    <th>Описание</th>
-                    <th>Статус</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for w in works %}
-                    <tr>
-                        <th title='{{ w.people|default_if_none:'' }}'>{{ w.date }}</th>
-                        <th>{{ w.device }}</th>
-                        <td><a href="{{ w.get_absolute_url }}">{{ w.name }}</a></td>
-                        <td><span class="label label-{{ w.status }}">{{ w.get_status_display }}</span></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
+        <div class='row'>
             <table class="span4 table">
                 <caption><h2>Устройства</h2></caption>
                 <thead>
@@ -77,9 +54,8 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="row">
-            <table class="span2 table">
+        </div><div class='row'>
+            <table class="span4 table">
                 <caption><h2>Картриджи</h2></caption>
                 <thead>
                 <tr>
@@ -105,7 +81,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <table class="table table-bordered span10">
+            <table class="table table-bordered span8">
                 <caption><h1>Список замен</h1></caption>
                 <thead>
                 <tr>
@@ -125,5 +101,5 @@
                 </tbody>
             </table>
         </div>
-        </div>
+    </div>  
 {% endblock %}

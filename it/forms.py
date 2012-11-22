@@ -2,19 +2,28 @@
 import datetime
 import django.forms as forms
 
-from bkz.it.models import Device, Buy, Work, Plug
+from bkz.it.models import Device, Buy, Plug
 from bkz.whs.forms import DateInput
+from bkz.bootstrap.forms import BootstrapMixin,Fieldset
 
-class DeviceForm(forms.ModelForm):
+class DeviceForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeviceForm, self).__init__(*args, **kwargs)
         self.fields['type'].queryset = Device.objects.filter(type__isnull=True)
+        if self.instance.type_id == 1:
+            self.fields['allowed'].queryset = Device.objects.filter(type_id=2)
+        elif self.instance.type_id == 2:
+            self.fields['allowed'].queryset = Device.objects.filter(type_id=1)
 
     class Meta:
         name = 'Device'
         model = Device
+        ordering = ('name',)
+        widgets = {
+            'allowed':forms.SelectMultiple(attrs={'size':15})
+        }
 
-class BuyForm(forms.ModelForm):
+class BuyForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BuyForm, self).__init__(*args, **kwargs)
         self.fields['cartridge'].queryset = Device.objects.filter(type__name=u'Картриджи')
@@ -26,24 +35,8 @@ class BuyForm(forms.ModelForm):
             'date': DateInput,
         }
 
-class WorkForm(forms.ModelForm):
-    class Meta:
-        name = 'Work'
-        model = Work
-        widgets = {
-            'name': forms.Textarea(attrs={'rows': 2}),
-            'status': forms.RadioSelect(),
-            'date': DateInput,
-            'date_finished': DateInput,
-            }
 
-    def clean(self):
-        data = self.cleaned_data
-        if 'status' in self.changed_data and data['status'] == 'success':
-            data['date_finished'] = datetime.date.today()
-        return data
-
-class PlugForm(forms.ModelForm):
+class PlugForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PlugForm, self).__init__(*args, **kwargs)
         self.fields['bill'].queryset = Buy.objects.filter(cartridge__type__name=u'Картриджи')
