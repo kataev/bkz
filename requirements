@@ -1,0 +1,9 @@
+django_extensions
+django_debug_toolbar
+pytils
+django-devserver
+south
+gunicorn
+django-webodt
+linaro_django_pagination
+
