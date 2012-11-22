@@ -36,6 +36,7 @@ nav = dict(
         ),
     lab = (
         ('lab:index',' icon-fullscreen', u'Лаборатория'),
+        ('lab:journal',' icon-book', u'Журнал'),
     )
 )
 menu = dict(
@@ -45,7 +46,6 @@ menu = dict(
         ),
     it=(
         ('it:Device-add', 'icon-inbox', 'Устройство или картридж'),
-        ('it:Work-add', 'icon-headphones', 'Заявку'),
         ('it:Buy-add', 'icon-tint', 'Накладную'),
         ('it:Plug-add', 'icon-adjust', 'Замену'),
         ),
@@ -66,12 +66,11 @@ menu = dict(
         ('lab:Raw-add','',u'Сырец'),
         ('lab:Batch-add','',u'Партия'),
         ('divider',),
-        ('lab:WaterAbsorption-add','',u'Водопоглащение'),
+        ('lab:WaterAbsorption-add','',u'Водопоглощение'),
         ('lab:Efflorescence-add','',u'Высолы'),
         ('lab:FrostResistance-add','',u'Морозостойкость'),
         ('lab:SEONR-add','',u'Уд.эф.акт.ест.рад.'),
         ('lab:HeatConduction-add','',u'Теплопроводность'),
-        ('lab:Density-add','',u'Плотность'),
     ),
     cpu = (
         ('cpu:Device-add','',u'Устройство'),
