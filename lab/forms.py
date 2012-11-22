@@ -1,34 +1,144 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, modelformset_factory
 from bkz.bootstrap.forms import BootstrapMixin,Fieldset
 
 from bkz.lab.models import *
 from bkz.whs.forms import BatchInput,DateInput,NumberInput
 
+class SplitDateTimeHTML5Widget(forms.SplitDateTimeWidget):
+    def __init__(self, attrs=None, date_format=None, time_format=None):
+        widgets = (forms.DateInput(attrs=attrs, format=date_format),
+                   forms.TimeInput(attrs=attrs, format='%H:%M'))
+        widgets[0].input_type = 'date'
+        widgets[1].input_type = 'time'
+        super(forms.SplitDateTimeWidget, self).__init__(widgets, attrs)
+
+    def decompress(self,value):
+        if value:
+            return [value.date(),value.time().replace(second=0,microsecond=0)]
+        return [None, None]
+
+class DateHTML5Input(forms.DateInput):
+    input_type = 'date'
+
+class FloatInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(NumberInput, self).__init__(attrs=attrs)
+        self.attrs['autocomplete'] = 'off'
+        self.attrs['step'] = 0.01
+
+class BrickChechboxInput(forms.CheckboxInput):
+    pass
+
+class BrickInput(forms.Select):
+    pass
+
+
+class BatchDateInput(DateInput):
+    pass
+
+class FlexionInput(FloatInput):
+    pass
+
+class PressureInput(FloatInput):
+    pass
+
 class ClayForm(forms.ModelForm):
     class Meta:
         model = Clay
+        exclude = (u'info',)
+        widgets = {'datetime':SplitDateTimeHTML5Widget,
+                    'humidity':forms.TextInput(attrs={'class':"SlashSeparatedFloatField",'autocomplete':'off'}),
+                    'sand':FloatInput,
+                    'inclusion':FloatInput,
+                    'dust':FloatInput,
+        }
+
+ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=4)
+ClayFactory.caption = u'Глина из карьера'
+ClayFactory.css_class = 'span8'
+ClayFactory.label_style = {}
 
 class StoredClayForm(forms.ModelForm):
     class Meta:
+        exclude = (u'info',)
         model = StoredClay
+        widgets = {'datetime':SplitDateTimeHTML5Widget,
+                    'humidity':FloatInput(attrs={'autocomplete':'off'}),
+        }
+
+StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=5)
+StoredClayFactory.caption = u'Глина по позициям'
+StoredClayFactory.css_class = 'span4'
+StoredClayFactory.width = {}
 
 class SandForm(forms.ModelForm):
     class Meta:
+        exclude = (u'info',)
         model = Sand
+        widgets = {'datetime':SplitDateTimeHTML5Widget,
+                'humidity':FloatInput(attrs={'autocomplete':'off'}),
+                'particle_size':FloatInput(attrs={'autocomplete':'off'}),
+                'module_size':FloatInput(attrs={'autocomplete':'off'}),
+                }
+
+SandFactory = modelformset_factory(Sand,form=SandForm,extra=2)
+SandFactory.caption = u'Песок'
+SandFactory.css_class = 'span6'
+SandFactory.width = {}
 
 class BarForm(forms.ModelForm):
     class Meta:
+        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info")
         model = Bar
+        widgets = {'datetime':SplitDateTimeHTML5Widget,
+                'tts':NumberInput,
+                'weight':NumberInput,
+                'temperature':FloatInput,
+                'humidity':FloatInput,
+                'sand':FloatInput,
+                'humidity_transporter':FloatInput,
+        }
+BarFactory = modelformset_factory(Bar,form=BarForm,extra=3)
+BarFactory.caption = u'Формовка'
+BarFactory.css_class = 'span10'
+BarFactory.width = {}
+
 
 class RawForm(forms.ModelForm):
     class Meta:
+        exclude = (u'info',)
         model = Raw
+        widgets = {'datetime':SplitDateTimeHTML5Widget,
+                    'tts':NumberInput,
+                    'weight':NumberInput,
+                    'temperature':FloatInput,
+                    'humidity':FloatInput,
+        }
+
+
+RawFactory = modelformset_factory(Raw,form=RawForm,extra=1)
+RawFactory.caption = u'Сырец'
+RawFactory.css_class = 'span9'
+RawFactory.width = {}
+
 
 class HalfForm(forms.ModelForm):
     class Meta:
+        exclude = (u'info',)
         model = Half
+        widgets = { 'datetime':SplitDateTimeHTML5Widget,
+                    'weight':NumberInput,
+                    'temperature':FloatInput,
+                    'humidity':FloatInput,
+                    'shrink':FloatInput,
+        }
+
+HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)
+HalfFactory.caption = u'Полуфабрикат'
+HalfFactory.css_class = 'span9'
+HalfFactory.width = {}
 
 class WaterAbsorptionForm(forms.ModelForm):
     class Meta:
@@ -50,56 +160,20 @@ class HeatConductionForm(forms.ModelForm):
     class Meta:
         model = HeatConduction
 
-class DensityForm(forms.ModelForm):
-    class Meta:
-        model = Density
-
-class DateHTML5Input(forms.DateInput):
-    input_type = 'date'
-
-class FloatInput(NumberInput):
-    def __init__(self, attrs=None):
-        super(NumberInput, self).__init__(attrs=attrs)
-        self.attrs['autocomplete'] = 'off'
-        self.attrs['step'] = 0.01
-
-class BrickChechboxInput(forms.CheckboxInput):
-    pass
-
-class BrickInput(forms.Select):
-    pass
-
-
-class BatchDateInput(DateInput):
-    pass
-
-class WeightInput(FloatInput):
-    pass
-
-class DensityInput(FloatInput):
-    pass
-
-class FlexionInput(FloatInput):
-    pass
-
-class PressureInput(FloatInput):
-    pass
-
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
-            'weight':WeightInput(),
-            'density':DensityInput(),
+            'weight':FloatInput(),
             'flexion':FlexionInput(),
             'pressure':PressureInput(),
             'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),
         }
         layout = (
             Fieldset(u'Партия', 'number', 'date', 'cavitation', 'width', 'view',
-                'color', 'ctype', 'flexion', 'pressure', 'mark', 'weight', 'density', 'cad', 'info',
+                'color', 'ctype', 'flexion', 'pressure', 'mark', 'weight', 'cad', 'info',
                 css_class='less span5'),
         )
 
@@ -110,7 +184,7 @@ class PartForm(BootstrapMixin, forms.ModelForm):
         model = Part
         exclude = ('amount','tto','brick')
         widgets = {
-            'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
+            # 'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
             'half':FloatInput,
             'dnumber':FloatInput,
             'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с извесняком',

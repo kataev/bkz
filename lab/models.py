@@ -22,7 +22,7 @@ class SlashSeparatedFloatField(models.CharField):
     def formfield(self,**kwargs):
         defaults = {
             'error_messages': {
-                'invalid': u'Вводите числа разеделённые дробью'
+                'invalid': u'Вводите числа разеделённые косой чертой (/)'
             }
         }
         defaults.update(kwargs)
@@ -53,8 +53,8 @@ class Clay(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())
     humidity = SlashSeparatedFloatField(u'Пробы влажности',max_length=300)
     sand = models.FloatField(u'Песок')
-    inclusion = models.FloatField(u'Включения')
-    dust = models.FloatField(u'Пылеватость')
+    inclusion = models.FloatField(u'Включ.')
+    dust = models.FloatField(u'Пылев.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     @property
@@ -78,12 +78,13 @@ clay_positions = (
     (3,u'3 позиция'),
     (4,u'4 позиция'),
     (5,u'5 позиция'),
+    (6,u'Белая глина'),
 )
 
 class StoredClay(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
-    humidity = models.FloatField(u'Влажность')
+    humidity = models.FloatField(u'Влаж.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -94,10 +95,10 @@ class StoredClay(models.Model,UrlMixin):
         verbose_name = u"Глина по позициям"
 
 class Sand(models.Model,UrlMixin):
-    date = models.DateField(u'Дата', default=datetime.date.today())
-    humidity = models.FloatField(u'Влажность')
-    particle_size = models.FloatField(u'Гран. состав')
-    module_size = models.FloatField(u'Модуль крупности')
+    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
+    humidity = models.FloatField(u'Влаж.')
+    particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>')
+    module_size = models.FloatField(u'<abbr title="Модуль крупности">МК</abbr>')
     dirt = models.TextField(u'Включения')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
@@ -117,19 +118,23 @@ width_c = (
 
 class Bar(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    width = models.CharField(u'Вид бруса',choices=width_c,default=1.0,max_length=30)
-    tts = models.CharField(u'Номер ТТС',max_length=20)
-    size = models.CharField(u'Размер',max_length=20)
+    cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
+    color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
+    width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
+
+    tts = models.CharField(u'ТТС',max_length=20)
+    size = models.CharField(u'Размеры, мм',max_length=20)
+    temperature = models.FloatField(u'Темп.')
     weight = models.FloatField(u'Масса')
-    temperature = models.FloatField(u'Температура')
-    humidity = models.FloatField(u'Влажность')
-    sand = models.FloatField(u'Влажность')
+    humidity = models.FloatField(u'Влаж.')
+    sand = models.FloatField(u'Песок')
+    humidity_transporter = models.FloatField(u'<abbr title="Влажность с конвейера, %">ВсК</abbr>')
+
     poke_left = models.CommaSeparatedIntegerField(u'Тычок левый',max_length=300)
     poke_right = models.CommaSeparatedIntegerField(u'Тычок правый',max_length=300)
     stratcher_left = models.CommaSeparatedIntegerField(u'Ложок левый',max_length=300)
     stratcher_right = models.CommaSeparatedIntegerField(u'Ложок правый',max_length=300)
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
-    humidity_transporter = models.FloatField(u'Влажность с конвейера')
     info = models.TextField(u'Примечание',max_length=3000)
 
     def __unicode__(self):
@@ -141,11 +146,15 @@ class Bar(models.Model,UrlMixin):
 
 class Raw(models.Model,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    tts = models.CharField(u'Номер ТТС',max_length=20)
+    cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
+    color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
+    width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
+
+    tts = models.CharField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
-    temperature = models.FloatField(u'Температура')
+    temperature = models.FloatField(u'Темп.')
     weight = models.FloatField(u'Масса')
-    humidity = models.FloatField(u'Влажность')
+    humidity = models.FloatField(u'Влаж.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -157,12 +166,17 @@ class Raw(models.Model,UrlMixin):
 
 class Half(models.Model):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    position = models.IntegerField(u'Позиция')
+
+    cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
+    color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
+    width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
+
     path = models.IntegerField(u'Путь')
-    width = models.FloatField(u'Вид бруса',choices=width_c)
+    position = models.IntegerField(u'Поз.')
+    tts = models.CharField(u'ТТС',max_length=20)
+    humidity = models.FloatField(u'Влаж.')
     size = models.CharField(u'Размер',max_length=20)
     weight = models.FloatField(u'Масса')
-    humidity = models.FloatField(u'Влажность')
     shrink = models.FloatField(u'Усадка')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
@@ -217,19 +231,6 @@ class FrostResistance(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Морозостойкость"
 
-class Density(models.Model,UrlMixin):
-    date = models.DateField(u'Дата', default=datetime.date.today())
-    width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
-    color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
-    value = models.FloatField(u'Значение')
-    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
-
-    def __unicode__(self):
-        return u'%.2f от %s для %s %s' % (self.value,ru_date(self.date),self.get_width_display(),self.get_color_display())
-
-    class Meta():
-        verbose_name = u"Плотность"
-
 class SEONR(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -238,8 +239,12 @@ class SEONR(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'%.2f\u00b1%.2f для %s' % (self.value,self.delta,self.get_color_display())
+        if self.pk: return u'%s для %s' % (self.get_name,self.get_color_display())
         else: return u'Новое значение радионуклидов'
+
+    @property
+    def get_name(self):
+        return u'%.2f\u00b1%.2f' % (self.value or 0,self.delta or 0)
 
     class Meta():
         verbose_name = u"Уд.эф.акт.ест.рад."
@@ -296,7 +301,7 @@ class Batch(UrlMixin,models.Model):
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
     flexion = models.FloatField(u'При изгибе',null=True,blank=True)
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1],null=True,blank=True)
-    chamfer = models.IntegerField(u'Фаска',null=True,blank=True)
+    chamfer = models.IntegerField(u'Фаска',default=3)
 
     pf = models.FloatField(u'Пустотность фактическая',null=True,blank=True)
     pct = models.FloatField(u'Пустотность приведенная к фактической',null=True,blank=True)
@@ -347,7 +352,6 @@ class Cause(models.Model):
     class Meta:
         ordering = ('type',)
 
-defect_c += ((u'no_cont',u'Некондиция'),)
 class Part(models.Model):
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name='parts')
     defect = models.CharField(u"Качество", max_length=60, choices=defect_c, blank=False)
@@ -414,7 +418,6 @@ class Part(models.Model):
     class Meta():
         verbose_name = u"Часть партии"
         verbose_name_plural = u"Часть партии"
-        ordering = ('batch__date','batch__number','defect')
 
 
 class RowPart(models.Model):
@@ -442,9 +445,12 @@ class Test(models.Model):
     value = models.FloatField(u'Знач',default=0.0)
 
     def __unicode__(self):
-        return u'Испытания'
+        return u'Испытания %s' % self.get_type_display().lower()
     @property
     def volume(self):
         if self.size:
             size = map(float,self.size.split('x'))
             return (size[0] * size[1] * size[2]) / pow(100*10,3)
+
+    class Meta:
+        ordering = ('row',)

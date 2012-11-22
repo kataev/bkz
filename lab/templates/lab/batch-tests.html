@@ -3,6 +3,9 @@
 {% block title %}
     Испытания {{ batch|lower }}
 {% endblock %}
+{% block head %}
+<link href="{{ STATIC_URL }}css/tests.css" rel="stylesheet" media="print">
+{% endblock %}
 {% block script %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
@@ -111,9 +114,10 @@
             <button type="submit" class="btn btn-primary" form="form">
                 <i class="icon-ok icon-white"></i> Сохранить изменения
             </button>
+            <a class='btn btn-info' href='{% url lab:Batch-tests_print pk=batch.pk %}'>
+                <i class="icon-print icon-white"></i> Печать протокола
+            </a>
             <button type="reset" class="btn" form="form"><i class="icon-ban-circle"></i> Отменить</button>
-            {% block bonus-button %}
-            {% endblock %}
         </div>
     </div>
 {% endblock %}

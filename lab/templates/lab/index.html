@@ -4,9 +4,7 @@
 {% block title %}Лаборатория{% endblock %}
 {% block container %}
     <div class="container">
-    <div class="span12">
-        <h1>Лаборатория</h1>
-    </div>
+    <h1>Лаборатория</h1>
     <div>
         <h2>Готовая продукция</h2>
         <table class="table table-bordered" id='batch-list'>
@@ -28,11 +26,21 @@
                     
                     <td>{{ b.get_mark_display }}</td>
                     
-                    <td><ol style='margin: 0 0 0 25px'>
+                    <td><ul class='unstyled' style='margin: 0 0 0 25px'>
                         {% for p in b.parts.all %}
-                        <li title='{{ p.get_cause_display }}'>{{ p }}</li>
+                        <li title='{{ p.get_cause_display }}'>
+                            {% if p.defect == 'gost' %}
+                            <span class='label label-success'>{{ p }}</span>
+                            {% elif p.defect == '<20' %}
+                            <span class='label'>{{ p }}</span>
+                            {% elif p.defect == '>20' %}
+                            <span class='label label-warning'>{{ p }}</span>
+                            {% elif p.defect == 'no_cont' %}
+                            <span class='label label-important'>{{ p }}</span>
+                            {% endif %}
+                        </li>
                         {% endfor %}
-                    </ol>
+                    </ul>
                     </td>
                 </tr>
             {% endfor %}

@@ -1,0 +1,39 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block title %}
+    Протокол испытаний кирпича по ГОСТ 8462-85
+{% endblock %}
+{% block head %}
+<link href="{{ STATIC_URL }}css/tests.css" rel="stylesheet" media="print">
+{% endblock %}
+{% block container %}
+<div class='container'>
+<h1>Протокол испытаний кирпича по ГОСТ 8462-85</h1>
+<h2>Дата: <b>{{ batch.date }}</b> Номер партии: <b>{{ batch.number }}</b> Кирпич <b>{{ batch.get_name }} {{ batch.get_color_display }}</b></h2>
+<div class='row'>
+{% for t in tests %}
+<table class='table table-condensed' style='float:left;width:50%;border: 2px solid black'>
+{% for r in t %}
+{% if forloop.first %}
+<caption><h3>Предел прочности {{ r.get_type_display|lower }}</h3></caption>
+<thead>
+	<tr>
+		<th>№ ТТО</th>
+		<th>Ряд</th>
+		<th>Знач, мПа</th>
+	</tr>
+</thead>
+<tbody>
+{% endif %}
+	<tr>
+		<td>{{ r.tto }}</td>
+		<td>{{ r.row }}</td>
+		<td>{{ r.value }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

@@ -7,6 +7,7 @@ from django.views.generic import UpdateView
 
 from bkz.lab.models import *
 from bkz.lab.forms import *
+from bkz.whs.forms import DateForm
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -55,7 +56,8 @@ class BatchUpdateView(UpdateView):
         return context
 
 def index(request):
-    batch_list = Batch.objects.all().select_related().prefetch_related('parts','parts__rows','parts__cause')
+    batch_list = Batch.objects.all().select_related('frost_resistance','width')\
+                    .prefetch_related('parts','parts__rows','parts__cause')
     raw_list = Raw.objects.all()
     return render(request,'lab/index.html',dict(batch_list=batch_list,raw_list=raw_list))
 
@@ -110,3 +112,31 @@ def batch_tests(request,pk):
             else:
                 messages.add_message(request, messages.WARNING, u'Не хватает данных для определения марки!')
     return render(request,'lab/batch-tests.html',{'tests':[pressure,flexion],'batch':batch,'form':form})
+
+def batch_tests_print(request,pk):
+    batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
+    flexion = batch.tests.filter(type='flexion')
+    pressure = batch.tests.filter(type='pressure')
+    return render(request,'lab/batch-tests-print.html',{'tests':[pressure,flexion],'batch':batch})
+
+def journal(request,date=None):
+    f = DateForm({'date':date})
+    if f.is_valid():
+        date = f.cleaned_data.get('date',datetime.date.today())
+    else:
+        date = datetime.date.today()
+    filter = dict(datetime__day=date.day,datetime__year=date.year,datetime__month=date.month)
+    clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay')
+    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay')
+    sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand')
+    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar')
+    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw')
+    raw_initial = [ {'position':16,'path':5},{'position':16,'path':7},
+                    {'position':25,'path':5},{'position':25,'path':7}]
+    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=raw_initial)
+    factory = [clay, storedclay, sand, bar, raw, half]
+    if request.method == 'POST':
+        for f in factory:
+            if f.is_valid():
+                f.save()
+    return render(request,'lab/journal.html',{'factory':factory,'date':date})
