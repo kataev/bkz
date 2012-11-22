@@ -10,84 +10,37 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="{{ STATIC_URL }}bootstrap/bootstrap.css" rel="stylesheet">
+    {% block head %}
+        <link href="{{ STATIC_URL }}bootstrap/docs.css" rel="stylesheet">
+    {% endblock %}
     <style> body { padding-top: 0; position: relative;} </style>
     <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
     <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}bootstrap/bootstrap-responsive.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/brick.css" rel="stylesheet">
 {#    <link href="/static/img/logo.png" rel='shortcut icon'>#}
-    {% block head %}
-        <style>
-            .masthead {
-                text-align: center;
-                font-size: 38px;
-                padding: 20px;
-            }
-
-            .masthead h1 {
-                font-size: 50px;
-                font-family: Helvetica, Arial;
-                font-weight: 200;
-                line-height: 1.25;
-            }
-
-            .masthead h1 small {
-                font-size: 40px;
-                display: block;
-            }
-
-            .masthead p {
-                font-size: 24px;
-                font-weight: 200;
-                line-height: 1.25;
-            }
-
-            .masthead .btn {
-                padding: 14px 24px;
-                font-size: 24px;
-                font-weight: 200;
-                color: #fff; /* redeclare to override the `.jumbotron a` */
-                border: 0;
-                -webkit-border-radius: 6px;
-                -moz-border-radius: 6px;
-                border-radius: 6px;
-                -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-                -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-                -webkit-transition: none;
-                -moz-transition: none;
-                transition: none;
-            }
-            .masthead .btn:hover {
-                -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-                -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
-            }
-            .masthead .btn:active {
-                -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
-                -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
-                box-shadow: inset 0 2px 4px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.1);
-            }
-        </style>
-    {% endblock %}
-    {#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
+{#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
 </head>
 <body data-spy='scroll' data-target='.navbar' data-offset='40'>
 {% include 'core/navbar.html' %}
 {% block brick-select %} {% endblock %}
 {% block container %}
-    <div class="container masthead">
+<div class='masthead jumbotron'
+    <div class="container">
+        
+        <img src="{{ STATIC_URL }}img/logo.svg" style='width:15%'>
         <h1>
-            Корпоративный портал
-            <small>ООО "Березниковский кирпичный завод"</small>
+            <b>Березниковский</b><br>кирпичный<br>завод
         </h1>
-        <p>Предоставляет доступ к системе поддержки принятия решения для отделов: производства, склада говоой продукции,
-            службы энергетика, ИТ отдел.
+        <h2>Корпоративный портал</h2>
+        <p>
+            
         </p>
         <p>
-            <a class="btn btn-primary" href="{% url price %}">Прайс-лист цен</a>
+            <a class="btn btn-primary" href="{% url price %}">Прайс-лист цен на продукцию</a>
         </p>
     </div>
+</div>
 {% endblock %}
 <div class="container" id="footer">
     <div class="row-fluid">
