@@ -59,7 +59,7 @@ frostresistance_c = (
     )
 
 ctype_c = (('0', 'Без типа'), ('1', 'тип 1'), ('2', 'тип 2'), ('3', 'тип 3'))
-defect_c = ((u'gost', u'Гост'), (u'<20', u'До 20%'), (u'>20', u'Более 20%'))
+defect_c = ((u'gost', u'Гост'), (u'<20', u'До 20%'), (u'>20', u'Более 20%'),(u'no_cont',u'Некондиция'))
 refuse_c = (
     (u'', u'Нет'), (u'Ф', u'Фаска'), (u'ФП', u'Фаска Полосы'), (u'ФФ', u'Фаска Фаска'), (u'ФФП', u'Фаска Фаска Полосы'),
     (u'П', u'Полосы'))
@@ -70,7 +70,7 @@ css_dict['width'] = {1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u
 css_dict['view'] = {u'Л': u'v-facial', u'Р': u'v-common'}
 css_dict['mark'] = {100: 'mark-100', 125: 'mark-125', 150: 'mark-150', 175: 'mark-175',
                     200: 'mark-200', 250: 'mark-250' , 300: 'mark-300', 9000: 'mark-9000'}
-css_dict['defect'] = {u'gost': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20'}
+css_dict['defect'] = {u'gost': u'd-lux', u'<20': u'd-l20', u'>20': u'd-g20',u'no_cont':u'g-no'}
 css_dict['ctype'] = {'0': u'ctype-0', '1': u"ctype-1", '2': u'ctype-2', '3': u'ctype-3'}
 css_dict['features'] = {}
 
@@ -98,9 +98,13 @@ def get_name(self):
 def get_full_name(self):
     name = u'%s ' % get_name(self) 
     if not self.mark == 9000:
-        name += '/'.join((self.width.value,self.get_mark_display() or '?',unicode(self.cad) or u'?'))
-    if self.frost_resistance: name += u'/%s ' % self.frost_resistance.value
-    else: name += '/? '
+        name += '/'.join(map(unicode,(self.width.value,self.mark or '?',self.cad or u'?')))
+
+    if self.frost_resistance:
+        name += u'/%s ' % self.frost_resistance.value
+    else: 
+        name += '/? '
+
     if hasattr(self,'defect') and self.defect == u'gost':
         name += u' ГОСТ 530-2007 '
     if self.color:

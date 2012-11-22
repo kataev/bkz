@@ -15,7 +15,9 @@ class Width(models.Model):
     type = models.BooleanField(u'Тип',choices=((False,u'Кирпич'),(True,u'Камень')),)
 
     def __unicode__(self):
-        return u'%s %s' % (self.name,self.value)
+        return u'%s %s' % (self.value,self.name,)
+    class Meta:
+        ordering = ('pk',)
 
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)

@@ -127,9 +127,9 @@ $(function () {
         color_select(this, val)
     })
 
-    $('fieldset.Part').on('click','a.show',function(e){
+    $('fieldset').on('click','a.show',function(e){
         e.preventDefault()
-        if (!$(e.delegateTarget).find('.row:hidden:first').show().length) $(this).hide();
+        if (!$(e.delegateTarget).find('tbody tr:hidden:first').show().length) $(this).hide();
     })
 })
 

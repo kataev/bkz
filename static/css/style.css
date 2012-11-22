@@ -22,6 +22,8 @@ div.controls ul {list-style: none}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
 input[name*="amount"] {background: #adff2f;}
+input[name*="datetime_"][type='date'] {width:90px;margin-right: 14px}
+input[name*="datetime_"][type='time'] {width:auto;}
 td.cause ul { list-style: none;}
 
 @media (max-width:480px) {
@@ -56,20 +58,19 @@ fieldset.Part div.error { background-color: #fcf8e3; }
 fieldset.Part div.info { background-color: #d9edf7; }
 
 fieldset table td {margin: 0;}
+input[type='time'] {padding-top: 2px}
 
-fieldset table input[type='date'], fieldset table input[type='number'],
-fieldset table input[type='text'], fieldset table textarea { height: 30px !important;}
-
-fieldset table input[type='date'], fieldset table input[type='number'],
-fieldset table input[type='text'], fieldset table textarea,
-fieldset table select
+fieldset table input[type='date'], fieldset table input[type='time'],
+fieldset table input[type='number'], fieldset table input[type='text'],
+fieldset table textarea, fieldset table select
 {
     width: 100%;
     box-sizing: border-box;
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
-    border-radius: 0 !important;
-    margin: 0 !important;
+    border-radius: 0;
+    margin: 0;
+    height: 30px;
 }
 fieldset table input[name*='test']{width: 52px;}
 fieldset table input[name*='brocken']{width: 60px;}
@@ -85,7 +86,9 @@ fieldset.pressure table input::-webkit-inner-spin-button,
 fieldset.flexion table input::-webkit-outer-spin-button,
 fieldset.flexion table input::-webkit-inner-spin-button,
 fieldset.Part table input::-webkit-outer-spin-button,
-fieldset.Part table input::-webkit-inner-spin-button 
+fieldset.Part table input::-webkit-inner-spin-button ,
+#journal table input::-webkit-outer-spin-button,
+#journal table input::-webkit-inner-spin-button 
     { -webkit-appearance:none; margin: 0; }
 
 
@@ -93,13 +96,34 @@ fieldset.Part table input::-webkit-inner-spin-button
 .tests .pressure input[name*='tto']{width: 52px;text-align: center;}
 .tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
 .tests input[name*='row']{width: 32px;text-align: center;}
-.tests input[name*='size']{width: 145px;text-align: center;}
+table  input[name*='-size']{width: 145px !important;text-align: center;}
 .tests input[name*='area']{width: 58px;text-align: center;}
 .tests input[name*='readings']{width: 52px;text-align: center;}
 .tests input[name*='value']{width: 52px;}
 input[name*='pf']{width: 52px;}
 input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
+
+
+#journal .Clay input[name*="humidity"] {width:130px;}
+#journal input[type='number'] { width:42px; text-align: center}
+#journal input[name*="tts"] {width:32px;}
+#journal input[name*="weight"] {width:60px;}
+#journal input[name*="-sand"] {width:60px;}
+#journal input[name*="-sand"] {width:60px;}
+#journal input[name*="inclusion"] {width:60px;}
+#journal input[name*="dust"] {width:60px;}
+#journal input[name*="datetime_"][type='date'] {width:110px;margin-right: 2px}
+#journal input[name*="datetime_"][type='time'] {width:60px;overflow: hidden;white-space: normal}
+#journal .input-append {margin: 0}
+#journal .input-append .add-on {border-radius: 0}
+#journal select {padding-left: 0;}
+#journal select[name*='cavitation'] { width:80px;}
+#journal select[name*='color'] { width:90px;}
+#journal select[name*='width'] { width:80px;}
+#journal select[name*='path'] { width:90px;}
+
+#journal input[name*='path'],#journal input[name*='position'] { width:32px;text-align: center;}
 
 
 form fieldset.Batch h3 { text-align: center}
