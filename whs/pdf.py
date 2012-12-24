@@ -5,6 +5,7 @@ from pytils.numeral import rubles
 
 
 class BillMixin(object):
+    @property
     def opers(self):
         opers = list(self.solds.all()) + list(self.pallets.all())
         for o in opers:
@@ -17,35 +18,35 @@ class BillMixin(object):
 
     @property
     def amount(self):
-        return sum([s.amount for s in self.solds.all()])
+        return sum([s.amount for s in self.solds.all()],0)
 
     @property
     def netto(self):
-        return sum([x.netto for x in self.opers])
+        return sum([x.netto for x in self.opers],0)
 
     @property
     def brutto(self):
-        return sum([x.brutto for x in self.opers])
+        return sum([x.brutto for x in self.opers],0)
 
     @property
     def tara(self):
-        return sum([getattr(x,'tara',0) for x in self.opers])
+        return sum([getattr(x,'tara',0) for x in self.opers],0)
 
     @property
     def items(self):
-        return sum([x.items for x in self.opers()])
+        return sum([x.items for x in self.opers],0)
 
     @property
     def money(self):
-        return sum([x.money for x in self.opers()])
+        return sum([x.money for x in self.opers],0)
 
     @property
     def nds(self):
-        return sum([x.nds for x in self.opers()])
+        return sum([x.nds for x in self.opers],0)
 
     @property
     def in_total(self):
-        return sum([x.in_total for x in self.opers()])
+        return sum([x.in_total for x in self.opers],0)
 
     @property
     def pages(self):
