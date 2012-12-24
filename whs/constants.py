@@ -66,7 +66,7 @@ refuse_c = (
 
 css_dict = OrderedDict()        
 css_dict['color'] = {0: u'bc-red', 1: u'bc-yellow', 2: u'bc-brown', 3: u'bc-light', 4: u'bc-white'}
-css_dict['width'] = {1: u'w-single', 1.4: u'w-thickened', 0: u'w-double', 0.8: u'w-euro'}
+css_dict['width'] = {2: u'w-single', 1: u'w-thickened', 4: u'w-double', 3: u'w-euro'}
 css_dict['view'] = {u'Л': u'v-facial', u'Р': u'v-common'}
 css_dict['mark'] = {100: 'mark-100', 125: 'mark-125', 150: 'mark-150', 175: 'mark-175',
                     200: 'mark-200', 250: 'mark-250' , 300: 'mark-300', 9000: 'mark-9000'}
@@ -82,12 +82,12 @@ def get_menu(css_dict=css_dict):
     result = []
     for name,items in css_dict.iteritems():
         field = Brick._meta.get_field_by_name(name)[0]
-        choices = dict(field.choices)
+        choices = field.get_choices()
         o = dict(verbose_name=field.verbose_name)
         if name == 'features':
             continue
         o['name']=name
-        o['items'] = [(css_dict[name][k],v) for k,v in field.choices]
+        o['items'] = [(css_dict[name][k],v) for k,v in field.get_choices() if k]
         result.append(o)
     return result
 

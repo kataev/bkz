@@ -6,10 +6,10 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
 {% endblock %}
-{% block title %}Журнал за день{% endblock %}
+{% block title %}Журнал за{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
-    <h1>Журнал за {{ date }}</h1>
+    <h1>Журнал</h1>
     <form method="POST" id='form' class='row'>
         {% csrf_token %}
     {% for f in factory %}

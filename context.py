@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from whs.models import Brick,get_menu
-
-brick_menu = get_menu()
+from bkz.whs.models import Brick
 
 def bricks(request):
     if getattr(request,'namespace',None) == 'whs':
         Bricks = Brick.objects.all()
-        return dict(Bricks=Bricks,brick_menu=brick_menu)
+        return dict(Bricks=Bricks)
     return {}
 
 nav = dict(

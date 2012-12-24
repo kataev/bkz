@@ -5,7 +5,7 @@
             <a href="#{{ item.name }}" class="dropdown-toggle" role='button' data-toggle="dropdown">
                 <span class="label">0</span> {{ item.verbose_name }} <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu" role='menu' aria-labelledby='bc'>
+            <ul class="dropdown-menu {{ item.name }}" role='menu'>
                 {% for k,v in item.items %}
                     <li>
                         <label class="radio {{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>

@@ -11,6 +11,9 @@ body {
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 #brick-select-buttons input {vertical-align: top}
 #brick-select-buttons label {margin-bottom: 0}
+#brick-select-buttons {margin: 0}
+#brick-select-buttons ul {margin: 0}
+#brick-select-buttons ul.width label {width: 210px;}
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
