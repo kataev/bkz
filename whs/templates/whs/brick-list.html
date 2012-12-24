@@ -1,9 +1,6 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
 {% block title %}Остатки{% endblock %}
-{% block head %}
-    <link href="/static/css/responsive-tables.css" rel="stylesheet">
-{% endblock %}
 {% block container %}
     <div class="container">
         <div class="row">
@@ -52,8 +49,7 @@
                             <td class="name"><a title='{{ b.name }}'
                                                 href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
                             {% for o in b.order %}
-                                <td {% if b|hash:o %}data-name="{{ o }}" rel="popover" data-placement='bottom'
-                                    data-trigger='manual'{% endif %}> {{ b|hash:o }} </td>
+                                <td> {{ b|hash:o }} </td>
                             {% endfor %}
                         </tr>
                     {% endfor %}
