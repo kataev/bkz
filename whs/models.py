@@ -49,6 +49,7 @@ class Brick(models.Model,UrlMixin):
     label = models.CharField(u"Ярлык", max_length=660, default='')
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
+    mass = models.FloatField(u'Ожидамая масса',default=0.0)
 
     nomenclature = models.ForeignKey('whs.Nomenclature', null=True, blank=True, verbose_name=u'Номенклатура')
 
@@ -63,10 +64,6 @@ class Brick(models.Model,UrlMixin):
 
     def make_css(self):
         return make_css(self)
-
-    @property
-    def mass(self):
-        return mass_c[self.width]
 
     class Meta():
         ordering = BrickOrder
