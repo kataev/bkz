@@ -46,7 +46,7 @@ def out(s):
             a = int(inv(bin(int(s, 16) - 1)), 2) / 10.
         else:
             a = int(s, 16) / 10.
-    except:
+    except BaseException:
         a = 0
     return a
 

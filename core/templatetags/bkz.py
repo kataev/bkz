@@ -65,5 +65,5 @@ def sum_pluck(queryset,attr):
             return sum([b.get(attr,0) for b in queryset])
         else:
             return sum([getattr(b,attr) for b in queryset])
-    except :
+    except BaseException:
         pass
