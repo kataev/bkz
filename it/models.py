@@ -12,6 +12,21 @@ class Device(models.Model,UrlMixin):
     info = models.CharField(u'Примечание', max_length=600, blank=True, help_text=u'Любая полезная информация')
     allowed = models.ManyToManyField('self',verbose_name=u'Девайс',null=True,blank=True)
 
+    @property
+    def avg_demand(self):
+        plugs = self.plug.order_by('date').all()
+        values = []
+        if len(plugs)>1:
+            v,d = None,None
+            for p in plugs:
+                if not d and not v:
+                    d = p.date
+                    v = p.bill.cartridge.value
+                else:
+                    values.append((v,p.date-d))
+            a = map(lambda x:x[0]/x[1].days,values)
+            return sum(a)/len(a)
+
     def __unicode__(self):
         if self.pk:
             return u'%s\t%s' % (self.name,self.place)
@@ -21,7 +36,7 @@ class Device(models.Model,UrlMixin):
     class Meta:
         verbose_name = u"Устройство"
         verbose_name_plural = u"Уствойства"
-        ordering = ('type__name',)
+        ordering = ('type__name','place','name')
 
 class Buy(models.Model,UrlMixin):
     cartridge = models.ForeignKey(Device,verbose_name=u'Картридж',related_name=u'buy')

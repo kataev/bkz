@@ -39,8 +39,12 @@ class BuyForm(BootstrapMixin,forms.ModelForm):
 class PlugForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PlugForm, self).__init__(*args, **kwargs)
-        self.fields['bill'].queryset = Buy.objects.filter(cartridge__type__name=u'Картриджи')
-        self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
+        try:
+            bill = Buy.objects.get(pk=self['bill'].value)
+            self.fields['printer'].queryset = bill.cartridge.allowed.all()
+            self.fields['bill'].widget.attrs['readonly']='readonly'
+        except Buy.DoesNotExist:
+            self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
 
     class Meta:
         model = Plug

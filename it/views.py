@@ -2,12 +2,13 @@
 from django.shortcuts import render
 from django.views.generic import CreateView
 
+
 from bkz.it.models import *
 from django.db.models import Count,Sum
 
 def main(request):
     """ Главная страница """
-    d = Device.objects.all()
+    d = Device.objects.all().prefetch_related('plug')
     
     c = Buy.objects.all().select_related()[:10]
     replaces = Plug.objects.order_by('-date').all().select_related()[:10]
@@ -24,10 +25,18 @@ class PlugCreateView(CreateView):
     def get_initial(self):
         initial = self.initial.copy()
         if self.request.method == 'GET':
-            agent = self.request.GET.get('bill', None)
-            if agent:
-                initial['bill'] = agent
+            bill = self.request.GET.get('bill', None)
+            if bill:
+                initial['bill'] = bill
         return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateView, self).get_context_data(**kwargs)
+        try:
+            context['bill'] = Buy.objects.get(pk=self.request.GET.get('bill',None))
+        except Buy.DoesNotExist:
+            pass
+        return context
 
 class BuyCreateView(CreateView):
     def get_initial(self):
