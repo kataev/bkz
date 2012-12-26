@@ -206,11 +206,11 @@ function bricks_per_tara(cl) {
 function tara_amount() {
     $('fieldset').on('change', 'input[name*="tara"],input[name*="brick"]', function (e) {
         var fieldset = $(e.delegateTarget)
-        var brick = $('.brick-select.brick input', fieldset)
+        var brick = $('.brickselect.brick input', fieldset)
         var tara = $('input[name*="tara"]', fieldset)
         var checkbox = $('input[name="tara-calculate"]', fieldset)
         if (checkbox.val() && brick.val() && tara.val()) {
-            var css = $('.brick-select.brick > span', fieldset).attr('class')
+            var css = $('.brickselect.brick > span', fieldset).attr('class')
             var factor = bricks_per_tara(css)
             $('input[name*="amount"]', fieldset).val(factor * tara.val())
         }

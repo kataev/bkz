@@ -10,14 +10,14 @@ body {
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 form.filter label {display: none}
-#brick-select-buttons input {vertical-align: top}
-#brick-select-buttons label {margin-bottom: 0}
-#brick-select-buttons {margin: 0}
-#brick-select-buttons ul {margin: 0}
-#brick-select-buttons ul.width label {width: 210px;}
-table#Bricks label, table#Bricks input {margin: 0}
-table#Bricks td {padding: 0px 5px}
-table#Bricks tr:hover {text-decoration: underline;}
+#brickselect-buttons input {vertical-align: top}
+#brickselect-buttons label {margin-bottom: 0}
+#brickselect-buttons {margin: 0}
+#brickselect-buttons ul {margin: 0}
+#brickselect-buttons ul.width label {width: 210px;}
+#brickselect label, #brickselect input {margin: 0}
+#brickselect td {padding: 0px 5px}
+#brickselect tr:hover {text-decoration: underline;}
 
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}

@@ -33,15 +33,24 @@ function css_to_dict(prefix, val, from) {
 }
 
 $(function () {
-    var $brickselect = $('#brickselect') //Кнопки для фильтрации
-    var $bricks = $('#Bricks')// Таблица с кирпичами
+    var $bricks = $('#bricks') //Таблица с кирпичами 
+    var $brickselect = $('#brickselect') //Таблица с кирпичами
     var $brickfade = $('#brickfade') // Див с кирпичами
+    var $brickshow = $('#brickshow') // Див с кирпичами
+
+    $brickselect.on('click', 'input', function (e) {
+            var target = $(e.delegateTarget).data('target')
+            var tr = $(this).parent().parent()
+            $(target).find('>span').attr('class', 'uneditable-input ' + $(tr).attr('class'))
+                .children('span').text($(tr).find('label').text().trim())
+            $(target).find('input[type=hidden]').val($(this).val())
+        })
 
     // Инпуты кирпича
     $('.brickselect').each(function () {
         var val = $('input[type=hidden]', this).val()
         if (!val) return;
-        var tr = $bricks.find('#brick-' + val)
+        var tr = $brickselect.find('#brick-' + val)
         $('>span', this).attr('class', 'uneditable-input ' + tr.attr('class'))
             .attr('title', 'Остаток: ' + tr.find('.name').text().trim())
             .children('span').text(tr.find('.name').text().trim())
@@ -56,12 +65,12 @@ $(function () {
         .on('click', 'a.btn', function (e) {
             //Выбор кирпича
             $brickfade.hide()
-            $brickselect.show()
+            $brickshow.show()
             var input = $('input[type=hidden]', e.delegateTarget)
             var val = $(input).val()
             if (val) $('#brick-' + val).find('input').attr('checked', true);
-            else $('#Bricks').find('input').attr('checked', false);
-            $bricks.data('target', e.delegateTarget)
+            else $brickselect.find('input').attr('checked', false);
+            $brickselect.data('target', e.delegateTarget)
             var name = $(input).attr('name').split('-')
             var prefix = name[0] || ''
             name = name[name.length > 0 ? name.length-1 : 0]
@@ -72,25 +81,17 @@ $(function () {
             if (prefix.indexOf('sorting') >= 0) var from = $('input[name=brick]').val();
             var filter = css_to_dict(prefix, val, from)
             if (filter.length > 1)
-            $bricks.find('tbody tr').hide().filter(filter).show()
+            $brickselect.find('tbody tr').hide().filter(filter).show()
             else
-            $bricks.find('tbody tr').show()
+            $brickselect.find('tbody tr').show()
         })
-        $brickselect.on('click', 'a.back', function (e) {
+        $brickshow.on('click', 'a.back', function (e) {
             $brickfade.show()
-            $brickselect.hide()
-        })
-        
-        $bricks.on('click', 'input', function (e) {
-            var target = $(e.delegateTarget).data('target')
-            var tr = $(this).parent().parent()
-            $(target).find('>span').attr('class', 'uneditable-input ' + $(tr).attr('class'))
-                .children('span').text($(tr).find('label').text().trim())
-            $(target).find('input[type=hidden]').val($(this).val())
+            $brickshow.hide()
         })
 
     //Фильтер кирпича по кнопкам
-    $('#brick-select-buttons').on('submit', function (e) {
+    $('#brickselect-buttons').on('submit', function (e) {
         e.preventDefault()
         var data = $(this).serializeArray()
         var $rows = $bricks.find('tbody tr').hide()
