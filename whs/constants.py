@@ -116,6 +116,7 @@ def make_label(brick): # Функция для вывода имени
     label = get_name(brick) + ' %s' % brick.get_mark_display()
     if brick.color:
         label += ' %s' % brick.get_color_display()
+
     if brick.ctype:
         label += ' %s' % brick.get_ctype_display()
     if brick.defect and not brick.defect=='gost':
@@ -132,6 +133,8 @@ def make_css(brick):
     css = u''
     for field, dict in css_dict.iteritems():
         val = getattr(brick, field, None)
+        if hasattr(val,'pk'):
+            val = getattr(brick, field+'_id', None)
         if field == 'mark':
             css += u'mark-%d ' % val
         elif field == 'color':

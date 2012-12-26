@@ -3,11 +3,13 @@
 
 {% block title %}{{ object|model_verbose_name }} {{ object }}{% endblock %}
 {% block container %}
-    <form class='well' action="" method="post">
+<div class="container">
+    <form class='' action="" method="post">
         {% csrf_token %}
         <h1>Вы уверены?</h1>
         <p>что хотите удалить <b>{{ object|model_verbose_name }} {{ object }}?</b></p>
         <button type="submit" class="btn btn-danger">Да, уверен</button>
-        <a href="./" class='btn'>Вернутся</a>
+        <a href="{{ object.get_absolute_url }}" class='btn'>Вернутся</a>
     </form>
+</div>
 {% endblock %}

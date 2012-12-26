@@ -109,21 +109,6 @@ class BillCreateView(CreateView):
                 initial['agent'] = agent
         return initial
 
-
-def agent_select_or_create(request):
-    select = AgentCreateOrSelectForm(request.POST or None)
-    form = AgentForm(request.POST or None)
-    if request.method == 'POST':
-        bill_url = reverse_lazy('whs:Bill-add')
-        if select.is_valid() and select.cleaned_data.has_key('agent'):
-            agent = select.cleaned_data.get('agent')
-            return redirect(bill_url + '?agent=%d' % agent.pk)
-        elif form.is_valid():
-            agent = form.save()
-            return redirect(bill_url + '?agent=%d' % agent.pk)
-    return render(request, 'whs/agent_select_or_create.html', dict(select=select, form=form))
-
-
 def bill_pk_redirect(request, pk):
     b = get_object_or_404(Bill, pk=pk)
     return redirect(b.get_absolute_url())
@@ -154,38 +139,35 @@ class BrickUpdateView(UpdateView):
 
 
 class BillListView(ListView):
-    queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
-        'agent').select_related()
+    
     model = Bill
-    form_class = BillFilter
     paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        context = super(BillListView, self).get_context_data(**kwargs)
-        context['form'] = self.form_class(self.request.GET or None)
-        return context
 
     def get_paginate_by(self, queryset):
         try: p = int(self.request.GET.get('rpp', ''))
         except ValueError: p = self.paginate_by
         return p
 
-    def get_queryset(self):
-        form = BillFilter(self.request.GET or None)
-        if form.is_valid():
-            data = dict([(k, v) for k, v in form.cleaned_data.items() if v is not None])
-            if data.has_key('page'):
-                data.pop('page')
-            if data.has_key('year'):
-                data['date__year'] = data.pop('year')
-            if data.has_key('month'):
-                data['date__month'] = data.pop('month')
-            if data.has_key('brick'):
-                data['solds__brick'] = data.pop('brick')
-            if data.has_key('rpp'):
-                data.pop('rpp')
-            return self.queryset.filter(**data)
-        return self.queryset
+def bills(request):
+    queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
+        'agent').select_related()
+    billfilter = BillFilter(request.GET or None)
+    datefilter = YearMonthFilter(request.GET or None)
+    rpp = request.GET.get('rpp',20)
+    if billfilter.is_valid():
+        data = dict(filter(lambda i:i[1],billfilter.cleaned_data.items()))
+        if data.has_key('page'):
+            data.pop('page')
+        if data.has_key('brick'):
+            data['solds__brick'] = data.pop('brick')
+        if data.has_key('rpp'):
+            data.pop('rpp')
+        queryset = queryset.filter(**data)
+    if datefilter.is_valid():
+        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        queryset = queryset.filter(**data)
+    return render(request,'whs/bill_list.html',dict(billfilter=billfilter,datefilter=datefilter,
+        object_list=queryset,rpp=rpp))
 
 
 def agents(request):

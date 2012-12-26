@@ -93,6 +93,8 @@ $(function () {
         $(n).html(text)
     })
 })
+
+
 $(function () {
     $('[rel="tooltip"]').tooltip()
     $('[rel="popover"]').popover()
@@ -101,7 +103,13 @@ $(function () {
     var $messages = $('#messages').popover('show')
 
     setTimeout(function(e){$messages.popover('hide')},10000)
-
+    if ($.mask){
+    if ($("input[name*='form']").val())
+    $("input[name*='inn']").mask('999 999 999 999')
+    else
+    $("input[name*='inn']").mask('99 99 99 99 99')
+    $("input[name*='kpp']").mask('999 999 999')
+    }
 })
 
 //Подсветка цветов селекта в редактировании кирпича

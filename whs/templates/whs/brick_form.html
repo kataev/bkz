@@ -5,6 +5,9 @@
     {% if form.insntace.pk %} {{ form.instance|striptags }}
         {% else %}{{ form.instance|model_verbose_name }} {% endif %}
 {% endblock %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
+{% endblock %}
 {% block container %}
     <div class="container">
             <form method="POST" action="" class='form-horizontal' id="form">

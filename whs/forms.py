@@ -158,7 +158,7 @@ class SoldFactory(SoldFactory):
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
 
 
-class YearMonthFilter(forms.Form):
+class YearMonthFilter(BootstrapMixin,forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
 
@@ -172,17 +172,15 @@ records_per_page = (
     (100, '100 записей на странице'),
     )
 
-class BillFilter(forms.Form):
-    page = forms.IntegerField(required=False)
-    year = forms.IntegerField(required=False)
-    month = forms.IntegerField(required=False)
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False)
-    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False)
+class BillFilter(BootstrapMixin, forms.Form):
+    page = forms.IntegerField(required=False,widget=forms.HiddenInput)    
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False,widget=AgentSelect)
+    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False,widget=BrickSelect)
     rpp = forms.ChoiceField(choices=records_per_page, initial='', required=False)
 
     class Meta:
         dates = Bill.objects.dates('date', 'month').reverse()
-
+        
 bill_group_by = (
     ('seller', u'Продавцу'),
     ('agent', u'Покупателю'),
@@ -199,6 +197,10 @@ class BillAggregateFilter(BillFilter):
 class AgentForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Agent
+        widgets= {
+            'address':forms.Textarea(attrs={'rows':2}),
+            'info':forms.Textarea(attrs={'rows':2})
+        }
 
 agent_choices = (
     (0, 'Выбрать'),

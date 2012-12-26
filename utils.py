@@ -19,8 +19,6 @@ def app_urlpatterns(app_name):
         name = model._meta.object_name
         if hasattr(forms,name+'Form'):
             form = getattr(forms,name+'Form',False)
-#        elif hasattr(forms,name+'FlatForm'):
-#            form = getattr(forms,name+'FlatForm',False)
         else: continue
         verbose_name = ''.join([x.capitalize() for x in model._meta.verbose_name.split(' ')])
         view = getattr(views,name+'CreateView',CreateView).as_view(form_class=form,model=model)

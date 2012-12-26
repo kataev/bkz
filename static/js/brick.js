@@ -60,25 +60,35 @@ $(function () {
             var input = $('input[type=hidden]', e.delegateTarget)
             var val = $(input).val()
             if (val) $('#brick-' + val).find('input').attr('checked', true);
-            $brickselect.data('target', e.delegateTarget).data('val', val)
-            var name = $(input).attr('name').split('_')
+            else $('#Bricks').find('input').attr('checked', false);
+            $bricks.data('target', e.delegateTarget)
+            var name = $(input).attr('name').split('-')
             var prefix = name[0] || ''
-            name = name[name.length > 0 ? name.length : 0]
-            if (prefix == 'solds') {
+            name = name[name.length > 0 ? name.length-1 : 0]
+            if (prefix.indexOf('solds') >= 0)  {
                 if (name == 'brick_from') var from = 0;
                 if (name == 'brick') var from = $('#' + input.attr('id') + '_from').val();
             }
-            if (prefix == 'sorting') var from = $('input[name=brick]').val();
+            if (prefix.indexOf('sorting') >= 0) var from = $('input[name=brick]').val();
             var filter = css_to_dict(prefix, val, from)
+            if (filter.length > 1)
             $bricks.find('tbody tr').hide().filter(filter).show()
+            else
+            $bricks.find('tbody tr').show()
+        })
+        $brickselect.on('click', 'a.back', function (e) {
+            $brickfade.show()
+            $brickselect.hide()
+        })
+        
+        $bricks.on('click', 'input', function (e) {
+            var target = $(e.delegateTarget).data('target')
+            var tr = $(this).parent().parent()
+            $(target).find('>span').attr('class', 'uneditable-input ' + $(tr).attr('class'))
+                .children('span').text($(tr).find('label').text().trim())
+            $(target).find('input[type=hidden]').val($(this).val())
         })
 
-    $bricks.find('tbody tr').map(function (e, tr) {
-        var td = $('td', tr).slice(1).map(function (id, td) { return parseInt(td.innerHTML)})
-        return {'css':$(tr).attr('class'), 'node':tr, 'td':td}
-    })
-
-    var $tfoot = $bricks.find('tfoot tr')
     //Фильтер кирпича по кнопкам
     $('#brick-select-buttons').on('submit', function (e) {
         e.preventDefault()
@@ -112,44 +122,6 @@ $(function () {
         }).on('reset',function(e){
             $(this).find('span.label').removeClass('label-warning').text(0)
         })
-//        .on('click', 'a', function (e) {
-//            //Фильтр при нажатии на кнопки
-//            if (!$('input', this).trigger('click').length) return;
-//            var data = $(e.delegateTarget).serializeArray()
-//            var filter = _(data).chain().pluck('value').reduce(function (m, n) { return m + '.' + n }, ' ').value()
-//            var nodes = $bricks.find('tbody tr').hide().filter(filter).show()
-//            if (filter == ' ') $('a', e.delegateTarget).removeClass('active');
-//            var tf = $bricks.find('tfoot th');
-//            var names = $('a.active', e.delegateTarget).text().trim()
-//            if (tf) {
-//                $(tf[0]).html(names)
-//                _(tf.slice(1)).each(function (node) {
-//                    node.innerHTML = 0
-//                })
-//                _(nodes).each(function (node) {
-//                    $('td', node).slice(1).each(function (id, td) {
-//                        $(tf[id + 1]).text(parseInt(tf[id + 1].innerHTML) + parseInt(td.innerHTML))
-//                    })
-//                })
-//            }
-//        })
 
-    $brickselect.on('click', 'a', function (e) {
-        $brickfade.show()
-        $brickselect.hide()
-    })
-        .on('click', 'tr', function (e) {
-            var target = $(e.delegateTarget).data('target')
-            $('input:radio', this).attr('checked', true)
-            $('>span', target).attr('class', 'uneditable-input ' + $(this).attr('class'))
-                .attr('title', 'Остаток: ' + $('.total', this).text().trim())
-                .children('span').text($('.name', this).text().trim())
-            $('input[type=hidden]', target).val($('input:radio', this).val())
-        })
-        .on('shown', function () {
-            var val = $(this).data('val')
-            if (val) {
-                window.location.hash = 'brick-' + val
-            }
-        })
+    
 })

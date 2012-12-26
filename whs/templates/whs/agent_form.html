@@ -1,1 +1,6 @@
 {% extends 'whs/brick_form.html' %}
+{% block bonus-button %}
+{{ block.super }}
+<a href="{% url whs:Bill-list %}?agent={{ object.pk }}" class="btn btn-primary">
+                    <i class="icon-eye-open icon-white"></i> Показать накладные</a>
+{% endblock %}

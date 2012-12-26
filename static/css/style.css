@@ -9,11 +9,16 @@ body {
 
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
+form.filter label {display: none}
 #brick-select-buttons input {vertical-align: top}
 #brick-select-buttons label {margin-bottom: 0}
 #brick-select-buttons {margin: 0}
 #brick-select-buttons ul {margin: 0}
 #brick-select-buttons ul.width label {width: 210px;}
+table#Bricks label, table#Bricks input {margin: 0}
+table#Bricks td {padding: 0px 5px}
+table#Bricks tr:hover {text-decoration: underline;}
+
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
@@ -24,6 +29,7 @@ div.controls ul {list-style: none}
     vertical-align: 0;
     background-position: 0;
 }
+.form-actions .btn-danger {float: right;}
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
@@ -139,8 +145,6 @@ form fieldset.Batch div.limit .controls {margin-left: 110px}
 .input-mini {width: 60px}
 table td.error input,table td.error .uneditable-input {color:#B94A48; border-color:#B94A48;}
 .add-on input[type='checkbox'] { vertical-align:baseline}
-#brickselect tr {cursor: pointer;}
-#brickselect tr:hover td.name {text-decoration: underline;}
 
 #Sorted td {padding: 4px;}
 #Bricks a, #Jurnal a, #Verification a {color:#333}
@@ -175,6 +179,7 @@ span.dot { position:absolute; text-indent: -1000em; }
 span.input {overflow: hidden;}
 
 tr.Bill {border-top-width:2px}
+tr.Bill .label {float: right;}
 .Sold .transfer p.help-block {display: none}
 .Sold .transfer {display: none}
 .Sold.transfered .transfer {display: block;}

@@ -11,7 +11,9 @@
     <![endif]-->
     <link href="{{ STATIC_URL }}bootstrap/bootstrap.css" rel="stylesheet">
     {% block head %}
-        <link href="{{ STATIC_URL }}bootstrap/docs.css" rel="stylesheet">
+    <style type="text/css">
+    #footer {display: none}
+    </style>
     {% endblock %}
     <style> body { padding-top: 0; position: relative;} </style>
     <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
@@ -25,20 +27,21 @@
 {% include 'core/navbar.html' %}
 {% block brick-select %} {% endblock %}
 {% block container %}
-<div class='masthead jumbotron'
-    <div class="container">
+<div class="container" style='text-align:center;margin-top:20px;'>
+    <div class='row'>
+        <div class='offset2 span8'>
+            <img src="{{ STATIC_URL }}img/logo.svg" style='width:15%'>
+            <h1 style='font-'>
+                <b>Березниковский</b><br>кирпичный<br>завод
+            </h1>
+            <h2>Корпоративный портал</h2>
+            <p>
+            </p>
+            <p>
+                <a class="btn btn-large btn-primary" href="{% url price %}">Прайс-лист цен на продукцию</a>
+            </p>
+        </div>
         
-        <img src="{{ STATIC_URL }}img/logo.svg" style='width:15%'>
-        <h1>
-            <b>Березниковский</b><br>кирпичный<br>завод
-        </h1>
-        <h2>Корпоративный портал</h2>
-        <p>
-            
-        </p>
-        <p>
-            <a class="btn btn-primary" href="{% url price %}">Прайс-лист цен на продукцию</a>
-        </p>
     </div>
 </div>
 {% endblock %}
@@ -74,6 +77,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery-1.8.1.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/accounting.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/bootstrap.min.js"></script>
+
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/brick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/script.js"></script>
