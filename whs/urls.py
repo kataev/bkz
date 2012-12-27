@@ -11,6 +11,7 @@ urlpatterns = patterns('bkz.whs.views',
     url(ur'^Производство', 'batchs', name='Add-list'),
     url(ur'^Журнал', 'journal', name='journal'),
     url(ur'^Сверка$', 'verification', name='verification'),
-    
+    url(ur'^Переводы$', 'transfers', name='transfers'),
+
     url(ur'^Накладная/(?P<pk>\d+)/печать$', 'bill_print', name='Bill-print'),
 ) + app_urlpatterns('whs')

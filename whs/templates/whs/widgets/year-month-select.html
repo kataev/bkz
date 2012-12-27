@@ -8,7 +8,6 @@
         {% endifchanged %}
     {% endfor %}
 </select>
-{{ year.errors }}
 <select class="span2" name="{{ month.name }}" style='min-width:146px'>
     <optgroup label="Выберите месяц">
         <option value="">Месяц</option>
@@ -22,4 +21,3 @@
         {% endfor %}
         </optgroup>
 </select>
-{{ month.errors }}

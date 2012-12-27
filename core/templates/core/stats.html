@@ -1,52 +1,43 @@
 {% extends 'core/index.html' %}
-
-{% block script %}
-    <script type="text/javascript" src="/static/js/libs/d3.v2.min.js"></script>
-    <script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
-    <script type="text/javascript" src="/static/js/stats.js"></script>
-
-{% endblock %}
-{% block head %}
-    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/css/stats.css"/>
-{% endblock %}
-{% block title %}Статистика{% endblock %}
+{% block title %}Таблица переводов{% endblock %}
 {% block container %}
-    <ul class="thumbnails">
-        <li class="span12">
-            <div class="thumbnail" id='transfer' data-href="{% url whs:transfer_mark_handler %}">
-                <div style="text-align: center;"></div>
-                <div class="caption">
-                    <h5>Переводы</h5>
-
-                    <form>
-                        {% with year=form.date__year month=form.date__month %}
-                            {% include 'whs/widgets/year-month-select.html' %}
-                        {% endwith %}
-                        <button id='transfer_show' type="submit" data-loading-text='Загрузка'
-                                style='vertical-align: top'
-                                class="btn btn-primal">Показать
-                        </button>
-                    </form>
-                </div>
+<div class='container'>
+    <div class="row">
+            <div class="span7">
+                <h1 class="">
+                    <h1>Таблица переводов</h1>
+                </h1>
             </div>
-        </li>
-        <li class="span12">
-            <div class="thumbnail" id='total' data-href="{% url whs:total_handler %}">
-                <div></div>
-                <div class="caption">
-                    <h5>Продажа кирпичей по виду, размеру, цвету и марке</h5>
+            <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+                {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+                <input type="submit" class="btn">
+            </form>
+        </div>
 
-                    <form>
-                        {% with year=form.date__year month=form.date__month %}
-                            {% include 'whs/widgets/year-month-select.html' %}
-                        {% endwith %}
-                        <button id='total_show' type="submit" data-loading-text='Загрузка' style='vertical-align: top'
-                                class="btn btn-primal">Показать
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </li>
-    </ul>
+    <div class='row'>
+        <div class='span12'>
+            <table class='table table-bordered'>
+                <tbody>
+                    <tr>
+                        <th>
+                            <span class='pull-right'>Из</span>
+                            <span>В</span>
+                        </th>
+                    {% for k in data.keys %}
+                        <th>{{ k }}</th>
+                    {% endfor %}
+                </tr>
+            {% for k,d in data.items %}
+            <tr>
+                <th>{{ k }}</th>
+                {% for k,v in d.items %}
+                    <td>{{ v }}</td>
+                {% endfor %}
+            </td>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

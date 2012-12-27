@@ -5,8 +5,9 @@ body {
     background-attachment: fixed;
     background-size: 11%;
 }
+
 .navbar .brand {font-weight: bold;font-size: 20px; color:black;}
-.navbar .nav >li > a {padding: 10px 10px 10px}
+.navbar .nav >li > a {padding: 10px 10px 10px;}
 
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
@@ -233,3 +234,7 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 
 .icon-Inventory { background-position: -144px -96px }
 .icon-Write_off { background-position: -120px -24px }
+
+@media print {
+    a.btn {display: none !important; }
+}

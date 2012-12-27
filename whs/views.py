@@ -145,7 +145,7 @@ def bills(request):
         queryset = queryset.filter(**data)
     return render(request,'whs/bills.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
-
+    
 def agents(request):
     alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"
     Agents = Agent.objects.all()
@@ -268,6 +268,30 @@ def verification(request):
         total = dict(base=Brick.objects.aggregate(Sum('total'))['total__sum'], csv=sum([int(r[f]) for r in oborot]))
     return render(request, 'whs/verification.html', dict(form=form, deriv=deriv, total=total, counter=c))
 
+from bkz.whs.constants import mark_c
+from collections import OrderedDict
+def transfers(request):
+    datefilter = YearMonthFilter(request.GET or None,model=Bill)
+    queryset = Sold.objects.filter(brick_from__isnull=False).values('brick__mark','brick_from__mark').annotate(Sum('amount'))
+    if datefilter.is_valid():
+        data = dict([('doc__'+k,v) for k,v in datefilter.cleaned_data.items() if v])
+    else:
+        date = datetime.date.today()
+        data = {'doc__date__year':date.year,'doc__date__month':date.month}
+    queryset = queryset.filter(**data)
+    d = dict(map(lambda x: (x[0],0),mark_c))
+    out = OrderedDict()
+    for m,l in mark_c:
+        out[m]=OrderedDict()
+        for w,l in mark_c:
+            out[m][w]=0
+    d = out
+    for s in queryset:
+        q = out.get(s['brick_from__mark'],d)
+        q[s['brick__mark']]=s['amount__sum']
+        out[s['brick_from__mark']]=q
+    print out
+    return render(request,'core/stats.html',{'data':out,'datefilter':datefilter})
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):
