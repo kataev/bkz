@@ -3,9 +3,10 @@ from whs.models import Sorting, Sold, Write_off
 from lab.models import Part
 
 def operations(filter):
-    m_from = Sorting.objects.filter(type=0)
-    m_to = Sorting.objects.filter(type=1)
-    m_rmv = Sorting.objects.filter(type=2)
+    print filter
+    m_from = Sorting.objects.filter(type=0).filter(**filter)
+    m_to = Sorting.objects.filter(type=1).filter(**filter)
+    m_rmv = Sorting.objects.filter(type=2).filter(**filter)
     part_filter = dict([('batch__%s' % k, v) for k, v in filter.items()])
     add = Part.objects.filter(**part_filter)
     doc_filter = dict([('doc__%s' % k, v) for k, v in filter.items()])

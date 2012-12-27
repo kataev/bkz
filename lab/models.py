@@ -418,6 +418,7 @@ class Part(models.Model):
     class Meta():
         verbose_name = u"Часть партии"
         verbose_name_plural = u"Часть партии"
+        ordering = ('-batch__date','-batch__number',)
 
 
 class RowPart(models.Model):

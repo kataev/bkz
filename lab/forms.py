@@ -297,3 +297,12 @@ class BatchFilter(BatchForm):
     class Meta:
         fields = ('cavitation','width','color','mark')
         model = Batch
+
+from bkz.whs.forms import BrickSelect
+class PartAddForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        fields = ('brick',)
+        widgets = {'brick':BrickSelect}
+        model = Part
+
+PartAddFormSet = modelformset_factory(Part,form=PartAddForm, extra=0)

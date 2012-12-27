@@ -22,16 +22,17 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-                {% block navbar-form %}
-                {% endblock %}
                 <ul class="nav pull-right">
                 {% if messages %}
                     <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-html='true' data-original-title="<i class='icon-info-sign'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
                 {% endif %}
-
-                    {% include 'core/auth.html' %}
+                {% load pytils_numeral %}
+                {% if user.is_authenticated %}
+                    <li><a href="#"> <i class='icon-flag'></i> {{ user.first_name }} {{ user.last_name }} </a></li>
+                {% else %}
+                    <li><a href="{% url login %}"><i class='icon-flag'></i> Гость</a></li>
+                {% endif %}
                 {% if menu|length %}
-                    <li class="divider-vertical"></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus '></i>
                             Создать <b class="caret"></b></a>
@@ -48,7 +49,6 @@
                 {% endif %}
                 </ul>
             </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
 </div>

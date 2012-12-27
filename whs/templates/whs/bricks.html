@@ -4,7 +4,7 @@
 {% block container %}
     <div class="container">
         <div class="row">
-            <div class="span4 offset4" style='text-align: center'>
+            <div class="span7">
                 <h1 class="">
                     {{ begin|date:'Y F' }}
                     {% if begin.year != end.year or begin.month != end.month %}
@@ -12,7 +12,7 @@
                     {% endif %}
                 </h1>
             </div>
-            <form method="GET" action="" class="form-inline span4" style='margin-top: 10px'>
+            <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
                 {% with year=form.date__year month=form.date__month %}
                     {% include 'whs/widgets/year-month-select.html' %}
                 {% endwith %}

@@ -21,7 +21,6 @@ nav = dict(
         ('whs:Bill-list', 'icon-whs', u'Реализация'),
         ('whs:Add-list', 'icon-man', u'Производство'),
         ('whs:Sorting-list', 'icon-indent-right', u'Сортировка'),
-        ('divider',),
         ('whs:Agent-list', 'icon-Agent', u'Контрагенты'),
         ),
     it=(

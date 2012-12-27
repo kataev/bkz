@@ -7,8 +7,9 @@ import logging
 from exceptions import ValueError
 from dateutil.relativedelta import relativedelta
 
-from django.db.models import Max, Sum, F
 from django.http import Http404
+from django.contrib import messages
+from django.db.models import Max, Sum, F
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
@@ -19,8 +20,8 @@ from bkz.whs.forms import BillFilter, YearMonthFilter
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
 from whs.forms import SoldFactory, PalletFactory
 from whs.models import *
-from lab.models import Batch
-from lab.forms import BatchFilter
+from lab.models import Batch,Part
+from lab.forms import BatchFilter,PartAddFormSet
 
 
 from whs.utils import operations, calc
@@ -145,7 +146,6 @@ def bills(request):
     return render(request,'whs/bills.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
 
-
 def agents(request):
     alphabet = u"АБВГДЕЁЖЗИКЛМНОПРСТФХЦЧШЩЫЮЯ"
     Agents = Agent.objects.all()
@@ -168,9 +168,15 @@ def journal(request):
     return render(request, 'whs/journal.html',dict(sorting=sorting,bills=bills,adds=adds,date=date))
 
 def batchs(request):
-    queryset = Batch.objects.all()
+    queryset = Batch.objects.select_related('frost_resistance','width').prefetch_related('parts','parts__rows').all()
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
     batchfilter = BatchFilter(request.GET or None)
+    factory = PartAddFormSet(request.POST or None,queryset=Part.objects.select_related('brick','brick__width')\
+        .prefetch_related('batch','rows','batch__frost_resistance','batch__width').filter(brick__isnull=True))
+    if request.method == 'POST' and factory.is_valid():
+        factory.save()
+        messages.add_message(request, messages.SUCCESS, u'Успешно сохранено!')
+        return redirect(reverse_lazy('whs:Add-list'))
     if batchfilter.is_valid():
         pass
     rpp = request.GET.get('rpp',20)
@@ -178,7 +184,7 @@ def batchs(request):
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
     return render(request, 'whs/batchs.html', dict(object_list=queryset,rpp=rpp,
-        datefilter=datefilter,filter=batchfilter,))
+        datefilter=datefilter,filter=batchfilter,factory=factory))
 
 def sortings(request):
     def prep1(v):
@@ -198,7 +204,6 @@ def sortings(request):
         date = datetime.date.today()
         data = {'date__year':date.year,'date__month':date.month}
         q2 = q2.filter(**data)
-        for q in tuple(map(prep2,[q1,q2])): print q
         queryset = Sorting.objects.raw("(%s) UNION (%s) ORDER BY date DESC" % tuple(map(prep2,[q1,q2])))
     return render(request, 'whs/sortings.html', dict(object_list=queryset,rpp=rpp,datefilter=datefilter))
 

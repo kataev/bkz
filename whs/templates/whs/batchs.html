@@ -6,8 +6,40 @@
     {% load pagination_tags %}
     {% autopaginate object_list rpp %}
     <div class="row">
-        <div class="span9">
-            <table id='Bills' class="table table-bordered table-condensed">
+        {% if factory|length %}
+        <div class='span12' id='brickfade'>
+            <form method="POST" action="{% url whs:Add-list %}" id='form'>
+                {% csrf_token %}
+                {{ factory.management_object }}
+                {{ factory.management_form }}
+        <table id='parts' class='table table-bordered table-condensed'>
+            <caption><h1>Новые партии</h1></caption>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+
+                    <th>№</th>
+                    <th>Название</th>
+                    <th>Кирпич</th>
+                </tr>
+            </thead>
+            {% for form in factory %}
+                {% include 'whs/part_form.html' with form=form %}
+            {% endfor %}
+        </table>
+        <div class="form-actions">
+            <div class="container">
+            <button type="submit" class="btn btn-primary" form="form">
+                <i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+            </div>
+        </div>
+    </form>
+        </div>
+        {% endif %}
+        {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks class='span12' %}
+        <div class="span9" >
+            <table id='batchs' class="table table-bordered table-condensed">
             <caption><h1>Партии</h1></caption>
                 {# <thead> #}
                 {# <tr> #}
@@ -30,27 +62,6 @@
                 </tbody>
             </table>
             {% paginate using 'pagination/pagination.html' %}
-        </div>
-        <div class="span3">
-        {{ form.errors }}
-            <form class="filter form-inline" action="" method="GET">
-                <fieldset>
-                    <legend style='margin-bottom:0'><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр
-                    </legend>
-                    <div class='control-group'>
-{% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
-                    </div>
-                    {{ filter.as_div }}
-                    <div class='control-group'>
-                        <button type="submit" class="small btn btn-info">
-                            <i class="icon-search icon-white"></i> Фильтр
-                        </button>
-                        <button type="reset" class="small btn">
-                            Сбросить
-                        </button>
-                    </div>
-                </fieldset>
-            </form>
         </div>
     </div>
     </div>

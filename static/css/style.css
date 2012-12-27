@@ -6,10 +6,15 @@ body {
     background-size: 11%;
 }
 .navbar .brand {font-weight: bold;font-size: 20px; color:black;}
+.navbar .nav >li > a {padding: 10px 10px 10px}
 
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 form.filter label {display: none}
+#parts label {display: none}
+.help-inline {float: right}
+#parts .control-group {margin: 0;padding: 0}
+#parts .brickselect {margin: 0;}
 #brickselect-buttons input {vertical-align: top}
 #brickselect-buttons label {margin-bottom: 0}
 #brickselect-buttons {margin: 0}
