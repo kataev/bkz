@@ -19,6 +19,9 @@ from bkz.whs.forms import BillFilter, YearMonthFilter
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
 from whs.forms import SoldFactory, PalletFactory
 from whs.models import *
+from lab.models import Batch
+from lab.forms import BatchFilter
+
 
 from whs.utils import operations, calc
 
@@ -166,7 +169,7 @@ def bills(request):
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
-    return render(request,'whs/bill_list.html',dict(billfilter=billfilter,datefilter=datefilter,
+    return render(request,'whs/bill_list.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
 
 
@@ -191,18 +194,34 @@ def journal(request):
     adds = []
     return render(request, 'whs/journal.html',dict(sorting=sorting,bills=bills,adds=adds,date=date))
 
-def man_main(request):
-    form = DateForm(request.GET or None)
-    if form.is_valid():
-        date = form.cleaned_data.get('date')
-    else:
-        date = datetime.date.today()
-    return render(request, 'whs/add-list.html', dict( form=form))
+def batchs(request):
+    queryset = Batch.objects.all()
+    datefilter = YearMonthFilter(request.GET or None)
+    datefilter.Meta.dates = Batch.objects.dates('date', 'month')[::-1]
+    batchfilter = BatchFilter(request.GET or None)
+    if batchfilter.is_valid():
+        pass
+    rpp = request.GET.get('rpp',20)
+    if datefilter.is_valid():
+        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        queryset = queryset.filter(**data)
+    return render(request, 'whs/add_list.html', dict(object_list=queryset,rpp=rpp,
+        datefilter=datefilter,filter=batchfilter,))
 
-from webodt.shortcuts import render_to_response
-def bill_print(request, pk):
-    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
-    return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)
+def sortings(request):
+    queryset = Sorting.objects.all()
+    datefilter = YearMonthFilter(request.GET or None)
+    datefilter.Meta.dates = Sorting.objects.dates('date', 'month')[::-1]
+    # batchfilter = BatchFilter(request.GET or None)
+    # if batchfilter.is_valid():
+        # pass
+    rpp = request.GET.get('rpp',20)
+    if datefilter.is_valid():
+        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        queryset = queryset.filter(**data)
+    return render(request, 'whs/sorting_list.html', dict(object_list=queryset,rpp=rpp,
+        datefilter=datefilter))
+
 
 def brick_main(request):
     """ Главная страница """
@@ -265,3 +284,7 @@ def verification(request):
     return render(request, 'whs/verification.html', dict(form=form, deriv=deriv, total=total, counter=c))
 
 
+from webodt.shortcuts import render_to_response
+def bill_print(request, pk):
+    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
+    return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)

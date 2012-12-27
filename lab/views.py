@@ -58,8 +58,8 @@ class BatchUpdateView(UpdateView):
 def index(request):
     batch_list = Batch.objects.all().select_related('frost_resistance','width')\
                     .prefetch_related('parts','parts__rows','parts__cause')
-    raw_list = Raw.objects.all()
-    return render(request,'lab/index.html',dict(batch_list=batch_list,raw_list=raw_list))
+    
+    return render(request,'lab/index.html',dict(object_list=batch_list))
 
 
 from webodt.shortcuts import render_to_response

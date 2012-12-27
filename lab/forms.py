@@ -3,8 +3,10 @@ import django.forms as forms
 from django.forms.models import inlineformset_factory, modelformset_factory
 from bkz.bootstrap.forms import BootstrapMixin,Fieldset
 
+from bkz.whs.models import Width
 from bkz.lab.models import *
 from bkz.whs.forms import BatchInput,DateInput,NumberInput
+
 
 class SplitDateTimeHTML5Widget(forms.SplitDateTimeWidget):
     def __init__(self, attrs=None, date_format=None, time_format=None):
@@ -279,3 +281,19 @@ class BatchTestsForm(forms.ModelForm):
             'pressure':forms.HiddenInput,
             'chamfer':NumberInput,
             }
+
+class BatchFilter(BatchForm):
+    width = forms.ModelChoiceField(queryset=Width.objects.all(),required=False)
+    def __init__(self,*args,**kwargs):
+        super(BatchFilter, self).__init__(*args,**kwargs)
+        self.fields['color'].choices = [('', 'Цвет'),] + self.fields['color'].choices
+        self.fields['color'].required = False
+        self.fields['color'].initial = None
+        self.fields['cavitation'].choices = [('', 'Пустоность'),] + self.fields['cavitation'].choices
+        self.fields['cavitation'].required = False
+        self.fields['cavitation'].initial = None
+        
+
+    class Meta:
+        fields = ('cavitation','width','color','mark')
+        model = Batch

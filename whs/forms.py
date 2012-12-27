@@ -240,38 +240,20 @@ class PartSelect(forms.Select):
         return u'\n'.join(output)
 
 class SortingForm(BootstrapMixin, forms.ModelForm):
-    def __init__(self,*args,**kwargs):
-        super(SortingForm,self).__init__(*args,**kwargs)
-        self.fields['part'].queryset = Part.objects.select_related('batch')
-        self.fields['part'].required = True
-
+    # def __init__(self,*args,**kwargs):
+    #     super(SortingForm,self).__init__(*args,**kwargs)
+    #     self.fields['part'].queryset = Part.objects.select_related('batch')
+    #     self.fields['part'].required = True
 
     class Meta:
         model = Sorting
-        exclude = ('source','brock')
         widgets = {
+            'source':forms.HiddenInput,
             'date': DateInput,
             'brick': BrickSelect,
             'amount': NumberInput,
             'info': forms.Textarea(attrs={'rows': 1}),
             }
-
-
-class SortedForm(SortingForm):
-    class Meta():
-        template_base = 'bootstrap/table'
-        model = Sorting
-        exclude = ('source')
-        widgets = {
-            'part': forms.TextInput(attrs={'class': 'span1', 'disabled': 'disabled'}),
-            'date': DateInput(attrs={'style': 'width:80px'}),
-            'brick': BrickSelect,
-#            'brock':forms.HiddenInput,
-            'amount': forms.TextInput(attrs={'class': 'span1'}),
-            'info': forms.Textarea(attrs={'rows': 1}),
-            }
-
-#SortedFactory = inlineformset_factory(Sorting, Sorting, form=SortedForm, extra=0)
 
 class Write_offForm(forms.ModelForm):
     class Meta:

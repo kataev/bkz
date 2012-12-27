@@ -218,12 +218,12 @@ class Nomenclature(models.Model, UrlMixin):
 class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
+
+sorting_type_c = ((0,u'В цех'),(1,u'Из цеха'),(2,u'Списание'))
+
 class Sorting(models.Model,UrlMixin):
-    """ Класс документа для учета сортировки кипича из одного товара в другой
-        В цех - кирпич, кол-во, дата, номер и год партии. (ajax проверка)
-        Из цеха - кирпич, кол-во, дата, источники ( сортировки в цех ), нормер и год партии ( ajax проверка и кнопка для создания)
-        Списание - кол-во, дата, источник ( сортировки в цех ), номер акта о списании?
-    """
+    """ Класс документа для учета сортировки кипича из одного товара в другой """
+    type = models.IntegerField(u'Тип',choices=sorting_type_c)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
@@ -231,7 +231,7 @@ class Sorting(models.Model,UrlMixin):
     batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
     batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
 
-    source = models.ManyToManyField('self',null=True,blank=True,related_name='sorted')
+    source = models.ForeignKey('self',null=True,blank=True,related_name='sorted')
 
     class Meta():
         verbose_name = u"Сортировка"

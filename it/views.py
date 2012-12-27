@@ -8,11 +8,7 @@ from django.db.models import Count,Sum
 
 def main(request):
     """ Главная страница """
-    devices = Device.objects.all().prefetch_related('plug')
-    
-
-
-    
+    divices = Device.objects.all().prefetch_related('plug')
     c = Buy.objects.all().select_related()[:10]
     replaces = Plug.objects.order_by('-date').all().select_related()[:10]
 
@@ -20,7 +16,6 @@ def main(request):
     plug = dict(Plug.objects.values_list('bill__cartridge').order_by().annotate(Count('id')))
 
     totals = dict([(pk,v-plug.get(pk,0)) for pk,v in buy.items()])
-
     return render(request, 'it/it.html',dict(divices=divices,cons=c,totals=totals,replaces=replaces))
 
 

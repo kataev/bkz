@@ -19,7 +19,7 @@ nav = dict(
         ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('divider',),
         ('whs:Bill-list', 'icon-whs', u'Реализация'),
-#        ('whs:Add-list', 'icon-man', u'Производство'),
+       ('whs:Add-list', 'icon-man', u'Производство'),
         ('divider',),
         ('whs:Agent-list', 'icon-Agent', u'Контрагенты'),
         ),
