@@ -1,5 +1,5 @@
 .bc-red {
-  background-color: #f77a6c;
+  background-color: #f77a6c !important;
   color: inherit;
   fill: #f77a6c;
 }
@@ -23,7 +23,7 @@ a.btn.bc-red.active {
   background-color: #f66d5d;
 }
 .bc-yellow {
-  background-color: #f6d87c;
+  background-color: #f6d87c !important;
   color: inherit;
   fill: #f6d87c;
 }
@@ -42,7 +42,7 @@ a.bc-yellow.active {
   background-color: #f5d46e;
 }
 .bc-brown {
-  background-color: #d48b6b;
+  background-color: #d48b6b !important;
   color: inherit;
   fill: #d48b6b;
 }
@@ -64,7 +64,7 @@ a.btn.bc-brown.active {
   background-color: #cf7f5b;
 }
 .bc-light {
-  background-color: #38d187;
+  background-color: #38d187 !important;
   color: inherit;
   fill: #38d187;
 }

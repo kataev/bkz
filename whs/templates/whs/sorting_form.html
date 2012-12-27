@@ -9,23 +9,12 @@
             {% endfor %}
             <div class="row">
                 <div class='span5'>
-                    <fieldset>
+                    <fieldset class="{{ form.Meta.model|class_name }} less">
                         <legend>{{ form.instance.get_type_display }}</legend>
                     {{ form.as_div }}
                     </fieldset>
                 </div>
-                <div class="span7" style="display: none;" id="brickselect">
-                    <fieldset>
-                        <legend>
-                            Выбор кирпича
-                                <a class="btn btn-success">Назад</a>
-
-                        </legend>
-                        <div style='overflow: auto;height: 450px'>
-                            {% include 'whs/widgets/brickselect-table.html' %}
-                        </div>
-                    </fieldset>
-                </div>
+                {% include 'whs/widgets/brickselect-table.html' %}
             </div>
         </form>
     </div>

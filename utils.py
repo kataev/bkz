@@ -10,6 +10,16 @@ from django.db.models import permalink
 
 from pytils.dt import ru_strftime
 
+def get_form(self, form_class):
+    form = form_class(**self.get_form_kwargs())
+    for key in self.request.GET:
+        try:
+            form.fields[key].initial = self.request.GET[key]
+        except KeyError:
+            pass
+    return form
+CreateView.get_form = get_form
+
 def app_urlpatterns(app_name):
     urls = patterns('')
     app = get_app(app_name)

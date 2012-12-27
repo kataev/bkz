@@ -85,22 +85,6 @@ class BillUpdateView(UpdateView):
             context['opers'][prefix] = factory(self.request.POST or None, instance=self.object)
         return context
 
-class SortingCreateView(CreateView):
-    def get_initial(self):
-        """
-        Returns the initial data to use for forms on this view.
-        """
-        initial = self.initial.copy()
-        part = self.request.GET.get('part',None)
-        if part:
-            initial['part']=part
-        return initial
-
-
-#class SortingUpdateView(BillUpdateView):
-#    opers = [SortedFactory]
-
-
 class BillCreateView(CreateView):
     def get_initial(self):
         initial = self.initial.copy()
@@ -140,17 +124,6 @@ class BrickUpdateView(UpdateView):
         self.object.save()
         return super(UpdateView, self).form_valid(form)
 
-
-class BillListView(ListView):
-    
-    model = Bill
-    paginate_by = 20
-
-    def get_paginate_by(self, queryset):
-        try: p = int(self.request.GET.get('rpp', ''))
-        except ValueError: p = self.paginate_by
-        return p
-
 def bills(request):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
         'agent').select_related()
@@ -169,7 +142,7 @@ def bills(request):
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
-    return render(request,'whs/bill_list.html',dict(filter=billfilter,datefilter=datefilter,
+    return render(request,'whs/bills.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
 
 
@@ -181,7 +154,7 @@ def agents(request):
         Agents = Agents.filter(name__iregex=u"^%s." % letter[0])
     else:
         Agents = Agents[:20]
-    return render(request, 'whs/agent_list.html', dict(Agents=Agents, alphabet=alphabet))
+    return render(request, 'whs/agents.html', dict(Agents=Agents, alphabet=alphabet))
 
 def journal(request):
     form = DateForm(request.GET or None)
@@ -205,11 +178,11 @@ def batchs(request):
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
-    return render(request, 'whs/add_list.html', dict(object_list=queryset,rpp=rpp,
+    return render(request, 'whs/batchs.html', dict(object_list=queryset,rpp=rpp,
         datefilter=datefilter,filter=batchfilter,))
 
 def sortings(request):
-    queryset = Sorting.objects.all()
+    queryset = Sorting.objects.prefetch_related('sorted').filter(type=0).annotate(Sum('sorted__amount'))
     datefilter = YearMonthFilter(request.GET or None)
     datefilter.Meta.dates = Sorting.objects.dates('date', 'month')[::-1]
     # batchfilter = BatchFilter(request.GET or None)
@@ -219,11 +192,11 @@ def sortings(request):
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
-    return render(request, 'whs/sorting_list.html', dict(object_list=queryset,rpp=rpp,
+    return render(request, 'whs/sortings.html', dict(object_list=queryset,rpp=rpp,
         datefilter=datefilter))
 
 
-def brick_main(request):
+def bricks(request):
     """ Главная страница """
     Bricks = Brick.objects.all()
     form = YearMonthFilter(request.GET or None)
@@ -261,7 +234,7 @@ def brick_main(request):
                    + b.m_from - b.m_to # + b.m_rmv # Перебор кирпича в цехе
             )
         b.opers = b.sold or b.add or b.t_from or b.t_to or b.m_from or b.m_to or b.m_rmv or b.inv
-    return render(request, 'whs/brick-list.html',
+    return render(request, 'whs/bricks.html',
         dict(Bricks=Bricks, order=Brick.order, form=form,brick_menu = get_menu(), 
             begin=begin, end=end - datetime.timedelta(1)))
 

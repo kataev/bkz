@@ -219,7 +219,7 @@ class BuhAgent(Agent):
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
 
-sorting_type_c = ((0,u'В цех'),(1,u'Из цеха'),(2,u'Списание'))
+sorting_type_c = ((0,u'В цех'),(1,u'Из цеха'),(2,u'Списанно'))
 
 class Sorting(models.Model,UrlMixin):
     """ Класс документа для учета сортировки кипича из одного товара в другой """
@@ -236,9 +236,31 @@ class Sorting(models.Model,UrlMixin):
     class Meta():
         verbose_name = u"Сортировка"
 
+    @property
+    def total(self):
+        return self.amount - getattr(self,'sorted__amount__sum',0)
+
+    @property
+    def get_days_in_work(self):
+        if self.source:
+            return (self.source.date - self.date).days
+
+    def get_type_class_display(self):
+        if self.type == 0:
+            return 'info'
+        elif self.type == 1:
+            return 'success'
+        elif self.type == 2:
+            return 'error'
+
+    def get_batch_display(self):
+        if datetime.date.today().year != self.batch_year:
+            return '%d, %s' % (self.batch_number,self.batch_year)
+        else: return self.batch_number
+
     def __unicode__(self):
         if self.pk:
-            return u'В сортировку %s, %s - %d шт' % (ru_date(self.date),self.brick,self.amount)
+            return u'%s %s, %s - %d шт' % (self.get_type_display(),ru_date(self.date),self.brick,self.amount)
         else:
             return u'Новая сортировка'
 

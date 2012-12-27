@@ -33,18 +33,7 @@
             </table>
             {% paginate using 'pagination/pagination.html' %}
         </div>
-        <div class="span9" style="display: none;" id="brickshow">
-                    <fieldset>
-                        <legend>
-                            Выбор кирпича
-                            <a class="btn btn-success back"><i class='icon-arrow-left icon-white'></i> Назад</a>
-
-                        </legend>
-                        <div style='overflow: auto;height: 450px'>
-                            {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks %}
-                        </div>
-                    </fieldset>
-                </div>
+        {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks class='span9' %}
         <div class="span3">
         {{ form.errors }}
             <form class="filter form-inline" action="" method="GET">

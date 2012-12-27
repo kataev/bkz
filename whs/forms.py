@@ -240,15 +240,19 @@ class PartSelect(forms.Select):
         return u'\n'.join(output)
 
 class SortingForm(BootstrapMixin, forms.ModelForm):
-    # def __init__(self,*args,**kwargs):
-    #     super(SortingForm,self).__init__(*args,**kwargs)
-    #     self.fields['part'].queryset = Part.objects.select_related('batch')
-    #     self.fields['part'].required = True
+    def __init__(self,*args,**kwargs):
+        super(SortingForm,self).__init__(*args,**kwargs)
+        if self['source'].value():
+            self.fields['type'].choices= self.fields['type'].choices[1:]
+        else:
+            self.fields['type'].initial = 0
+            self.fields['type'].widget = forms.HiddenInput()
 
     class Meta:
         model = Sorting
         widgets = {
             'source':forms.HiddenInput,
+            'type':forms.HiddenInput,
             'date': DateInput,
             'brick': BrickSelect,
             'amount': NumberInput,

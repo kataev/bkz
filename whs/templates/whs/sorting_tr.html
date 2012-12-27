@@ -1,10 +1,24 @@
-<tr class='Sorting {{ s.brick.css }}' data-opers='Sorting_{{ s.pk }}'>
-    <td colspan="2"> {{ s.date|date:'j M Y' }} </td>
-    <td>{{ s.brick }} <i class="icon-zoom-in pull-right" ></i></td>
+<tr class='Sorting {{ s.get_type_class_display }}' data-opers='Sorting_{{ s.pk }}'>
+	<th>{{ s.get_type_display }}</th>
+    <td> {{ s.date|date:'j M Y' }} </td>
+    <td>{{ s.get_batch_display }}</td>
+    <td class='{{ s.brick.css }}'>{{ s.brick }} <i class="icon-zoom-in pull-right" ></i></td>
     <td>{{ s.amount }}</td>
 </tr>
-<tbody class="opers" style='display: none' id='Sorting_{{ s.pk }}'>
-{% for so in s.sorted.all %}
-    {% include 'whs/sorted_tr.html' %}
-{% endfor %}
+<tbody class="opers" id='Sorting_{{ s.pk }}'>
+	{% for so in s.sorted.all %}
+    	<tr class='Sorting {{ so.get_type_class_display }}'>
+			<td>{{ so.get_type_display }}</td>
+    		<td> {{ so.date|date:'j M Y' }} 
+    			<span class='badge' title='Провело дней в работе'>{{ so.get_days_in_work }}</span> 
+    		</td>
+    		<td>{{ so.get_batch_display }}</td>
+			<td class='{{ s.brick.css }}'>{{ so.brick }}</td>
+    		<td>{{ so.amount }}</td>
+		</tr>	
+	{% endfor %}
 </tbody>
+<tr>
+    <th colspan="4" style='text-align:right'>Остаток от партии № {{ s.get_batch_display }}</th>
+    <td>{{ s.total }}</td>
+</tr>
