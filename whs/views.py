@@ -128,7 +128,7 @@ def bills(request):
     queryset = Bill.objects.prefetch_related('solds', 'pallets', 'solds__brick', 'solds__brick_from', 'seller',
         'agent').select_related()
     billfilter = BillFilter(request.GET or None)
-    datefilter = YearMonthFilter(request.GET or None)
+    datefilter = YearMonthFilter(request.GET or None,model=Bill)
     rpp = request.GET.get('rpp',20)
     if billfilter.is_valid():
         data = dict(filter(lambda i:i[1],billfilter.cleaned_data.items()))
@@ -169,8 +169,7 @@ def journal(request):
 
 def batchs(request):
     queryset = Batch.objects.all()
-    datefilter = YearMonthFilter(request.GET or None)
-    datefilter.Meta.dates = Batch.objects.dates('date', 'month')[::-1]
+    datefilter = YearMonthFilter(request.GET or None,model=Batch)
     batchfilter = BatchFilter(request.GET or None)
     if batchfilter.is_valid():
         pass
@@ -190,25 +189,24 @@ def sortings(request):
         return query.replace('SUM(T4."amount")','COALESCE(SUM(T4."amount"),0)') % tuple(map(prep1,params))
     q1 = Sorting.objects.filter(type=0).annotate(Sum('sorted__amount')).exclude(sorted__amount__sum=F('amount'))
     q2 = Sorting.objects.filter(type=0).annotate(Sum('sorted__amount'))
-    datefilter = YearMonthFilter(request.GET or None)
-    datefilter.Meta.dates = Sorting.objects.dates('date', 'month')[::-1]
+    datefilter = YearMonthFilter(request.GET or None,model=Sorting)
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        queryset = q2.filter(**data)
     else:
         date = datetime.date.today()
         data = {'date__year':date.year,'date__month':date.month}
-    # q1 = q1.exclude(**data)
-    q2 = q2.filter(**data)
-    for q in tuple(map(prep2,[q1,q2])): print q
-    queryset = Sorting.objects.raw("(%s) UNION (%s)" % tuple(map(prep2,[q1,q2])))
+        q2 = q2.filter(**data)
+        for q in tuple(map(prep2,[q1,q2])): print q
+        queryset = Sorting.objects.raw("(%s) UNION (%s) ORDER BY date DESC" % tuple(map(prep2,[q1,q2])))
     return render(request, 'whs/sortings.html', dict(object_list=queryset,rpp=rpp,datefilter=datefilter))
 
 
 def bricks(request):
     """ Главная страница """
     Bricks = Brick.objects.all()
-    form = YearMonthFilter(request.GET or None)
+    form = YearMonthFilter(request.GET or None,model=Bill)
     if form.is_valid():
         data = dict([(k, v) for k, v in form.cleaned_data.items() if v is not None])
         if data.has_key('date__month'):

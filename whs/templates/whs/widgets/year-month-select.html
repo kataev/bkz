@@ -1,6 +1,6 @@
-<select class="span1" name="{{ year.name }}">
+<select class="span1" name="{{ year.name }}" style='min-width:70px'>
     <option value="">Год</option>
-    {% for d in form.Meta.dates %}
+    {% for d in form.dates %}
         {% ifchanged d.year %}
             <option
                     {% if d.year == year.value|add:0 %}selected="selected" {% endif %}
@@ -8,10 +8,10 @@
         {% endifchanged %}
     {% endfor %}
 </select>
-<select class="span2" name="{{ month.name }}">
+<select class="span2" name="{{ month.name }}" style='min-width:170px'>
     <optgroup label="Выберите месяц">
         <option value="">Месяц</option>
-        {% for d in form.Meta.dates %}
+        {% for d in form.dates %}
             {% ifchanged d.year %}
                 </optgroup>
                 <optgroup label="{{ d|date:'Y'  }}">

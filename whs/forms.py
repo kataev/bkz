@@ -162,8 +162,10 @@ class YearMonthFilter(BootstrapMixin,forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
 
-    class Meta:
-        dates = Bill.objects.dates('date', 'month')[::-1]
+    def __init__(self, *args, **kwargs):
+        model = kwargs.pop('model')
+        super(BootstrapMixin, self).__init__(*args, **kwargs)
+        self.dates = model.objects.dates('date', 'month')[::-1]
 
 records_per_page = (
     (10, '10 записей на странице'),
