@@ -3,8 +3,6 @@
 {% block title %}Партии{% endblock %}
 {% block container %}
     <div class="container">
-    {% load pagination_tags %}
-    {% autopaginate object_list rpp %}
     <div class="row">
         <div class="span9">
             <table id='sortings' class="table table-bordered table-condensed">
@@ -12,7 +10,7 @@
                 <thead>
                 <tr>
                     <th width=45px>#</th>
-                    <th width="110px">Дата</th>
+                    <th width="115px">Дата</th>
                     <th width='70px'>№ партии</th>
                     <th>Кирпич</th>
                     <th style='width:60px;'>Кол-во</th>
@@ -20,11 +18,10 @@
                 </thead>
                 <tbody>
                 {% for s in object_list %}
-                        {% include 'whs/sorting_tr.html' %}
+                    {% include 'whs/sorting_tr.html' %}
                 {% endfor %}
                 </tbody>
             </table>
-            {% paginate using 'pagination/pagination.html' %}
         </div>
         <div class="span3">
         {{ form.errors }}

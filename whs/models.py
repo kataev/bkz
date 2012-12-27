@@ -243,7 +243,7 @@ class Sorting(models.Model,UrlMixin):
     @property
     def get_days_in_work(self):
         if self.source:
-            return (self.source.date - self.date).days
+            return (self.date - self.source.date).days
 
     def get_type_class_display(self):
         if self.type == 0:

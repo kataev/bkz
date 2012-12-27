@@ -2,7 +2,14 @@
 	<th>{{ s.get_type_display }}</th>
     <td> {{ s.date|date:'j M Y' }} </td>
     <td>{{ s.get_batch_display }}</td>
-    <td class='{{ s.brick.css }}'>{{ s.brick }} <i class="icon-zoom-in pull-right" ></i></td>
+    <td class='{{ s.brick.css }}'>{{ s.brick }} 
+        {# {% if s.total %} #}
+            <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=2' class='btn btn-mini pull-right btn-success'>
+                Из цеха</a> 
+            <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=1' class='btn btn-mini pull-right btn-warning'>
+                Списать</a>
+        {# {% endif %} #}
+    </td>
     <td>{{ s.amount }}</td>
 </tr>
 <tbody class="opers" id='Sorting_{{ s.pk }}'>

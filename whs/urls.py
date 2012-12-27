@@ -2,6 +2,7 @@
 from bkz.utils import app_urlpatterns,url,patterns
 
 urlpatterns = patterns('bkz.whs.views',
+    url(ur'^$', 'bricks', name='index'), # for deleteView
     url(ur'^$', 'bricks', name='Brick-list'),
     url(ur'^Контрагенты$', 'agents', name='Agent-list'),
     url(ur'^Реализация/$', 'bills',name='Bill-list'),

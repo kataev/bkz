@@ -19,6 +19,8 @@ form.filter label {display: none}
 #brickselect td {padding: 0px 5px}
 #brickselect tr:hover {text-decoration: underline;}
 
+#sortings a.btn-mini {padding: 0px 6px;border: none;margin-left: 2px}
+
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
 div.controls ul {list-style: none}
