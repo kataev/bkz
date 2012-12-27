@@ -1,0 +1,15 @@
+<tr class='Batch' data-opers='Batch_{{ b.pk }}'>
+    <td>{{ b.date }}</td>
+    <td>
+        <a href="{{ b.get_absolute_url }}">{{ b }} , {{ b.get_full_name }}</a> 
+    </td>
+    <td>
+        <table>
+            <tbody>
+            {% for p in b.parts.all %}
+                <tr><td>{{ p }}</td></tr>            
+            {% endfor %}
+            </tbody>
+        </table>
+    </td>
+</tr>

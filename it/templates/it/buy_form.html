@@ -1,19 +1,33 @@
-{% extends 'whs/brick_form.html' %}
-{% block right %}
-    <div class="span5">
-        <table class="table">
-            <caption><h1>Список замен</h1></caption>
-            <thead>
-            </thead>
-            <tbody>
-            {% for b in object.plug.all %}
-                <tr>
-                    <td><a href="{{ b.get_absolute_url }}">{{ b.date }}</a></td>
-                    <td><a href="{{ b.printer.get_absolute_url }}">{{ b.printer }}</a></td>
-                </tr>
-            {% endfor %}
-
-            </tbody>
-        </table>
+{% extends 'core/form.html' %}
+{% block form %}
+    <div class="container">
+            <form method="POST" action="" class='form-horizontal' id="form">
+                {% csrf_token %}
+            <div class="row">
+                <div class='span6'>
+                    <fieldset>
+                        <legend>
+                             {{ form.instance }}
+                        </legend>
+                        {{ form.as_div|default:form }}
+                    </fieldset>
+                </div>
+                <div class="span5">
+                    <table class="table">
+                        <caption><h1>Список замен</h1></caption>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        {% for b in object.plug.all %}
+                            <tr>
+                                <td><a href="{{ b.get_absolute_url }}">{{ b.date }}</a></td>
+                                <td><a href="{{ b.printer.get_absolute_url }}">{{ b.printer }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </form>
     </div>
 {% endblock %}

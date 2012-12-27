@@ -1,12 +1,6 @@
-{% extends 'core/index.html' %}
+{% extends 'core/form.html' %}
 {% load bkz %}
-{% block title %}
-    {% if form.instance.pk %}
-        {{ form.instance|model_verbose_name|safe }}
-    {% endif %}
-    {{ form.instance|striptags }}
-{% endblock %}
-{% block container %}
+{% block form %}
     <div style='display: none'>
         {% for k,o in opers.iteritems %}
             {% include 'whs/bill_opers.html' with form=o.empty_form hide=1 only %}
@@ -86,7 +80,6 @@
                         <legend>
                             Выбор кирпича
                             <a class="btn btn-success back"><i class='icon-arrow-left icon-white'></i> Назад</a>
-
                         </legend>
                         <div style='overflow: auto;height: 450px'>
                             {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks %}
@@ -96,21 +89,12 @@
             </div>
         </form>
     </div>
-    <div class="form-actions">
-        <div class="container">
-            <button type="submit" class="btn btn-primary" form="form">
-                <i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-            <button type="reset" class="btn" form="form"><i class="icon-ban-circle"></i> Отменить</button>
-            {% block bonus-button %}
-                {% if form.instance.pk %}
-                    <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
-                        <i class="icon-print icon-white"></i>
-                        Печать
-                    </a>
-                    <a href="{{ form.instance.get_delete_url }}" class='btn btn-danger'>Удалить</a>
-                {% endif %}
-            {% endblock %}
-        </div>
-    </div>
+{% endblock %}
+{% block bonus-button %}
+    {% if form.instance.pk %}
+        <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+            <i class="icon-print icon-white"></i>
+            Печать
+        </a>
+    {% endif %}
 {% endblock %}

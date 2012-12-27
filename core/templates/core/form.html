@@ -1,0 +1,27 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block script %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
+{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}
+        {{ form.instance|model_verbose_name|safe }}
+    {% endif %}
+    {{ form.instance|striptags }}
+{% endblock %}
+{% block container %}
+    {% block form %}
+    {% endblock %}
+    <div class="form-actions">
+        <div class="container">
+            <button type="submit" class="btn btn-primary" form="form">
+                <i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+            <button type="reset" class="btn" form="form"><i class="icon-ban-circle"></i> Отменить</button>
+            {% block bonus-button %}{% endblock %}
+            {% if form.instance.pk %}
+                    <a href="{{ form.instance.get_delete_url }}" class='btn btn-danger'>Удалить</a>
+                {% endif %}
+        </div>
+    </div>
+{% endblock %}

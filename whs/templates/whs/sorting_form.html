@@ -1,76 +1,18 @@
-{% extends 'core/index.html' %}
+{% extends 'core/form.html' %}
 {% load bkz %}
-{% block head %}
-    <link href="/static/css/responsive-tables.css" rel="stylesheet">
-{% endblock %}
-{% block title %}
-    {% if form.instance.pk %}
-        {{ form.instance|model_verbose_name|safe }}
-    {% endif %}
-    {{ form.instance|striptags }}
-{% endblock %}
-{% block container %}
+{% block form %}
     <div class="container">
-        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
             {% csrf_token %}
             {% for k,o in opers.iteritems %}
                 {{ o.management_form }}
             {% endfor %}
             <div class="row">
-                <div class="span5">
-                    <fieldset class="{{ form.Meta.model|class_name }} less">
-                        {% block main-fieldset %}
-                            <legend>
-                                 В сортировку
-                            </legend>
-                            {{ form.as_div }}
-                        {% endblock %}
+                <div class='span5'>
+                    <fieldset>
+                        <legend>{{ form.instance.get_type_display }}</legend>
+                    {{ form.as_div }}
                     </fieldset>
-                </div>
-                <div class="span7" id="brickselect-fade">
-                    {% if opers %}
-                        <fieldset>
-                            <legend>
-                                После сортировки
-                                    {% for k,o in opers.iteritems %}
-                                        <a class="btn btn-primary btn-mini form-add" data-append="#Sorted tbody:visible"
-                                           data-prefix='{{ o.prefix }}'>Добавить</a>
-                                    {% endfor %}
-
-                            </legend>
-                            {% for k,o in opers.iteritems %}
-                                {% for e in o.non_form_errors %}
-                                    <div class="alert alert-error">
-                                        <i class="icon-warning-sign"></i>
-                                        <strong>{{ e|safe }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endfor %}
-                            <table id='Sorted' class="table">
-                                <thead>
-                                <tr>
-                                    <th>Партия</th>
-                                    <th>Дата</th>
-                                    <th>Кирпич</th>
-                                    <th>Бой</th>
-                                    <th>Кол-во</th>
-                                    <th><i class="icon-trash"></i></th>
-                                </tr>
-                                </thead>
-                                {% for k,o in opers.iteritems %}
-                                    <tbody style='display: none'>
-                                    {% include 'whs/sort_opers.html' with form=o.empty_form only %}
-                                    </tbody>
-                                    <tbody>
-                                    {% for form in o %}
-                                        {% include 'whs/sort_opers.html' with form=form only %}
-                                    {% endfor %}
-                                    </tbody>
-                                {% endfor %}
-
-                            </table>
-                        </fieldset>
-                    {% endif %}
                 </div>
                 <div class="span7" style="display: none;" id="brickselect">
                     <fieldset>
@@ -83,19 +25,6 @@
                             {% include 'whs/widgets/brickselect-table.html' %}
                         </div>
                     </fieldset>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <i class="icon-ok icon-white"></i> Сохранить
-                    </button>
-                    {% if form.instance.pk %}
-                        <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
-                            <i class="icon-print icon-white"></i>
-                            Печать
-                        </a>
-                    {% endif %}
                 </div>
             </div>
         </form>

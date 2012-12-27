@@ -3,7 +3,9 @@
 {% endblock %}
 {% block title %}Лаборатория{% endblock %}
 {% block container %}
-    <div class="container">
+{% load pagination_tags %}
+{% autopaginate object_list 20 %}
+<div class="container">
     <h1>Лаборатория</h1>
     <div>
         <h2>Готовая продукция</h2>
@@ -18,7 +20,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for b in batch_list %}
+            {% for b in object_list %}
                 <tr title="{{ b.title }}" class='{{ b.css }}'>
                     <td>{{ b.date }}</td>
                     <td><a href="{{ b.get_absolute_url }}">{{ b }} , {{ b.get_full_name }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
@@ -46,7 +48,7 @@
             {% endfor %}
             </tbody>
         </table>
+        {% paginate using 'pagination/pagination.html' %}
     </div>
-
-    </div>
+</div>
 {% endblock %}

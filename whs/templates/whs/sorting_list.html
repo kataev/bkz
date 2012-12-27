@@ -1,0 +1,57 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block title %}Партии{% endblock %}
+{% block container %}
+    <div class="container">
+    {% load pagination_tags %}
+    {% autopaginate object_list rpp %}
+    <div class="row">
+        <div class="span9">
+            <table id='Bills' class="table table-bordered table-condensed">
+            <caption><h1>Партии</h1></caption>
+                {# <thead> #}
+                {# <tr> #}
+                    {# <th width=15px>#</th> #}
+                    {# <th width="auto">Дата</th> #}
+                    {# <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th> #}
+                    {# <th style='width:60px;'>Кол-во</th> #}
+                {# </tr> #}
+                {# </thead> #}
+                {# <tfoot> #}
+                {# <tr> #}
+                    {# <th colspan="3">Показанно {{ object_list|length }} из {{ page_obj.paginator.count }}</th> #}
+                    {# <th>{{ object_list|sum_pluck:'amount' }}</th> #}
+                {# </tr> #}
+                {# </tfoot> #}
+                <tbody>
+                {% for b in object_list %}
+                        {# {% include 'lab/batch_tr.html' %} #}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% paginate using 'pagination/pagination.html' %}
+        </div>
+        <div class="span3">
+        {{ form.errors }}
+            <form class="filter form-inline" action="" method="GET">
+                <fieldset>
+                    <legend style='margin-bottom:0'><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр
+                    </legend>
+                    <div class='control-group'>
+{% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+                    </div>
+                    {{ filter.as_div }}
+                    <div class='control-group'>
+                        <button type="submit" class="small btn btn-info">
+                            <i class="icon-search icon-white"></i> Фильтр
+                        </button>
+                        <button type="reset" class="small btn">
+                            Сбросить
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

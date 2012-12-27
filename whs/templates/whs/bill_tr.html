@@ -13,7 +13,7 @@
         {% if b.seller.pk != 1206 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
         <i class="icon-zoom-in pull-right" ></i>
     </td>
-    <td><strong>{{ b.total }}</strong></td>
+    <td><strong>{{ b.amount }}</strong></td>
     {% with total=b.in_total %}
         <td>
             <strong>

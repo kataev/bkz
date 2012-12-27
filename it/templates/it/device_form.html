@@ -1,6 +1,18 @@
 {% extends 'whs/brick_form.html' %}
-{% block right %}
-    <div class="span6">
+{% block form %}
+    <div class="container">
+            <form method="POST" action="" class='form-horizontal' id="form">
+                {% csrf_token %}
+            <div class="row">
+                <div class='span6'>
+                    <fieldset>
+                        <legend>
+                             {{ form.instance }}
+                        </legend>
+                        {{ form.as_div|default:form }}
+                    </fieldset>
+                </div>
+                <div class="span6">
         {% if object.type.pk == 1 %}
             <table class="table">
                 <caption><h1>Список замен</h1></caption>
@@ -52,5 +64,8 @@
                 </tbody>
             </table>
         {% endif %}
+    </div>
+            </div>
+            </form>
     </div>
 {% endblock %}
