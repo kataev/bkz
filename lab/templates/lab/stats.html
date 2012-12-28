@@ -1,0 +1,107 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block title %}Показатели{% endblock %}
+{% block container %}
+<div class='container'>
+    <div class="row">
+        <div class="span4">
+            <h1>Показатели {{ factory.model|model_verbose_name_plural }}</h1>
+        </div>
+        <form method="GET" action="" class="form-inline span8" style='margin-top: 10px;text-align:right'>
+            {{ modelselect.model}}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            <input type="submit" class="btn">
+        </form>
+    </div>
+    <div class='row'>
+        <div class='span12'>
+        <table class='table table-bordered table-condensed table-striped'>
+            <thead>
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                        {% if field.name in 'cavitation color width' %}
+                        {% else %}
+                        <th>{{ field.label|safe }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for form in factory %}
+            {% if not forloop.last %}
+            <tr>
+                {% for field in form.visible_fields %}
+                    
+                        {% if forloop.first %}
+                        <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>
+                        {% elif field.name in 'cavitation color width' %}
+                        {% else %}
+                            {% if factory.model|class_name == 'Clay' and field.name == 'humidity' %}
+                                <td>{{ field.value }}<span class='label'>{{ form.instance.value }}</span></td>
+                            {% else %}
+                                <td>{{ field.value }}</td>
+                            {% endif %}
+                        {% endif %}
+                {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+            <thead>
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                        {% if forloop.first %}
+                            <th>Максимальное значение</th>
+                        {% else %}
+                            {% if factory.model|class_name == 'Clay' and field.name == 'humidity' %}
+                            <th>{{ factory.queryset|max_pluck:'value' }}</th>
+                            {% elif field.name in 'cavitation color width' %}
+                            {% else %}
+                            {% if field.name in 'tts path position size' %}<th></th>
+                            {% else %}
+                            <th>{{ factory.queryset|max_pluck:field.name|default:0 }}</th>
+                            {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                        {% if forloop.first %}
+                            <th>Среднее значение</th>
+                        {% else %}
+                            {% if factory.model|class_name == 'Clay' and field.name == 'humidity' %}
+                            <th>{{ factory.queryset|avg_pluck:'value' }}</th>
+                            {% elif field.name in 'cavitation color width' %}
+                            {% else %}
+                                {% if field.name in 'tts path position size' %}<th></th>
+                                {% else %}
+                                <th>{{ factory.queryset|avg_pluck:field.name|default:0 }}</th>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                        {% if forloop.first %}
+                            <th>Минимальное значение</th>
+                        {% else %}
+                            {% if factory.model|class_name == 'Clay' and field.name == 'humidity' %}
+                            <th>{{ factory.queryset|min_pluck:'value' }}</th>
+                            {% elif field.name in 'cavitation color width' %}
+                            {% else %}
+                                {% if field.name in 'tts path position size' %}<th></th>
+                                {% else %}
+                                <th>{{ factory.queryset|min_pluck:field.name|default:0 }}</th>
+                            {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,7 +7,7 @@ from django.views.generic import UpdateView
 
 from bkz.lab.models import *
 from bkz.lab.forms import *
-from bkz.whs.forms import DateForm
+from bkz.whs.forms import DateForm,YearMonthFilter
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -119,13 +119,15 @@ def batch_tests_print(request,pk):
     pressure = batch.tests.filter(type='pressure')
     return render(request,'lab/batch-tests-print.html',{'tests':[pressure,flexion],'batch':batch})
 
+
 def journal(request,date=None):
-    f = DateForm({'date':date})
+    f = DateForm(request.GET or None)
     if f.is_valid():
         date = f.cleaned_data.get('date',datetime.date.today())
     else:
         date = datetime.date.today()
-    filter = dict(datetime__day=date.day,datetime__year=date.year,datetime__month=date.month)
+    date = datetime.datetime.combine(date,datetime.time(8))
+    filter = dict(datetime__range=(date,date+datetime.timedelta(hours=24)))
     clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay')
     storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay')
     sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand')
@@ -139,4 +141,20 @@ def journal(request,date=None):
         for f in factory:
             if f.is_valid():
                 f.save()
-    return render(request,'lab/journal.html',{'factory':factory,'date':date})
+    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f})
+
+def stats(request):
+    datefilter = YearMonthFilter(request.GET or None,model=Batch)
+    modelselect = ModelSelect(request.GET or None)
+    if modelselect.is_valid():
+        factory = eval(modelselect.cleaned_data['model']+'Factory')
+    else: 
+        factory = ClayFactory
+    if datefilter.is_valid():
+        data = dict([(k.replace('date','datetime'),v) for k,v in datefilter.cleaned_data.items() if v])
+    else:
+        date = datetime.date.today()
+        data = {'datetime__year':date.year,'datetime__month':date.month}
+    factory = factory(queryset=factory.model.objects.filter(**data))
+    return render(request,'lab/stats.html',{'datefilter':datefilter,'modelselect':modelselect,
+        'factory':factory})

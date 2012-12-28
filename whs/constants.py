@@ -83,11 +83,12 @@ def get_menu(css_dict=css_dict):
     for name,items in css_dict.iteritems():
         field = Brick._meta.get_field_by_name(name)[0]
         choices = field.get_choices()
+        print choices
         o = dict(verbose_name=field.verbose_name)
         if name == 'features':
             continue
         o['name']=name
-        o['items'] = [(css_dict[name][k],v) for k,v in field.get_choices() if k]
+        o['items'] = [(css_dict[name][k],v) for k,v in field.get_choices() if k!='']
         result.append(o)
     return result
 

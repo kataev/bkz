@@ -35,6 +35,7 @@ nav = dict(
     lab = (
         ('lab:index',' icon-fullscreen', u'Лаборатория'),
         ('lab:journal',' icon-book', u'Журнал'),
+        ('lab:stats',' icon-signal', u'Показатели'),
     )
 )
 menu = dict(
@@ -49,7 +50,6 @@ menu = dict(
         ),
     whs=(
         ('whs:Bill-add', 'icon-Bill', u'Накладную'),
-#        ('whs:Add-add', 'icon-Man', u'Производство'),
         ('whs:Sorting-add', 'icon-Sorting', u'Сортировку'),
 #        ('whs:Inventory-add', 'icon-Inventory', u'Инвентаризацию'),
         ('divider',),
@@ -57,11 +57,6 @@ menu = dict(
         ('whs:Agent-add', 'icon-Agent', u'Контрагента'),
         ),
     lab = (
-        ('lab:Clay-add','',u'Глина'),
-        ('lab:StoredClay-add','',u'Глина по позициям'),
-        ('lab:Sand-add','',u'Песок'),
-        ('lab:Bar-add','',u'Брус'),
-        ('lab:Raw-add','',u'Сырец'),
         ('lab:Batch-add','',u'Партия'),
         ('divider',),
         ('lab:WaterAbsorption-add','',u'Водопоглощение'),

@@ -6,10 +6,19 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
 {% endblock %}
-{% block title %}Журнал за{% endblock %}
+{% block title %}Журнал за {{ date|date:'j E Y' }}{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
-    <h1>Журнал</h1>
+    <div class="row">
+            <div class="span7">
+                <h1>Журнал <small>за {{ date|date:'j E Y, l' }}</small></h1>
+            </div>
+            <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+                {{ dateform.date }}
+                <input type="submit" class="btn">
+            </form>
+    </div>
+    
     <form method="POST" id='form' class='row'>
         {% csrf_token %}
     {% for f in factory %}
@@ -27,7 +36,7 @@
     		</thead>
     	<tbody>
     		{% for form in f %}
-    			<tr id='{{ form.prefix}}' {% if not forloop.first and not form.instance.pk %}style='display: none;'{% endif %}>
+    			<tr id='{{ form.prefix}}' >
     				{% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">
@@ -44,13 +53,6 @@
     			</tr>
     		{% endfor %}
     	</tbody>
-        <tfoot>
-        <tr>
-            <td colspan="{{ f.0.visible_fields|length }}">
-                <a href="#" class="show btn btn-mini">Добавить еще форму</a>
-            </td>
-        </tr>
-        </tfoot>    
     </table>
     </fieldset>
     {% endfor %}

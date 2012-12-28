@@ -11,6 +11,17 @@
 {% endblock %}
 {% block container %}
     {% block form %}
+        <div class="container">
+            <h1>{{ form.instance|model_verbose_name|safe }}</h1>
+            <form method="POST" action="" class='form-horizontal' id="form">
+                {% csrf_token %}
+            <div class="row">
+                <div class='span6'>
+                {{ form }}
+                </div>
+            </div>  
+            </form>
+        </div>  
     {% endblock %}
     <div class="form-actions">
         <div class="container">

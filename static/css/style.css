@@ -92,6 +92,7 @@ fieldset table textarea, fieldset table select
     margin: 0;
     height: 30px;
 }
+fieldset.StoredClay {float:right;}
 fieldset table input[name*='test']{width: 52px;}
 fieldset table input[name*='brocken']{width: 60px;}
 fieldset table input[name*='amount']{width: 70px;}
@@ -236,5 +237,5 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 .icon-Write_off { background-position: -120px -24px }
 
 @media print {
-    a.btn {display: none !important; }
+    button, input[type='button'], input[type='submit'], a.btn {display: none !important; }
 }

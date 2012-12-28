@@ -15,9 +15,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import UpdateView, CreateView, ListView
 
-from bkz.whs.forms import BillFilter, YearMonthFilter
-
-from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm
+from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm,BillFilter, YearMonthFilter
 from whs.forms import SoldFactory, PalletFactory
 from whs.models import *
 from lab.models import Batch,Part
@@ -170,21 +168,18 @@ def journal(request):
 def batchs(request):
     queryset = Batch.objects.select_related('frost_resistance','width').prefetch_related('parts','parts__rows').all()
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
-    batchfilter = BatchFilter(request.GET or None)
     factory = PartAddFormSet(request.POST or None,queryset=Part.objects.select_related('brick','brick__width')\
         .prefetch_related('batch','rows','batch__frost_resistance','batch__width').filter(brick__isnull=True))
     if request.method == 'POST' and factory.is_valid():
         factory.save()
         messages.add_message(request, messages.SUCCESS, u'Успешно сохранено!')
         return redirect(reverse_lazy('whs:Add-list'))
-    if batchfilter.is_valid():
-        pass
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
     return render(request, 'whs/batchs.html', dict(object_list=queryset,rpp=rpp,
-        datefilter=datefilter,filter=batchfilter,factory=factory))
+        datefilter=datefilter,factory=factory))
 
 def sortings(request):
     def prep1(v):
@@ -291,7 +286,7 @@ def transfers(request):
         q[s['brick__mark']]=s['amount__sum']
         out[s['brick_from__mark']]=q
     print out
-    return render(request,'core/stats.html',{'data':out,'datefilter':datefilter})
+    return render(request,'core/transfers.html',{'data':out,'datefilter':datefilter})
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):

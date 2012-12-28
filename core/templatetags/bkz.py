@@ -66,3 +66,36 @@ def sum_pluck(queryset,attr):
             return sum([getattr(b,attr) for b in queryset])
     except BaseException:
         pass
+
+@register.filter(name='avg_pluck')
+def avg_pluck(queryset,attr):
+    try:
+        if isinstance(queryset[0],dict):
+            q = [b.get(attr,0) for b in queryset]
+        else:
+            q= [getattr(b,attr) for b in queryset]
+        return round(sum(q)/len(q),2)
+    except BaseException:
+        pass
+
+@register.filter(name='min_pluck')
+def min_pluck(queryset,attr):
+    try:
+        if isinstance(queryset[0],dict):
+            q = [b.get(attr,0) for b in queryset]
+        else:
+            q= [getattr(b,attr) for b in queryset]
+        return min(q)
+    except BaseException:
+        pass
+
+@register.filter(name='max_pluck')
+def max_pluck(queryset,attr):
+    try:
+        if isinstance(queryset[0],dict):
+            q = [b.get(attr,0) for b in queryset]
+        else:
+            q= [getattr(b,attr) for b in queryset]
+        return max(q)
+    except BaseException:
+        pass

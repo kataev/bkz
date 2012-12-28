@@ -57,7 +57,7 @@ class ClayForm(forms.ModelForm):
                     'dust':FloatInput,
         }
 
-ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=4)
+ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=1)
 ClayFactory.caption = u'Глина из карьера'
 ClayFactory.css_class = 'span8'
 ClayFactory.label_style = {}
@@ -70,7 +70,7 @@ class StoredClayForm(forms.ModelForm):
                     'humidity':FloatInput(attrs={'autocomplete':'off'}),
         }
 
-StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=5)
+StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=1)
 StoredClayFactory.caption = u'Глина по позициям'
 StoredClayFactory.css_class = 'span4'
 StoredClayFactory.width = {}
@@ -85,7 +85,7 @@ class SandForm(forms.ModelForm):
                 'module_size':FloatInput(attrs={'autocomplete':'off'}),
                 }
 
-SandFactory = modelformset_factory(Sand,form=SandForm,extra=2)
+SandFactory = modelformset_factory(Sand,form=SandForm,extra=1)
 SandFactory.caption = u'Песок'
 SandFactory.css_class = 'span6'
 SandFactory.width = {}
@@ -102,7 +102,7 @@ class BarForm(forms.ModelForm):
                 'sand':FloatInput,
                 'humidity_transporter':FloatInput,
         }
-BarFactory = modelformset_factory(Bar,form=BarForm,extra=3)
+BarFactory = modelformset_factory(Bar,form=BarForm,extra=1)
 BarFactory.caption = u'Формовка'
 BarFactory.css_class = 'span10'
 BarFactory.width = {}
@@ -137,7 +137,7 @@ class HalfForm(forms.ModelForm):
                     'shrink':FloatInput,
         }
 
-HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)
+HalfFactory = modelformset_factory(Half,form=HalfForm,extra=1)
 HalfFactory.caption = u'Полуфабрикат'
 HalfFactory.css_class = 'span9'
 HalfFactory.width = {}
@@ -306,3 +306,16 @@ class PartAddForm(BootstrapMixin, forms.ModelForm):
         model = Part
 
 PartAddFormSet = modelformset_factory(Part,form=PartAddForm, extra=0)
+
+
+model_c = (
+    ('Clay',u'Глина из карьера'),
+    ('StoredClay',u'Глина по позициям'),
+    ('Sand',u'Песок'),
+    ('Bar',u'Формовка'),
+    ('Raw',u'Сырец'),
+    ('Half',u'Полуфабрикат'),
+    )
+
+class ModelSelect(forms.Form):
+    model = forms.ChoiceField(choices=model_c)

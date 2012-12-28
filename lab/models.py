@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
-from scipy.lib.blas import get_blas_funcs
+import datetime
 
 from django.core.validators import RegexValidator
-from django.utils import datetime_safe as datetime
 from django.db import models
 
 from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
-from bkz.lab.utils import convert_tto
+from bkz.lab.utils import convert_tto,ShiftMixin
 
 
 
@@ -49,7 +48,7 @@ class RangeField(models.CharField):
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])
 
-class Clay(models.Model,UrlMixin):
+class Clay(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())
     humidity = SlashSeparatedFloatField(u'Пробы влажности',max_length=300)
     sand = models.FloatField(u'Песок')
@@ -60,7 +59,8 @@ class Clay(models.Model,UrlMixin):
     @property
     def value(self):
         if self.humidity:
-            val = [float(v) for v in self.humidity.replace(',','.').split('/') if v]
+            try: val = [float(v) for v in self.humidity.replace(',','.').split('/') if v]
+            except BaseException: return None
             return round(sum(val)/len(val),2)
         else:
             return 0
@@ -71,6 +71,8 @@ class Clay(models.Model,UrlMixin):
 
     class Meta():
         verbose_name = u"Глина"
+        verbose_name_plural = u"Глины"
+        ordering = ('-datetime',)
 
 clay_positions = (
     (1,u'1 позиция'),
@@ -81,7 +83,7 @@ clay_positions = (
     (6,u'Белая глина'),
 )
 
-class StoredClay(models.Model,UrlMixin):
+class StoredClay(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
     humidity = models.FloatField(u'Влаж.')
@@ -93,8 +95,10 @@ class StoredClay(models.Model,UrlMixin):
 
     class Meta():
         verbose_name = u"Глина по позициям"
+        verbose_name_plural = u"Глины по позициям"
+        ordering = ('-datetime','-position')
 
-class Sand(models.Model,UrlMixin):
+class Sand(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     humidity = models.FloatField(u'Влаж.')
     particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>')
@@ -108,6 +112,8 @@ class Sand(models.Model,UrlMixin):
 
     class Meta():
         verbose_name = u"Песок"
+        verbose_name_plural = u"Песка"
+        ordering = ('-datetime',)
 
 
 width_c = (
@@ -116,7 +122,7 @@ width_c = (
     (1.4,u'Утолщенный'),
 )
 
-class Bar(models.Model,UrlMixin):
+class Bar(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -138,13 +144,15 @@ class Bar(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000)
 
     def __unicode__(self):
-        if self.pk: return u'Брус от %s' % self.datetime
+        if self.pk: return u'Брус от %s с телеги № %s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый брус'
 
     class Meta():
         verbose_name = u"Брус"
+        verbose_name_plural = u"Бруса"
+        ordering = ('-datetime',)
 
-class Raw(models.Model,UrlMixin):
+class Raw(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -158,13 +166,15 @@ class Raw(models.Model,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'Сырец от %s' % self.datetime
+        if self.pk: return u'Сырец от %s с телеги № %s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый сырец'
 
     class Meta():
         verbose_name = u"Сырец из накопителя"
+        verbose_name_plural = u"Сырца из накопителя"
+        ordering = ('-datetime',)
 
-class Half(models.Model):
+class Half(models.Model,ShiftMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
 
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
@@ -181,11 +191,13 @@ class Half(models.Model):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'Полуфабрикат с поз № %d от %s' % (self.humidity,ru_date(self.datetime))
+        if self.pk: return u'Полуфабрикат от %s с поз № %d, путь №%d' % (ru_date(self.datetime),self.position,self.path)
         else: return u'Новый полуфабрикат'
 
     class Meta():
         verbose_name = u"Полуфабрикат"
+        verbose_name_plural = u"Полуфабриката"
+        ordering = ('-datetime','-path','-position')
 
 class WaterAbsorption(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())

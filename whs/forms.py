@@ -78,7 +78,8 @@ class MoneyInput(forms.TextInput):
 
 
 class DateForm(forms.Form):
-    date = forms.DateField()
+    date = forms.DateField(widget=DateInput)
+
 
 
 class BillForm(BootstrapMixin, forms.ModelForm):

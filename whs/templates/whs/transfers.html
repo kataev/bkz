@@ -3,17 +3,14 @@
 {% block container %}
 <div class='container'>
     <div class="row">
-            <div class="span7">
-                <h1 class="">
-                    <h1>Таблица переводов</h1>
-                </h1>
-            </div>
-            <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
-                {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
-                <input type="submit" class="btn">
-            </form>
+        <div class="span7">
+            <h1>Таблица переводов</h1>
         </div>
-
+        <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            <input type="submit" class="btn">
+        </form>
+    </div>
     <div class='row'>
         <div class='span12'>
             <table class='table table-bordered'>
