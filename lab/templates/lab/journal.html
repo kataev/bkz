@@ -11,7 +11,11 @@
 <div class="container" id='journal'>
     <div class="row">
             <div class="span7">
-                <h1>Журнал <small>за {{ date|date:'j E Y, l' }}</small></h1>
+                <h1 class='datehead'>
+                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                    Журнал <small>за {{ date|date:'j E Y, l' }}</small>
+                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+                </h1>
             </div>
             <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
                 {{ dateform.date }}

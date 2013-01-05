@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 from collections import defaultdict
 
 import django.forms as forms
@@ -10,8 +11,8 @@ from whs.models import *
 from lab.models import Part
 from whs.validation import validate_transfer
 
-from django.utils.encoding import force_unicode
 from itertools import chain
+from django.utils.encoding import force_unicode
 from django.utils.html import escape
 
 class AgentSelect(forms.Select):
@@ -77,10 +78,21 @@ class MoneyInput(forms.TextInput):
         self.attrs['autocomplete'] = 'off'
 
 
+def get_date(self,der):
+        td = datetime.timedelta(days=1) 
+        if self.is_valid():
+            val = self.cleaned_data['date']
+        else:
+            val = datetime.date.today()
+        if der: return val + td
+        else:  return val - td
+
 class DateForm(forms.Form):
     date = forms.DateField(widget=DateInput)
-
-
+   
+    previous = property(lambda x: get_date(x,0))
+    next = property(lambda x: get_date(x,1))
+        
 
 class BillForm(BootstrapMixin, forms.ModelForm):
     class Meta:
