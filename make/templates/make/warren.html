@@ -16,18 +16,17 @@
                 <input type="submit" class="btn">
             </form>
     </div>
-    
     <form accept-chartset='utf-8' method="POST" id='form' class='row less'>
         {% csrf_token %}
-        <fieldset class='span4'>
-    <table class='table table-bordered ' style='width:220px'>
+        {% for form in factory %}
+        <fieldset class='span3'>
         {{ factory.management_object }}
         {{ factory.management_form }}
-        {% for form in factory %}
+        <table class='table table-bordered '>
         <thead>
             <tr>
-                <th width='46px'>№ ТТС</th>
-                <th width='48px'>№ ТТО</th>
+                <th>№ ТТС</th>
+                <th>№ ТТО</th>
                 <th>Кол-во</th>
             </tr>
         </thead>
@@ -50,10 +49,13 @@
                 </tr>
                 {% endfor %}
         </tbody>
-        {% endfor %}
     </table>
     </fieldset>
+    {% endfor %}    
     </form>
+    <div class='alert alert-info'>
+        Для удобного переключения между полями используйте кнопку Tab
+    </div>
 </div>
 <div class="form-actions">
         <div class="container">

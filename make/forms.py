@@ -25,5 +25,5 @@ class WarrenTTOForm(BootstrapMixin, forms.ModelForm):
 	class Meta:
 		model = Warren
 
-WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=1)
-WarrenTTOFactory = inlineformset_factory(Warren, Warren, WarrenTTOForm, exclude=('date',) , extra=1,can_delete=False)
+WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=4,max_num=4)
+WarrenTTOFactory = inlineformset_factory(Warren, Warren, WarrenTTOForm, exclude=('date',) , extra=3, max_num=3,can_delete=False)

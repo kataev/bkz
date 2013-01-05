@@ -38,6 +38,7 @@ div.controls ul {list-style: none}
     background-position: 0;
 }
 .form-actions .btn-danger {float: right;}
+.form-actions {background: none;border-top:5px solid #E5E5E5;}
 .nav.nav-list .create {margin-top: 2px;}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
@@ -82,7 +83,7 @@ fieldset.Part div.success { background-color: #dff0d8; }
 fieldset.Part div.error { background-color: #fcf8e3; }
 fieldset.Part div.info { background-color: #d9edf7; }
 
-fieldset table td {margin: 0;padding: 0}
+fieldset table td {margin: 0;}
 input[type='time'] {padding-top: 2px}
 
 fieldset table input[type='date'], fieldset table input[type='time'],
