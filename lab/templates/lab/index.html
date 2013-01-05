@@ -6,9 +6,16 @@
 {% load pagination_tags %}
 {% autopaginate object_list 20 %}
 <div class="container">
-    <h1>Лаборатория</h1>
-    <div>
-        <h2>Готовая продукция</h2>
+    <div class="row">
+        <div class="span4">
+            <h1>Партии</h1>
+        </div>
+        <form method="GET" action="" class="form-inline span8" style='margin-top: 10px;text-align:right'>
+            {{ modelselect.model}}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            <input type="submit" class="btn">
+        </form>
+    </div>
         <table class="table table-bordered" id='batch-list'>
             <thead>
             <tr>

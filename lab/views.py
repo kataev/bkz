@@ -56,10 +56,16 @@ class BatchUpdateView(UpdateView):
         return context
 
 def index(request):
-    batch_list = Batch.objects.all().select_related('frost_resistance','width')\
+    queryset = Batch.objects.all().select_related('frost_resistance','width')\
                     .prefetch_related('parts','parts__rows','parts__cause')
-    
-    return render(request,'lab/index.html',dict(object_list=batch_list))
+    datefilter = YearMonthFilter(request.GET or None,model=Batch)
+    if datefilter.is_valid():
+        data = dict([(k,v) for k,v in datefilter.cleaned_data.items() if v])
+    else:
+        date = datetime.date.today()
+        data = {'date__year':date.year,'date__month':date.month}
+    queryset = queryset.filter(**data)
+    return render(request,'lab/index.html',dict(object_list=queryset,datefilter=datefilter))
 
 
 from webodt.shortcuts import render_to_response
