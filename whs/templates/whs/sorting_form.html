@@ -2,7 +2,7 @@
 {% load bkz %}
 {% block form %}
     <div class="container">
-        <form class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
+        <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
             {% csrf_token %}
             {% for k,o in opers.iteritems %}
                 {{ o.management_form }}

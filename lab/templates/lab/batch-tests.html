@@ -16,7 +16,7 @@
 
         <h2>Кирпич {{ batch.get_name }}</h2><input type="hidden" id='width' value='{{ batch.width }}'>
 
-        <form method="POST" action="{{ batch.get_tests_url }}" id='form'>
+        <form accept-chartset='utf-8' method="POST" action="{{ batch.get_tests_url }}" id='form'>
             {% csrf_token %}
             <div class="row tests">
                 {% for t in tests %}

@@ -93,7 +93,7 @@ def get_menu(css_dict=css_dict):
     return result
 
 def get_name(self):
-    name = self.width.label + self.view + u'П' + (self.get_cavitation_display()[1:2]).lower()
+    name = self.width.label + getattr(self,'view',u'Р') + u'П' + (self.get_cavitation_display()[1:2]).lower()
     return name
 
 def get_full_name(self):

@@ -27,9 +27,10 @@ def app_urlpatterns(app_name):
     views = import_module('.views',app_name)
     for model in filter(lambda m:issubclass(m,UrlMixin),get_models(app)):
         name = model._meta.object_name
-        if hasattr(forms,name+'Form'):
-            form = getattr(forms,name+'Form',False)
-        else: continue
+        try:
+            form = getattr(forms,name+'Form')
+        except AttributeError:
+            raise ImportError(app_name+'.'+name)
         verbose_name = ''.join([x.capitalize() for x in model._meta.verbose_name.split(' ')])
         view = getattr(views,name+'CreateView',CreateView).as_view(form_class=form,model=model)
         u = url(ur'%s/Создать$' % verbose_name, view, name=name+'-add')

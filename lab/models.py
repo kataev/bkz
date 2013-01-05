@@ -19,11 +19,7 @@ class SlashSeparatedFloatField(models.CharField):
     description = u'Slash-separated floats'
 
     def formfield(self,**kwargs):
-        defaults = {
-            'error_messages': {
-                'invalid': u'Вводите числа разеделённые косой чертой (/)'
-            }
-        }
+        defaults = {'error_messages': {'invalid': u'Вводите числа разеделённые косой чертой (/)'} } 
         defaults.update(kwargs)
         return super(SlashSeparatedFloatField,self).formfield(**defaults)
 
@@ -36,14 +32,9 @@ class RangeField(models.CharField):
     description = u'Range field'
 
     def formfield(self,**kwargs):
-        defaults = {
-            'error_messages': {
-                'invalid': u'Вводите числа разеделённые дробью'
-            }
-        }
+        defaults = {'error_messages': {'invalid': u'Вводите числа разеделённые дробью'} }
         defaults.update(kwargs)
         return super(RangeField,self).formfield(**defaults)
-
 
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])

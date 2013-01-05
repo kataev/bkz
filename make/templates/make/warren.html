@@ -1,0 +1,65 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block title %}Садка за {{ date|date:'j E Y, l' }}{% endblock %}
+{% block container %}
+<div class="container" id='warren'>
+    <div class="row">
+            <div class="span7">
+                <h1 class='datehead'>
+                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                    Садка <small>за {{ date|date:'j E Y, l' }}</small>
+                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+                </h1>
+            </div>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+                {{ dateform.date }}
+                <input type="submit" class="btn">
+            </form>
+    </div>
+    
+    <form accept-chartset='utf-8' method="POST" id='form' class='row less'>
+        {% csrf_token %}
+        <fieldset class='span4'>
+    <table class='table table-bordered ' style='width:220px'>
+        {{ factory.management_object }}
+        {{ factory.management_form }}
+        {% for form in factory %}
+        <thead>
+            <tr>
+                <th width='46px'>№ ТТС</th>
+                <th width='48px'>№ ТТО</th>
+                <th>Кол-во</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr></tr>
+            <tr>
+                <td rowspan='{{ form.factory|length }}'> 
+                    {{ form }} 
+                    {{ form.factory.management_object }}
+                    {{ form.factory.management_form }}
+                </td>
+                {% for form in form.factory %}
+                {% for f in form.hidden_fields %}
+                    {{ f }}
+                {% endfor %}
+                {% if not forloop.first %} <tr> {% endif %}
+                {% for f in form.visible_fields %}
+                    <td>{{ f }}</td>
+                {% endfor %}
+                </tr>
+                {% endfor %}
+        </tbody>
+        {% endfor %}
+    </table>
+    </fieldset>
+    </form>
+</div>
+<div class="form-actions">
+        <div class="container">
+            <button type="submit" class="btn btn-primary" form="form">
+                <i class="icon-ok icon-white"></i> Сохранить изменения
+            </button>
+        </div>
+    </div>
+{% endblock %}

@@ -6,7 +6,7 @@
         <div class="span7">
             <h1>Таблица переводов</h1>
         </div>
-        <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
             {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
             <input type="submit" class="btn">
         </form>

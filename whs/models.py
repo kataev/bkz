@@ -71,7 +71,8 @@ class Brick(models.Model,UrlMixin):
         verbose_name_plural = u'Кирпичи'
         permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
 
-class OldBrick(Brick):
+class OldBrick(models.Model):
+    brick = models.ForeignKey(Brick,related_name='oldbrick')
     old = models.IntegerField('Старое ID')
     prim = models.CharField(u"Имя", max_length=260, default='', help_text=u'Старое "имя"')
 
@@ -122,8 +123,10 @@ class Seller(Agent,UrlMixin):
         verbose_name_plural=u'Продавецы'
         ordering = ('name', )
 
-class OldAgent(Agent):
+class OldAgent(models.Model):
+    agent = models.ForeignKey(Agent,related_name='oldagent')
     old = models.IntegerField('Старое ID')
+
 
 class Bill(UrlMixin, BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
@@ -208,14 +211,15 @@ class Sold(SoldMixin,models.Model):
             return self.brick.css
 
 
-class Nomenclature(models.Model, UrlMixin):
+class Nomenclature(models.Model):
     title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
     def __unicode__(self):
         return u'%s - %s' % (self.code,self.title)
 
-class BuhAgent(Agent):
+class BuhAgent(models.Model):
+    agent = models.ForeignKey(Agent,related_name='buhagent')
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
 

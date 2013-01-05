@@ -8,7 +8,7 @@
     <div class="row">
         {% if factory|length %}
         <div class='span12' id='brickfade'>
-            <form method="POST" action="{% url whs:Add-list %}" id='form'>
+            <form accept-chartset='utf-8' method="POST" action="{% url whs:Add-list %}" id='form'>
                 {% csrf_token %}
                 {{ factory.management_object }}
                 {{ factory.management_form }}

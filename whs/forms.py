@@ -89,7 +89,6 @@ def get_date(self,der):
 
 class DateForm(forms.Form):
     date = forms.DateField(widget=DateInput)
-   
     previous = property(lambda x: get_date(x,0))
     next = property(lambda x: get_date(x,1))
         

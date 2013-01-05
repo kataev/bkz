@@ -2,20 +2,12 @@
 {% load bkz %}
 {% block head %}
 {% endblock %}
-{% block script %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
-{% endblock %}
-{% block title %}Журнал за {{ date|date:'j E Y' }}{% endblock %}
+{% block title %}Производство{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
     <div class="row">
             <div class="span7">
-                <h1 class='datehead'>
-                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Журнал <small>за {{ date|date:'j E Y, l' }}</small>
-                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
-                </h1>
+                <h1>Журнал <small>за {{ date|date:'j E Y, l' }}</small></h1>
             </div>
             <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
                 {{ dateform.date }}

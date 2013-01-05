@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
     <h1>{{ data.model|model_verbose_name }}</h1>
-    <form method="POST" action="{{ data.model.get_absolute_url }}" class='form-inline'>
+    <form accept-chartset='utf-8' accept-chartset='utf-8' method="POST" action="{{ data.model.get_absolute_url }}" class='form-inline'>
         {% csrf_token %}
         <table class="table table-bordered" id='Energy'>
             <thead>

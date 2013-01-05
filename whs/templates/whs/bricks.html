@@ -12,7 +12,7 @@
                     {% endif %}
                 </h1>
             </div>
-            <form method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
                 {% with year=form.date__year month=form.date__month %}
                     {% include 'whs/widgets/year-month-select.html' %}
                 {% endwith %}

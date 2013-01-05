@@ -16,18 +16,17 @@ class Command(BaseCommand):
             self.test_batch(*args[:3])
 
     def totals(self):
-        for b in DispTovar.objects.select_related().all():
+        for t in DispTovar.objects.select_related().all():
             try:
-                o = OldBrick.objects.get(old=b.pk)
-                o.total = b.total.total
-                o.save()
+                b = OldBrick.objects.get(old=t.pk).brick
+                b.total = t.total.total
+                b.save()
             except OldBrick.DoesNotExist:
                 print 'DNE',b.pk,b.prim
 
     def set_old_brick(self,pk,old):
         b = Brick.objects.get(pk=pk)
-        OldBrick.objects.create(pk=pk,old=old)
-        b.save()
+        OldBrick.objects.create(brick=b,old=old,prim=DispTovar.objects.get(pk=old).prim)
         print b,'ok'
 
     def test_batch(self,year,month,day=None):
@@ -35,18 +34,19 @@ class Command(BaseCommand):
         if day: pluss = pluss.filter(date__day=day)
         for plus in pluss.order_by('-date'):
             old = OldBrick.objects.get(old=plus.tov_id)
-            part = Part.objects.filter(batch__date=plus.date,defect=old.defect)
+            brick = old.brick
+            part = Part.objects.filter(batch__date=plus.date,defect=brick.defect)
             try:
                 part = part.get()
-                if old.mark != part.batch.mark and old.mark < 400:
-                    print 'mark not match', plus.date, old, part.batch.mark
+                if brick.mark != part.batch.mark and brick.mark < 400:
+                    print 'mark not match', plus.date, brick, part.batch.mark
                     continue
                 if part.amount == plus.plus:
-                    part.brick = old
+                    part.brick = brick
                     part.save()
                 else:
-                    print 'amount not match', plus.date, old,plus.plus, '!=' ,part.amount, part.batch.mark
+                    print 'amount not match', plus.date, brick,plus.plus, '!=' ,part.amount, part.batch.mark
             except Part.DoesNotExist:
-                print 'DNE',plus.date,old,plus.plus
+                print 'DNE',plus.date,brick,plus.plus
             except Part.MultipleObjectsReturned:
-                print 'MOR',plus.date,old
+                print 'MOR',plus.date,brick

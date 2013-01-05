@@ -12,8 +12,8 @@ body {
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 form.filter label {display: none}
-#parts label {display: none}
-.help-inline {float: right}
+#warren label, #parts label {display: none}
+table .help-inline {float: right}
 #parts .control-group {margin: 0;padding: 0}
 #parts .brickselect {margin: 0;}
 #brickselect-buttons input {vertical-align: top}
@@ -45,6 +45,11 @@ input[name*="amount"] {background: #adff2f;}
 input[name*="datetime_"][type='date'] {width:90px;margin-right: 14px}
 input[name*="datetime_"][type='time'] {width:auto;}
 td.cause ul { list-style: none;}
+.datehead {position: relative;}
+.datehead a {top:25%;position: absolute;}
+.datehead a:first-child {left:-20px;}
+.datehead a:last-child {margin-left: 5px}
+
 
 @media (max-width:480px) {
     .brickinput select, .batchinput input {width:auto !important;}
@@ -77,7 +82,7 @@ fieldset.Part div.success { background-color: #dff0d8; }
 fieldset.Part div.error { background-color: #fcf8e3; }
 fieldset.Part div.info { background-color: #d9edf7; }
 
-fieldset table td {margin: 0;}
+fieldset table td {margin: 0;padding: 0}
 input[type='time'] {padding-top: 2px}
 
 fieldset table input[type='date'], fieldset table input[type='time'],
@@ -102,15 +107,9 @@ fieldset table input[name*='pressure']{width: 100%;}
 fieldset table input[name*='limestone']{width: 117px;}
 [data-title='Ошибка']{border:red 1px dashed;}
 
-fieldset.pressure table input::-webkit-outer-spin-button,
-fieldset.pressure table input::-webkit-inner-spin-button,
-fieldset.flexion table input::-webkit-outer-spin-button,
-fieldset.flexion table input::-webkit-inner-spin-button,
-fieldset.Part table input::-webkit-outer-spin-button,
-fieldset.Part table input::-webkit-inner-spin-button ,
-#journal table input::-webkit-outer-spin-button,
-#journal table input::-webkit-inner-spin-button 
-    { -webkit-appearance:none; margin: 0; }
+table input::-webkit-outer-spin-button,
+table input::-webkit-inner-spin-button
+{ -webkit-appearance:none; margin: 0; }
 
 
 .tests .pressure table, .tests .flexion table {margin-right: auto;margin-left: auto;}
@@ -125,6 +124,8 @@ input[name*='pf']{width: 52px;}
 input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
 
+#warren input[name*="tt"] {width:40px;}
+#warren tbody {border-bottom: 15px solid white}
 
 #journal .Clay input[name*="humidity"] {width:130px;}
 #journal input[type='number'] { width:42px; text-align: center}

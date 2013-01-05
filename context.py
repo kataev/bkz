@@ -11,6 +11,7 @@ nav = dict(
     main= (
         ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('lab:index', 'icon-fullscreen', u'Лаборатория'),
+        ('make:index', 'icon-tasks', u'Производство'),
 #        ('energy:index', 'icon-energy', u'Энергоресурсы'),
         ('it:index', 'icon-hdd', u'ИТ'),
         ('price', 'icon-shopping-cart', u'Прайс'),
@@ -36,7 +37,11 @@ nav = dict(
         ('lab:index',' icon-fullscreen', u'Лаборатория'),
         ('lab:journal',' icon-book', u'Журнал'),
         ('lab:stats',' icon-signal', u'Показатели'),
-    )
+    ),
+    make = (
+        ('make:index', 'icon-tasks', u'Производство'),
+        ('make:warren', 'icon-resize-full', u'Садка за день'),
+        )
 )
 menu = dict(
     energy=(
@@ -65,6 +70,10 @@ menu = dict(
         ('lab:SEONR-add','',u'Уд.эф.акт.ест.рад.'),
         ('lab:HeatConduction-add','',u'Теплопроводность'),
     ),
+    make = (
+        ('make:Forming-add','',u'Формовка'),
+        ('make:Warren-add','',u'Садка'),
+        ),
     cpu = (
         ('cpu:Device-add','',u'Устройство'),
         ('cpu:Position-add','',u'Канал')

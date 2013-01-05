@@ -4,7 +4,7 @@
 {% block container %}
     <div class="row">
     <div class="span5">
-    <form action="{% url whs:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
+    <form accept-chartset='utf-8' action="{% url whs:verification %}" enctype="multipart/form-data" class='form-horizontal' method="POST">
         {% csrf_token %}
         <fieldset>
             <legend>Сверка</legend>
