@@ -46,7 +46,7 @@ class FlexionInput(FloatInput):
 class PressureInput(FloatInput):
     pass
 
-class ClayForm(forms.ModelForm):
+class ClayForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Clay
         exclude = (u'info',)
@@ -62,7 +62,7 @@ ClayFactory.caption = u'Глина из карьера'
 ClayFactory.css_class = 'span8'
 ClayFactory.label_style = {}
 
-class StoredClayForm(forms.ModelForm):
+class StoredClayForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         exclude = (u'info',)
         model = StoredClay
@@ -70,12 +70,12 @@ class StoredClayForm(forms.ModelForm):
                     'humidity':FloatInput(attrs={'autocomplete':'off'}),
         }
 
-StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=1)
+StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=5,max_num=6)
 StoredClayFactory.caption = u'Глина по позициям'
 StoredClayFactory.css_class = 'span4'
 StoredClayFactory.width = {}
 
-class SandForm(forms.ModelForm):
+class SandForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         exclude = (u'info',)
         model = Sand
@@ -90,9 +90,9 @@ SandFactory.caption = u'Песок'
 SandFactory.css_class = 'span6'
 SandFactory.width = {}
 
-class BarForm(forms.ModelForm):
+class BarForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info")
+        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info",'cavitation','color','width')
         model = Bar
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                 'tts':NumberInput,
@@ -108,9 +108,9 @@ BarFactory.css_class = 'span10'
 BarFactory.width = {}
 
 
-class RawForm(forms.ModelForm):
+class RawForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = (u'info',)
+        exclude = (u'info','cavitation','color','width')
         model = Raw
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                     'tts':NumberInput,
@@ -126,9 +126,9 @@ RawFactory.css_class = 'span9'
 RawFactory.width = {}
 
 
-class HalfForm(forms.ModelForm):
+class HalfForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = (u'info',)
+        exclude = (u'info','cavitation','color','width')
         model = Half
         widgets = { 'datetime':SplitDateTimeHTML5Widget,
                     'weight':NumberInput,
@@ -137,28 +137,28 @@ class HalfForm(forms.ModelForm):
                     'shrink':FloatInput,
         }
 
-HalfFactory = modelformset_factory(Half,form=HalfForm,extra=1)
+HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)
 HalfFactory.caption = u'Полуфабрикат'
 HalfFactory.css_class = 'span9'
 HalfFactory.width = {}
 
-class WaterAbsorptionForm(forms.ModelForm):
+class WaterAbsorptionForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = WaterAbsorption
 
-class EfflorescenceForm(forms.ModelForm):
+class EfflorescenceForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Efflorescence
 
-class FrostResistanceForm(forms.ModelForm):
+class FrostResistanceForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = FrostResistance
 
-class SEONRForm(forms.ModelForm):
+class SEONRForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = SEONR
 
-class HeatConductionForm(forms.ModelForm):
+class HeatConductionForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = HeatConduction
 
@@ -194,7 +194,7 @@ class PartForm(BootstrapMixin, forms.ModelForm):
         }
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
 
-class RowForm(forms.ModelForm):
+class RowForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = RowPart
         widgets = {
@@ -208,7 +208,7 @@ class RowForm(forms.ModelForm):
 
 RowFactory = inlineformset_factory(Part, RowPart, RowForm,extra=1,max_num=1)
 
-class PressureForm(forms.ModelForm):
+class PressureForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         exclude = ('timestamp',)
         model = Test
@@ -221,7 +221,7 @@ class PressureForm(forms.ModelForm):
             'type':forms.HiddenInput
             }
 
-class FlexionForm(forms.ModelForm):
+class FlexionForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FlexionForm, self).__init__(*args,**kwargs)
         self['area'].label = u'2Bh²'
@@ -271,7 +271,7 @@ def get_flexion_value(self):
 FlexionFactory.get_value = property(get_flexion_value)
 FlexionFactory.caption = u'Испытания на изгиб'
 
-class BatchTestsForm(forms.ModelForm):
+class BatchTestsForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
         fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer',

@@ -2,68 +2,68 @@
 {% load bkz %}
 {% block title %}Остатки{% endblock %}
 {% block container %}
-    <div class="container">
-        <div class="row">
-            <div class="span7">
-                <h1 class="">
-                    {{ begin|date:'Y F' }}
-                    {% if begin.year != end.year or begin.month != end.month %}
-                        &mdash; {{ end|date:'Y F' }}
-                    {% endif %}
-                </h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
-                {% with year=form.date__year month=form.date__month %}
-                    {% include 'whs/widgets/year-month-select.html' %}
-                {% endwith %}
-                <input type="submit" class="btn">
-            </form>
+<div class="container">
+    <div class="row">
+        <div class="span7">
+            <h1 class="">
+                {{ begin|date:'Y F' }}
+                {% if begin.year != end.year or begin.month != end.month %}
+                    &mdash; {{ end|date:'Y F' }}
+                {% endif %}
+            </h1>
         </div>
-        <div class="row">
-            <div class="span12">
-                {% include 'whs/widgets/brickselect-buttons.html' %}
-                <table id='bricks' class="table table-bordered table-condensed">
-                    <colgroup>
-                        <col span=1>
-                        <col span="10" style='width:70px;'>
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>Имя</th>
-                        <th>Начало</th>
-                        <th>Приход</th>
-                        <th>Првд из</th>
-                        <th>Првд в</th>
-                        <th>Продажи</th>
-                        <th>В цех</th>
-                        <th>Из цеха</th>
-                        <th>Списанно</th>
-                        <th>Инв</th>
-                        <th>Остатки</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for b in Bricks %}
-                        <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}"
-                            class="{{ b.css }} {% if b.opers %}zero{% endif %}">
-                            <td class="name"><a title='{{ b.name }}'
-                                                href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
-                            {% for o in b.order %}
-                                <td> {{ b|hash:o }} </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <th></th>
-                        {% for o in order %}
-                            <th> {{ Bricks|sum_pluck:o }} </th>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+            {% with year=form.date__year month=form.date__month %}
+                {% include 'whs/widgets/year-month-select.html' %}
+            {% endwith %}
+            <input type="submit" class="btn">
+        </form>
+    </div>
+    <div class="row">
+        <div class="span12">
+            {% include 'whs/widgets/brickselect-buttons.html' %}
+            <table id='bricks' class="table table-bordered table-condensed">
+                <colgroup>
+                    <col span=1>
+                    <col span="10" style='width:70px;'>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>Имя</th>
+                    <th>Начало</th>
+                    <th>Приход</th>
+                    <th>Првд из</th>
+                    <th>Првд в</th>
+                    <th>Продажи</th>
+                    <th>В цех</th>
+                    <th>Из цеха</th>
+                    <th>Списанно</th>
+                    <th>Инв</th>
+                    <th>Остатки</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for b in Bricks %}
+                    <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}"
+                        class="{{ b.css }} {% if b.opers %}zero{% endif %}">
+                        <td class="name"><a title='{{ b.name }}'
+                                            href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
+                        {% for o in b.order %}
+                            <td> {{ b|hash:o }} </td>
                         {% endfor %}
                     </tr>
-                    </tfoot>
-                </table>
-            </div>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    {% for o in order %}
+                        <th> {{ Bricks|sum_pluck:o }} </th>
+                    {% endfor %}
+                </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
+</div>
 {% endblock %}

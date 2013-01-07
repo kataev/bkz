@@ -135,7 +135,8 @@ def journal(request,date=None):
     date = datetime.datetime.combine(date,datetime.time(8))
     filter = dict(datetime__range=(date,date+datetime.timedelta(hours=24)))
     clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay')
-    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay')
+    cinitial=map(lambda x: {'position':x},range(1,6))
+    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay',initial=cinitial)
     sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand')
     bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar')
     raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw')
@@ -156,11 +157,10 @@ def stats(request):
         factory = eval(modelselect.cleaned_data['model']+'Factory')
     else: 
         factory = ClayFactory
-    if datefilter.is_valid():
-        data = dict([(k.replace('date','datetime'),v) for k,v in datefilter.cleaned_data.items() if v])
-    else:
-        date = datetime.date.today()
-        data = {'datetime__year':date.year,'datetime__month':date.month}
+    date = datefilter.get_date
+    data = {'datetime__year':date.year}
+    if datefilter.is_valid() and datefilter.cleaned_data.get('datetime__month'):
+        data['datetime__month']=date.month
     factory = factory(queryset=factory.model.objects.filter(**data))
     return render(request,'lab/stats.html',{'datefilter':datefilter,'modelselect':modelselect,
-        'factory':factory})
+        'factory':factory,'functions':('max','avg','min')})

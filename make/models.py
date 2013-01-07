@@ -28,10 +28,21 @@ class Forming(models.Model,UrlMixin):
 class Warren(models.Model,UrlMixin):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today(),null=True,blank=True)    
-    tt = models.CharField(u'ТТС',max_length=20)
-    tts = models.ForeignKey('self',verbose_name=u'ТТС',related_name='tto',null=True,blank=True)
+    number = models.IntegerField(u'ТТС')
+    source = models.ForeignKey('self',verbose_name=u'ТТС',related_name='consumer',null=True,blank=True)
     amount = models.CharField(u'Кол-во',max_length=20)
 
+    def __unicode__(self):
+        if self.pk:
+            if self.source:
+                return u'Садка от %s, на ТТО № %d с ТТС № %d' % (ru_date(self.date),self.source.number, self.number)
+            else:
+                return u'Садка от %s, на ТТО № %d c ТТC № %s' % (ru_date(self.date),self.number,\
+                            ','.join([str(t.number) for t in self.consumer.all()]))
+        else:
+            return u'Новая садка'
+
     class Meta:
+        ordering = ('-date',)
         verbose_name=u'Садка'
         verbose_name_plural=u'Садка'

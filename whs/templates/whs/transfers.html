@@ -23,17 +23,17 @@
                     {% for k in data.keys %}
                         <th>{{ k }}</th>
                     {% endfor %}
-                </tr>
-            {% for k,d in data.items %}
-            <tr>
-                <th>{{ k }}</th>
-                {% for k,v in d.items %}
-                    <td>{{ v }}</td>
-                {% endfor %}
-            </td>
-            {% endfor %}
-            </tbody>
-        </table>
+                    </tr>
+                    {% for k,d in data.items %}
+                    <tr>
+                        <th>{{ k }}</th>
+                        {% for k,v in d.items %}
+                            <td>{{ v }}</td>
+                        {% endfor %}
+                    </td>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

@@ -50,7 +50,7 @@ td.cause ul { list-style: none;}
 .datehead a {top:25%;position: absolute;}
 .datehead a:first-child {left:-20px;}
 .datehead a:last-child {margin-left: 5px}
-
+.dateform input[type='date'] { width: 130px}
 
 @media (max-width:480px) {
     .brickinput select, .batchinput input {width:auto !important;}

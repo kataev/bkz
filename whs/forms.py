@@ -170,13 +170,20 @@ class SoldFactory(SoldFactory):
                 raise ValidationError(u'Не хватает кирпича для накладной, проверьте отгрузки по кирпичу %s' % b.label)
 
 
-class YearMonthFilter(BootstrapMixin,forms.Form):
+class YearMonthFilter(forms.Form):
     date__year = forms.IntegerField(required=True)
     date__month = forms.IntegerField(required=False)
 
+    @property
+    def get_date(self):
+        if self.is_valid():
+            return datetime.date(self.cleaned_data.get('date__year'),self.cleaned_data.get('date__month',1) or 1,1)
+        else:
+            return datetime.date.today()
+
     def __init__(self, *args, **kwargs):
         model = kwargs.pop('model')
-        super(BootstrapMixin, self).__init__(*args, **kwargs)
+        super(YearMonthFilter, self).__init__(*args, **kwargs)
         self.dates = model.objects.dates('date', 'month')[::-1]
 
 records_per_page = (

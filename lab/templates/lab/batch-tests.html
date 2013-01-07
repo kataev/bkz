@@ -6,10 +6,6 @@
 {% block head %}
 <link href="{{ STATIC_URL }}css/tests.css" rel="stylesheet" media="print">
 {% endblock %}
-{% block script %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
-{% endblock %}
 {% block container %}
     <div class='container'>
         <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>

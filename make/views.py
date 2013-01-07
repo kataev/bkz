@@ -8,8 +8,19 @@ from django.contrib import messages
 from bkz.make.models import Forming,Warren
 from bkz.make.forms import WarrenFactory,WarrenTTOFactory
 from bkz.whs.forms import DateForm,YearMonthFilter
+from bkz.lab.models import *
 
 def index(request):
+    try: days = requst.GET.get('days',4)
+    except ValueError: days = 4
+    dateform = DateForm(request.GET or None)
+    if dateform.is_valid():
+        date = dateform.cleaned_data.get('date',datetime.date.today())
+    else:
+        date = datetime.date.today()
+    queryset = Batch.objects.filter(date=date)
+    for batch in queryset:
+        warrens = Warren.objects.filter(tto__isnull=True).filter(number__in=batch.get_tto)
 	return render(request,'make/index.html')
 
 def warren(request):

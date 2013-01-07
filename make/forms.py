@@ -14,13 +14,13 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
 class WarrenForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Warren
-        exclude = ('tts','amount')
+        exclude = ('consumer','amount')
         widgets = {'date':forms.HiddenInput}
         
 class WarrenTTOForm(BootstrapMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(WarrenTTOForm, self).__init__(*args,**kwargs)
-        self['tt'].label = u'№ ТТО'
+        self['number'].label = u'№ ТТО'
 
 	class Meta:
 		model = Warren

@@ -286,7 +286,7 @@ def transfers(request):
         q[s['brick__mark']]=s['amount__sum']
         out[s['brick_from__mark']]=q
     print out
-    return render(request,'core/transfers.html',{'data':out,'datefilter':datefilter})
+    return render(request,'whs/transfers.html',{'data':out,'datefilter':datefilter})
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):

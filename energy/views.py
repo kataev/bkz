@@ -21,7 +21,7 @@ def delta(queryset,fields):
         prev = v
     return energy
 
-def main(request,year=None,month=None):
+def index(request,year=None,month=None):
     fields = ('gaz','elec4','elec16')
     start = datetime.date.today().replace(day=1)
     energy = []

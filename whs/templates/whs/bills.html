@@ -2,21 +2,21 @@
 {% load bkz %}
 {% block title %}Накладные{% endblock %}
 {% block container %}
-    <div class="container">
-    {% load pagination_tags %}
-    {% autopaginate object_list rpp %}
+{% load pagination_tags %}
+{% autopaginate object_list rpp %}
+<div class="container">
     <div class="row">
         <div class="span9" id="brickfade">
             <table id='Bills' class="table table-bordered table-condensed">
-            <caption><h1>Накладные</h1></caption>
+                <caption><h1>Накладные</h1></caption>
                 <thead>
-                <tr>
-                    <th width=15px>#</th>
-                    <th width="auto">Дата</th>
-                    <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
-                    <th style='width:60px;'>Кол-во</th>
-                    <th style='width:100px;'>Цена</th>
-                </tr>
+                    <tr>
+                        <th width=15px>#</th>
+                        <th width="auto">Дата</th>
+                        <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
+                        <th style='width:60px;'>Кол-во</th>
+                        <th style='width:100px;'>Цена</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {% for b in object_list %}
@@ -58,5 +58,5 @@
             </form>
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}

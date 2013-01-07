@@ -78,6 +78,7 @@ class StoredClay(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
     humidity = models.FloatField(u'Влаж.')
+    used = models.BooleanField(u'<abbr title="По этой позиции формовали?">Ф</abbr>',default=False)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -165,7 +166,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
         verbose_name_plural = u"Сырца из накопителя"
         ordering = ('-datetime',)
 
-class Half(models.Model,ShiftMixin):
+class Half(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
 
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])

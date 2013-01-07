@@ -5,19 +5,26 @@
 {% endblock %}
 {% block title %}
     {% if form.instance.pk %}
-        {{ form.instance|model_verbose_name|safe }}
+        {{ form.instance }}
+    {% else %}
+        {{ form.instance|striptags }}
     {% endif %}
-    {{ form.instance|striptags }}
 {% endblock %}
 {% block container %}
     {% block form %}
         <div class="container">
-            <h1>{{ form.instance|model_verbose_name|safe }}</h1>
+            <h1>
+                {% if form.instance.pk %}
+                    {{ form.instance }}
+                {% else %}
+                    {{ form.instance|striptags }}
+                {% endif %}
+            </h1>
             <form accept-chartset='utf-8' method="POST" action="" class='form-horizontal' id="form">
                 {% csrf_token %}
             <div class="row">
                 <div class='span6'>
-                {{ form }}
+                {{ form.as_div }}
                 </div>
             </div>  
             </form>

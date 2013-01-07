@@ -5,59 +5,24 @@
 {% block title %}Производство{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
-    <div class="row">
-            <div class="span7">
-                <h1>Журнал <small>за {{ date|date:'j E Y, l' }}</small></h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
-                {{ dateform.date }}
-                <input type="submit" class="btn">
-            </form>
+    <div class="row page-header">
+        <div class="span9">
+            <h1>Производство <small>за {{ date|date:'j E Y, l' }}</small></h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span3 dateform" style='margin-top:  10px;text-align:right'>
+            {{ dateform.date }}
+            <input type="submit" class="btn">
+        </form>
     </div>
-    
-    <form accept-chartset='utf-8' method="POST" id='form' class='row'>
-        {% csrf_token %}
-    {% for f in factory %}
-    <fieldset class='{{ f.css_class }} {{ f.model|class_name }}'>
-    {{ f.management_object }}    
-    {{ f.management_form }}  
-    <table>
-    	<caption><h2>{{ f.caption }}</h2></caption>
-    		<thead>
-                <tr>
-                    {% for field in f.empty_form.visible_fields %}
-                        <th>{{ field.label|safe }}</th>
-                    {% endfor %}
-    			</tr>
-    		</thead>
-    	<tbody>
-    		{% for form in f %}
-    			<tr id='{{ form.prefix}}' >
-    				{% for f in form.visible_fields %}
-                        {% if forloop.first %}
-                        <td class="input-prepend">
-                            <span class='add-on'>{{ forloop.parentloop.counter }}</span>
-                            {% for f in form.hidden_fields %}
-                                {{ f }}
-                            {% endfor %}
-                            {{ f }}
-                        </td>
-                        {% else %}
-                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
-                        {% endif %}
-                    {% endfor %}
-    			</tr>
-    		{% endfor %}
-    	</tbody>
-    </table>
-    </fieldset>
-    {% endfor %}
+    <div class='span12'>
+        
+    </div>    
 </div>
 <div class="form-actions">
-        <div class="container">
-            <button type="submit" class="btn btn-primary" form="form">
-                <i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-        </div>
+    <div class="container">
+        <button type="submit" class="btn btn-primary" form="form">
+            <i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
     </div>
+</div>
 {% endblock %}

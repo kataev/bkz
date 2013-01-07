@@ -2,10 +2,6 @@
 {% load bkz %}
 {% block head %}
 {% endblock %}
-{% block script %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/tests.js"></script>
-{% endblock %}
 {% block title %}Журнал за {{ date|date:'j E Y' }}{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
@@ -40,7 +36,7 @@
     		</thead>
     	<tbody>
     		{% for form in f %}
-    			<tr id='{{ form.prefix}}' >
+    			<tr id='{{ form.prefix }}' >
     				{% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">
@@ -49,6 +45,10 @@
                                 {{ f }}
                             {% endfor %}
                             {{ f }}
+                        </td>
+                        {% elif forloop.last and f.name == 'used' %}
+                        <td class="input-append">
+                            <span class='add-on'>{{ f }}</span>
                         </td>
                         {% else %}
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
