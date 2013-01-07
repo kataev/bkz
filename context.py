@@ -29,9 +29,6 @@ nav = dict(
         ),
     energy=(
         ('energy:index', 'icon-energy', u'Энергоресурсы'),
-        ('divider',),
-        ('energy:Energy', 'icon-Energy', u'Энергия'),
-        ('energy:Teplo', 'icon-Teplo', u'Тепло'),
         ),
     lab = (
         ('lab:index',' icon-fullscreen', u'Лаборатория'),
@@ -74,11 +71,20 @@ menu = dict(
         ('make:Forming-add','',u'Формовка'),
         ('make:Warren-add','',u'Садка'),
         ),
-    cpu = (
-        ('cpu:Device-add','',u'Устройство'),
-        ('cpu:Position-add','',u'Канал')
-    )
 )
+
+from django.core.urlresolvers import reverse,NoReverseMatch
+def test_urls(urls):
+    for d in urls.values():
+        for url in d:
+            if len(url) > 1:
+                try:
+                    reverse(url[0])
+                except NoReverseMatch:
+                    raise NoReverseMatch(url)
+test_urls(nav)
+test_urls(menu)
+
 def namespace(request):
     namespace = getattr(request,'namespace',None) or 'main'
     return dict(nav=nav.get(namespace), menu=menu.get(namespace),current_app=namespace)
