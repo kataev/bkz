@@ -68,10 +68,11 @@ def func_pluck(queryset,attr):
             q = [b.get(attr,0) for b in queryset]
         else:
             q = [getattr(b,attr) for b in queryset]
-        print q
+        if isinstance(q[0],str):
+            return
         if func=='sum': return sum(q)
-        elif func=='min': return min(q)
         elif func=='avg': return round(sum(q)/len(q),2)
+        elif func=='min': return min(q)
         elif func=='max': return max(q)
         else: return
     except IndexError:

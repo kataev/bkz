@@ -20,7 +20,7 @@ def index(request):
         date = datetime.date.today()
     queryset = Batch.objects.filter(date=date)
     for batch in queryset:
-        warrens = Warren.objects.filter(tto__isnull=True).filter(number__in=batch.get_tto)
+        warrens = Warren.objects.filter(tto__isnull=True).filter(number__in=batch.get_tto).order_by('-date','number')[len(batch.get_tto)]
 	return render(request,'make/index.html')
 
 def warren(request):

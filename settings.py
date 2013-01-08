@@ -46,9 +46,6 @@ DATABASES = {
     # },
 }
 
-if 'test' in sys.argv or 'test_coverage' in sys.argv:
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['old']['ENGINE'] = 'django.db.backends.sqlite3'
 SOUTH_TESTS_MIGRATE = False
 
 DATABASE_ROUTERS = ('routes.bkzRouter',)

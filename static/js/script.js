@@ -299,7 +299,7 @@ function get_area_and_volume(id,size) {
 
 
 $(function(){
-    $("input[name*='size']").mask('999.9 x 999.9 x 99.9').change(function(e){
+    $("input[name*='size'][type='text']").mask('999.9 x 999.9 x 99.9').change(function(e){
         var id = $(this).attr('id')
         var size = $(this).val()
         var q = get_area_and_volume(id,size)

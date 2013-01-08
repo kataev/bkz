@@ -144,11 +144,14 @@ def journal(request,date=None):
                     {'position':25,'path':5},{'position':25,'path':7}]
     half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=raw_initial)
     factory = [clay, storedclay, sand, bar, raw, half]
+
     if request.method == 'POST':
         for f in factory:
             if f.is_valid():
                 f.save()
-    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f})
+    if date < datetime.datetime.now() - datetime.timedelta(days=2):
+        add = False
+    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f,'add':add})
 
 def stats(request):
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
@@ -159,8 +162,8 @@ def stats(request):
         factory = ClayFactory
     date = datefilter.get_date
     data = {'datetime__year':date.year}
-    if datefilter.is_valid() and datefilter.cleaned_data.get('datetime__month'):
+    if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
         data['datetime__month']=date.month
-    factory = factory(queryset=factory.model.objects.filter(**data))
+    factory = factory(queryset=factory.model.objects.filter(**data).order_by('datetime'))
     return render(request,'lab/stats.html',{'datefilter':datefilter,'modelselect':modelselect,
         'factory':factory,'functions':('max','avg','min')})

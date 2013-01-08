@@ -36,11 +36,14 @@
     		</thead>
     	<tbody>
     		{% for form in f %}
+            {% if form.instance.pk or add %}
     			<tr id='{{ form.prefix }}' >
     				{% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">
-                            <span class='add-on'>{{ forloop.parentloop.counter }}</span>
+                            <span class='add-on'>
+                                <a href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                            </span>
                             {% for f in form.hidden_fields %}
                                 {{ f }}
                             {% endfor %}
@@ -55,6 +58,7 @@
                         {% endif %}
                     {% endfor %}
     			</tr>
+                {% endif %}
     		{% endfor %}
     	</tbody>
     </table>

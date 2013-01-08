@@ -63,7 +63,7 @@ class Clay(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Глина"
         verbose_name_plural = u"Глины"
-        ordering = ('-datetime',)
+        ordering = ('datetime',)
 
 clay_positions = (
     (1,u'1 позиция'),
@@ -88,7 +88,7 @@ class StoredClay(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Глина по позициям"
         verbose_name_plural = u"Глины по позициям"
-        ordering = ('-datetime','-position')
+        ordering = ('datetime','-position')
 
 class Sand(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
@@ -99,13 +99,13 @@ class Sand(models.Model,ShiftMixin,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'Проба песка от %s' % ru_date(self.date)
+        if self.pk: return u'Проба песка от %s' % ru_date(self.datetime)
         else: return u'Новая проба песка'
 
     class Meta():
         verbose_name = u"Песок"
         verbose_name_plural = u"Песка"
-        ordering = ('-datetime',)
+        ordering = ('datetime',)
 
 
 width_c = (
@@ -116,7 +116,7 @@ width_c = (
 
 class Bar(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
+    cavitation = models.IntegerField(u"Пустот.", choices=cavitation_c, default=0)
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
@@ -142,7 +142,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Брус"
         verbose_name_plural = u"Бруса"
-        ordering = ('-datetime',)
+        ordering = ('datetime',)
 
 class Raw(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
@@ -164,7 +164,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Сырец из накопителя"
         verbose_name_plural = u"Сырца из накопителя"
-        ordering = ('-datetime',)
+        ordering = ('datetime',)
 
 class Half(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
@@ -189,7 +189,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Полуфабрикат"
         verbose_name_plural = u"Полуфабриката"
-        ordering = ('-datetime','-path','-position')
+        ordering = ('datetime','-path','-position')
 
 class WaterAbsorption(models.Model,UrlMixin):
     date = models.DateField(u'Дата', default=datetime.date.today())
@@ -435,6 +435,10 @@ class RowPart(models.Model):
     @property
     def out(self):
         return (self.amount or 0) - (self.test or 0) - (self.brocken or 0)
+
+    @property
+    def get_tto(self):
+        return convert_tto(self.tto)
 
 test_c = ((u'flexion',u'На изгиб'), (u'pressure',u'На сжатие'),)
 

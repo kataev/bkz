@@ -59,7 +59,7 @@ class ClayForm(BootstrapMixin,forms.ModelForm):
 
 ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=1)
 ClayFactory.caption = u'Глина из карьера'
-ClayFactory.css_class = 'span8'
+ClayFactory.css_class = 'span7'
 ClayFactory.label_style = {}
 
 class StoredClayForm(BootstrapMixin,forms.ModelForm):
@@ -72,14 +72,15 @@ class StoredClayForm(BootstrapMixin,forms.ModelForm):
 
 StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=5,max_num=6)
 StoredClayFactory.caption = u'Глина по позициям'
-StoredClayFactory.css_class = 'span4'
+StoredClayFactory.css_class = 'span5'
 StoredClayFactory.width = {}
 
 class SandForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         exclude = (u'info',)
         model = Sand
-        widgets = {'datetime':SplitDateTimeHTML5Widget,
+        widgets = {
+                'datetime':SplitDateTimeHTML5Widget,
                 'humidity':FloatInput(attrs={'autocomplete':'off'}),
                 'particle_size':FloatInput(attrs={'autocomplete':'off'}),
                 'module_size':FloatInput(attrs={'autocomplete':'off'}),
