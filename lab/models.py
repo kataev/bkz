@@ -8,7 +8,7 @@ from django.db import models
 from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto,ShiftMixin
-
+from bkz.make.models import Warren,Forming
 
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
@@ -40,7 +40,7 @@ from south.modelsinspector import add_introspection_rules
 add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])
 
 class Clay(models.Model,ShiftMixin,UrlMixin):
-    datetime = models.DateTimeField(u'Дата', default=datetime.datetime.now())
+    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     humidity = SlashSeparatedFloatField(u'Пробы влажности',max_length=300)
     sand = models.FloatField(u'Песок')
     inclusion = models.FloatField(u'Включ.')
@@ -77,8 +77,8 @@ clay_positions = (
 class StoredClay(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
-    humidity = models.FloatField(u'Влаж.')
     used = models.BooleanField(u'<abbr title="По этой позиции формовали?">Ф</abbr>',default=False)
+    humidity = models.FloatField(u'Влаж.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
@@ -310,6 +310,12 @@ class Batch(UrlMixin,models.Model):
     pf = models.FloatField(u'Пустотность фактическая',null=True,blank=True)
     pct = models.FloatField(u'Пустотность приведенная к фактической',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
+
+    @property
+    def get_warren(self):
+        tto = self.get_tto
+        dr = (self.date - datetime.timedelta(days=5),self.date - datetime.timedelta(days=3))
+        return Warren.objects.order_by('-date','number').values_list('number','consumer__number').filter(source__isnull=True).filter(number__in=tto).filter(date__range=dr)
 
     def __unicode__(self):
         if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)

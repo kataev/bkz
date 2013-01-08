@@ -129,13 +129,19 @@ input[name*='chamfer']{width: 52px;}
 #warren input[name*="tt"] {width:40px;}
 #warren tbody {border-bottom: 15px solid white}
 
-#journal .Clay input[name*="humidity"] {width:130px;}
+#journal table tr td:last-child input, #journal table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
+#journal table td {vertical-align: top ;}
 #journal input[type='number'] { width:42px; text-align: center}
 #journal input[name*="tts"] {width:32px;}
 #journal input[name*="weight"] {width:60px;}
+#journal input[name*="weight"] {width:60px;}
+#journal input[name*="humidity"] {width:60px;}
+#journal input[name*="temperature"] {width:60px;}
 #journal input[name*="-sand"] {width:50px;}
 #journal input[name*="inclusion"] {width:50px;}
 #journal input[name*="dust"] {width:50px;}
+#journal .Clay input[name*="humidity"] {width:130px;}
+#journal .Sand textarea {width:182px;}
 #journal input[name*="datetime_"][type='date'] {width:110px;margin-right: 2px}
 #journal input[name*="datetime_"][type='time'] {width:60px;overflow: hidden;white-space: normal}
 #journal .input-append {margin: 0}
@@ -241,4 +247,23 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 @media print {
     button, input[type='button'], input[type='submit'], a.btn {display: none !important; }
     .dateform {display: none !important}
+    input[type="text"],input[type="number"],input[type="date"],input[type="time"], textarea, select {
+        border:none !important;
+        border-size:0 !important;
+        -webkit-box-shadow:none !important;
+        -webkit-appearance:none !important;
+        box-shadow:none !important;
+        -webkit-transition:none !important;
+    }
+    #journal table {page-break-inside: avoid;}
+    input[type="date"]{width:85px !important;}
+    ::-webkit-calendar-picker-indicator {
+        display: none;
+        -webkit-appearance:none !important;
+    }
+    h1 {}
+    tr,td,th {border: 1px black solid;}
+    .add-on {background: none !important;border: none !important;}
+
+    }
 }

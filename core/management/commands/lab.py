@@ -2,6 +2,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from bkz.lab.models import *
 from bkz.whs.models import Width
+from bkz.make.models import Warren,Forming
 from random import randint,random,shuffle,uniform
 from itertools import cycle
 import datetime
@@ -27,6 +28,8 @@ class Command(BaseCommand):
                 self.create_test_data_clay()
             if arg1 =='storedclay':
                 self.create_test_data_stored_clay()
+            if arg1 =='warren':
+                self.create_test_data_warren()
             
         else:
             raise CommandError('Command DNE')
@@ -146,6 +149,26 @@ class Command(BaseCommand):
                 humidity=round(uniform(2,40),2),
                 )
 
+    def create_half(self,d,color,width,pos,path,t):
+        if pos==16:
+            weight = randint(4100,4208)
+            hum = round(uniform(12,13),2)
+        else:
+            weight = randint(3700,3800)
+            hum = round(uniform(2,8),2)
+        return Half.objects.create(
+            datetime=d,
+            color = color,
+            width = width,
+            position = pos,
+            path = path,
+            tts = t,
+            size = '%d.0 x %d.0 x %d.0' % (255-randint(0,2),121-randint(0,2),88-randint(0,2)),
+            weight = weight,
+            humidity=hum,
+            shrink=round(uniform(5,7),2)
+            )
+
     def create_test_data_half(self):
         shuffle(self.tts)
         i,j = 0,0
@@ -167,21 +190,39 @@ class Command(BaseCommand):
                 date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
                 d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
 
-                if pos==16:
-                    weight = randint(4100,4208)
-                    hum = round(uniform(12,13),2)
-                else:
-                    weight = randint(3700,3800)
-                    hum = round(uniform(2,8),2)
-                Half.objects.create(
-                    datetime=d,
-                    color = Bar.objects.filter(datetime__year=2012,datetime__month=d.month,datetime__day=d.day)[0].color,
-                    width = Bar.objects.filter(datetime__year=2012,datetime__month=d.month,datetime__day=d.day)[0].width,
-                    position = pos,
-                    path = path,
-                    tts = t,
-                    size = '%d.0 x %d.0 x %d.0' % (255-randint(0,2),121-randint(0,2),88-randint(0,2)),
-                    weight = weight,
-                    humidity=hum,
-                    shrink=round(uniform(5,7),2)
-                    )
+                
+
+    def create_test_data_warren(self):
+        dr = (datetime.date(2012,1,6),datetime.date(2012,1,31))
+        paths = cycle([5,7])
+        poss = cycle([16,25])
+        ttss = cycle(self.tts)
+        for batch in Batch.objects.filter(date__range=dr):
+            d = batch.date - datetime.timedelta(days=5)
+            i=0
+            for tto,pos,path in zip(batch.get_tto,paths,poss):
+                i+=1
+                if i<=8:
+                    warren = Warren.objects.create(date=d,number=tto,amount='')
+                for i,tts in zip(range(4),ttss):
+                    Warren.objects.create(date=d,number=tts,source=warren,amount='')
+                self.create_half(d,batch.color,batch.width,pos,path,tts)
+
+
+    def get_tto_period(self):
+        dr = (datetime.date(2012,1,1),datetime.date(2012,1,31))
+        result = []
+        for i in xrange(1,30):
+            a = map(lambda x: (datetime.date(2012,1,1)-x).days,[t.part.batch.date for t in RowPart.objects.filter(part__batch__date__range=dr) if i in t.get_tto])
+            w = None
+            r = []
+            for j,q in enumerate(a):
+                if w is not None:
+                    r.append(w-q)
+                w=q
+            result.append(r)
+            print r
+
+
+
+

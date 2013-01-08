@@ -11,20 +11,16 @@ from bkz.whs.forms import DateForm,YearMonthFilter
 from bkz.lab.models import *
 
 def index(request):
-    try: days = requst.GET.get('days',4)
-    except ValueError: days = 4
     dateform = DateForm(request.GET or None)
     if dateform.is_valid():
         date = dateform.cleaned_data.get('date',datetime.date.today())
     else:
         date = datetime.date.today()
     queryset = Batch.objects.filter(date=date)
-    for batch in queryset:
-        warrens = Warren.objects.filter(tto__isnull=True).filter(number__in=batch.get_tto).order_by('-date','number')[len(batch.get_tto)]
-	return render(request,'make/index.html')
+    return render(request,'make/index.html')
 
 def warren(request):
-    queryset = Warren.objects.all()
+    queryset = Warren.objects.all().filter(source__isnull=True).prefetch_related('consumer')
     dateform = DateForm(request.GET or None)
     if dateform.is_valid():
         date = dateform.cleaned_data.get('date',datetime.date.today())
@@ -34,7 +30,7 @@ def warren(request):
     factory = WarrenFactory(request.POST or None, queryset=queryset,initial=[{'date':date}])
     for form in factory:
         instance=form.instance or None
-        form_queryset=Warren.objects.all()
+        form_queryset=form.instance.consumer.all()
         form.factory = WarrenTTOFactory(request.POST or None, instance=instance,queryset=form_queryset,prefix=form.prefix+'-factory')
     if request.method == 'POST':
         for form in factory:

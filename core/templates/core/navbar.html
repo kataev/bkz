@@ -24,13 +24,19 @@
                 </ul>
                 <ul class="nav pull-right">
                 {% if messages %}
-                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-html='true' data-original-title="<i class='icon-info-sign'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
+                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-html='true' data-original-title="<i class='icon-bell'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
                 {% endif %}
                 {% load pytils_numeral %}
                 {% if user.is_authenticated %}
-                    <li><a href="#"> <i class='icon-flag'></i> {{ user.first_name }} {{ user.last_name }} </a></li>
+                    <li><a href="#"> 
+                        {% if user.is_superuser %}
+                        <i class='icon-flag'></i>
+                        {% else %}
+                        <i class='icon-user'></i>
+                        {% endif %}
+                         {{ user.first_name }} {{ user.last_name }} </a></li>
                 {% else %}
-                    <li><a href="{% url 'login' %}"><i class='icon-flag'></i> Гость</a></li>
+                    <li><a href="{% url 'login' %}"><i class='icon-user'></i> Гость</a></li>
                 {% endif %}
                 {% if menu|length %}
                     <li class="dropdown">
