@@ -341,6 +341,7 @@ class Batch(UrlMixin,models.Model):
         verbose_name_plural = u"Готовая продукция"
         ordering = ('-date','-number',)
 
+    @property
     def get_cad_display(self):
         if self.cad == 0.8:
             return u'высоко-эффективный'
@@ -392,6 +393,14 @@ class Part(models.Model):
     @property
     def out(self):
         return sum([r.out for r in self.rows.all()])
+
+    @property
+    def brocken(self):
+        return sum([r.brocken for r in self.rows.all()])
+
+    @property
+    def test(self):
+        return sum([r.test for r in self.rows.all()])
 
     @property
     def tto(self):

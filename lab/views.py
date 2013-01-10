@@ -76,7 +76,13 @@ def batch_print_akt(request, pk):
 
 def batch_print_doc(request, pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
-    return render_to_response('webodt/document-the-quality-of.odt',{'batch':batch},format='pdf',inline=True)
+    parts = batch.parts.all()
+    part,part2 = False,False
+    if len(parts) and parts[0].defect =='gost':
+        part = parts[0]
+    if len(parts)==2 and parts[1].defect =='gost':
+        part2 = parts[1]
+    return render_to_response('webodt/document-the-quality-of.odt',{'part':part,'part2':part2},format='pdf',inline=True)
 
 
 

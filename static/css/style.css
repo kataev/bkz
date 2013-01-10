@@ -261,7 +261,7 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
         display: none;
         -webkit-appearance:none !important;
     }
-    h1 {}
+    h1 a {display: none}
     tr,td,th {border: 1px black solid;}
     .add-on {background: none !important;border: none !important;}
 

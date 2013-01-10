@@ -34,11 +34,11 @@ class Warren(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
+            return u''  
             if self.source:
-                return u'Садка от %s, на ТТО № %d с ТТС № %d' % (ru_date(self.date),self.source.number, self.number)
+                return u'Садка от %s, c ТТC № %d ' % (ru_date(self.date),self.number)
             else:
-                return u'Садка от %s, на ТТО № %d c ТТC № %s' % (ru_date(self.date),self.number,\
-                            ','.join([str(t.number) for t in self.consumer.all()]))
+                return u'Садка от %s, на ТТО № %d' % (ru_date(self.date),self.number)
         else:
             return u'Новая садка'
 

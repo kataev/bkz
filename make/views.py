@@ -20,7 +20,7 @@ def index(request):
     return render(request,'make/index.html')
 
 def warren(request):
-    queryset = Warren.objects.all().filter(source__isnull=True).prefetch_related('consumer')
+    queryset = Warren.objects.filter(source__isnull=True).prefetch_related('consumer')
     dateform = DateForm(request.GET or None)
     if dateform.is_valid():
         date = dateform.cleaned_data.get('date',datetime.date.today())
