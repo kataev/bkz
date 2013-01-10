@@ -2,7 +2,7 @@
 import os, sys
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = True
 
 INTERNAL_IPS = ('127.0.0.1','192.168.1.2','192.168.0.72')

@@ -58,7 +58,9 @@
                 <tr>
                     <th></th>
                     {% for o in order %}
-                        <th> {{ Bricks|sum_pluck:o }} </th>
+                        {% with field='sum '|add:o %}
+                        <th> {{ Bricks|func_pluck:field }} </th>
+                        {% endwith %}
                     {% endfor %}
                 </tr>
                 </tfoot>

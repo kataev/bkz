@@ -26,8 +26,8 @@
                 <tfoot>
                 <tr>
                     <th colspan="3">Показанно {{ object_list|length }} из {{ page_obj.paginator.count }}</th>
-                    <th>{{ object_list|sum_pluck:'amount' }}</th>
-                    <th><span class="money"> {{ object_list|sum_pluck:'money' }} </span></th>
+                    <th>{{ object_list|func_pluck:'sum amount' }}</th>
+                    <th><span class="money"> {{ object_list|func_pluck:'sum money' }} </span></th>
                 </tr>
                 </tfoot>
             </table>

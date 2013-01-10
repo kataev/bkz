@@ -10,3 +10,5 @@ pytils==0.2.3
 gunicorn==0.14.2
 django-debug-toolbar==0.9.4
 django-extensions==0.8
+lxml==2.3.2
+python-dateutil==1.5
