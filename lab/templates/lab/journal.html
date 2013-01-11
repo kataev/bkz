@@ -37,7 +37,7 @@
     	<tbody>
     		{% for form in f %}
             {% if form.instance.pk or add %}
-    			<tr id='{{ form.prefix }}' >
+    			<tr id='{{ form.prefix }}' class='{{ form.instance.css }}'>
     				{% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">

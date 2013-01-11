@@ -19,33 +19,39 @@
     <form accept-chartset='utf-8' method="POST" id='form' class='row less'>
         {% csrf_token %}
         {% for form in factory %}
-        <fieldset class='span3'>
+        <fieldset class='span2'>
         {{ factory.management_object }}
         {{ factory.management_form }}
         <table class='table table-bordered '>
-        <thead>
+        <tfoot>
             <tr>
                 <th>№ ТТС</th>
-                <th>№ ТТО</th>
                 <th>Кол-во</th>
             </tr>
-        </thead>
+        </tfoot>
         <tbody>
-            <tr></tr>
+            
             <tr>
-                <td rowspan='{{ form.factory|length }}'> 
-                    {{ form }} 
+                <td colspan="2"> 
+                    {% for f in form.hidden_fields %}
+                        {{ f }}
+                    {% endfor %}
+                    {% for f in form.visible_fields %}
+                        {{ f }}
+                    {% endfor %}
+                    
                     {{ form.factory.management_object }}
                     {{ form.factory.management_form }}
                 </td>
+            </tr>
                 {% for form in form.factory %}
-                {% for f in form.hidden_fields %}
-                    {{ f }}
-                {% endfor %}
-                {% if not forloop.first %} <tr> {% endif %}
-                {% for f in form.visible_fields %}
-                    <td>{{ f }}</td>
-                {% endfor %}
+                <tr>
+                    {% for f in form.hidden_fields %}
+                        {{ f }}
+                    {% endfor %}
+                    {% for f in form.visible_fields %}
+                        <td>{{ f }}</td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
         </tbody>

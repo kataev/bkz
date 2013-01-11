@@ -12,7 +12,7 @@ body {
 .popover .alert {margin: 0;padding: 2px;}
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 form.filter label {display: none}
-#warren label, #parts label {display: none}
+
 table .help-inline {float: right}
 #parts .control-group {margin: 0;padding: 0}
 #parts .brickselect {margin: 0;}
@@ -100,13 +100,13 @@ fieldset table textarea, fieldset table select
     height: 30px;
 }
 fieldset.StoredClay {float:right;}
-fieldset table input[name*='test']{width: 52px;}
-fieldset table input[name*='brocken']{width: 60px;}
-fieldset table input[name*='amount']{width: 70px;}
-fieldset table td.input-box {width:34px;}
-fieldset table input[name*='flexion']{width: 100%;}
-fieldset table input[name*='pressure']{width: 100%;}
-fieldset table input[name*='limestone']{width: 117px;}
+#tests fieldset table input[name*='test']{width: 52px;}
+#tests fieldset table input[name*='brocken']{width: 60px;}
+#tests fieldset table input[name*='amount']{width: 70px;}
+#tests fieldset table td.input-box {width:34px;}
+#tests fieldset table input[name*='flexion']{width: 100%;}
+#tests fieldset table input[name*='pressure']{width: 100%;}
+#tests fieldset table input[name*='limestone']{width: 117px;}
 [data-title='Ошибка']{border:red 1px dashed;}
 
 table input::-webkit-outer-spin-button,
@@ -126,9 +126,14 @@ input[name*='pf']{width: 52px;}
 input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
 
-#warren input[name*="tt"] {width:40px;}
+#warren input[name*="factory"][name*="number"] {width:46px;}
+#warren label, #parts label {display: none}
 #warren tbody {border-bottom: 15px solid white}
 
+.position-25 
+.position-16 
+
+#warren table tr td:last-child input, #warren table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
 #journal table tr td:last-child input, #journal table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
 #journal table td {vertical-align: top ;}
 #journal input[type='number'] { width:42px; text-align: center}

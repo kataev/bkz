@@ -136,7 +136,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000)
 
     def __unicode__(self):
-        if self.pk: return u'Брус от %s с телеги № %s' % (ru_date(self.datetime),self.tts)
+        if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый брус'
 
     class Meta():
@@ -152,13 +152,13 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
 
     tts = models.CharField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
-    temperature = models.FloatField(u'Темп.')
-    weight = models.FloatField(u'Масса')
     humidity = models.FloatField(u'Влаж.')
+    weight = models.FloatField(u'Масса')
+    temperature = models.FloatField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
-        if self.pk: return u'Сырец от %s с телеги № %s' % (ru_date(self.datetime),self.tts)
+        if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый сырец'
 
     class Meta():
@@ -173,17 +173,22 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
+    tts = models.CharField(u'ТТС',max_length=20)
+    size = models.CharField(u'Размер',max_length=20)
+    humidity = models.FloatField(u'Влаж.')
+    weight = models.FloatField(u'Масса')
+    shrink = models.FloatField(u'<attr title="Усадка, %">Усдк</attr>')
     path = models.IntegerField(u'Путь')
     position = models.IntegerField(u'Поз.')
-    tts = models.CharField(u'ТТС',max_length=20)
-    humidity = models.FloatField(u'Влаж.')
-    size = models.CharField(u'Размер',max_length=20)
-    weight = models.FloatField(u'Масса')
-    shrink = models.FloatField(u'Усадка')
+    
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    @property
+    def css(self):
+        return u'path-%d position-%d' % (self.path or 0,self.position or 0)
+
     def __unicode__(self):
-        if self.pk: return u'Полуфабрикат от %s с поз № %d, путь №%d' % (ru_date(self.datetime),self.position,self.path)
+        if self.pk: return u'Полуфабрикат от %s с поз №%d, путь №%d' % (ru_date(self.datetime),self.position,self.path)
         else: return u'Новый полуфабрикат'
 
     class Meta():

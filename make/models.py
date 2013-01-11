@@ -12,6 +12,12 @@ class Forming(models.Model,UrlMixin):
     cavitation = models.PositiveIntegerField(u"Пустотность", choices=cavitation_c, default=cavitation_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
+
+    size = models.CharField(u'Размеры, мм',max_length=20)
+    temperature = models.FloatField(u'Темп.')
+    humidity = models.FloatField(u'Влаж.')
+    vacuum = models.FloatField(u'Вакуум')
+
     tts = models.CharField(u'№ ТТС',max_length=200,help_text=u'Перечислите номера ТТС через запятую')
 
     get_name = property(get_name)

@@ -5,7 +5,7 @@ from bkz.bootstrap.forms import BootstrapMixin,Fieldset
 
 from bkz.whs.models import Width
 from bkz.lab.models import *
-from bkz.whs.forms import BatchInput,DateInput,NumberInput
+from bkz.whs.forms import BatchInput,DateInput,NumberInput,FloatInput
 
 
 class SplitDateTimeHTML5Widget(forms.SplitDateTimeWidget):
@@ -23,12 +23,6 @@ class SplitDateTimeHTML5Widget(forms.SplitDateTimeWidget):
 
 class DateHTML5Input(forms.DateInput):
     input_type = 'date'
-
-class FloatInput(NumberInput):
-    def __init__(self, attrs=None):
-        super(NumberInput, self).__init__(attrs=attrs)
-        self.attrs['autocomplete'] = 'off'
-        self.attrs['step'] = 0.01
 
 class BrickChechboxInput(forms.CheckboxInput):
     pass
@@ -136,6 +130,8 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
                     'temperature':FloatInput,
                     'humidity':FloatInput,
                     'shrink':FloatInput,
+                    'position':NumberInput(attrs={'max':25,'min':1,'step':1}),
+                    'path':NumberInput(attrs={'max':7,'min':4,'step':1})
         }
 
 HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)

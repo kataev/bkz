@@ -43,6 +43,11 @@ class NumberInput(forms.TextInput):
         super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
 
+class FloatInput(NumberInput):
+    def __init__(self, attrs=None):
+        super(NumberInput, self).__init__(attrs=attrs)
+        self.attrs['autocomplete'] = 'off'
+        self.attrs['step'] = 0.01
 
 class BatchInput(forms.TextInput):
     input_type = 'number'
