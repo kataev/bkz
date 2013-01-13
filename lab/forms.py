@@ -45,10 +45,10 @@ class ClayForm(BootstrapMixin,forms.ModelForm):
         model = Clay
         exclude = (u'info',)
         widgets = {'datetime':SplitDateTimeHTML5Widget,
-                    'humidity':forms.TextInput(attrs={'class':"SlashSeparatedFloatField",'autocomplete':'off'}),
-                    'sand':FloatInput,
-                    'inclusion':FloatInput,
-                    'dust':FloatInput,
+                    'humidity':FloatInput(attrs={'autocomplete':'off'}),
+                    'sand':FloatInput(attrs={'autocomplete':'off'}),
+                    'inclusion':FloatInput(attrs={'autocomplete':'off'}),
+                    'dust':FloatInput(attrs={'autocomplete':'off'}),
         }
 
 ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=1)
@@ -162,6 +162,7 @@ class HeatConductionForm(BootstrapMixin,forms.ModelForm):
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
+	exclude = ('ctype','view')
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
@@ -171,8 +172,8 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),
         }
         layout = (
-            Fieldset(u'Партия', 'number', 'date', 'cavitation', 'width', 'view',
-                'color', 'ctype', 'flexion', 'pressure', 'mark', 'weight', 'cad', 'info',
+            Fieldset(u'Партия', 'number', 'date', 'cavitation', 'width',
+                'color', 'flexion', 'pressure', 'mark', 'weight', 'cad', 'info',
                 css_class='less span5'),
         )
 
@@ -186,7 +187,7 @@ class PartForm(BootstrapMixin, forms.ModelForm):
             # 'info':forms.Textarea(attrs={'rows':1,"placeholder":'Примечание'}),
             'half':FloatInput,
             'dnumber':FloatInput,
-            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с извесняком',
+            'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с известняком',
                 'title':u'Можно узкаывать через запятую или тире','autocomplete':'off'}),
         }
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)

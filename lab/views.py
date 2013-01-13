@@ -59,13 +59,12 @@ def index(request):
     queryset = Batch.objects.all().select_related('frost_resistance','width')\
                     .prefetch_related('parts','parts__rows','parts__cause')
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
-    if datefilter.is_valid():
-        data = dict([(k,v) for k,v in datefilter.cleaned_data.items() if v])
-    else:
-        date = datetime.date.today()
-        data = {'date__year':date.year,'date__month':date.month}
+    date = datefilter.get_date
+    data = {'date__year':date.year}
+    if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
+        data['date__month']=date.month
     queryset = queryset.filter(**data)
-    return render(request,'lab/index.html',dict(object_list=queryset,datefilter=datefilter))
+    return render(request,'lab/index.html',dict(object_list=queryset,datefilter=datefilter,date=date))
 
 
 from webodt.shortcuts import render_to_response

@@ -1,59 +1,69 @@
 {% extends 'core/index.html' %}
+{% load bkz %}
 {% block head %}
 {% endblock %}
 {% block title %}Лаборатория{% endblock %}
 {% block container %}
 {% load pagination_tags %}
-{% autopaginate object_list 20 %}
+{% autopaginate object_list 32 %}
 <div class="container">
     <div class="row">
         <div class="span4">
-            <h1>Партии</h1>
+            <h1>Партии <small>
+                {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
+                        за {{ datefilter.get_date|date:'F Y'|lower }} года
+                    {% else %}
+                        за {{ datefilter.get_date|date:'Y' }} год
+                {% endif %}
+                </small>
+            </h1>
         </div>
-        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span8" style='margin-top: 10px;text-align:right'>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span8 dateform" style='margin-top: 10px;text-align:right'>
             {{ modelselect.model}}
             {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
             <input type="submit" class="btn">
         </form>
     </div>
-        <table class="table table-bordered" id='batch-list'>
+        <table class="table table-bordered table-condensed" id='batch-list'>
             <thead>
             <tr>
-                <th style='width:100px'>Дата</th>
-                <th>Партия</th>
-                {# <th>Кирпич</th> #}
-                <th><abbr title="Установленная марка">М</abbr></th>
-                <th>Кол-во</th>
+                <th style='width:100px' rowspan="2">Дата</th>
+                <th rowspan="2">№</th>
+                <th rowspan="2">Кирпич</th>
+                <th rowspan="2"><abbr title="Установленная марка">М</abbr></th>
+                <th colspan="3">Кол-во</th>
+            </tr>
+            <tr>
+                <th>Гост</th>
+                <th><20%</th>
+                <th>>20%</th>
             </tr>
             </thead>
             <tbody>
             {% for b in object_list %}
                 <tr title="{{ b.title }}" class='{{ b.css }}'>
-                    <td>{{ b.date }}</td>
-                    <td><a href="{{ b.get_absolute_url }}">{{ b }} , {{ b.get_full_name }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
+                    <th>{{ b.date }}</th>
+                    <th>{{ b.number }}</th>
+                    <td><a href="{{ b.get_absolute_url }}">{{ b.get_full_name }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
                     
                     
                     <td>{{ b.get_mark_display }}</td>
                     
-                    <td><ul class='unstyled' style='margin: 0 0 0 25px'>
-                        {% for p in b.parts.all %}
-                        <li title='{{ p.get_cause_display }}'>
-                            {% if p.defect == 'gost' %}
-                            <span class='label label-success'>{{ p }}</span>
-                            {% elif p.defect == '<20' %}
-                            <span class='label'>{{ p }}</span>
-                            {% elif p.defect == '>20' %}
-                            <span class='label label-warning'>{{ p }}</span>
-                            {% elif p.defect == 'no_cont' %}
-                            <span class='label label-important'>{{ p }}</span>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    {% for p in b.parts_by_defect %}
+                        <td>{{ p|func_pluck:'sum out'|default_if_none:0 }}</td>
+                    {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4"></th>
+                    <th>{{ object_list|func_pluck:'sum gost' }}</th>
+                    <th>{{ object_list|func_pluck:'sum l20' }}</th>
+                    <th>{{ object_list|func_pluck:'sum m20' }}</th>
+                 </tr>
+            </tfoot>
         </table>
         {% paginate using 'pagination/pagination.html' %}
     </div>

@@ -3,7 +3,7 @@
 {% load url from future %}
 {% block form %}
     <div class="container">
-        <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
+        <form id="form"accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
             {% csrf_token %}
             <div class="row">
                 {% for e in form.non_field_errors %}

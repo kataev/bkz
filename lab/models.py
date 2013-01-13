@@ -10,7 +10,6 @@ from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto,ShiftMixin
 from bkz.make.models import Warren,Forming
 
-
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')
 
@@ -41,10 +40,10 @@ add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\
 
 class Clay(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    humidity = SlashSeparatedFloatField(u'Пробы влажности',max_length=300)
-    sand = models.FloatField(u'Песок')
-    inclusion = models.FloatField(u'Включ.')
-    dust = models.FloatField(u'Пылев.')
+    humidity = models.FloatField(u'Влаж.')
+    sand = models.FloatField(u'Песок',null=True,blank=True)
+    inclusion = models.FloatField(u'Включ.',null=True,blank=True)
+    dust = models.FloatField(u'Пылев.',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     @property
@@ -93,16 +92,16 @@ class StoredClay(models.Model,ShiftMixin,UrlMixin):
 class Sand(models.Model,ShiftMixin,UrlMixin):
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     humidity = models.FloatField(u'Влаж.')
-    particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>')
-    module_size = models.FloatField(u'<abbr title="Модуль крупности">МК</abbr>')
-    dirt = models.TextField(u'Включения')
+    particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>',null=True,blank=True)
+    module_size = models.FloatField(u'<abbr title="Модуль крупности">МК</abbr>',null=True, blank=True)
+    dirt = models.TextField(u'Включения',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     def __unicode__(self):
         if self.pk: return u'Проба песка от %s' % ru_date(self.datetime)
         else: return u'Новая проба песка'
 
-    class Meta():
+    class Meta:
         verbose_name = u"Песок"
         verbose_name_plural = u"Песка"
         ordering = ('datetime',)
@@ -122,11 +121,11 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
 
     tts = models.CharField(u'ТТС',max_length=20)
     size = models.CharField(u'Размеры, мм',max_length=20)
-    temperature = models.FloatField(u'Темп.')
-    weight = models.FloatField(u'Масса')
     humidity = models.FloatField(u'Влаж.')
+    weight = models.FloatField(u'Масса')
+    temperature = models.FloatField(u'Темп.')
     sand = models.FloatField(u'Песок')
-    humidity_transporter = models.FloatField(u'<abbr title="Влажность с конвейера, %">ВсК</abbr>')
+    humidity_transporter = models.FloatField(u'<abbr title="Влажность с конвейера, %">ВсК</abbr>',null=True)
 
     poke_left = models.CommaSeparatedIntegerField(u'Тычок левый',max_length=300)
     poke_right = models.CommaSeparatedIntegerField(u'Тычок правый',max_length=300)
@@ -333,6 +332,23 @@ class Batch(UrlMixin,models.Model):
     @property
     def css(self):
         return css_dict['color'].get(self.color,'None')
+
+    @property
+    def parts_by_defect(self):
+        return map(lambda x:[p for p in self.parts.all() if p.defect==x[0]],defect_c[:-1])
+
+    @property
+    def gost(self):
+        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='gost']),defect_c[:-1]))
+
+    @property
+    def l20(self):
+        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='<20']),defect_c[:-1]))
+
+    @property
+    def m20(self):
+        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='>20']),defect_c[:-1]))
+
 
     get_name = property(get_name)
     get_full_name = property(get_full_name)
