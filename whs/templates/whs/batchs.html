@@ -12,7 +12,7 @@
                 {% csrf_token %}
                 {{ factory.management_object }}
                 {{ factory.management_form }}
-        <table id='parts' class='table table-bordered table-condensed'>
+        <table id='parts' class='table table-condensed'>
             <caption><h1>Новые партии</h1></caption>
             <thead>
                 <tr>
@@ -27,12 +27,10 @@
                 {% include 'whs/part_form.html' with form=form %}
             {% endfor %}
         </table>
-        <div class="form-actions">
-            <div class="container">
+        <div class="container">
             <button type="submit" class="btn btn-primary" form="form">
                 <i class="icon-ok icon-white"></i> Сохранить изменения
             </button>
-            </div>
         </div>
     </form>
         </div>
@@ -42,15 +40,31 @@
             <table id='batchs' class="table table-bordered table-condensed">
             <caption><h1>Партии</h1></caption>
                 <thead>
-                <tr>
-                    <th width="auto">Дата</th>
-                    <th>Кирпич</th>
-                    <th style='width:250px;'>Акты</th>
-                </tr>
+                    <tr>
+                        <th style='width:100px' rowspan="2">Дата</th>
+                        <th rowspan="2">№</th>
+                        <th rowspan="2">Кирпич</th>
+                        <th rowspan="2"><abbr title="Установленная марка">М</abbr></th>
+                        <th colspan="3">Кол-во</th>
+                    </tr>
+                    <tr>
+                        <th>Гост</th>
+                        <th><20%</th>
+                        <th>>20%</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {% for b in object_list %}
-                        {% include 'lab/batch_tr.html' %}
+                    <tr title="{{ b.title }}" class='{{ b.css }}'>
+                        <th>{{ b.date }}</th>
+                        <th>{{ b.number }}</th>
+                        <td><a href="{{ b.get_absolute_url }}">{{ b.get_full_name }}</a> <a class="label pull-right" href='{{ b.get_tests_url }}'>Испытания</a> </td>
+                        <td>{{ b.get_mark_display }}</td>
+                        {% for p in b.parts_by_defect %}
+                            <td>{{ p|func_pluck:'sum out'|default_if_none:0 }}</td>
+                        {% endfor %}
+                        </td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>

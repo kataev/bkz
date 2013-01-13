@@ -17,6 +17,7 @@ def get_form(self, form_class):
             form.fields[key].initial = self.request.GET[key]
         except KeyError:
             pass
+
     return form
 CreateView.get_form = get_form
 

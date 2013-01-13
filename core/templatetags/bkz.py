@@ -59,7 +59,6 @@ def hash(obj,key):
 
 @register.filter(name='func_pluck')
 def func_pluck(queryset,attr):
-    print attr
     func,attr = attr.split(' ')
     if func not in ('max','min','avg','sum'):
         raise template.TemplateSyntaxError('Func pluck error')

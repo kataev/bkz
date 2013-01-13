@@ -55,13 +55,7 @@
                             <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>
                         {% elif field.name in 'cavitation color width' %}
                         {% else %}
-                            {% if factory.model|class_name == 'Clay' and field.name == 'humidity' %}
-                                <td>{{ field.value|default_if_none:'----' }}
-                                    <span class='label'> {{ form.instance.value|default_if_none:'----' }}</span>
-                                </td>
-                            {% else %}
                                 <td>{{ field.value|default_if_none:'----' }}</td>
-                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </tr>
