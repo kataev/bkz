@@ -35,7 +35,6 @@ class Brick(models.Model,UrlMixin):
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер')
-    ww = models.FloatField(u"Размер", choices=width_c, default=width_c[0][0])
     view = models.CharField(u"Вид", max_length=60, choices=view_c, default=view_c[0][0])
     ctype = models.CharField(u"Тип цвета", max_length=6, choices=ctype_c, default=ctype_c[0][0],blank=True)
     defect = models.CharField(u"Брак в %", max_length=60, choices=defect_c, default=defect_c[0][0],blank=True)
@@ -112,7 +111,8 @@ class Agent(models.Model,UrlMixin):
         else:
             return u'Новый контрагент'
 
-class Seller(Agent,UrlMixin):
+class Seller(models.Model,UrlMixin):
+    agent = models.OneToOneField(Agent,verbose_name=u'Контрагент')
     director = models.CharField(u'Директор',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
     dispetcher = models.CharField(u'Диспечер',max_length=200)
@@ -121,12 +121,12 @@ class Seller(Agent,UrlMixin):
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
-        ordering = ('name', )
+        
+
 
 class OldAgent(models.Model):
     agent = models.ForeignKey(Agent,related_name='oldagent')
     old = models.IntegerField('Старое ID')
-
 
 class Bill(UrlMixin, BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
