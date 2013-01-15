@@ -34,6 +34,32 @@
                     {% endfor %}
                 </tr>
             </thead>
+            <tfoot>
+                {{ form|delta:'del' }}
+                {{ form|avg:'del' }}
+                {% for func in functions %}
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                    {% with n=func|add:' '|add:field.name %}
+                        {% if forloop.first %}
+                            <th>{% cycle 'Максимум' 'Среднее' 'Минимум' %}</th>
+                        {% else %}
+                            {% if field.name in 'cavitation color width' %}
+                            {% else %}
+                                {% if field.name in 'tts path position size' %}<th></th>
+                                {% else %}
+                                {% with val=factory.queryset|func_pluck:n %} 
+                                <th>{{ val|default:'-----' }}</th>
+                                {{ val|avg:n }}
+                                {% endwith %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tfoot>
             <tbody>
             {% for form in factory %}
             {% if datefilter.is_valid and not datefilter.cleaned_data.date__month %}
@@ -55,36 +81,29 @@
                             <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>
                         {% elif field.name in 'cavitation color width' %}
                         {% else %}
-                                <td>{{ field.value|default_if_none:'----' }}</td>
+                                <td>
+                                    {{ field.value|default_if_none:'----' }}
+                                    {% with val=field.value|delta:field.name %}
+                                    {% if val != None %}
+                                    <span title='Значение относительно предыдущего' class='pull-right label {% if val > 0 %}label-success{% elif val < 0 %}label-warning{%endif%}'>
+                                        {{ val }}
+                                    </span>
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% with val=field.value|avg:field.name %}
+                                    {% if val != None %}
+                                    <span title='Значение относительно среднего' class='pull-right label {% if val > 0 %}label-success{% elif val < 0 %}label-warning{%endif%}'>
+                                        {{ val }}
+                                    </span>
+                                    {% endif %}
+                                    {% endwith %}
+                                </td>
                         {% endif %}
                     {% endfor %}
                 </tr>
             {% endif %}
             {% endfor %}
             </tbody>
-            <thead>
-                {% for func in functions %}
-                <tr>
-                    {% for field in factory.empty_form.visible_fields %}
-                    {% with n=func|add:' '|add:field.name %}
-                        {% if forloop.first %}
-                            <th>{% cycle 'Максимум' 'Среднее' 'Минимум' %}</th>
-                        {% else %}
-                            {% if field.name in 'cavitation color width' %}
-                            {% else %}
-                                {% if field.name in 'tts path position size' %}<th></th>
-                                {% else %}
-                                
-                                <th>{{ factory.queryset|func_pluck:n|default:'-----' }}</th>
-                                
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        {% endwith %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </thead>
         </table>
         </div>
     </div>

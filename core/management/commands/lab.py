@@ -82,6 +82,7 @@ class Command(BaseCommand):
                 Sand.objects.create(datetime=d,humidity=randint(2,40)+round(random(),2),
                                                particle_size=randint(2,40)+round(random(),2),
                                                module_size=randint(2,40)+round(random(),2),)
+
     tts = [81, 63, 40, 94, 90, 95, 14, 35, 9, 13, 10, 42, 31, 93, 36, 17, 26, 23, 52, 4, 74, 27, 51, 64, 41, 56, 44, 49, 34, 84, 78, 96, 8, 24, 39, 43, 45, 76, 98, 32, 75, 12, 37, 19, 28, 53, 1, 29, 72, 21, 48, 60, 67, 30, 22, 79, 70, 46, 58, 61, 16, 3, 65, 97, 47, 68, 55, 80, 88, 85, 7, 25, 11, 73, 6, 20, 62, 50, 5, 54, 59, 82, 66, 91, 38, 86, 71, 89, 69, 77, 87, 83, 57, 92, 15, 18, 33, 2]
     tto = range(1,30)
     def create_test_data_bar(self):
@@ -193,20 +194,13 @@ class Command(BaseCommand):
                 
 
     def create_test_data_warren(self):
-        dr = (datetime.date(2012,1,6),datetime.date(2012,1,31))
-        paths = cycle([5,7])
-        poss = cycle([16,25])
         ttss = cycle(self.tts)
-        for batch in Batch.objects.filter(date__range=dr):
+        for batch in Batch.objects.all():
             d = batch.date - datetime.timedelta(days=5)
-            i=0
-            for tto,pos,path in zip(batch.get_tto,paths,poss):
-                i+=1
-                if i<=8:
-                    warren = Warren.objects.create(date=d,number=tto,amount='')
-                for i,tts in zip(range(4),ttss):
+            for tto in batch.get_tto:
+                warren = Warren.objects.create(date=d,number=tto,amount='')
+                for i,tts in zip(range(5),ttss):
                     Warren.objects.create(date=d,number=tts,source=warren,amount='')
-                self.create_half(d,batch.color,batch.width,pos,path,tts)
 
 
     def get_tto_period(self):

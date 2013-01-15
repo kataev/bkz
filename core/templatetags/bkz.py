@@ -78,3 +78,34 @@ def func_pluck(queryset,attr):
         pass
     except BaseException:
         pass
+
+
+delta = {}
+@register.filter(name='delta')
+def delta_filter(obj,key):
+    global delta
+    if key == 'del':
+        delta = {}
+        return ''
+    elif isinstance(obj,int) or isinstance(obj,float):
+        val = 0
+        if key in delta.keys():
+            val = delta.get(key,0.0) - obj
+        delta[key]=obj
+        return val
+        
+
+
+    
+avg_dict = {}
+@register.filter(name='avg')
+def avg_filter(obj,key):
+    global avg_dict
+    if key == 'del':
+        avg_dict = {}
+        return ''
+    if 'avg' in key or 'max' in key or 'min' in key or 'sum' in key:
+        avg_dict[key]=obj
+        return ''
+    elif isinstance(obj,int) or isinstance(obj,float):
+        return avg_dict.get('avg %s'%key,0.0) - obj

@@ -40,7 +40,6 @@ class Warren(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u''  
             if self.source:
                 return u'Садка от %s, c ТТC № %d ' % (ru_date(self.date),self.number)
             else:

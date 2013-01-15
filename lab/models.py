@@ -454,6 +454,14 @@ class Part(models.Model):
             return 'info'
         else:
             return 'error'
+    @property
+    def get_warren_tts(self):
+        q =  Warren.objects.order_by('-date','number')\
+                                .filter(date__lt=self.batch.date)\
+                                .filter(number__in=self.get_tto)[:len(self.get_tto)]
+        print q.query
+        return q
+
 
     class Meta():
         verbose_name = u"Часть партии"

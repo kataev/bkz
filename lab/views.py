@@ -160,6 +160,16 @@ def journal(request,date=None):
         add = True
     return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f,'add':add})
 
+def slice(request):
+    datefilter = YearMonthFilter(request.GET or None,model=Batch)
+    date = datefilter.get_date
+    data = {'datetime__year':date.year}
+    if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
+        data['datetime__month']=date.month
+    queryset = Batch.objects.filter(**dict([(k.replace('datetime','date'),v) for k,v in data.items()]))
+    return render(request,'index.html')
+
+
 def stats(request):
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
     modelselect = ModelSelect(request.GET or None)
