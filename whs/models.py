@@ -118,6 +118,9 @@ class Seller(models.Model,UrlMixin):
     dispetcher = models.CharField(u'Диспечер',max_length=200)
     nds = models.FloatField(u'НДС',default=0.18)
 
+    def __unicode__(self):
+        return self.agent.name[:40]
+
     class Meta:
         verbose_name=u'Продавец'
         verbose_name_plural=u'Продавецы'
