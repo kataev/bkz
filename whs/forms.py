@@ -237,7 +237,7 @@ class AgentCreateOrSelectForm(forms.Form):
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False, )
 
 
-class SellerForm(forms.ModelForm):
+class SellerForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Seller
 
