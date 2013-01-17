@@ -18,15 +18,17 @@ class Width(models.Model):
         return u'%s %s' % (self.value,self.name,)
     class Meta:
         ordering = ('pk',)
+        verbose_name=u'Номинальный размер'
 
 class Features(models.Model):
     name = models.CharField(u'Имя',max_length=30)
-    type = models.CharField(u'Сокрашение',max_length=30)
+    type = models.CharField(u'Сокращённое название',max_length=30)
 
     def __unicode__(self):
         return '%s (%s)' % (self.name,self.type)
     class Meta:
         ordering = ('type',)
+        verbose_name=u'Особенности'
 
 class Brick(models.Model,UrlMixin):
     """ Класс для кирпича, основа приложения, выделен в отдельный блок.
@@ -44,11 +46,11 @@ class Brick(models.Model,UrlMixin):
     features = models.ManyToManyField(Features,verbose_name=u'Редкие особенности',null=True,blank=True)
     name = models.CharField(u"Наименование", max_length=160, default='', help_text=u'Введите полное название продукции, для проверки')
 
-    css = models.CharField(u"Css", max_length=360, default=u'')
+    css = models.CharField(u"Стили", max_length=360, default=u'')
     label = models.CharField(u"Ярлык", max_length=660, default='')
 
     total = models.PositiveIntegerField(u"Остаток", default=0)
-    mass = models.FloatField(u'Ожидамая масса',default=0.0)
+    mass = models.FloatField(u'Масса',default=0.0)
 
     nomenclature = models.ForeignKey('whs.Nomenclature', null=True, blank=True, verbose_name=u'Номенклатура')
 
@@ -72,7 +74,7 @@ class Brick(models.Model,UrlMixin):
 
 class OldBrick(models.Model):
     brick = models.ForeignKey(Brick,related_name='oldbrick')
-    old = models.IntegerField('Старое ID')
+    old = models.IntegerField('ID кирпича в старой базе')
     prim = models.CharField(u"Имя", max_length=260, default='', help_text=u'Старое "имя"')
 
 type_c = ((0,u'Юр.Лицо'),(1,u'Физ.лицо'))
@@ -129,7 +131,7 @@ class Seller(models.Model,UrlMixin):
 
 class OldAgent(models.Model):
     agent = models.ForeignKey(Agent,related_name='oldagent')
-    old = models.IntegerField('Старое ID')
+    old = models.IntegerField('ID контрагентa в старой базе')
 
 class Bill(UrlMixin, BillMixin, models.Model):
     """ Накладная, документ который используется при отгрузке кирпича покупателю
@@ -220,6 +222,9 @@ class Nomenclature(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.code,self.title)
+
+    class Meta:
+        verbose_name=u'Номенклатура'
 
 class BuhAgent(models.Model):
     agent = models.ForeignKey(Agent,related_name='buhagent')

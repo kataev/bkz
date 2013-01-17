@@ -507,3 +507,4 @@ class Test(models.Model):
 
     class Meta:
         ordering = ('row',)
+        verbose_name=u'Испытания'
