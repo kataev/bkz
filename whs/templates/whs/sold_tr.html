@@ -4,6 +4,6 @@
             {{ s.brick|safe }}{% if s.brick_from %} <i class="icon-chevron-left"></i> {{ s.brick_from|safe }}{% endif %}
         </a>
     </td>
-    <td>{{ s.amount }}</td>
+    <td>{{ s.amount }}/{{ s.tara }}</td>
     <td><span rel='tooltip' data-original-title='{{ s.price }} за шт' class='money'>{{ s.money }}</span></td>
 </tr>

@@ -149,3 +149,27 @@ def make_css(brick):
             css += u'%s ' % dict.get(val, 'NOTFOUND' + field)
     css = css.strip()
     return css
+
+def bricks_per_pallet(brick):
+    if brick.width == 4:
+        return 160
+    if brick.color == 1:
+        if brick.width_id == 1:
+            return 192
+        else:
+            return 264
+    if brick.view == u'Р':
+        if brick.width_id == 1:
+            return 288
+        elif brick.width_id == 2:
+            return 352
+        elif brick.width_id == 3:
+            return 352
+    else:
+        if brick.width_id == 1:
+            return 192
+        elif brick.width_id == 2:
+            return 264
+        elif brick.width_id == 3:
+            return 256
+

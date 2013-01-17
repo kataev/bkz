@@ -290,5 +290,10 @@ def transfers(request):
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):
-    doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
-    return render_to_response('webodt/torg-12.odt',{'doc':doc},format='pdf',inline=True)
+    docs = [get_object_or_404(Bill.objects.select_related(), pk=pk)]
+    if docs[0].seller_id != 1:
+        doc = get_object_or_404(Bill.objects.select_related(), pk=pk)
+        doc.agent = doc.seller.agent
+        doc.seller = doc.bkz
+        docs.append(doc)    
+    return render_to_response('webodt/torg-12.odt',{'docs':docs},format='pdf',inline=True)

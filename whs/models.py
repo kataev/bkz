@@ -66,6 +66,8 @@ class Brick(models.Model,UrlMixin):
     def make_css(self):
         return make_css(self)
 
+    get_bricks_per_pallet=property(bricks_per_pallet)
+
     class Meta():
         ordering = BrickOrder
         verbose_name = u"Кирпич"
@@ -148,7 +150,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
 
     @property
     def bkz(self):
-        return Seller.objects.get(pk=1206)
+        return Seller.objects.get(pk=1)
 
     class Meta():
         verbose_name = u"Накладная"

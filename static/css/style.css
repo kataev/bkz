@@ -58,6 +58,7 @@ td.cause ul { list-style: none;}
     .brickinput select, .batchinput input {width:auto !important;}
 }
 
+fieldset.legeng {overflow-x:hidden;}
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
     fieldset.less .controls {margin-left: 110px}

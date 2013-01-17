@@ -30,7 +30,7 @@ class BillMixin(object):
 
     @property
     def tara(self):
-        return sum([getattr(x,'tara',0) for x in self.opers],0)
+        return sum([s.tara for s in self.solds.all()],0)
 
     @property
     def items(self):

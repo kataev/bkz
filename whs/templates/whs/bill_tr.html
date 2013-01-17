@@ -10,10 +10,10 @@
     <span class='label {% if not b.agent.form %}label-success{% endif %}'>
         <a title='Посмотреть агента' href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
     </span>
-        {% if b.seller.pk != 1206 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
+        {% if b.seller.pk != 1 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
         <i class="icon-zoom-in pull-right" ></i>
     </td>
-    <td><strong>{{ b.amount }}</strong></td>
+    <td><strong>{{ b.amount }}</strong>/{{ b.tara }}</td>
     {% with total=b.in_total %}
         <td>
             <strong>
