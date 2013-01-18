@@ -37,6 +37,8 @@ class Warren(models.Model,UrlMixin):
     number = models.IntegerField(u'ТТС')
     source = models.ForeignKey('self',verbose_name=u'ТТС',related_name='consumer',null=True,blank=True)
     amount = models.CharField(u'Кол-во',max_length=20)
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens')
+    part = models.ForeignKey('lab.Part',verbose_name=u'Партия',null=True,blank=True,related_name='warrens')
 
     def __unicode__(self):
         if self.pk:

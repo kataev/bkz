@@ -134,6 +134,8 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
+
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый брус'
@@ -155,6 +157,8 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     weight = models.FloatField(u'Масса')
     temperature = models.FloatField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
 
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -181,6 +185,8 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     position = models.IntegerField(u'Поз.')
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
+
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
 
     @property
     def css(self):
