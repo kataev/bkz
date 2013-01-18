@@ -83,20 +83,6 @@
                         {% else %}
                                 <td>
                                     {{ field.value|default_if_none:'----' }}
-                                    {% with val=field.value|delta:field.name %}
-                                    {% if val != None %}
-                                    <span title='Значение относительно предыдущего' class='pull-right label {% if val > 0 %}label-success{% elif val < 0 %}label-warning{%endif%}'>
-                                        {{ val }}
-                                    </span>
-                                    {% endif %}
-                                    {% endwith %}
-                                    {% with val=field.value|avg:field.name %}
-                                    {% if val != None %}
-                                    <span title='Значение относительно среднего' class='pull-right label {% if val > 0 %}label-success{% elif val < 0 %}label-warning{%endif%}'>
-                                        {{ val }}
-                                    </span>
-                                    {% endif %}
-                                    {% endwith %}
                                 </td>
                         {% endif %}
                     {% endfor %}

@@ -23,6 +23,8 @@ urlpatterns += patterns('',
     url(ur'^ИТ/', include('bkz.it.urls', namespace='it'), name='it'),
 )
 
+urlpatterns += patterns('bkz.views',url(ur'^Доклад$','presentation',name='presentation'))
+
 urlpatterns += patterns('django.contrib.auth.views',
     url(ur'^Вход$', 'login', {'template_name': 'core/login.html'}, name='login'),
     url(ur'^Выход$', 'logout_then_login', name='logout'),

@@ -39,6 +39,10 @@
             <p>
                 <a class="btn btn-large btn-primary" href="{% url price %}">Прайс-лист цен на продукцию</a>
             </p>
+
+            <p>
+                <a class="btn btn-large btn-success" href="{% url presentation %}">Доклад</a>
+            </p>
         </div>
         
     </div>
@@ -51,6 +55,7 @@
                 <ul class="unstyled">
                     <li><b>ООО &laquo;Березниковский кирпичный завод&raquo;</b></li>
                     <li>Информационная система</li>
+                    <li>{{ report }}</li>
                 </ul>
             </blockquote>
         </div>
