@@ -7,9 +7,10 @@ from bkz.utils import UrlMixin,ru_date
 from bkz.whs.constants import cavitation_c,color_c,get_name
 
 
-
-
 class Forming(models.Model,UrlMixin):
+    """
+    Хранит в себе информацию о формовании продукции. Отражается на журнал оператора пресса.
+    """
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today())    
     cavitation = models.PositiveIntegerField(u"Пустотность", choices=cavitation_c, default=cavitation_c[0][0])
@@ -33,10 +34,16 @@ class Forming(models.Model,UrlMixin):
         verbose_name_plural=u'Формовка'
 
 class TTS(models.Model):
+    """
+    Сформованные телеги
+    """
     number = models.IntegerField(u'ТТС')
     forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='tts')
 
 class Warren(models.Model,UrlMixin):
+    """
+    Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. Отражается на журнал оператора садочного коплекса
+    """
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today(),null=True,blank=True)    
     number = models.IntegerField(u'ТТС')

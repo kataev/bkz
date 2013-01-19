@@ -8,6 +8,9 @@ from bkz.utils import UrlMixin,ru_date
 from whs.pdf import PalletMixin, SoldMixin, BillMixin
 
 class Width(models.Model):
+    """
+    Сущность для номинальных размеров из ГОСТ 530-2007.
+    """
     name = models.CharField(u'Вид изделия',max_length=30)
     label = models.CharField(u'Обозначение вида',max_length=6)
     size = models.CharField(u'Номинальные размеры',max_length=20)
@@ -21,6 +24,9 @@ class Width(models.Model):
         verbose_name=u'Номинальный размер'
 
 class Features(models.Model):
+    """
+    Сущность для хранения видов различных особенностей готовой продукции.
+    """
     name = models.CharField(u'Имя',max_length=30)
     type = models.CharField(u'Сокращённое название',max_length=30)
 
@@ -31,8 +37,7 @@ class Features(models.Model):
         verbose_name=u'Особенности'
 
 class Brick(models.Model,UrlMixin):
-    """ Класс для кирпича, основа приложения, выделен в отдельный блок.
-    Содержит информацию о характеристиках кирпича и текушем остатке """
+    """ Сущность для готовой продукции, содержит характеристики и текущий остатк """
     cavitation = models.PositiveIntegerField(u"Пустотелость", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.PositiveIntegerField(u"Цвет", choices=color_c, default=color_c[0][0])
     mark = models.PositiveIntegerField(u"Марка", choices=mark_c, default=mark_c[0][0])
@@ -75,6 +80,9 @@ class Brick(models.Model,UrlMixin):
         permissions = (("view_brick", u"Может просматривать таблицу с остатками"),)
 
 class OldBrick(models.Model):
+    """
+    Сущность для хранения id записей продукции в старой базы.
+    """
     brick = models.ForeignKey(Brick,related_name='oldbrick')
     old = models.IntegerField('ID кирпича в старой базе')
     prim = models.CharField(u"Имя", max_length=260, default='', help_text=u'Старое "имя"')
@@ -82,6 +90,9 @@ class OldBrick(models.Model):
 type_c = ((0,u'Юр.Лицо'),(1,u'Физ.лицо'))
 
 class Agent(models.Model,UrlMixin):
+    """
+    Сущность контрагента.
+    """
     name = models.CharField(u"Имя",max_length=400,db_index=True,
         help_text=u'Название без юридической формы, без ООО, без ИП, без кавычек.')
     fullname = models.CharField(u"Полное имя",max_length=400,help_text=u'Название для накладных')
@@ -116,6 +127,9 @@ class Agent(models.Model,UrlMixin):
             return u'Новый контрагент'
 
 class Seller(models.Model,UrlMixin):
+    """
+    Сущность для продавца продукции.
+    """
     agent = models.OneToOneField(Agent,verbose_name=u'Контрагент')
     director = models.CharField(u'Директор',max_length=200)
     buhgalter = models.CharField(u'Бухгалтер',max_length=200)
@@ -130,22 +144,22 @@ class Seller(models.Model,UrlMixin):
         verbose_name_plural=u'Продавецы'
         
 
-
 class OldAgent(models.Model):
+    """
+    Сущность для хранения id записей контрагентов в старой базы.
+    """
     agent = models.ForeignKey(Agent,related_name='oldagent')
     old = models.IntegerField('ID контрагентa в старой базе')
 
 class Bill(UrlMixin, BillMixin, models.Model):
-    """ Накладная, документ который используется при отгрузке кирпича покупателю
-    Основа продажи, на него ссылаются операции продажи - Sold && Transfer. """
+    """ Сущность накладных """
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ документа',
         help_text=u'Число уникальное в этом году')
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today(),db_index=True)
     agent = models.ForeignKey(Agent, verbose_name=u'Покупатель',related_name=u'bill_agents',help_text=u'',default=1)
     seller = models.ForeignKey(Seller, verbose_name=u'Продавец', help_text=u'', default=350,related_name='bill_sallers')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
-    reason = models.CharField(u'Основание', max_length=300, blank=True,
-        help_text=u'Основание для выставления товарной накладной')
+    reason = models.CharField(u'Основание', max_length=300, blank=True, help_text=u'Основание для выставления товарной накладной')
     type = models.CharField(u'Вид операции', max_length=300, blank=True)
 
     @property
@@ -166,7 +180,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
             return u'Новая накладная'
 
 class Pallet(PalletMixin, models.Model):
-    """ Поддоны при продаже """
+    """ Сущность строки в накладной с поддонами """
     amount = models.PositiveIntegerField(u"Кол-во поддоннов")
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=200)
@@ -184,6 +198,7 @@ class Pallet(PalletMixin, models.Model):
             return u'Продажа поддонов'
 
 class Sold(SoldMixin,models.Model):
+    """Сущность строки с продукцией в накладной """
     brick_from = models.ForeignKey(Brick, related_name="sold_brick_from",
         verbose_name=u"Перевод",blank=True,null=True)
     brick = models.ForeignKey(Brick, related_name="sold_brick", verbose_name=u"Кирпич")
@@ -219,6 +234,7 @@ class Sold(SoldMixin,models.Model):
 
 
 class Nomenclature(models.Model):
+    """" Номенклатурный номер для продукции, необхоидмо для связи с бухгалтерией. Коды берутся с id номенклатуры из базы 1с """
     title = models.CharField(u"Наименование", max_length=200,blank=False,unique=True)
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
@@ -229,6 +245,7 @@ class Nomenclature(models.Model):
         verbose_name=u'Номенклатура'
 
 class BuhAgent(models.Model):
+    """Содержит информацию о id запией контрагентов в бухгалтерской базе 1с """
     agent = models.ForeignKey(Agent,related_name='buhagent')
     code = models.CharField(u"Код", max_length=11,blank=False,unique=True)
 
@@ -236,7 +253,7 @@ class BuhAgent(models.Model):
 sorting_type_c = ((0,u'В цех'),(1,u'Из цеха'),(2,u'Списанно'))
 
 class Sorting(models.Model,UrlMixin):
-    """ Класс документа для учета сортировки кипича из одного товара в другой """
+    """ Сущность документа для учета сортировки кипича из одного товара в другой """
     type = models.IntegerField(u'Тип',choices=sorting_type_c)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
@@ -279,6 +296,7 @@ class Sorting(models.Model,UrlMixin):
             return u'Новая сортировка'
 
 class Inventory(models.Model, UrlMixin):
+    """ Сущность инвентаризации, отражается на акт о инвентаризации"""
     date = models.DateField(u'Дата', default=datetime.date.today())
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
 
@@ -294,6 +312,7 @@ class Inventory(models.Model, UrlMixin):
             return u'Новая инвентаризация'
 
 class Write_off(models.Model):
+    """ Сущность для одной записи в акте о инвентаризация """
     brick = models.ForeignKey(Brick, related_name="write_off", verbose_name=u"Кирпич")
     amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
     doc = models.ForeignKey(Inventory, blank=False, related_name="write_off", null=False)

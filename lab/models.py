@@ -39,6 +39,9 @@ from south.modelsinspector import add_introspection_rules
 add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])
 
 class Clay(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность для хранения данных о глине из карьера.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     humidity = models.FloatField(u'Влаж.')
     sand = models.FloatField(u'Песок',null=True,blank=True)
@@ -74,6 +77,9 @@ clay_positions = (
 )
 
 class StoredClay(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность для хранения информации о глине находящейся на складе.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
     used = models.BooleanField(u'<abbr title="По этой позиции формовали?">Ф</abbr>',default=False)
@@ -90,6 +96,9 @@ class StoredClay(models.Model,ShiftMixin,UrlMixin):
         ordering = ('datetime','-position')
 
 class Sand(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность для хранения данных о доставленном песке.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     humidity = models.FloatField(u'Влаж.')
     particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>',null=True,blank=True)
@@ -114,6 +123,9 @@ width_c = (
 )
 
 class Bar(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность хранит в себе данные лабораторного анализа образца свежесформнованного бруса.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     cavitation = models.IntegerField(u"Пустот.", choices=cavitation_c, default=0)
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -146,6 +158,9 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
         ordering = ('datetime',)
 
 class Raw(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность хранит в себе данные лабораторного анализа образца полуфабриката из накопителя, перед входом с сушку.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -170,6 +185,9 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
         ordering = ('datetime',)
 
 class Half(models.Model,ShiftMixin,UrlMixin):
+    """
+    Сущность хранит в себе данные лабораторного анализа образка взятого из сушки.
+    """
     datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
 
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
@@ -202,6 +220,9 @@ class Half(models.Model,ShiftMixin,UrlMixin):
         ordering = ('datetime','-path','-position')
 
 class WaterAbsorption(models.Model,UrlMixin):
+    """
+    Сущность для хранения результатов испытаний продукции на водопоглащение.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -216,6 +237,9 @@ class WaterAbsorption(models.Model,UrlMixin):
         verbose_name = u"Водопоглащение"
 
 class Efflorescence(models.Model,UrlMixin):
+    """
+    Сущность для хранения результатов испытаний продукции на высолы.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
@@ -229,6 +253,9 @@ class Efflorescence(models.Model,UrlMixin):
 
 
 class FrostResistance(models.Model,UrlMixin):
+    """
+    Сущность для хранения результатов испытаний продукции на морозостойкость.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     mark = models.PositiveIntegerField(u"Марка",choices=mark_c[:-1])
@@ -246,6 +273,9 @@ class FrostResistance(models.Model,UrlMixin):
         verbose_name = u"Морозостойкость"
 
 class SEONR(models.Model,UrlMixin):
+    """
+    Сущность для хранения результатов испытаний продукции на удельную эффективную активность ествененных радионуклидов.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     value = models.FloatField(u'Значение')
@@ -264,6 +294,9 @@ class SEONR(models.Model,UrlMixin):
         verbose_name = u"Уд.эф.акт.ест.рад."
 
 class HeatConduction(models.Model,UrlMixin):
+    """
+    Сущность для хранения результатов испытаний продукции на теплопроводность.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     width = models.FloatField(u'Вид кирпича',max_length=30,choices=width_c,default=width_c[0][0])
     value = models.FloatField(u'Значение')
@@ -291,6 +324,9 @@ class HeatConduction(models.Model,UrlMixin):
             return u'Малоэффективные'
 
 class Batch(UrlMixin,models.Model):
+    """
+    Сущность партии готовой продукции, отражается на документ о качестве.
+    """
     date = models.DateField(u'Дата', default=datetime.date.today())
     number = models.PositiveIntegerField(unique_for_year='date', verbose_name=u'№ партии')
 
@@ -382,6 +418,9 @@ class Batch(UrlMixin,models.Model):
 
 
 class Cause(models.Model):
+    """
+    Сущность возможных причин неудовлетворительного качества части продукции. Расширенный список причин брака из ГОСТ 530-2007.
+    """
     name = models.CharField(u'Имя',max_length=30)
     type = models.CharField(u'тип',max_length=30)
 
@@ -391,6 +430,9 @@ class Cause(models.Model):
         ordering = ('type',)
 
 class Part(models.Model):
+    """
+    Партия делится на части на основе качественной характеристики. Именно этими частями продукция принимается на склад. Отражается на документ "Акт о выходе с производства".
+    """
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name='parts')
     defect = models.CharField(u"Качество", max_length=60, choices=defect_c, blank=False)
     dnumber = models.FloatField(u'Брак.число',default=0)
@@ -476,6 +518,9 @@ class Part(models.Model):
 
 
 class RowPart(models.Model):
+    """
+    Строка акта о выходе с производства, хранит информацию о кол-ве произведеной продукции, кол-ве битой продукции и кол-ве продукции взятой для испытаний.
+    """
     part = models.ForeignKey(Part,related_name='rows')
     tto = RangeField(u'№ телег',max_length=30)
     amount = models.IntegerField(u'Кол-во')
@@ -493,6 +538,9 @@ class RowPart(models.Model):
 test_c = ((u'flexion',u'На изгиб'), (u'pressure',u'На сжатие'),)
 
 class Test(models.Model):
+    """
+    Сущность испытаний на прочность, отражается на протокол испытаний.
+    """
     type = models.CharField(u'Тип',max_length=10,choices=test_c)
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'tests')
