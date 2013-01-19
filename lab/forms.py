@@ -87,7 +87,7 @@ SandFactory.width = {}
 
 class BarForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info",'cavitation','color','width')
+        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info",'cavitation','color','width','forming')
         model = Bar
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                 'tts':NumberInput,
@@ -105,7 +105,7 @@ BarFactory.width = {}
 
 class RawForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = (u'info','cavitation','color','width')
+        exclude = (u'info','cavitation','color','width','forming')
         model = Raw
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                     'tts':NumberInput,
@@ -123,7 +123,7 @@ RawFactory.width = {}
 
 class HalfForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = (u'info','cavitation','color','width')
+        exclude = (u'info','cavitation','color','width','forming'   )
         model = Half
         widgets = { 'datetime':SplitDateTimeHTML5Widget,
                     'weight':NumberInput,

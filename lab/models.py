@@ -8,7 +8,7 @@ from django.db import models
 from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto,ShiftMixin
-from bkz.make.models import Warren,Forming
+from bkz.make.models import Warren,Forming,TTS
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')
@@ -134,7 +134,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
-    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
+    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
 
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -158,7 +158,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     temperature = models.FloatField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
+    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
 
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -186,7 +186,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
+    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
 
     @property
     def css(self):

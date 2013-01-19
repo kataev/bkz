@@ -72,6 +72,19 @@
         </div>
     </div>
 </div>
+<div style='bottom:0;position:fixed;'>
+<a class='btn' href='{% url whs:index %}'>W</a>
+<a class='btn' href='{% url whs:Bill-list %}'>Bs</a>
+<a class='btn' href='{% url whs:transfers %}'>Ts</a>
+<a class='btn' href='{% url whs:Bill-change pk=7 %}'>B</a>
+<a class='btn' href='{% url whs:Bill-print pk=7 %}'>Bpr</a>
+<a class='btn btn-info' href='{% url lab:index %}'>Lab</a>
+<a class='btn' href='{% url lab:Batch-change pk=76 %}'>Ba</a>
+<a class='btn' href='{% url lab:Batch-tests pk=76 %}'>Te</a>
+<a class='btn' href='{% url lab:journal %}?date=2013-01-15'>J</a>
+<a class='btn' href='{% url lab:stats %}?model=Half&date__year=2013'>St</a>
+<a class='btn btn-primary' href='{% url presentation %}#/9'>E</a>
+</div>
 
 <!-- Le javascript
 ================================================== -->
@@ -85,7 +98,7 @@
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/brick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/script.js"></script>
-{% block script %}
+{% block script %}s
 {% endblock %}
 </body>
 </html>

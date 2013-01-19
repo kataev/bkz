@@ -10,26 +10,25 @@ import datetime
 class Command(BaseCommand):
     help = "Commands for lagasy db"
     def handle(self, *args, **options):
-        label,arg1,args = args[0],args[1],1
+        label = args[0]
         if label == 'amount':
             self.amount()
         elif label =='limestone':
             self.limestone()
-        elif label =='test':
-            if arg1 == 'half':
-                self.create_test_data_half()
-            if arg1 == 'raw':
-                self.create_test_data_raw()
-            if arg1 == 'bar':
-                self.create_test_data_bar_tts()
-            if arg1 == 'sand':
-                self.create_test_data_sand()
-            if arg1 =='clay':
-                self.create_test_data_clay()
-            if arg1 =='storedclay':
-                self.create_test_data_stored_clay()
-            if arg1 =='warren':
-                self.create_test_data_warren()
+        elif label == 'half':
+            self.create_test_data_half()
+        elif label == 'raw':
+            self.create_test_data_raw()
+        elif label == 'bar':
+            self.create_test_data_bar()
+        elif label == 'sand':
+            self.create_test_data_sand()
+        elif label =='clay':
+            self.create_test_data_clay()
+        elif label =='storedclay':
+            self.create_test_data_stored_clay()
+        elif label =='warren':
+            self.create_test_data_warren()
             
         else:
             raise CommandError('Command DNE')
@@ -53,20 +52,23 @@ class Command(BaseCommand):
             p.save()
 
     def create_test_data_stored_clay(self):
-        for c in Clay.objects.all():
-            c.humidity = '/'.join(map(lambda x:str(round(uniform(10,40),2)),[1,3,4]))
-            c.save()
+        for x in xrange(17):
+            print x
+            date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
+            for i in xrange(randint(2,3)):
+                d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
+                StoredClay.objects.create(humidity=round(uniform(10,40),2),position=randint(1,5),datetime=d)
 
-        # for x in xrange(356):
-        #     date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+        # for x in xrange(17):
+        #     date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
         #     for i in xrange(randint(4,6)):
         #         d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
         #         StoredClay.objects.create(datetime=d,position=randint(1,5),humidity=round(random(),2),used=(i==4))
 
 
     def create_test_data_clay(self):
-        for x in xrange(356):
-            date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+        for x in xrange(17):
+            date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
             for i in xrange(randint(2,3)):
                 d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
                 Clay.objects.create(datetime=d,humidity=randint(2,40)+round(random(),2),
@@ -75,8 +77,9 @@ class Command(BaseCommand):
                                                dust=randint(2,40)+round(random(),2),)
 
     def create_test_data_sand(self):
-        for x in xrange(356):
-            date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+        for x in xrange(2):
+            print x
+            date = datetime.date(2013,1,2) + datetime.timedelta(days=randint(1,3))
             for i in xrange(randint(0,3)):
                 d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
                 Sand.objects.create(datetime=d,humidity=randint(2,40)+round(random(),2),
@@ -90,7 +93,8 @@ class Command(BaseCommand):
         width = 1
         color = 0
         tts = self.tts
-        for x in xrange(356):
+        for x in xrange(17):
+            print x
             if not len(tts):
                 tts = self.tts
             cavitation = 0
@@ -103,7 +107,7 @@ class Command(BaseCommand):
             if j==12:
                 color = randint(0,2)
                 j=0
-            date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+            date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
             d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
             Bar.objects.create(datetime=d,
                 humidity=round(uniform(20,25),2),
@@ -124,7 +128,7 @@ class Command(BaseCommand):
         width = 1
         color = 0
         tts = self.tts
-        for x,t in zip(xrange(356),cycle(self.tts)):
+        for x,t in zip(xrange(17),cycle(self.tts)):
             if not len(tts):
                 tts = self.tts
             i+=1
@@ -135,12 +139,12 @@ class Command(BaseCommand):
             if j==12:
                 color = randint(0,2)
                 j=0
-            date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+            date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
             d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
             Raw.objects.create(
                 datetime=d,
-                color = Bar.objects.filter(datetime__year=2012,datetime__month=d.month,datetime__day=d.day)[0].color,
-                width = Bar.objects.filter(datetime__year=2012,datetime__month=d.month,datetime__day=d.day)[0].width,
+                color = Bar.objects.filter(datetime__year=2013,datetime__month=d.month,datetime__day=d.day)[0].color,
+                width = Bar.objects.filter(datetime__year=2013,datetime__month=d.month,datetime__day=d.day)[0].width,
 
                 tts = t,
                 temperature=round(uniform(30,40),2),
@@ -176,7 +180,8 @@ class Command(BaseCommand):
         width = 1
         color = 0
         tts = self.tts
-        for x in xrange(356):
+        for x in xrange(17):
+            print x
             for q,t,path,pos in zip(range(3),cycle(self.tts),cycle([5,7]),cycle([16,16,25,25])):
                 if not len(tts):
                     tts = self.tts
@@ -188,8 +193,9 @@ class Command(BaseCommand):
                 if j==12:
                     color = randint(0,2)
                     j=0
-                date = datetime.date(2012,1,1) + datetime.timedelta(days=x)
+                date = datetime.date(2013,1,1) + datetime.timedelta(days=x)
                 d = datetime.datetime.combine(date,datetime.time(randint(8,12),randint(0,59)))
+                self.create_half(d, color, Width.objects.get(pk=width), pos, path, t)
 
                 
 
@@ -204,10 +210,10 @@ class Command(BaseCommand):
 
 
     def get_tto_period(self):
-        dr = (datetime.date(2012,1,1),datetime.date(2012,1,31))
+        dr = (datetime.date(2013,1,1),datetime.date(2013,1,31))
         result = []
         for i in xrange(1,30):
-            a = map(lambda x: (datetime.date(2012,1,1)-x).days,[t.part.batch.date for t in RowPart.objects.filter(part__batch__date__range=dr) if i in t.get_tto])
+            a = map(lambda x: (datetime.date(2013,1,1)-x).days,[t.part.batch.date for t in RowPart.objects.filter(part__batch__date__range=dr) if i in t.get_tto])
             w = None
             r = []
             for j,q in enumerate(a):

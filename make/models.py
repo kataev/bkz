@@ -6,6 +6,9 @@ from django.db import models
 from bkz.utils import UrlMixin,ru_date
 from bkz.whs.constants import cavitation_c,color_c,get_name
 
+
+
+
 class Forming(models.Model,UrlMixin):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today())    
@@ -18,12 +21,10 @@ class Forming(models.Model,UrlMixin):
     humidity = models.FloatField(u'Влаж.')
     vacuum = models.FloatField(u'Вакуум')
 
-    tts = models.CharField(u'№ ТТС',max_length=200,help_text=u'Перечислите номера ТТС через запятую')
-
     get_name = property(get_name)
     def __unicode__(self):
         if self.pk:
-            return u'Формовка %s от %s, %s' % (self.get_name,ru_date(self.date),self.tts)
+            return u'Формовка %s от %s' % (self.get_name,ru_date(self.date))
         else:
             return u'Новая формовка'
 
@@ -31,21 +32,22 @@ class Forming(models.Model,UrlMixin):
         verbose_name=u'Формовка'
         verbose_name_plural=u'Формовка'
 
+class TTS(models.Model):
+    number = models.IntegerField(u'ТТС')
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='tts')
+
 class Warren(models.Model,UrlMixin):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today(),null=True,blank=True)    
     number = models.IntegerField(u'ТТС')
     source = models.ForeignKey('self',verbose_name=u'ТТС',related_name='consumer',null=True,blank=True)
     amount = models.CharField(u'Кол-во',max_length=20)
-    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens')
+    tts = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens')
     part = models.ForeignKey('lab.Part',verbose_name=u'Партия',null=True,blank=True,related_name='warrens')
 
     def __unicode__(self):
         if self.pk:
-            if self.source:
-                return u'Садка от %s, c ТТC № %d ' % (ru_date(self.date),self.number)
-            else:
-                return u'Садка от %s, на ТТО № %d' % (ru_date(self.date),self.number)
+            return u'Садка от %s, c ТТC № %d ' % (ru_date(self.date),self.number)
         else:
             return u'Новая садка'
 
@@ -53,3 +55,4 @@ class Warren(models.Model,UrlMixin):
         ordering = ('-date',)
         verbose_name=u'Садка'
         verbose_name_plural=u'Садка'
+

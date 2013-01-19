@@ -31,7 +31,7 @@ class WarrenTTOForm(BootstrapMixin, forms.ModelForm):
 
 	class Meta:
 		model = Warren
-        widgets = {'number':forms.TextInput(attrs={'placeholder':u'№ ТТC'})}
+        # widgets = {'number':forms.TextInput(attrs={'placeholder':u'№ ТТC'})}
 
 WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=6,max_num=6)
 WarrenTTOFactory = inlineformset_factory(Warren, Warren, WarrenTTOForm, exclude=('date',) , extra=6, max_num=6,can_delete=False)
