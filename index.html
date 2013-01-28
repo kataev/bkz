@@ -1,93 +1,350 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640" />
+<!doctype html>
+<html lang="en">
 
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+	<head>
+		<meta charset="utf-8">
 
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
-    <title>Bkz by Bteam</title>
-  </head>
+		<title>reveal.js - The HTML Presentation Framework</title>
 
-  <body>
-    <a id="forkme_banner" href="https://github.com/Bteam/bkz">View on GitHub</a>
-    <div class="shell">
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
 
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Bkz</h1>
-            <h2>Склад кирпича</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/Bteam/bkz/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/Bteam/bkz/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+    <section>
+        <h4>
+    <font face="trebuchet ms">Выпускная квалификационная работа</font>
+</h4>
+<p style="text-align: left;text-indent: -20.0px;margin-left: 20.0px;">Тема: Информационная система автоматизации технологического контроля производства и реализации продукции на&nbsp;ООО "Березниковский кирпичный завод"</p>
+        <p style="text-align: left;text-indent: -20.0px;margin-left: 20.0px;">
+            <br>
+        </p>
+<p style="text-align: left;">Выполнил: Катаев Д.А.</p>
+<p style="text-align: left;">Группа: ИВТ-08в</p>
+<p style="text-align: left;">Руководитель: Затонский А.В.</p>
+</section>
+        <section>
+            <section>
+                <h2>Предметная областЬ</h2>
+                <div>
+                    <br>
+                </div>
+                <div>
+                    <h3>
+                        <br>
+                    </h3>
+                    <h3>
+                        <span style="text-align: left;letter-spacing: -0.08em;line-height: 0.9em;">Лаборатория</span>
+                    </h3>
+                    <h5>
+                        <span style="text-align: left;letter-spacing: -0.08em;line-height: 0.9em;">+</span>
+                    </h5>
+                    <h3>
+                        <span style="text-align: left;letter-spacing: -0.08em;line-height: 0.9em;">Склад</span>
+                    </h3>
+                </div>
+            </section>
+            <section>
+                <h2>Лаборатория</h2>
+                <div>
+                    <br>
+                </div>
+                <h3>
+                    <span style="letter-spacing: -0.08em;line-height: 0.9em;text-transform: uppercase;">Испытание полуфабрикатов</span>
+                </h3>
+                <div>Контроль сырья и технологического процесса</div>
+                <div>
+                    <br>
+                </div>
+                <h3>Испытание готовой продукции</h3>
+                <div>Определение&nbsp;качества готовой продукции в&nbsp;соответствии&nbsp;с ГОСТ 530-2007</div>
+            </section>
+            <section>
+                <h4>
+                    <span style="font-size: 2.11em;letter-spacing: -0.08em;line-height: 0.9em;">
+                        <br>
+                    </span>
+                </h4>
+                <h4>
+                    <span style="font-size: 2.11em;letter-spacing: -0.08em;line-height: 0.9em;">Склад</span>
+                </h4>
+                <div>
+                    <ul>
+                        <li>
+                            <span style="letter-spacing: -0.02em;line-height: 1.2em;">Приём продукции с производства</span>
+                            <br>
+                        </li>
+                        <li>Сортировка продукции</li>
+                        <li>Отгрузка</li>
+                    </ul>
+                    <div style="text-align: left;">
+                        <br>
+                    </div>
+                    <div style="text-align: center;">Источник информации о количестве оставшейся готовой продукции для руководителя</div>
+                </div>
+            </section>
+        </section>
+        <section>
+            <h2>
+                <br>
+            </h2>
+            <h2>Проблемы</h2>
+            <div>
+                <ul>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Информация о технологическом процессе хранится в слабо&nbsp;структурированном</span>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">&nbsp;виде, затрудняя её анализ</span>
+                        <br>
+                    </li>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Старый способ ведения оборотной ведомости в </span>
+                        <i style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Excel&nbsp;</i>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">затруднён из-за увеличения&nbsp;разнообразия</span>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">&nbsp;продукции</span>
+                        <br>
+                    </li>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Из-за&nbsp;усложнения</span>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">&nbsp;структуры компании увеличилось время подготовки накладных при отгрузке</span>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <h2>
+                <br>
+            </h2>
+            <h2>Цели работы</h2>
+            <div>
+                <ul>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Ускорить процесс отгрузки кирпича</span>
+                        <br>
+                    </li>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Снизить количество ошибок при&nbsp;операциях</span>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">&nbsp;на складе</span>
+                        <br>
+                    </li>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Предоставить удалённый доступ к информации</span>
+                    </li>
+                    <li>
+                        <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Обеспечить возможность накопления и анализа данных о течении технологического процесса</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <h2>
+                <br>
+            </h2>
+            <div>
+                <br>
+            </div>
+            <h2>Задачи ИС</h2>
+            <div>
+                <ul>
+                    <li>Автоматизация ведения оборотной ведомости</li>
+                    <li>Формирование док-тов для печати</li>
+                    <li>
+                        <span style="letter-spacing: -0.02em;line-height: 1.2em;">Расчёт&nbsp;</span>результатов<span style="letter-spacing: -0.02em;line-height: 1.2em;">&nbsp;испытаний Г.П.</span>
+                        <br>
+                    </li>
+                    <li>Обеспечение информационной поддержки руководства</li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <section>
+                <h2>
+                    <br>
+                </h2>
+                <h2>
+                    <br>
+                </h2>
+                <h2>Функциональное Моделирование</h2>
+                <h2>idef0</h2>
+            </section>
+            <section>
+                <img src="/img/idef0_0.png">
+            </section>
+            <section>
+                <h2>
+                    <img src="/img/idef0_1.png" style="line-height: 1.2em;font-size: 36.0px;letter-spacing: -0.02em;">
+                    <br>
+                </h2>
+            </section>
+            <section>
+                <img src="/img/idef0_2.png">
+            </section>
+            <section>
+                <img src="/img/idef0_3.png">
+            </section>
+            <section>
+                <img src="/img/idef0_4.png">
+            </section>
+        </section>
+        <section>
+            <section>
+                <div>ER-диаграмма</div>
+                <img src="/img/erd_eng.png">
+            </section>
+            <section>
+                <div>
+                    <ol>
+                        <li>
+                            <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">Партия</span>
+                            <br>
+                        </li>
+                    </ol>
+                </div>
+                <img src="/img/1_0.png">
+            </section>
+            <section>
+                <div>
+                    <span style="letter-spacing: -0.02em;line-height: 1.2em;">2. &nbsp; Производство</span>
+                    <br>
+                </div>
+                <img src="/img/1_1.png">
+            </section>
+            <section>
+                <div>3. &nbsp; Склад</div>
+                <img src="/img/2.png">
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>АРХИТЕКТУРА<br>
+                </h2>
+                <div>Веб-приложение</div>
+                <div>Используется стек свободных технологий</div>
+                <div>
+                    <img src="/img/bkzDjango.png">
+                    <br>
+                </div>
+            </section>
+            <section>
+                <h2>Django</h2>
+                <div>фреймворк для веб-приложений на языке Python<br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <h2>Twitter Bootstrap</h2>
+                <div>набор инструментов для создания сайтов и веб-приложений<br>
+                </div>
+                <div>
+                    <br>
+                </div>
+                <h2>Jquery</h2>
+                <div>библиотека JavaScript<br>
+                </div>
+            </section>
+            <section>
+                <h3>Шаблоны - OpenOfficE</h3>
+                <div>
+                    <img src="/img/oo.png">
+                    <br>
+                </div>
+            </section>
+        </section>
+        <section>
+            <h2>
+                <br>
+            </h2>
+            <h2>
+                <br>
+            </h2>
+            <h2>Краткий обзор</h2>
+<div>
+    <a href="/">Информационной системы</a>
+            <br>
+</div>
+
+</section>
+            <section>
+                <h2>
+                    <br>
+                </h2>
+                <h2>Заключение</h2>
+                <div>Информационная система "БКЗ"&nbsp;внедрена&nbsp;на&nbsp;</div>
+                <div>ООО "Березниковский кирпичный завод"</div>
+                <div>В базе которой содержится:</div>
+                <div>
+                    <ul>
+                        <li>
+                            <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">138 партий</span>
+                            <br>
+                        </li>
+                        <li>
+                            <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">273 ед. продукции</span>
+                        </li>
+                        <li>
+                            <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">33 накладных</span>
+                        </li>
+                        <li>
+                            <span style="line-height: 1.2em;text-align: center;letter-spacing: -0.02em;">1214 контрагентов</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
 
 
-      <span class="banner-fix"></span>
+		</div>
 
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
 
-      <section id="main_content">
-        <h3>Welcome to GitHub Pages.</h3>
+		<script>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
 
-<h3>Designer Templates</h3>
+		</script>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/Bteam">Bteam</a> can be found on <a href="https://github.com/Bteam/bkz">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
-    </div>
-
-    
-  </body>
+	</body>
 </html>
