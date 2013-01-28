@@ -75,7 +75,6 @@
 <div style='bottom:0;position:fixed;'>
 <a class='btn' href='{% url whs:index %}'>W</a>
 <a class='btn' href='{% url whs:Bill-list %}'>Bs</a>
-<a class='btn' href='{% url whs:transfers %}'>Ts</a>
 <a class='btn' href='{% url whs:Bill-change pk=7 %}'>B</a>
 <a class='btn' href='{% url whs:Bill-print pk=7 %}'>Bpr</a>
 <a class='btn btn-info' href='{% url lab:index %}'>Lab</a>
@@ -98,7 +97,7 @@
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/brick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/script.js"></script>
-{% block script %}s
+{% block script %}
 {% endblock %}
 </body>
 </html>

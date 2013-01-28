@@ -154,10 +154,7 @@ def journal(request,date=None):
         for f in factory:
             if f.is_valid():
                 f.save()
-    if date < datetime.datetime.now() - datetime.timedelta(days=2):
-        add = False
-    else:
-        add = True
+    add = True
     return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f,'add':add})
 
 def slice(request):

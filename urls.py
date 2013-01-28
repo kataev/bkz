@@ -10,6 +10,7 @@ urlpatterns = patterns(u'',
     url(ur'^$', render, dict(template_name='core/index.html'), name='index'),
     url(ur'^Помошь$', render, dict(template_name='core/help.html'), name='help'),
     url(ur'^Прайс$', render, dict(template_name='core/price.html'), name='price'),
+    url(ur'^Доклад$', render, dict(template_name='core/presentation.html'), name='presentation'),
 )
 
 urlpatterns += patterns('',
@@ -22,8 +23,6 @@ urlpatterns += patterns('',
     # url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
     url(ur'^ИТ/', include('bkz.it.urls', namespace='it'), name='it'),
 )
-
-urlpatterns += patterns('bkz.views',url(ur'^Доклад$','presentation',name='presentation'))
 
 urlpatterns += patterns('django.contrib.auth.views',
     url(ur'^Вход$', 'login', {'template_name': 'core/login.html'}, name='login'),
