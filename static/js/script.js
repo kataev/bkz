@@ -209,7 +209,7 @@ function tara_amount() {
         var brick = fieldset.find('input[name*="brick"]:last')
         var tara = fieldset.find('input[name*="tara"]').val()
         var checkbox = fieldset.find('input[name*="tara-calculate"]')
-        if (checkbox.val() && brick.val() && tara) {
+        if (checkbox.prop('checked') && brick.val() && tara) {
             var css = brick.parent().find('span').attr('class')
             var factor = bricks_per_tara(css)
             fieldset.find('input[name*="amount"]').val(factor * tara)

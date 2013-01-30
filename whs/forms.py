@@ -136,16 +136,15 @@ class SoldForm(BootstrapMixin, forms.ModelForm):
 
     def clean(self):
         data = self.cleaned_data
-        brick_from, brick, amount = data['brick_from'], data['brick'], data['amount']
+        brick_from, brick, amount = data.get('brick_from'), data.get('brick'), data.get('amount',0)
         total = brick.total
         if brick_from:
             validate_transfer(brick_from, brick)
             total = brick_from.total
         if self.instance.pk:
             total += self.instance.amount
-        if not amount <= 0:
-            raise ValidationError(u'Нельзя делать операцию с 0 количесвом кирпича')
-
+        if amount <= 0:
+            raise ValidationError(u'Нельзя делать операцию с отрицательным или нулевым количеством кирпича')
         if total < amount:
             raise ValidationError(u'На складе нету столько кирпича')
         return data

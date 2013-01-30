@@ -23,7 +23,7 @@ table .help-inline {float: right}
 #brickselect-buttons ul.width label {width: 210px;}
 #brickselect label, #brickselect input {margin: 0}
 #brickselect td {padding: 0px 5px}
-#brickselect tr:hover {text-decoration: underline;}
+#brickselect tr:hover td {border-bottom: 1px #333333 solid}
 
 #sortings a.btn-mini {padding: 0px 6px;border: none;margin-left: 2px}
 
