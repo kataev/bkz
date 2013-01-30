@@ -204,15 +204,15 @@ function bricks_per_tara(cl) {
 }
 
 function tara_amount() {
-    $('fieldset').on('change', 'input[name*="tara"],input[name*="brick"]', function (e) {
+    $('fieldset.Sold').on('change', 'input[name*="tara"],input[name*="brick"]', function (e) {
         var fieldset = $(e.delegateTarget)
-        var brick = $('.brickselect.brick input', fieldset)
-        var tara = $('input[name*="tara"]', fieldset)
-        var checkbox = $('input[name="tara-calculate"]', fieldset)
-        if (checkbox.val() && brick.val() && tara.val()) {
-            var css = $('.brickselect.brick > span', fieldset).attr('class')
+        var brick = fieldset.find('input[name*="brick"]:last')
+        var tara = fieldset.find('input[name*="tara"]').val()
+        var checkbox = fieldset.find('input[name*="tara-calculate"]')
+        if (checkbox.val() && brick.val() && tara) {
+            var css = brick.parent().find('span').attr('class')
             var factor = bricks_per_tara(css)
-            $('input[name*="amount"]', fieldset).val(factor * tara.val())
+            fieldset.find('input[name*="amount"]').val(factor * tara)
         }
     })
 }

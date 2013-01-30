@@ -58,7 +58,8 @@ td.cause ul { list-style: none;}
     .brickinput select, .batchinput input {width:auto !important;}
 }
 
-fieldset.legeng {overflow-x:hidden;}
+
+
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
     fieldset.less .controls {margin-left: 110px}
@@ -79,6 +80,7 @@ fieldset.legeng {overflow-x:hidden;}
     .tarainput span input {width:26px}
 }
 #batch-list th {text-align: center;}
+fieldset legend a {color:#333333;}
 fieldset table th label {margin: 0;}
 fieldset.Part div.row {margin-bottom:10px;padding-bottom: 2px;border:#2F96B4 solid 2px;}
 fieldset.Part div.span3 {margin-left:10px}

@@ -181,7 +181,7 @@ class Bill(UrlMixin, BillMixin, models.Model):
 
 class Pallet(PalletMixin, models.Model):
     """ Сущность строки в накладной с поддонами """
-    amount = models.PositiveIntegerField(u"Кол-во поддоннов")
+    amount = models.PositiveIntegerField(u"Кол-во поддоннов",default=1)
     poddon = models.PositiveIntegerField(u"Тип поддона", choices=poddon_c, default=352)
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=200)
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
@@ -205,7 +205,7 @@ class Sold(SoldMixin,models.Model):
     batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
     batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
     tara = models.PositiveIntegerField(u"Кол-во поддонов", default=0)
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции',default=1)
     price = models.FloatField(u"Цена за единицу", help_text=u'Цена за шт. Можно прокручивать колёсиком мыши.',default=0)
     delivery = models.FloatField(u"Цена доставки", default=0, help_text=u'0 если доставки нет')
     info = models.CharField(u'Примечание', max_length=300, blank=True, help_text=u'Любая полезная информация')
@@ -257,7 +257,7 @@ class Sorting(models.Model,UrlMixin):
     type = models.IntegerField(u'Тип',choices=sorting_type_c)
     date = models.DateField(u'Дата', help_text=u'Дата документа', default=datetime.date.today())
     brick = models.ForeignKey(Brick, related_name="sorting", verbose_name=u"Кирпич")
-    amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции')
+    amount = models.PositiveIntegerField(u"Кол-во", help_text=u'Кол-во кирпича для операции',default=1)
 
     batch_number = models.PositiveSmallIntegerField(u'Партия',null=True, blank=True)
     batch_year = models.PositiveSmallIntegerField(u'Год партии',null=True, blank=True,default=datetime.date.today().year)
@@ -314,7 +314,7 @@ class Inventory(models.Model, UrlMixin):
 class Write_off(models.Model):
     """ Сущность для одной записи в акте о инвентаризация """
     brick = models.ForeignKey(Brick, related_name="write_off", verbose_name=u"Кирпич")
-    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции')
+    amount = models.PositiveIntegerField(u"Кол-во кирпича", help_text=u'Кол-во кирпича для операции',default=1)
     doc = models.ForeignKey(Inventory, blank=False, related_name="write_off", null=False)
 
     class Meta():

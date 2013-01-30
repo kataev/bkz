@@ -43,6 +43,14 @@ class NumberInput(forms.TextInput):
         super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
 
+class AmountInput(NumberInput):
+    def __init__(self,attrs=None):
+        super(NumberInput, self).__init__(attrs=attrs)
+        self.attrs['autocomplete'] = 'off'
+        self.attrs['step'] = 1
+        self.attrs['min'] = 1
+
+
 class FloatInput(NumberInput):
     def __init__(self, attrs=None):
         super(NumberInput, self).__init__(attrs=attrs)
@@ -120,7 +128,7 @@ class SoldForm(BootstrapMixin, forms.ModelForm):
             'batch_number': BatchInput(attrs={'placeholder': 'Номер', }),
             'batch_year': BatchInput(attrs={'placeholder': 'Год', }),
             'tara': TaraInput,
-            'amount': NumberInput,
+            'amount': AmountInput,
             'price': MoneyInput,
             'delivery': MoneyInput,
             'info': forms.Textarea(attrs={'rows': 1}),
@@ -135,6 +143,9 @@ class SoldForm(BootstrapMixin, forms.ModelForm):
             total = brick_from.total
         if self.instance.pk:
             total += self.instance.amount
+        if not amount <= 0:
+            raise ValidationError(u'Нельзя делать операцию с 0 количесвом кирпича')
+
         if total < amount:
             raise ValidationError(u'На складе нету столько кирпича')
         return data
@@ -144,7 +155,7 @@ class PalletForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Pallet
         widgets = {
-            'amount': NumberInput,
+            'amount': AmountInput,
             'price': MoneyInput,
             'info': forms.Textarea(attrs={'rows': 1}),
             }
@@ -281,7 +292,7 @@ class SortingForm(BootstrapMixin, forms.ModelForm):
             'type':forms.HiddenInput,
             'date': DateInput,
             'brick': BrickSelect,
-            'amount': NumberInput,
+            'amount': AmountInput,
             'info': forms.Textarea(attrs={'rows': 1}),
             }
 
