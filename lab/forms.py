@@ -40,6 +40,9 @@ class FlexionInput(FloatInput):
 class PressureInput(FloatInput):
     pass
 
+class PopUpCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    pass
+
 class ClayForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Clay
@@ -116,7 +119,7 @@ class RawForm(BootstrapMixin,forms.ModelForm):
 
 
 RawFactory = modelformset_factory(Raw,form=RawForm,extra=1)
-RawFactory.caption = u'Сырец'
+RawFactory.caption = u'Накопитель'
 RawFactory.css_class = 'span9'
 RawFactory.width = {}
 
@@ -131,7 +134,8 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
                     'humidity':FloatInput,
                     'shrink':FloatInput,
                     'position':NumberInput(attrs={'max':25,'min':1,'step':1}),
-                    'path':NumberInput(attrs={'max':7,'min':4,'step':1})
+                    'path':NumberInput(attrs={'max':7,'min':4,'step':1}),
+                    'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),
         }
 
 HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)
@@ -158,6 +162,10 @@ class SEONRForm(BootstrapMixin,forms.ModelForm):
 class HeatConductionForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = HeatConduction
+
+class CauseForm(BootstrapMixin,forms.ModelForm):
+    class Meta:
+        model = Cause
 
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:

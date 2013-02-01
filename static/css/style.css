@@ -147,7 +147,7 @@ input[name*='chamfer']{width: 52px;}
 
 #journal input {padding: 4px 6px }
 #journal input[type='number'] { width:42px; text-align: center}
-#journal input[name*="tts"] {width:32px;}
+#journal input[name*="tts"] {width:40px;}
 #journal input[name*="weight"] {width:60px;}
 #journal input[name*="weight"] {width:60px;}
 #journal input[name*="humidity"] {width:60px;}
@@ -159,12 +159,12 @@ input[name*='chamfer']{width: 52px;}
 #journal input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
 #journal input[name*="datetime_"][type='time'] {width:54px;overflow: hidden;white-space: normal}
 #journal .input-append {margin: 0}
-#journal .input-append .add-on {border-radius: 0}
 #journal select {padding-left: 0;}
 #journal select[name*='cavitation'] { width:80px;}
 #journal select[name*='color'] { width:90px;}
 #journal select[name*='width'] { width:80px;}
 #journal select[name*='path'] { width:90px;}
+#journal .cause a:hover {text-decoration: none}
 
 #journal input[name*='path'],#journal input[name*='position'] { width:32px;text-align: center;}
 

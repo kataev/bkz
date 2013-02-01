@@ -66,6 +66,7 @@ menu = dict(
         ('lab:FrostResistance-add','',u'Морозостойкость'),
         ('lab:SEONR-add','',u'Уд.эф.акт.ест.рад.'),
         ('lab:HeatConduction-add','',u'Теплопроводность'),
+        ('lab:Cause-add','',u'Дефект'),
     ),
     make = (
         ('make:Forming-add','',u'Формовка'),

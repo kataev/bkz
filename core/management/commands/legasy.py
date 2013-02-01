@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
+from django.core import serializers
 from bkz.whs.models import *
 from bkz.lab.models import *
 from bkz.old.models import *
@@ -14,6 +15,8 @@ class Command(BaseCommand):
             self.set_old_brick(*args[:2])
         if label == 'test_batch':
             self.test_batch(*args[:3])
+        if label == 'import_batch':
+            self.import_batch()
 
     def totals(self):
         for t in DispTovar.objects.select_related().all():
@@ -50,3 +53,14 @@ class Command(BaseCommand):
                 print 'DNE',plus.date,brick,plus.plus
             except Part.MultipleObjectsReturned:
                 print 'MOR',plus.date,brick
+    def import_batch(self):
+        try:
+            for m in serializers.deserialize('json',file('../bkz_19_01_2013.json').read()):
+                name = m.object._meta.module_name.split('.')[-1].lower()
+                if name in ['batch','part','rowpart','cause','heatconduction','seonr','frostresistance','waterabsorption']:
+                    if name == 'batch':
+                        m.object.volume=None
+                    m.save()
+        except serializers.base.DeserializationError:
+            pass
+

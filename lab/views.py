@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 from bkz.whs.views import BillCreateView
@@ -139,21 +140,26 @@ def journal(request,date=None):
         date = datetime.date.today()
     date = datetime.datetime.combine(date,datetime.time(8))
     filter = dict(datetime__range=(date,date+datetime.timedelta(hours=24)))
-    clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay')
-    cinitial=map(lambda x: {'position':x},range(1,6))
-    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay',initial=cinitial)
-    sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand')
-    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar')
-    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw')
-    raw_initial = [ {'position':16,'path':5},{'position':16,'path':7},
-                    {'position':25,'path':5},{'position':25,'path':7}]
-    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=raw_initial)
+    initial = {'datetime':date}
+    scinitial=[dict({'position':x},**initial) for x in range(1,6)]
+    clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay',initial=[initial,])
+    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay',initial=scinitial)
+    sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand',initial=[initial,])
+    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar',initial=[initial,])
+    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw',initial=[initial,])
+    half_initial = [ {'position':16,'path':5,'datetime':date},{'position':16,'path':7,'datetime':date},
+                     {'position':25,'path':5,'datetime':date},{'position':25,'path':7,'datetime':date}]
+    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=half_initial)
     factory = [clay, storedclay, sand, bar, raw, half]
 
     if request.method == 'POST':
         for f in factory:
             if f.is_valid():
                 f.save()
+            else:
+                print f.prefix,f.errors
+        if all([f.is_valid() for f in factory]):
+            return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
     add = True
     return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f,'add':add})
 

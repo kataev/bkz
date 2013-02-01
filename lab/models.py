@@ -38,6 +38,29 @@ class RangeField(models.CharField):
 from south.modelsinspector import add_introspection_rules
 add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\.lab\.models\.RangeField"])
 
+type_c = (
+    ('part','Для партий'),
+    ('half','Для полуфабриката'),
+    )
+
+class Cause(UrlMixin,models.Model):
+    """
+    Сущность возможных причин неудовлетворительного качества части продукции. Расширенный список причин брака из ГОСТ 530-2007.
+    """
+    type = models.CharField(u'Для чего',max_length=30,choices=type_c,default='part')
+    name = models.CharField(u'Имя',max_length=30)
+    code = models.CharField(u'Код',max_length=30,null=True,blank=True)
+
+    def __unicode__(self):
+        if self.pk:
+            return '%s %s' % (self.code,self.name)
+        else:
+            return u'Новый дефект'
+    class Meta:
+        ordering = ('code',)
+        verbose_name=u'Дефект'
+
+
 class Clay(models.Model,ShiftMixin,UrlMixin):
     """
     Сущность для хранения данных о глине из карьера.
@@ -201,6 +224,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     shrink = models.FloatField(u'<attr title="Усадка, %">Усдк</attr>')
     path = models.IntegerField(u'Путь')
     position = models.IntegerField(u'Поз.')
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True,limit_choices_to = {'type':'half'})
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
@@ -416,19 +440,6 @@ class Batch(UrlMixin,models.Model):
             return u'малоэффективный (обыкновенный)'
 
 
-
-class Cause(models.Model):
-    """
-    Сущность возможных причин неудовлетворительного качества части продукции. Расширенный список причин брака из ГОСТ 530-2007.
-    """
-    name = models.CharField(u'Имя',max_length=30)
-    type = models.CharField(u'тип',max_length=30)
-
-    def __unicode__(self):
-        return '%s %s' % (self.type,self.name)
-    class Meta:
-        ordering = ('type',)
-
 class Part(models.Model):
     """
     Партия делится на части на основе качественной характеристики. Именно этими частями продукция принимается на склад. Отражается на документ "Акт о выходе с производства".
@@ -437,7 +448,7 @@ class Part(models.Model):
     defect = models.CharField(u"Качество", max_length=60, choices=defect_c, blank=False)
     dnumber = models.FloatField(u'Брак.число',default=0)
     half = models.FloatField(u'Половняк',default=3.0)
-    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True)
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True,limit_choices_to = {'type':'part'})
     limestone = RangeField(u'№ телег c изв.вкл меньше 1см²',max_length=30,null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
     brick = models.ForeignKey('whs.Brick',verbose_name=u'Кирпич',null=True,blank=True)

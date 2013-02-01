@@ -53,6 +53,16 @@
                         <td class="input-append">
                             <span class='add-on'>{{ f }}</span>
                         </td>
+                        {% elif f.name == 'cause' %}
+                        <td class="input-append dropdown cause">
+                            <ul class="dropdown-menu" role='menu'>
+                            {{ f|removetags:'ul' }}
+                            </ul>
+                            <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
+                                <span class='label'>0</span> <b class="caret"></b>
+                            </a>
+                            
+                        </td>
                         {% else %}
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
