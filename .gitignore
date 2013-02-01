@@ -2,7 +2,7 @@
 .idea
 *.json
 bkz
-static/css/bo*
+static/bo*
 static/js/jquery-ui/
 static/js/libs/
 bkz.sublime-workspace
