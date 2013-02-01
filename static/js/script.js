@@ -239,53 +239,6 @@ function tara_amount() {
 }
 $(tara_amount)
 
-$(function () {
-    $("#Bricks td[rel='popover']").click(function () {
-        if (parseInt($(this).text()) <= 0)
-            return
-        var name = $(this).data('name')
-        if (name == 'total' || name == 'begin')
-            return
-        $(this).popover()
-        var tr = $(this).parent('tr')
-        var brick = $(tr).find('td:first').text()
-        var url = $(tr).find('td:first a').attr('href')
-        var css = $(tr).attr('class')
-        $(this).data('popover').$element.attr('data-original-title', '<span class="' + css + '">' + brick + '</span><i class="close">&times;</i>')
-        $(this).data('popover').$element.attr('data-content', '<p><img src="/static/img/loader.gif"><p><span class="label">Загрузка</span></p></p>')
-
-        $(this).popover('show')
-        $(this).data('popover').$tip.on('click.close', $.proxy(function () {
-            $(this).popover('hide')
-        }, this))
-        url += '/' + name + '/' + window.location.search
-        $.ajax({url:url, context:this }).success(
-            function (data) {
-                var table = $('<table class="table table-condensed table-striped"></table>')
-                    .appendTo($(this).data('popover')
-                    .$tip.find('.popover-content').empty())
-                var tbody = $('<tbody></tbody>').appendTo(table)
-                $('<thead><tr><th>Дата</th><th>Кол-во</th></tr></thead>').appendTo(table)
-                _(data).each(function (a) {
-                    var tr = $('<tr></tr>').appendTo(tbody)
-                    _(a).each(function (e) {
-                        $('<td></td>').appendTo(tr).text(e)
-                    })
-                })
-                var sum = _(data).reduce(function (m, v) {
-                    return m + v[1]
-                }, 0)
-                var tfoot = $('<tfoot>').appendTo(table)
-                var tr = $('<tr>').appendTo(tfoot)
-                $('<th>').appendTo(tr).text('Итого:').attr('style', 'text-align:right')
-                $('<td>').appendTo(tr).text(sum)
-            }).error(function () {
-                $('<p><span class="label label-important"><i class="icon-warning-sign"></i>Что-то пошло не так</span></p>')
-                    .addClass('alert alert-error')
-                    .appendTo($(this).data('popover').$tip.find('.popover-content').empty())
-            })
-    })
-})
 $('[name="month"],[name*="month"]').change(function () {
     var year = $(':selected', this).parent().attr('label')
     $(this).parents('form').find('[name="'+($(this).attr('name').replace('month','year'))+'"]').val(year)
