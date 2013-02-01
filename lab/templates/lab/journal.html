@@ -15,7 +15,7 @@
             </div>
             <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
                 {{ dateform.date }}
-                <input type="submit" class="btn">
+                <input type="submit" value='Показать' class="btn">
             </form>
     </div>
     
@@ -54,12 +54,14 @@
                             <span class='add-on'>{{ f }}</span>
                         </td>
                         {% elif f.name == 'cause' %}
-                        <td class="input-append dropdown cause">
+                        <td class="input-append dropdown counter">
                             <ul class="dropdown-menu" role='menu'>
                             {{ f|removetags:'ul' }}
                             </ul>
                             <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
-                                <span class='label'>0</span> <b class="caret"></b>
+                                <span class='label {% if f.value|length %}label-warning{% endif %}'>
+                                    {{ f.value|length }}
+                                </span> <b class="caret"></b>
                             </a>
                             
                         </td>

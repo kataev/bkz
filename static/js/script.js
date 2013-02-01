@@ -131,13 +131,6 @@ $(function () {
     var $messages = $('#messages').popover('show')
 
     setTimeout(function(e){$messages.popover('hide')},10000)
-    if ($.mask){
-    if ($("input[name*='form']").val())
-    $("input[name*='inn']").mask('999 999 999 999')
-    else
-    $("input[name*='inn']").mask('99 99 99 99 99')
-    $("input[name*='kpp']").mask('999 999 999')
-    }
 })
 
 //Подсветка цветов селекта в редактировании кирпича
@@ -327,13 +320,18 @@ function get_area_and_volume(id,size) {
 
 
 $(function(){
-    $("input[name*='size'][type='text']").mask('999.9 x 999.9 x 99.9').change(function(e){
+    var readings = function(e){
         var id = $(this).attr('id')
         var size = $(this).val()
         var q = get_area_and_volume(id,size)
         $('#'+id.replace('size','area')).val(q[0]).attr('title','Объем м³: '+q[1])
         $('#'+id.replace('size','readings')).change()
-    })
+    }
+    $("input[name*='size'][type='text']").not("input[name*='pressure']").mask('999 x 999 x 99')
+    $(".tests input[name*='pressure'][type='text']").mask('999.9 x 999.9 x 99.9').change(readings)
+    $(".tests input[name*='flexion'][type='text']").change(readings)
+    
+
     $("input[name*='readings']").change(function(e){
         var id = $(this).attr('id')
         var s = $('#'+id.replace('readings','area')).val()
@@ -454,14 +452,20 @@ $(function(){
         })
         $bricks.find('tfoot tr').find('th').slice(1).each(function(i,node){node.innerHTML = totals[i]})
 
-    }).on('click','input',function(e){
+    }).on('reset',function(e){
+            $(this).find('span.label').removeClass('label-warning').text(0)
+        })
+
+
+    $('.dropdown.counter').on('click','input[type="checkbox"]',function(e){
             var name = $(this).attr('name')
             var span = $(e.delegateTarget).find('a[href="#'+name+'"]').find('span.label')
             if ($(this).prop('checked')) $(span).text(parseInt($(span).text())+1).addClass('label-warning')
             else $(span).text(parseInt($(span).text())-1)
             if (!parseInt($(span).text())) $(span).removeClass('label-warning')
-        }).on('reset',function(e){
-            $(this).find('span.label').removeClass('label-warning').text(0)
-        })
+    }).each(function(node){
+        var span = $(this).find('span.label')
+        span.text($(this).find('input:checked').length)
+    })
    
 })

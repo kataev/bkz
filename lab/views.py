@@ -141,16 +141,13 @@ def journal(request,date=None):
     date = datetime.datetime.combine(date,datetime.time(8))
     filter = dict(datetime__range=(date,date+datetime.timedelta(hours=24)))
     initial = {'datetime':date}
-    scinitial=[dict({'position':x},**initial) for x in range(1,6)]
-    clay = ClayFactory(request.POST or None,queryset=Clay.objects.filter(**filter),prefix='clay',initial=[initial,])
-    storedclay = StoredClayFactory(request.POST or None,queryset=StoredClay.objects.filter(**filter),prefix='storedclay',initial=scinitial)
-    sand = SandFactory(request.POST or None,queryset=Sand.objects.filter(**filter),prefix='sand',initial=[initial,])
+    matherial = MatherialFactory(request.POST or None,queryset=Matherial.objects.filter(**filter),prefix='matherial',initial=[initial,])
     bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar',initial=[initial,])
     raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw',initial=[initial,])
-    half_initial = [ {'position':16,'path':5,'datetime':date},{'position':16,'path':7,'datetime':date},
-                     {'position':25,'path':5,'datetime':date},{'position':25,'path':7,'datetime':date}]
+    half_initial = [{'position':16,'path':5,'datetime':date},{'position':25,'path':5,'datetime':date},
+                    {'position':16,'path':7,'datetime':date},{'position':25,'path':7,'datetime':date}]
     half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=half_initial)
-    factory = [clay, storedclay, sand, bar, raw, half]
+    factory = [half, raw, bar, matherial]
 
     if request.method == 'POST':
         for f in factory:
@@ -179,7 +176,7 @@ def stats(request):
     if modelselect.is_valid():
         factory = eval(modelselect.cleaned_data['model']+'Factory')
     else: 
-        factory = ClayFactory
+        factory = MatherialFactory
     date = datefilter.get_date
     data = {'datetime__year':date.year}
     if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:

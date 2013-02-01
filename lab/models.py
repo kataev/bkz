@@ -61,83 +61,61 @@ class Cause(UrlMixin,models.Model):
         verbose_name=u'Дефект'
 
 
-class Clay(models.Model,ShiftMixin,UrlMixin):
-    """
-    Сущность для хранения данных о глине из карьера.
-    """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    humidity = models.FloatField(u'Влаж.')
-    sand = models.FloatField(u'Песок',null=True,blank=True)
-    inclusion = models.FloatField(u'Включ.',null=True,blank=True)
-    dust = models.FloatField(u'Пылев.',null=True,blank=True)
-    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
-
-    @property
-    def value(self):
-        if self.humidity:
-            try: val = [float(v) for v in self.humidity.replace(',','.').split('/') if v]
-            except BaseException: return None
-            return round(sum(val)/len(val),2)
-        else:
-            return 0
-
-    def __unicode__(self):
-        if self.pk: return u'Проба глины от %s %s' % (ru_date(self.datetime.date()),self.datetime.time())
-        else: return u'Новая проба глины из карьера'
-
-    class Meta():
-        verbose_name = u"Глина"
-        verbose_name_plural = u"Глины"
-        ordering = ('datetime',)
-
 clay_positions = (
     (1,u'1 позиция'),
     (2,u'2 позиция'),
     (3,u'3 позиция'),
     (4,u'4 позиция'),
     (5,u'5 позиция'),
-    (6,u'Белая глина'),
+    (6,u'Конвейер'),
+    (7,u'Карьер'),
+    (8,u'Белая глина'),
+    (9,u'Песок'),
 )
 
-class StoredClay(models.Model,ShiftMixin,UrlMixin):
+class Matherial(models.Model,ShiftMixin,UrlMixin):
     """
     Сущность для хранения информации о глине находящейся на складе.
     """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
+    datetime = models.DateTimeField(u'Время', default=datetime.datetime.now())
     position = models.IntegerField(u'Позиция',choices=clay_positions,default=1)
-    used = models.BooleanField(u'<abbr title="По этой позиции формовали?">Ф</abbr>',default=False)
     humidity = models.FloatField(u'Влаж.')
-    info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
-
-    def __unicode__(self):
-        if self.pk: return u'Глина от %s, с позиции %.0f %.2f' % (ru_date(self.datetime.date()),self.position,self.humidity)
-        else: return u'Новая проба глины со склада'
-
-    class Meta():
-        verbose_name = u"Глина по позициям"
-        verbose_name_plural = u"Глины по позициям"
-        ordering = ('datetime','-position')
-
-class Sand(models.Model,ShiftMixin,UrlMixin):
-    """
-    Сущность для хранения данных о доставленном песке.
-    """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
-    humidity = models.FloatField(u'Влаж.')
+    sand = models.FloatField(u'Песок',null=True,blank=True)
+    inclusion = models.FloatField(u'Включ.',null=True,blank=True)
+    dust = models.FloatField(u'Пылев.',null=True,blank=True)
     particle_size = models.FloatField(u'<abbr title=Гран. состав>ГС</abbr>',null=True,blank=True)
     module_size = models.FloatField(u'<abbr title="Модуль крупности">МК</abbr>',null=True, blank=True)
     dirt = models.TextField(u'Включения',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    def css(self):
+        if self.position < 6:
+            return 'success'
+        elif self.position == 7:
+            return 'error'
+        elif self.position == 6:
+            return 'warning'
+        elif self.position == 9:
+            return 'info'
+        return ''
+        
+
     def __unicode__(self):
-        if self.pk: return u'Проба песка от %s' % ru_date(self.datetime)
-        else: return u'Новая проба песка'
+        name = self.get_position_display()
+        if self.position < 6:
+            name = u'%sи' % name[:-1]
+            # name[-1]=u'и'
+        if self.position < 8:
+            name = u'Глина с %s' % name.lower()
+            if self.position > 5:
+                name+=u'a'
+        if self.pk: return u'%s от %s' % (name,ru_date(self.datetime.date()))
+        else: return u'Новая %s' % name.lower()
 
-    class Meta:
-        verbose_name = u"Песок"
-        verbose_name_plural = u"Песка"
-        ordering = ('datetime',)
-
+    class Meta():
+        verbose_name = u"Сырьё"
+        verbose_name_plural = u"Сырьё"
+        ordering = ('datetime','-position')
 
 width_c = (
     (0.8,u'Евро'),
@@ -149,18 +127,17 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     """
     Сущность хранит в себе данные лабораторного анализа образца свежесформнованного бруса.
     """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
+    datetime = models.DateTimeField(u'Время', default=datetime.datetime.now())
     cavitation = models.IntegerField(u"Пустот.", choices=cavitation_c, default=0)
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
     tts = models.CharField(u'ТТС',max_length=20)
-    size = models.CharField(u'Размеры, мм',max_length=20)
+    size = models.CharField(u'Размеры, мм',max_length=20,null=True,blank=True)
     humidity = models.FloatField(u'Влаж.')
-    weight = models.FloatField(u'Масса')
-    temperature = models.FloatField(u'Темп.')
-    sand = models.FloatField(u'Песок')
-    humidity_transporter = models.FloatField(u'<abbr title="Влажность с конвейера, %">ВсК</abbr>',null=True)
+    weight = models.FloatField(u'Масса',null=True,blank=True)
+    temperature = models.FloatField(u'Темп.',null=True,blank=True)
+    sand = models.FloatField(u'Песок',null=True,blank=True)
 
     poke_left = models.CommaSeparatedIntegerField(u'Тычок левый',max_length=300)
     poke_right = models.CommaSeparatedIntegerField(u'Тычок правый',max_length=300)
@@ -184,7 +161,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     """
     Сущность хранит в себе данные лабораторного анализа образца полуфабриката из накопителя, перед входом с сушку.
     """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
+    datetime = models.DateTimeField(u'Время', default=datetime.datetime.now())
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
@@ -211,7 +188,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     """
     Сущность хранит в себе данные лабораторного анализа образка взятого из сушки.
     """
-    datetime = models.DateTimeField(u'Дата и время', default=datetime.datetime.now())
+    datetime = models.DateTimeField(u'Время', default=datetime.datetime.now())
 
     cavitation = models.PositiveIntegerField(u"Пустот.", choices=cavitation_c, default=cavitation_c[0][0])
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
@@ -221,10 +198,10 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     size = models.CharField(u'Размер',max_length=20)
     humidity = models.FloatField(u'Влаж.')
     weight = models.FloatField(u'Масса')
-    shrink = models.FloatField(u'<attr title="Усадка, %">Усдк</attr>')
+    shrink = models.FloatField(u'<attr title="Усадка, %">&Delta;L</attr>')
     path = models.IntegerField(u'Путь')
     position = models.IntegerField(u'Поз.')
-    cause = models.ManyToManyField('lab.Cause',verbose_name=u'Причина брака',null=True,blank=True,limit_choices_to = {'type':'half'})
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'<attr title="Дефекты">Деф</attr>',null=True,blank=True,limit_choices_to = {'type':'half'})
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
@@ -241,7 +218,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     class Meta():
         verbose_name = u"Полуфабрикат"
         verbose_name_plural = u"Полуфабриката"
-        ordering = ('datetime','-path','-position')
+        ordering = ('datetime','-path','position')
 
 class WaterAbsorption(models.Model,UrlMixin):
     """

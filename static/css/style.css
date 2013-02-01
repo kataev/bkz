@@ -13,6 +13,7 @@ body {
 .popover .popover-content {margin-bottom:0;padding: 2px; text-align: center;}
 form.filter label {display: none}
 
+.controls ul {margin: 0}
 table .help-inline {float: right}
 #parts .control-group {margin: 0;padding: 0}
 #parts .brickselect {margin: 0;}
@@ -26,6 +27,7 @@ table .help-inline {float: right}
 #brickselect tr:hover td {border-bottom: 1px #333333 solid}
 
 #sortings a.btn-mini {padding: 0px 6px;border: none;margin-left: 2px}
+.counter ul.dropdown-menu {padding: 5px 10px}
 
 ul#opers {list-style: decimal;list-style-position: inside;}
 div.control-group.DELETE label {color: #DA4F49}
@@ -103,7 +105,6 @@ fieldset table textarea, fieldset table select
     margin: 0;
     height: 30px;
 }
-fieldset.StoredClay {float:right;}
 #tests fieldset table input[name*='test']{width: 52px;}
 #tests fieldset table input[name*='brocken']{width: 60px;}
 #tests fieldset table input[name*='amount']{width: 70px;}
@@ -118,17 +119,20 @@ table input::-webkit-inner-spin-button
 { -webkit-appearance:none; margin: 0; }
 
 
-.tests .pressure table, .tests .flexion table {margin-right: auto;margin-left: auto;}
-.tests .pressure input[name*='tto']{width: 52px;text-align: center;}
-.tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
-.tests input[name*='row']{width: 32px;text-align: center;}
-table  input[name*='-size']{width: 145px !important;text-align: center;}
-.tests input[name*='area']{width: 58px;text-align: center;}
-.tests input[name*='readings']{width: 52px;text-align: center;}
-.tests input[name*='value']{width: 52px;}
 input[name*='pf']{width: 52px;}
 input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
+fieldset table tr td input[name*='-size']{width: 105px; text-align: center;}
+
+fieldset table {margin-right: auto;margin-left: auto;}
+.tests .pressure input[name*='-size']{width: 145px !important; text-align: center;}
+.tests .pressure input[name*='tto']{width: 52px;text-align: center;}
+.tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
+.tests input[name*='row']{width: 32px;text-align: center;}
+
+.tests input[name*='area']{width: 58px;text-align: center;}
+.tests input[name*='readings']{width: 52px;text-align: center;}
+.tests input[name*='value']{width: 52px;}
 
 #warren input[name*="factory"][name*="number"] {width:46px;}
 #warren label, #parts label {display: none}
@@ -145,6 +149,7 @@ input[name*='chamfer']{width: 52px;}
         -webkit-appearance:none !important;
     }
 
+#journal table input[type="date"]{display: none}
 #journal input {padding: 4px 6px }
 #journal input[type='number'] { width:42px; text-align: center}
 #journal input[name*="tts"] {width:40px;}
@@ -155,7 +160,7 @@ input[name*='chamfer']{width: 52px;}
 #journal input[name*="-sand"] {width:50px;}
 #journal input[name*="inclusion"] {width:50px;}
 #journal input[name*="dust"] {width:50px;}
-#journal .Sand textarea {width:66px;}
+#journal textarea {width:66px;}
 #journal input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
 #journal input[name*="datetime_"][type='time'] {width:54px;overflow: hidden;white-space: normal}
 #journal .input-append {margin: 0}
@@ -164,11 +169,10 @@ input[name*='chamfer']{width: 52px;}
 #journal select[name*='color'] { width:90px;}
 #journal select[name*='width'] { width:80px;}
 #journal select[name*='path'] { width:90px;}
-#journal .cause a:hover {text-decoration: none}
 
 #journal input[name*='path'],#journal input[name*='position'] { width:32px;text-align: center;}
 
-
+.counter a:hover {text-decoration: none}
 form fieldset.Batch h3 { text-align: center}
 form fieldset.Batch div.limit label.control-label {width: 100px;overflow: hidden;}
 form fieldset.Batch div.limit .controls {margin-left: 110px}

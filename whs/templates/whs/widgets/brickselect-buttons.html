@@ -1,14 +1,14 @@
 <form accept-chartset='utf-8' id='brickselect-buttons'>
 <ul class="nav nav-pills">
     {% for item in brick_menu %}
-        <li class="dropdown">
+        <li class="dropdown counter">
             <a href="#{{ item.name }}" class="dropdown-toggle" role='button' data-toggle="dropdown">
                 <span class="label">0</span> {{ item.verbose_name }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu {{ item.name }}" role='menu'>
                 {% for k,v in item.items %}
                     <li>
-                        <label class="radio {{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>
+                        <label class="{{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>
                             {{ v }}
                         </label>
                     </li>

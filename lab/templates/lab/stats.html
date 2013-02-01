@@ -38,7 +38,7 @@
                 {{ form|delta:'del' }}
                 {{ form|avg:'del' }}
                 {% for func in functions %}
-                <tr>
+                <tr >
                     {% for field in factory.empty_form.visible_fields %}
                     {% with n=func|add:' '|add:field.name %}
                         {% if forloop.first %}
@@ -71,11 +71,7 @@
             {% endif %}
 
             {% if form.instance.pk %}
-                {% if factory.model|class_name == 'StoredClay' and form.instance.used %}
-                    <tr class='success'>
-                {% else %}
-                    <tr>
-                {% endif %}
+                <tr class='{{ form.instance.css }}'>
                     {% for field in form.visible_fields %}
                         {% if forloop.first %}
                             <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>

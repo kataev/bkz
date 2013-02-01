@@ -43,50 +43,26 @@ class PressureInput(FloatInput):
 class PopUpCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
     pass
 
-class ClayForm(BootstrapMixin,forms.ModelForm):
+
+
+class MatherialForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        model = Clay
         exclude = (u'info',)
+        model = Matherial
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                     'humidity':FloatInput(attrs={'autocomplete':'off'}),
                     'sand':FloatInput(attrs={'autocomplete':'off'}),
                     'inclusion':FloatInput(attrs={'autocomplete':'off'}),
                     'dust':FloatInput(attrs={'autocomplete':'off'}),
+                    'particle_size':FloatInput(attrs={'autocomplete':'off'}),
+                    'module_size':FloatInput(attrs={'autocomplete':'off'}),
         }
 
-ClayFactory = modelformset_factory(Clay,form=ClayForm,extra=1)
-ClayFactory.caption = u'Глина из карьера'
-ClayFactory.css_class = 'span7'
-ClayFactory.label_style = {}
+MatherialFactory = modelformset_factory(Matherial,form=MatherialForm,extra=2)
+MatherialFactory.caption = u'Сырьё'
+MatherialFactory.css_class = 'span12'
+MatherialFactory.width = {}
 
-class StoredClayForm(BootstrapMixin,forms.ModelForm):
-    class Meta:
-        exclude = (u'info',)
-        model = StoredClay
-        widgets = {'datetime':SplitDateTimeHTML5Widget,
-                    'humidity':FloatInput(attrs={'autocomplete':'off'}),
-        }
-
-StoredClayFactory = modelformset_factory(StoredClay,form=StoredClayForm,extra=5,max_num=6)
-StoredClayFactory.caption = u'Глина по позициям'
-StoredClayFactory.css_class = 'span5'
-StoredClayFactory.width = {}
-
-class SandForm(BootstrapMixin,forms.ModelForm):
-    class Meta:
-        exclude = (u'info',)
-        model = Sand
-        widgets = {
-                'datetime':SplitDateTimeHTML5Widget,
-                'humidity':FloatInput(attrs={'autocomplete':'off'}),
-                'particle_size':FloatInput(attrs={'autocomplete':'off'}),
-                'module_size':FloatInput(attrs={'autocomplete':'off'}),
-                }
-
-SandFactory = modelformset_factory(Sand,form=SandForm,extra=1)
-SandFactory.caption = u'Песок'
-SandFactory.css_class = 'span6'
-SandFactory.width = {}
 
 class BarForm(BootstrapMixin,forms.ModelForm):
     class Meta:
@@ -102,7 +78,7 @@ class BarForm(BootstrapMixin,forms.ModelForm):
         }
 BarFactory = modelformset_factory(Bar,form=BarForm,extra=1)
 BarFactory.caption = u'Формовка'
-BarFactory.css_class = 'span10'
+BarFactory.css_class = 'span6'
 BarFactory.width = {}
 
 
@@ -120,7 +96,7 @@ class RawForm(BootstrapMixin,forms.ModelForm):
 
 RawFactory = modelformset_factory(Raw,form=RawForm,extra=1)
 RawFactory.caption = u'Накопитель'
-RawFactory.css_class = 'span9'
+RawFactory.css_class = 'span6'
 RawFactory.width = {}
 
 
@@ -138,9 +114,9 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
                     'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),
         }
 
-HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=4)
+HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=8)
 HalfFactory.caption = u'Полуфабрикат'
-HalfFactory.css_class = 'span9'
+HalfFactory.css_class = 'span12'
 HalfFactory.width = {}
 
 class WaterAbsorptionForm(BootstrapMixin,forms.ModelForm):
@@ -315,9 +291,7 @@ PartAddFormSet = modelformset_factory(Part,form=PartAddForm, extra=0)
 
 
 model_c = (
-    ('Clay',u'Глина из карьера'),
-    ('StoredClay',u'Глина по позициям'),
-    ('Sand',u'Песок'),
+    ('Matherial',u'Глина по позициям'),
     ('Bar',u'Формовка'),
     ('Raw',u'Сырец'),
     ('Half',u'Полуфабрикат'),
