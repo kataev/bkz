@@ -35,6 +35,14 @@
                 </tr>
             </thead>
             <tfoot>
+                <tr>
+                    {% for field in factory.empty_form.visible_fields %}
+                        {% if field.name in 'cavitation color width' %}
+                        {% else %}
+                        <th>{{ field.label|safe }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
                 {{ form|delta:'del' }}
                 {{ form|avg:'del' }}
                 {% for func in functions %}
@@ -46,7 +54,7 @@
                         {% else %}
                             {% if field.name in 'cavitation color width' %}
                             {% else %}
-                                {% if field.name in 'tts path position size' %}<th></th>
+                                {% if field.name in 'tts path position size cause' %}<th></th>
                                 {% else %}
                                 {% with val=factory.queryset|func_pluck:n %} 
                                 <th>{{ val|default:'-----' }}</th>

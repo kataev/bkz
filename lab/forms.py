@@ -46,8 +46,25 @@ class PopUpCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
 
 
 class MatherialForm(BootstrapMixin,forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MatherialForm, self).__init__(*args,**kwargs)
+        position = (self.instance.position or self.initial.get('position'))
+        if position < 8:
+            self.fields['position'].choices = self.fields['position'].choices[:8]
+            if 'sand' in self.fields.keys():
+                self.fields['sand'].widget = forms.HiddenInput(attrs={})
+            if 'dust' in self.fields.keys():
+                self.fields['dust'].widget = forms.HiddenInput(attrs={})
+                self.fields['particle_size'].widget = forms.HiddenInput(attrs={})
+                self.fields['module_size'].widget = forms.HiddenInput(attrs={})
+        elif position < 8:
+            self.fields['position'].choices = self.fields['position'].choices[position:position+1]
+        if position == 8:
+            self.fields['module_size'].label = u'Глинистые'
+            self.fields['dust'].label = u'Пластичность'
+            self.fields['particle_size'].label = u'Пылеватые'
+            self.fields['position'].widget = forms.HiddenInput(attrs={})
     class Meta:
-        exclude = (u'info',)
         model = Matherial
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                     'humidity':FloatInput(attrs={'autocomplete':'off'}),
@@ -58,7 +75,31 @@ class MatherialForm(BootstrapMixin,forms.ModelForm):
                     'module_size':FloatInput(attrs={'autocomplete':'off'}),
         }
 
-MatherialFactory = modelformset_factory(Matherial,form=MatherialForm,extra=2)
+
+QuarryFactory = modelformset_factory(Matherial,form=MatherialForm,extra=3,max_num=3)
+QuarryFactory.caption = u'Карьер'
+QuarryFactory.css_class = 'span4'
+QuarryFactory.width = {}
+
+class ClayForm(MatherialForm):
+    class Meta(MatherialForm.Meta):
+        fields = ('datetime','position','humidity')
+
+
+ClayFactory = modelformset_factory(Matherial,form=ClayForm,extra=3,max_num=10)
+ClayFactory.caption = u'Склад'
+ClayFactory.css_class = 'span4'
+ClayFactory.width = {}
+
+class SandForm(MatherialForm):
+    def __init__(self, *args, **kwargs):
+        super(SandForm, self).__init__(*args,**kwargs)
+        self.css_class = 'span2 form-horizontal less Sand'
+    class Meta(MatherialForm.Meta):
+        exclude = ('position','info')
+
+
+MatherialFactory = modelformset_factory(Matherial,form=MatherialForm,extra=2,max_num=10)
 MatherialFactory.caption = u'Сырьё'
 MatherialFactory.css_class = 'span12'
 MatherialFactory.width = {}
@@ -76,7 +117,7 @@ class BarForm(BootstrapMixin,forms.ModelForm):
                 'sand':FloatInput,
                 'humidity_transporter':FloatInput,
         }
-BarFactory = modelformset_factory(Bar,form=BarForm,extra=1)
+BarFactory = modelformset_factory(Bar,form=BarForm,extra=2,max_num=4)
 BarFactory.caption = u'Формовка'
 BarFactory.css_class = 'span6'
 BarFactory.width = {}
@@ -116,7 +157,7 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
 
 HalfFactory = modelformset_factory(Half,form=HalfForm,extra=4,max_num=8)
 HalfFactory.caption = u'Полуфабрикат'
-HalfFactory.css_class = 'span12'
+HalfFactory.css_class = 'span6'
 HalfFactory.width = {}
 
 class WaterAbsorptionForm(BootstrapMixin,forms.ModelForm):
@@ -150,7 +191,7 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
-            'weight':FloatInput(),
+            'weight':NumberInput(),
             'flexion':FlexionInput(),
             'pressure':PressureInput(),
             'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),

@@ -45,6 +45,7 @@ div.controls ul {list-style: none}
 .nav.nav-list .create a {background-color: #468847;color:white;text-shadow: 0 -1px 0 rgba(0,0,0,0.2)}
 .badge-round { padding:  1px 3px 2px;}
 input[name*="amount"] {background: #adff2f;}
+input[name*="humidity"] {background: #bbd8e9;}
 input[type='date'] {width:auto}
 input[name*="datetime_"][type='date'] {width:90px;margin-right: 14px}
 input[name*="datetime_"][type='time'] {width:auto;}
@@ -149,16 +150,19 @@ fieldset table {margin-right: auto;margin-left: auto;}
         -webkit-appearance:none !important;
     }
 
-#journal table input[type="date"]{display: none}
+#journal .Sand .control-group {margin-bottom: 5px;}
+#journal fieldset input[type="date"]{display: none}
 #journal input {padding: 4px 6px }
 #journal input[type='number'] { width:42px; text-align: center}
 #journal input[name*="tts"] {width:40px;}
-#journal input[name*="weight"] {width:60px;}
-#journal input[name*="weight"] {width:60px;}
-#journal input[name*="humidity"] {width:60px;}
-#journal input[name*="temperature"] {width:60px;}
+#journal input[name*="weight"] {width:50px;}
+#journal input[name*="humidity"] {width:50px;}
+#journal input[name*="temperature"] {width:45px;}
 #journal input[name*="-sand"] {width:50px;}
 #journal input[name*="inclusion"] {width:50px;}
+#journal input[name*="particle_size"] {width:50px;}
+#journal input[name*="module_size"] {width:50px;}
+
 #journal input[name*="dust"] {width:50px;}
 #journal textarea {width:66px;}
 #journal input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
@@ -265,7 +269,8 @@ i.icon-zoom-in.zoom {background-position:-360px 0;}
 
 @media print {
     button, input[type='button'], input[type='submit'], a.btn {display: none !important; }
-    .dateform {display: none !important}
+
+    .fake,.form-actions,.dateform {display: none !important}
     input[type="text"],input[type="number"],input[type="date"],input[type="time"], textarea, select {
         border:none !important;
         border-size:0 !important;

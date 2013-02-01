@@ -132,33 +132,38 @@ def batch_tests_print(request,pk):
     return render(request,'lab/batch-tests-print.html',{'tests':[pressure,flexion],'batch':batch})
 
 
-def journal(request,date=None):
-    f = DateForm(request.GET or None)
-    if f.is_valid():
-        date = f.cleaned_data.get('date',datetime.date.today())
+def journal(request):
+    dateform = DateForm(request.GET or None)
+    if dateform.is_valid():
+        date = dateform.cleaned_data.get('date',datetime.date.today())
     else:
         date = datetime.date.today()
     date = datetime.datetime.combine(date,datetime.time(8))
-    filter = dict(datetime__range=(date,date+datetime.timedelta(hours=24)))
-    initial = {'datetime':date}
-    matherial = MatherialFactory(request.POST or None,queryset=Matherial.objects.filter(**filter),prefix='matherial',initial=[initial,])
-    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter),prefix='bar',initial=[initial,])
-    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter),prefix='raw',initial=[initial,])
-    half_initial = [{'position':16,'path':5,'datetime':date},{'position':25,'path':5,'datetime':date},
-                    {'position':16,'path':7,'datetime':date},{'position':25,'path':7,'datetime':date}]
-    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter),prefix='half',initial=half_initial)
-    factory = [half, raw, bar, matherial]
+    filter = dict(datetime__range=(date,date+datetime.timedelta(hours=23,minutes=59)))
+    initial={'datetime':date}
+    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter), prefix='bar',initial=[initial,]*BarFactory.extra)
+    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter), prefix='raw',initial=[initial,]*RawFactory.extra)
 
-    if request.method == 'POST':
+    quarry = QuarryFactory(request.POST or None, queryset=Matherial.objects.filter(**filter).filter(position=8), prefix='quarry',initial=[dict(initial,position=8),]*QuarryFactory.extra)
+    clay = ClayFactory(request.POST or None, queryset=Matherial.objects.filter(**filter).filter(position__lte=7), prefix='clay',initial=[dict(initial),]*ClayFactory.extra)
+    # sand = SandForm(request.POST or None, instance=Matherial.objects.filter(**filter).filter(position=9).get(), prefix='clay',initial=dict(initial,position=9))
+
+
+    initial = [dict(initial,position=position,path=path) for path,position in zip([5,5,7,7],[16,25,16,25])]
+    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter), prefix='half',initial=initial)
+    # sand = SandForm(request.POST or None,instance=(Matherial.objects.filter(**filter).filter(position=9) or [None,])[0],initial={'position':9},prefix='sand')
+
+
+    factory = [half, raw, bar, clay, quarry]
+    if request.method == 'POST' and all([f.is_valid() for f in factory]):
         for f in factory:
-            if f.is_valid():
-                f.save()
-            else:
-                print f.prefix,f.errors
-        if all([f.is_valid() for f in factory]):
-            return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
+            f.save()
+        return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
+    if not all([f.is_valid() for f in factory]):
+        for f in factory:
+            print f.prefix,f.errors
     add = True
-    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':f,'add':add})
+    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':dateform,'add':add})
 
 def slice(request):
     datefilter = YearMonthFilter(request.GET or None,model=Batch)
