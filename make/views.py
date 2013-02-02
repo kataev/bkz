@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from django.shortcuts import get_object_or_404, render, redirect
-from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 from bkz.make.models import Forming,Warren
-from bkz.make.forms import WarrenFactory,WarrenTTOFactory
-from bkz.whs.forms import DateForm,YearMonthFilter
-from bkz.lab.models import *
+from bkz.make.forms import FormingFactory, WarrenFactory
+from bkz.whs.forms import DateForm
+
 
 def index(request):
     dateform = DateForm(request.GET or None)
@@ -16,8 +16,16 @@ def index(request):
         date = dateform.cleaned_data.get('date',datetime.date.today())
     else:
         date = datetime.date.today()
-    queryset = Batch.objects.filter(date=date)
-    return render(request,'make/index.html')
+    filter = {'date':date}
+    initial={'date':date}
+    factory = FormingFactory(request.POST or None,initial=[initial,]*FormingFactory.extra,queryset=Forming.objects.filter(**filter),prefix='warren')
+    if request.method == 'POST' and factory.is_valid():
+        factory.save()
+        return redirect(reverse('make:index')+'?date=%s' % date.isoformat())
+    return render(request,'make/index.html',{'factory':factory,'date':date,'dateform':dateform})
+
+
+
 
 def warren(request):
     queryset = Warren.objects.filter(source__isnull=True).prefetch_related('consumer')
@@ -39,5 +47,5 @@ def warren(request):
                 if form.factory.is_valid():
                     form.factory.save()
         if all([form.is_valid() for form in factory]) and all([form.factory.is_valid() for form in factory]):
-            return redirect(reverse_lazy('make:warren')+'?date=%s' % date.isoformat())
+            return redirect(reverse('make:warren')+'?date=%s' % date.isoformat())
     return render(request,'make/warren.html',dict(factory=factory,date=date,dateform=dateform))

@@ -120,13 +120,12 @@
             <tbody>
     		{% for form in f %}
             {% if form.instance.pk or add %}
-                
     			<tr id='{{ form.prefix }}' class='{{ form.instance.css }} {% if not form.instance.pk %}fake{% endif %}'>
     				{% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">
                             <span class='add-on'>
-                                <a href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                                <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
                             </span>
                             {% for f in form.hidden_fields %}
                                 {{ f }}
@@ -167,11 +166,11 @@
 </div>
 {% if add %}
 <div class="form-actions">
-        <div class="container">
-            <button type="submit" class="btn btn-primary" form="form">
-                <i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-        </div>
+    <div class="container">
+        <button type="submit" class="btn btn-primary" form="form">
+            <i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
     </div>
+</div>
 {% endif %}
 {% endblock %}

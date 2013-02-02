@@ -8,7 +8,6 @@ from django.db import models
 from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
 from bkz.lab.utils import convert_tto,ShiftMixin
-from bkz.make.models import Warren,Forming,TTS
 
 slash_separated_float_list_re = re.compile('^([-+]?\d*\.|,?\d+[/\s]*)+$')
 validate_slash_separated_float_list = RegexValidator(slash_separated_float_list_re,u'Вводите числа разеделённые дробью','invalid')
@@ -139,7 +138,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
-    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
 
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -164,7 +163,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     temperature = models.FloatField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
 
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -194,7 +193,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey(TTS,verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
 
     @property
     def css(self):
@@ -337,12 +336,6 @@ class Batch(UrlMixin,models.Model):
     pct = models.FloatField(u'Пустотность приведенная к фактической',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
-    @property
-    def get_warren(self):
-        tto = self.get_tto
-        dr = (self.date - datetime.timedelta(days=5),self.date - datetime.timedelta(days=3))
-        return Warren.objects.order_by('-date','number').values_list('number','consumer__number').filter(source__isnull=True).filter(number__in=tto).filter(date__range=dr)
-
     def __unicode__(self):
         if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
         else: return u'Новая партия'
@@ -468,15 +461,7 @@ class Part(models.Model):
             return 'info'
         else:
             return 'error'
-    @property
-    def get_warren_tts(self):
-        q =  Warren.objects.order_by('-date','number')\
-                                .filter(date__lt=self.batch.date)\
-                                .filter(number__in=self.get_tto)[:len(self.get_tto)]
-        print q.query
-        return q
-
-
+    
     class Meta():
         verbose_name = u"Часть партии"
         verbose_name_plural = u"Часть партии"

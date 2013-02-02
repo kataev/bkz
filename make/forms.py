@@ -9,11 +9,22 @@ from bkz.whs.forms import DateInput,NumberInput,FloatInput
 class FormingForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Forming
-        widgets = {'date': DateInput,
-                    'temperature':FloatInput,
-                    'humidity':FloatInput,
+        widgets = { 'date': forms.HiddenInput(),
+                    'cavitation':forms.HiddenInput(),
+                    'width':forms.HiddenInput(),
+                    'color':forms.HiddenInput(),
+                    'size':forms.TextInput(attrs={'tabindex':-1}),
+                    'poke':forms.TextInput(attrs={'tabindex':-1}),
+                    'stratcher':forms.TextInput(attrs={'tabindex':-1}),
+                    'temperature':NumberInput(attrs={'tabindex':-1}),
+                    'humidity':FloatInput(attrs={'tabindex':-1}),
+                    'sand':FloatInput(attrs={'tabindex':-1}),
+                    'k':FloatInput(attrs={'tabindex':-1}),
+
+                    'density':FloatInput(),
                     'vacuum':FloatInput,
          }
+FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=26,max_num=30)         
 
 class WarrenForm(BootstrapMixin, forms.ModelForm):
     class Meta:

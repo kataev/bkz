@@ -5,18 +5,57 @@
 {% block title %}Производство{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
-    <div class="row page-header">
-        <div class="span9">
-            <h1>Производство <small>за {{ date|date:'j E Y, l' }}</small></h1>
-        </div>
-        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span3 dateform" style='margin-top:  10px;text-align:right'>
-            {{ dateform.date }}
-            <input type="submit" class="btn">
-        </form>
+    <div class="row">
+            <div class="span7">
+                <h1 class='datehead'>
+                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
+                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+                </h1>
+            </div>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
+                {{ dateform.date }}
+                <input type="submit" value='Показать' class="btn">
+            </form>
     </div>
-    <div class='span12'>
-        
-    </div>    
+    <form accept-chartset='utf-8' method="POST" id='form' class='row'>
+        {% csrf_token %}
+        {{ factory.management_object }}    
+        {{ factory.management_form }}  
+    <fieldset class='span12'>
+        <table>
+            <caption><h2>{{ factory.caption }}</h2></caption>
+            <thead>
+                <tr>
+                {% for field in factory.empty_form.visible_fields %}
+                    <th>{{ field.label|safe }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for form in factory %}
+                <tr id='{{ form.prefix }}' class='{{ form.instance.css }} {% if not form.instance.pk %}fake{% endif %}'>
+                    {% for f in form.visible_fields %}
+                        {% if forloop.first %}
+                        <td class="input-prepend">
+                            <span class='add-on'>
+                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                            </span>
+                            {% for f in form.hidden_fields %}
+                                {{ f }}
+                            {% endfor %}
+                            {{ f }}
+                        </td>
+                        {% else %}
+                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </fieldset>    
+</form>
 </div>
 <div class="form-actions">
     <div class="container">
