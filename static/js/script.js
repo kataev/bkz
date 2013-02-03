@@ -282,8 +282,8 @@ $(function(){
         $('#'+id.replace('size','readings')).change()
     }
     $("input[name*='size'][type='text']").not("input[name*='pressure']").mask('999 x 999 x 99')
-    $(".tests input[name*='pressure'][type='text']").mask('999.9 x 999.9 x 99.9').change(readings)
-    $(".tests input[name*='flexion'][type='text']").change(readings)
+    $(".pressure input[name*='size'][type='text']").mask('999.9 x 999.9 x 99.9').change(readings)
+    $(".flexion input[name*='size'][type='text']").change(readings)
     
 
     $("input[name*='readings']").change(function(e){

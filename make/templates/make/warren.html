@@ -18,46 +18,56 @@
     </div>
     <form accept-chartset='utf-8' method="POST" id='form' class='row less'>
         {% csrf_token %}
-        {% for form in factory %}
-        <fieldset class='span2'>
         {{ factory.management_object }}
         {{ factory.management_form }}
-        <table class='table table-bordered '>
-        <tfoot>
-            <tr>
-                <th>№ ТТС</th>
-                <th>Кол-во</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            
-            <tr>
-                <td colspan="2"> 
-                    {% for f in form.hidden_fields %}
-                        {{ f }}
-                    {% endfor %}
-                    {% for f in form.visible_fields %}
-                        {{ f }}
-                    {% endfor %}
-                    
-                    {{ form.factory.management_object }}
-                    {{ form.factory.management_form }}
-                </td>
-            </tr>
-                {% for form in form.factory %}
+        {% for form in factory %}
+        <fieldset class='span3'>
+        <table>
+            <thead>
                 <tr>
-                    {% for f in form.hidden_fields %}
-                        {{ f }}
-                    {% endfor %}
-                    {% for f in form.visible_fields %}
-                        <td>{{ f }}</td>
+                    <th>№ ТТО</th>
+                    <th>ТТС</th>
+                    <th>Путь</th>
+                    <th>% Брака</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <th>{{ form.number }}
+                    {% for field in form.hidden_fields %} {{ field }} {% endfor %}
+                    {{ form.tts.management_object }}
+                    {{ form.tts.management_form }}
+                    {{ form.errors }}
+                </th>
+                {% for f in form.tts %}
+                    {% if not forloop.first %} <tr><th>{{ f.errors }}</th> {% endif %}
+                    {% for field in f.visible_fields %}
+                    {% if field.name == 'cause' %}
+                        <td class="input-append dropdown counter">
+                            {% if forloop.first %}{% for field in form.hidden_fields %} {{ field }} {% endfor %}{% endif %}
+                            <ul class="dropdown-menu" role='menu'>
+                            {{ field|removetags:'ul' }}
+                            </ul>
+                            <a href="#{{ field.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
+                                <span class='label {% if field.value|length %}label-warning{% endif %}'>
+                                    {{ field.value|length }}
+                                </span> <b class="caret"></b>
+                            </a>
+                            
+                        </td>
+                    {% else %}
+                        <td>
+                            {% if forloop.first %}{% for field in form.hidden_fields %} {{ field }} {% endfor %}{% endif %}
+                            {{ field }}
+                        </td>
+                    {% endif %}
                     {% endfor %}
                 </tr>
                 {% endfor %}
         </tbody>
-    </table>
-    </fieldset>
-    {% endfor %}    
+        </table>
+        </fieldset>
+        {% endfor %}    
     </form>
     <div class='alert alert-info'>
         Для удобного переключения между полями используйте кнопку Tab

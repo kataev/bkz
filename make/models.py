@@ -6,7 +6,6 @@ from django.db import models
 from bkz.utils import UrlMixin,ru_date
 from bkz.whs.constants import cavitation_c,color_c,get_name
 
-
 class Forming(models.Model,UrlMixin):
     """
     Хранит в себе информацию о формовании продукции. Отражается на журнал оператора пресса.
@@ -34,27 +33,49 @@ class Forming(models.Model,UrlMixin):
             return u'Формовка %s от %s' % (self.get_name,ru_date(self.date))
         else:
             return u'Новая формовка'
+    @property
+    def lab(self):
+        return list(self.half.all()) + list(self.raw.all()) + list(self.bar.all())
 
     class Meta:
         verbose_name=u'Формовка'
         verbose_name_plural=u'Формовка'
+        unique_together = ('date','tts')
+        ordering = ('date',)
 
 
 class Warren(models.Model,UrlMixin):
     """
     Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. Отражается на журнал оператора садочного коплекса
     """
-    timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     date = models.DateField(u'Дата', default=datetime.date.today(),null=True,blank=True)    
-    number = models.IntegerField(u'ТТС')
+    number = models.CharField(u'ТТС',max_length=5)
+    path = models.IntegerField(u'Путь',null=True,blank=True)
     source = models.ForeignKey('self',verbose_name=u'ТТС',related_name='consumer',null=True,blank=True)
-    amount = models.CharField(u'Кол-во',max_length=20)
-    tts = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens')
+    brocken = models.IntegerField(u'% брака',default=0)
+    cause = models.ManyToManyField('lab.Cause',verbose_name=u'<attr title="Причина брака">П.Б.</attr>',null=True,blank=True,limit_choices_to = {'type':'warren'})
+
+    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens')
     part = models.ForeignKey('lab.Part',verbose_name=u'Партия',null=True,blank=True,related_name='warrens')
+
+    @property
+    def tts(self):
+        if self.source:
+            return ','.join(self.consumer.all().values_list('number'))
+        else:
+            return self.number
+
+    @property
+    def tto(self):
+        if self.source:
+            return self.number
+        else:
+            return self.source.number
+            
 
     def __unicode__(self):
         if self.pk:
-            return u'Садка от %s, c ТТC № %d ' % (ru_date(self.date),self.number)
+            return u'Садка от %s, c ТТC № %s ' % (ru_date(self.date),self.number)
         else:
             return u'Новая садка'
 

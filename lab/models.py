@@ -40,6 +40,7 @@ add_introspection_rules([],["^bkz\.lab\.models\.SlashSeparatedFloatField","^bkz\
 type_c = (
     ('part','Для партий'),
     ('half','Для полуфабриката'),
+    ('warren','Для садки'),
     )
 
 class Cause(UrlMixin,models.Model):
@@ -138,7 +139,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bar')
 
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -163,7 +164,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     temperature = models.FloatField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raw')
 
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -193,14 +194,14 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='half')
 
     @property
     def css(self):
         return u'path-%d position-%d' % (self.path or 0,self.position or 0)
 
     def __unicode__(self):
-        if self.pk: return u'Полуфабрикат от %s с поз №%d, путь №%d' % (ru_date(self.datetime),self.position,self.path)
+        if self.pk: return u'Полуфабрикат от %s с поз №%d, путь №%d, ТТС № %s' % (ru_date(self.datetime),self.position,self.path,self.tts)
         else: return u'Новый полуфабрикат'
 
     class Meta():

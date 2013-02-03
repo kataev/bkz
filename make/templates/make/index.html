@@ -4,16 +4,16 @@
 {% endblock %}
 {% block title %}Формовка{% endblock %}
 {% block container %}
-<div class="container" id='journal'>
+<div class="container" id='forming'>
     <div class="row">
-            <div class="span7">
+            <div class="span8">
                 <h1 class='datehead'>
                     <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
                     Формовка <small>за {{ date|date:'j E Y, l' }}</small>
                     <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
                 </h1>
             </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
                 {{ dateform.date }}
                 <input type="submit" value='Показать' class="btn">
             </form>
@@ -45,6 +45,21 @@
                                 {{ f }}
                             {% endfor %}
                             {{ f }}
+                        </td>
+                        {% elif forloop.last and form.instance.pk and form.instance.lab %}
+                        <td>
+                            {{ f }}
+                        </td>
+                        <td>
+                            {% for l in form.instance.lab %}
+                                {% if l|class_name == 'Raw' %}
+                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-success {{ l.css }}'>Н</a>
+                                {% elif l|class_name == 'Half' %}
+                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-info {{ l.css }}'>ПФ-{{ l.position }}</a>
+                                {% elif l|class_name == 'Bar' %}
+                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-primary {{ l.css }}'>Б</a>
+                                {% endif %}
+                            {% endfor %}
                         </td>
                         {% else %}
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>

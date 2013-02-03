@@ -31,6 +31,12 @@ def form_name(value):
 def model_verbose_name(obj):
     return obj._meta.verbose_name
 
+@register.filter(name='model_verbose_name_initial')
+def model_verbose_name_initial(obj):
+    vn = obj._meta.verbose_name.split(' ')
+
+    return 
+
 @register.filter(name='model_verbose_name_plural')
 def model_verbose_name_plural(obj):
     if not obj: return ''

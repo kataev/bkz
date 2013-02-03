@@ -72,7 +72,7 @@
                 </tr>
                 {% endwith %}
                 <tr>
-                    <th><input type='text' value='Среднее:' disabled='disabled' style='width:81px;border-radius: 4px 0 0 4px;text-align:right'></th>
+                    <th><input type='text' value='Среднее:' disabled='disabled' style='width:81px;border-radius: 4px 0 0 4px;text-align:right;float:right;'></th>
                     <td>
                         <input type='text' value='{{ f.queryset|func_pluck:'avg humidity'}}' disabled='disabled' style='width:50px'>
                     </td>

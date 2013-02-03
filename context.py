@@ -38,7 +38,7 @@ nav = dict(
     ),
     make = (
         ('make:index', 'icon-tasks', u'Производство'),
-        ('make:warren', 'icon-resize-full', u'Садка за день'),
+        ('make:warren', 'icon-resize-full', u'Садка'),
         )
 )
 menu = dict(

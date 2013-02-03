@@ -33,7 +33,6 @@ class BatchUpdateView(UpdateView):
     model=Batch
     def form_valid(self, form):
         context = self.get_context_data(form=form)
-        print 'ololo'
         self.object = form.save(commit=False)
         for part in self.parts:
             if part.is_valid() and part.has_changed():

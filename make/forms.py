@@ -5,6 +5,7 @@ from bkz.bootstrap.forms import BootstrapMixin
 
 from bkz.make.models import Forming, Warren
 from bkz.whs.forms import DateInput,NumberInput,FloatInput
+from bkz.lab.forms import PopUpCheckboxSelectMultiple
 
 class FormingForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -13,13 +14,13 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
                     'cavitation':forms.HiddenInput(),
                     'width':forms.HiddenInput(),
                     'color':forms.HiddenInput(),
-                    'size':forms.TextInput(attrs={'tabindex':-1}),
-                    'poke':forms.TextInput(attrs={'tabindex':-1}),
-                    'stratcher':forms.TextInput(attrs={'tabindex':-1}),
-                    'temperature':NumberInput(attrs={'tabindex':-1}),
-                    'humidity':FloatInput(attrs={'tabindex':-1}),
-                    'sand':FloatInput(attrs={'tabindex':-1}),
-                    'k':FloatInput(attrs={'tabindex':-1}),
+                    'size':forms.TextInput(attrs={'tabindex':2}),
+                    'poke':forms.TextInput(attrs={'tabindex':2}),
+                    'stratcher':forms.TextInput(attrs={'tabindex':2}),
+                    'temperature':NumberInput(attrs={'tabindex':2}),
+                    'humidity':FloatInput(attrs={'tabindex':2}),
+                    'sand':FloatInput(attrs={'tabindex':2}),
+                    'k':FloatInput(attrs={'tabindex':2}),
 
                     'density':FloatInput(),
                     'vacuum':FloatInput,
@@ -29,20 +30,22 @@ FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=26,max_num=
 class WarrenForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Warren
-        exclude = ('consumer','amount')
+        fields = ('number','date')
         widgets = {'date':forms.HiddenInput(),
-                    'source':forms.HiddenInput(),
-                    'number':NumberInput(attrs={'placeholder':u'№ ТТО'})
+                    'number':forms.TextInput(attrs={'tabindex':'2'})
                     }
         
 class WarrenTTOForm(BootstrapMixin, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(WarrenTTOForm, self).__init__(*args,**kwargs)
-        self['number'].label = u'№ ТТО'
+    class Meta:
+        model = Warren
+        exclude = ('consumer','part','forming')
+        widgets = {'date':forms.HiddenInput(),
+                    'number':forms.TextInput(attrs={'tabindex':'2'}),
+                    'path':NumberInput(attrs={'tabindex':'2'}),
+                    'brocken':NumberInput(attrs={'tabindex':'3'}),
+                    'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),
+                    }
 
-	class Meta:
-		model = Warren
-        # widgets = {'number':forms.TextInput(attrs={'placeholder':u'№ ТТC'})}
 
-WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=6,max_num=6)
-WarrenTTOFactory = inlineformset_factory(Warren, Warren, WarrenTTOForm, exclude=('date',) , extra=6, max_num=6,can_delete=False)
+WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=8,max_num=10)
+WarrenTTOFactory = inlineformset_factory(Warren, Warren, form=WarrenTTOForm, extra=4, max_num=5,can_delete=False)

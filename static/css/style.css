@@ -95,9 +95,12 @@ fieldset.Part div.info { background-color: #d9edf7; }
 fieldset table td {margin: 0;}
 input[type='time'] {padding-top: 2px}
 
-fieldset table input[type='date'], fieldset table input[type='time'],
-fieldset table input[type='number'], fieldset table input[type='text'],
-fieldset table textarea, fieldset table select
+fieldset table tr td input[type='date'], fieldset table tr td input[type='time'],
+fieldset table tr td input[type='number'], fieldset table tr td input[type='text'],
+fieldset table tr th input[type='date'], fieldset table tr th input[type='time'],
+fieldset table tr th input[type='number'], fieldset table tr th input[type='text'],
+fieldset table tr td textarea, fieldset table tr td select,
+fieldset table tr th textarea, fieldset table tr th select
 {
     width: 100%;
     box-sizing: border-box;
@@ -107,13 +110,13 @@ fieldset table textarea, fieldset table select
     margin: 0;
     height: 30px;
 }
-#tests fieldset table input[name*='test']{width: 52px;}
-#tests fieldset table input[name*='brocken']{width: 60px;}
-#tests fieldset table input[name*='amount']{width: 70px;}
-#tests fieldset table td.input-box {width:34px;}
-#tests fieldset table input[name*='flexion']{width: 100%;}
-#tests fieldset table input[name*='pressure']{width: 100%;}
-#tests fieldset table input[name*='limestone']{width: 117px;}
+fieldset table tr td input[name*='test']{width: 52px;}
+fieldset table tr td input[name*='brocken']{width: 60px;}
+fieldset table tr td input[name*='amount']{width: 70px;}
+fieldset table td.input-box {width:34px;}
+fieldset table tr td input[name*='flexion']{width: 100%;}
+fieldset table tr td input[name*='pressure']{width: 100%;}
+fieldset table tr td input[name*='limestone']{width: 117px;}
 [data-title='Ошибка']{border:red 1px dashed;}
 
 table input::-webkit-outer-spin-button,
@@ -126,7 +129,7 @@ input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
 fieldset table tr td input[name*='-size']{width: 105px; text-align: center;}
 
-fieldset table {margin-right: auto;margin-left: auto;}
+#journal fieldset table, #tests fieldset table {margin-right: auto;margin-left: auto;}
 .tests .pressure input[name*='-size']{width: 145px !important; text-align: center;}
 .tests .pressure input[name*='tto']{width: 52px;text-align: center;}
 .tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
@@ -136,46 +139,54 @@ fieldset table {margin-right: auto;margin-left: auto;}
 .tests input[name*='readings']{width: 52px;text-align: center;}
 .tests input[name*='value']{width: 52px;}
 
-#warren input[name*="factory"][name*="number"] {width:46px;}
-#warren label, #parts label {display: none}
-#warren tbody {border-bottom: 15px solid white}
+#parts label {display: none}
 
-.position-25 
-.position-16 
+#warren table > tbody:nth-child(odd) { background-color: #f9f9f9;}
 
-#warren table tr td:last-child input, #warren table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
-#journal table tr td:last-child input, #journal table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
-#journal table td {vertical-align: top ;}
-#journal table input::-webkit-calendar-picker-indicator {
+fieldset table tr td input[disabled] { cursor: inherit; }
+fieldset table tr td input[readonly] { cursor: inherit; }
+fieldset table tr td:last-child input, fieldset table tr td:last-child textarea {border-radius: 0 4px 4px 0;}
+fieldset table tr td {vertical-align: top ;}
+fieldset table tr td input::-webkit-calendar-picker-indicator {
         display: none;
         -webkit-appearance:none !important;
     }
 
-#journal .Sand .control-group {margin-bottom: 5px;}
-#journal fieldset input[type="date"]{display: none}
-#journal input {padding: 4px 6px }
-#journal input[type='number'] { width:42px; text-align: center}
-#journal input[name*="tts"] {width:40px;}
-#journal input[name*="weight"] {width:50px;}
-#journal input[name*="humidity"] {width:50px;}
-#journal input[name*="temperature"] {width:45px;}
-#journal input[name*="-sand"] {width:50px;}
-#journal input[name*="inclusion"] {width:50px;}
-#journal input[name*="particle_size"] {width:50px;}
-#journal input[name*="module_size"] {width:50px;}
+fieldset table .Sand .control-group {margin-bottom: 5px;}
+fieldset table fieldset input[type="date"]{display: none}
+fieldset table tr td input {padding: 4px 6px }
+fieldset table tr td input[type='number'] { text-align: center}
+fieldset table tr td input[name*="tts"] {width:40px;}
+fieldset table tr td input[name*="density"] {width:50px;}
+fieldset table tr td input[name*='path'] { width:32px;text-align: center;}
+fieldset table tr td input[name*='position'] { width:32px;text-align: center;}
+fieldset table tr td input[name*="vacuum"] {width:50px;}
+fieldset table tr td input[name*="weight"] {width:50px;}
+fieldset table tr td input[name*="humidity"] {width:50px;}
+fieldset table tr td input[name*="temperature"] {width:45px;}
+fieldset table tr td input[name*="-sand"] {width:50px;}
+fieldset table tr td input[name*="inclusion"] {width:50px;}
+fieldset table tr td input[name*="particle_size"] {width:50px;}
+fieldset table tr td input[name*="module_size"] {width:50px;}
+fieldset table tr td input[name*="poke"] {width:90px;}
+fieldset table tr td input[name*="stratcher"] {width:130px;}
+fieldset table tr td input[name*="dust"] {width:50px;}
+fieldset table tr td textarea {width:66px;}
+fieldset table tr td input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
+fieldset table tr td input[name*="datetime_"][type='time'] {width:54px;overflow: hidden;white-space: normal}
+fieldset table tr td.input-append {margin: 0}
+fieldset table tr td select {padding-left: 0;}
+fieldset table tr td select[name*='cavitation'] { width:80px;}
+fieldset table tr td select[name*='color'] { width:90px;}
+fieldset table tr td select[name*='width'] { width:80px;}
+fieldset table tr td select[name*='path'] { width:90px;}
 
-#journal input[name*="dust"] {width:50px;}
-#journal textarea {width:66px;}
-#journal input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
-#journal input[name*="datetime_"][type='time'] {width:54px;overflow: hidden;white-space: normal}
-#journal .input-append {margin: 0}
-#journal select {padding-left: 0;}
-#journal select[name*='cavitation'] { width:80px;}
-#journal select[name*='color'] { width:90px;}
-#journal select[name*='width'] { width:80px;}
-#journal select[name*='path'] { width:90px;}
+/*warren*/
+fieldset table tr th input[name*="number"] {width:50px;}
+fieldset table tr td input[name*="number"] {width:40px;}
 
-#journal input[name*='path'],#journal input[name*='position'] { width:32px;text-align: center;}
+
+
 
 .counter a:hover {text-decoration: none}
 form fieldset.Batch h3 { text-align: center}
