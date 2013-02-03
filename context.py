@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from bkz.whs.models import Brick
+from django.contrib import messages
 
 def bricks(request):
     if getattr(request,'namespace',None) == 'whs':
@@ -89,3 +90,12 @@ test_urls(menu)
 def namespace(request):
     namespace = getattr(request,'namespace',None) or 'main'
     return dict(nav=nav.get(namespace), menu=menu.get(namespace),current_app=namespace)
+
+
+def flash(request):
+    levels = [m.level for m in messages.get_messages(request)]
+    if any(l == 40 for l in levels): return {'level':'error'}
+    if any(l == 30 for l in levels): return {'level':'warning'}
+    if all(l == 25 for l in levels) and levels: return {'level':'success'}
+    if any(l == 20 for l in levels): return {'level':'info'}
+    return {}

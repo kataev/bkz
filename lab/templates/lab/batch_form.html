@@ -9,7 +9,10 @@
                 {% for e in form.non_field_errors %}
                     {{ e }}
                 {% endfor %}
+                <fieldset class='less span5'>
+                    <caption><h1>Партия</h1></caption>
                 {{ form.as_div }}
+                </fieldset>
                 {% if form.instance.pk %}
                     {% include 'lab/part_list.html' %}
                 {% endif %}

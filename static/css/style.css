@@ -3,9 +3,10 @@ body {
     background-repeat: no-repeat;
     background-position: right bottom;
     background-attachment: fixed;
-    background-size: 11%;
+    /*background-size: 11%;*/
 }
-
+body.success {background-color:#62c462;}
+body.error {background-color:#f89406;}
 .navbar .brand {font-weight: bold;font-size: 20px; color:black;}
 .navbar .nav >li > a {padding: 10px 10px 10px;}
 

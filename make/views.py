@@ -21,6 +21,7 @@ def index(request):
     factory = FormingFactory(request.POST or None,initial=[initial,]*FormingFactory.extra,queryset=Forming.objects.filter(**filter),prefix='warren')
     if request.method == 'POST' and factory.is_valid():
         factory.save()
+        messages.success(request,'Формовка сохранена')
         return redirect(reverse('make:index')+'?date=%s' % date.isoformat())
     return render(request,'make/index.html',{'factory':factory,'date':date,'dateform':dateform})
 
@@ -47,5 +48,6 @@ def warren(request):
                 if form.factory.is_valid():
                     form.factory.save()
         if all([form.is_valid() for form in factory]) and all([form.factory.is_valid() for form in factory]):
+            messages.success(request,'Садка сохранена')
             return redirect(reverse('make:warren')+'?date=%s' % date.isoformat())
     return render(request,'make/warren.html',dict(factory=factory,date=date,dateform=dateform))

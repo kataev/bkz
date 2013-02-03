@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory, modelformset_factory
-from bkz.bootstrap.forms import BootstrapMixin,Fieldset
+from bkz.bootstrap.forms import BootstrapMixin
 
 from bkz.whs.models import Width
 from bkz.lab.models import *
@@ -187,7 +187,8 @@ class CauseForm(BootstrapMixin,forms.ModelForm):
 class BatchForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Batch
-	exclude = ('ctype','view')
+        fields = ('number', 'date', 'cavitation', 'width','color', 'flexion', 'pressure', 'mark', 'weight', 'cad', 'info')
+        exclude = ('ctype','view')
         widgets = {
             'number':BatchInput(),
             'date':BatchDateInput(),
@@ -196,11 +197,6 @@ class BatchForm(BootstrapMixin,forms.ModelForm):
             'pressure':PressureInput(),
             'info':forms.Textarea(attrs={'rows':3,"placeholder":'Примечание'}),
         }
-        layout = (
-            Fieldset(u'Партия', 'number', 'date', 'cavitation', 'width',
-                'color', 'flexion', 'pressure', 'mark', 'weight', 'cad', 'info',
-                css_class='less span5'),
-        )
 
 info_list = ['5.3.2 Известняковые включения < 1см','5.3.4 Размеры, дефекты','5.3.3 Высолы','5.2.6 Половняк более 5%','5.2.5 Черная сердцевина, пятна']
 

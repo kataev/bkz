@@ -23,7 +23,7 @@
 {#    <link href="/static/img/logo.png" rel='shortcut icon'>#}
 {#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
 </head>
-<body data-spy='scroll' data-target='.navbar' data-offset='40'>
+<body data-spy='scroll' data-target='.navbar' data-offset='40' class='{{ level }}'>
 {% include 'core/navbar.html' %}
 {% block container %}
 <div class="container" style='text-align:center;margin-top:20px;'>
@@ -80,6 +80,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/accounting.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/libs/jquery.animate-colors-min.js"></script>
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/script.js"></script>
 {% block script %}

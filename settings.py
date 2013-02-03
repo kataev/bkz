@@ -153,6 +153,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     'bkz.context.bricks',
     'bkz.context.namespace',
+    'bkz.context.flash',
     )
 
 ROOT_URLCONF = 'bkz.urls'

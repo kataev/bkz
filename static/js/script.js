@@ -130,7 +130,8 @@ $(function () {
 
     var $messages = $('#messages').popover('show')
 
-    setTimeout(function(e){$messages.popover('hide')},10000)
+    setTimeout(function(e){$messages.popover('hide')},5000)
+    $('body.success,body.error').animate({'background-color':'#fff'},800)
 })
 
 //Подсветка цветов селекта в редактировании кирпича

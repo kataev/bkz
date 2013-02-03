@@ -70,6 +70,7 @@ class BillUpdateView(UpdateView):
             if factory.is_valid():
                 factory.save()
         if all([f.is_valid() for k,f in opers.items()]):
+            messages.success(self.request,u'Партия сохранена')
             return redirect(self.get_success_url())
         return self.render_to_response(dict(form=form, opers=opers))
 
@@ -100,6 +101,7 @@ def bill_pk_redirect(request, pk):
     return redirect(b.get_absolute_url())
 
 from django.core.exceptions import ValidationError
+
 class BrickCreateView(CreateView):
     model = Brick
 
@@ -110,6 +112,7 @@ class BrickCreateView(CreateView):
             raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % self.object.pk)
         self.object.css = make_css(self.object)
         self.object.save()
+        messages.success(self.request,u'Сохранено')
         return super(CreateView, self).form_valid(form)
 
 
@@ -121,6 +124,7 @@ class BrickUpdateView(UpdateView):
         self.object.label = make_label(self.object)
         self.object.css = make_css(self.object)
         self.object.save()
+        messages.success(self.request,u'Сохранено')
         return super(UpdateView, self).form_valid(form)
 
 def bills(request):
@@ -172,7 +176,7 @@ def batchs(request):
         .prefetch_related('batch','rows','batch__frost_resistance','batch__width').filter(brick__isnull=True))
     if request.method == 'POST' and factory.is_valid():
         factory.save()
-        messages.add_message(request, messages.SUCCESS, u'Успешно сохранено!')
+        messages.success(request, u'Успешно сохранено!')
         return redirect(reverse_lazy('whs:Add-list'))
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():

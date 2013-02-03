@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
 from django.forms.models import inlineformset_factory, modelformset_factory
-from bkz.bootstrap.forms import BootstrapMixin,Fieldset
+from bkz.bootstrap.forms import BootstrapMixin
 
 from bkz.make.models import Forming, Warren
 from bkz.whs.forms import DateInput,NumberInput,FloatInput

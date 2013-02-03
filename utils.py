@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from functools import partial
 
+from django.contrib import messages
 from django.conf.urls import url,patterns
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import get_models,get_app
 from django.utils.importlib import import_module
 from django.views.generic import CreateView,UpdateView,DeleteView
+from django.views.generic.edit import ModelFormMixin
 from django.db.models import permalink
 
 from pytils.dt import ru_strftime
@@ -19,7 +21,20 @@ def get_form(self, form_class):
             pass
 
     return form
+def form_valid(self, form):
+    self.object = form.save()
+    messages.success(self.request,u'Сохранено')
+    return super(ModelFormMixin, self).form_valid(form)
+
+def form_invalid(self, form):
+    messages.error(self.request,u'Найденны ошибки')
+    return self.render_to_response(self.get_context_data(form=form))    
+
 CreateView.get_form = get_form
+CreateView.form_valid = form_valid
+CreateView.form_invalid = form_invalid
+UpdateView.form_valid = form_valid
+UpdateView.form_invalid = form_invalid
 
 def app_urlpatterns(app_name):
     urls = patterns('')

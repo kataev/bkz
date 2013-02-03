@@ -25,6 +25,7 @@ class BatchCreateView(BillCreateView):
         self.object.frost_resistance = FrostResistance.objects.filter(color=self.object.color).latest('date')
         self.object.water_absorption = WaterAbsorption.objects.filter().latest('date')
         self.object.save()
+        messages(self.request,u'Партия созданна')
         return redirect(self.get_success_url())
 
 class BatchUpdateView(UpdateView):
@@ -32,6 +33,7 @@ class BatchUpdateView(UpdateView):
     model=Batch
     def form_valid(self, form):
         context = self.get_context_data(form=form)
+        print 'ololo'
         self.object = form.save(commit=False)
         for part in self.parts:
             if part.is_valid() and part.has_changed():
@@ -44,9 +46,11 @@ class BatchUpdateView(UpdateView):
         self.object.tto = ','.join([r.instance.tto or '' for r in self.parts])
         self.object.save()
         if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
-            messages.add_message(self.request, messages.SUCCESS, u'Партия сохранена успешно!')
+            messages.success(self.request, u'Партия сохранена успешно!')
             return redirect(self.get_success_url())
         return self.render_to_response(context)
+
+
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
@@ -98,15 +102,15 @@ def batch_tests(request,pk):
     if request.method == 'POST':
         if form.is_valid():
             batch = form.save()
-            messages.add_message(request, messages.SUCCESS, u'Характеристики сохранены!')
+            messages.success(request,  u'Характеристики сохранены!')
         if flexion.is_valid():
             flexion.save()
             fle = flexion.get_value
-            messages.add_message(request, messages.SUCCESS, u'Испытания на изгиб сохранены!')
+            messages.success(request,  u'Испытания на изгиб сохранены!')
         if pressure.is_valid():
             pressure.save()
             pre = pressure.get_value
-            messages.add_message(request, messages.SUCCESS, u'Испытания на сжатие сохранены!')
+            messages.success(request,  u'Испытания на сжатие сохранены!')
         if pressure.is_valid() and flexion.is_valid():
             volume = request.POST.get('volume','')
             if volume:
@@ -119,10 +123,10 @@ def batch_tests(request,pk):
                 batch.pressure = pre['avgn']
                 batch.flexion = fle['avgn']
                 batch.save()
-                messages.add_message(request, messages.SUCCESS, u'Марка определена!')
+                messages.success(request,  u'Марка определена!')
                 return redirect(batch.get_tests_url())
             else:
-                messages.add_message(request, messages.WARNING, u'Не хватает данных для определения марки!')
+                messages.warning(request,  u'Не хватает данных для определения марки!')
     return render(request,'lab/batch-tests.html',{'tests':[pressure,flexion],'batch':batch,'form':form})
 
 def batch_tests_print(request,pk):
@@ -157,6 +161,7 @@ def journal(request):
     factory = [half, raw, bar, clay, quarry]
     if request.method == 'POST' and all([f.is_valid() for f in factory]):
         for f in factory:
+            messages.success(request,u'Журнал сохранен')
             f.save()
         return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
     if not all([f.is_valid() for f in factory]):

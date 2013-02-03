@@ -4,7 +4,7 @@ import django.forms as forms
 
 from bkz.it.models import Device, Buy, Plug
 from bkz.whs.forms import DateInput
-from bkz.bootstrap.forms import BootstrapMixin,Fieldset
+from bkz.bootstrap.forms import BootstrapMixin
 
 class DeviceForm(BootstrapMixin,forms.ModelForm):
     def __init__(self, *args, **kwargs):
