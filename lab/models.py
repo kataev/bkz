@@ -125,7 +125,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размеры, мм',max_length=20,null=True,blank=True)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса',null=True,blank=True)
@@ -157,7 +157,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса')
@@ -183,7 +183,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса')

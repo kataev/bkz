@@ -15,7 +15,7 @@ class Forming(models.Model,UrlMixin):
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     density = models.FloatField(u'Плот.')
     vacuum = models.FloatField(u'Вак')
     temperature = models.FloatField(u'Темп.',null=True,blank=True)
