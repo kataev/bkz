@@ -106,7 +106,7 @@ class BrickCreateView(CreateView):
     model = Brick
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        self.object = form.save()
         self.object.label = make_label(self.object)
         if Brick.objects.exclude(pk=self.object.pk).filter(label=self.object.label):
             raise ValidationError(u'Такой кирпич вроде уже есть с УИД %d!' % self.object.pk)

@@ -25,7 +25,7 @@ class Command(BaseCommand):
                 b.total = t.total.total
                 b.save()
             except OldBrick.DoesNotExist:
-                print 'DNE',b.pk,b.prim
+                print 'DNE',t.pk,t.prim
 
     def set_old_brick(self,pk,old):
         b = Brick.objects.get(pk=pk)
