@@ -5,7 +5,6 @@ from django.db import models
 from bkz.utils import UrlMixin
 
 class Energy(UrlMixin,models.Model):
-    date_time=models.DateTimeField(u"Дата и время",auto_now=True)
     date=models.DateField(u"Дата")
     elec4=models.FloatField(u"Электр 4 ячейка")
     elec16=models.FloatField(u"Электр 16 ячейка")
@@ -26,7 +25,6 @@ class Energy(UrlMixin,models.Model):
             return u'Новые показания энергоресурсов'
 
 class Teplo(UrlMixin,models.Model):
-    date_time=models.DateTimeField(u"Дата и время",auto_now=True)
     date=models.DateField(u"Дата")
     henergy=models.FloatField(u"ТЭнергия кал")
     hot_water=models.FloatField(u"Расход гор.воды м³")

@@ -125,11 +125,11 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размеры, мм',max_length=20,null=True,blank=True)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса',null=True,blank=True)
-    temperature = models.FloatField(u'Темп.',null=True,blank=True)
+    temperature = models.IntegerField(u'Темп.',null=True,blank=True)
     sand = models.FloatField(u'Песок',null=True,blank=True)
 
     poke_left = models.CommaSeparatedIntegerField(u'Тычок левый',max_length=300)
@@ -157,11 +157,11 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса')
-    temperature = models.FloatField(u'Темп.')
+    temperature = models.IntegerField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raw')
@@ -183,7 +183,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     color = models.IntegerField(u'Цвет',choices=color_c,default=color_c[0][0])
     width = models.ForeignKey('whs.Width',verbose_name=u'Размер',default=1)
 
-    tts = models.CharField(u'ТТС',max_length=20)
+    tts = models.IntegerField(u'ТТС',max_length=20)
     size = models.CharField(u'Размер',max_length=20)
     humidity = models.FloatField(u'Влаж.')
     weight = models.IntegerField(u'Масса')

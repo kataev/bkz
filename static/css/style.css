@@ -152,8 +152,10 @@ fieldset table tr td input::-webkit-calendar-picker-indicator {
         -webkit-appearance:none !important;
     }
 
+fieldset table tr td input[type="date"] {width: 95px}
+#journal fieldset table tr td input[type="date"] {display: none}
+
 fieldset table .Sand .control-group {margin-bottom: 5px;}
-fieldset table fieldset input[type="date"]{display: none}
 fieldset table tr td input {padding: 4px 6px }
 fieldset table tr td input[type='number'] { text-align: center}
 fieldset table tr td input[name*="tts"] {width:40px;}
@@ -163,6 +165,7 @@ fieldset table tr td input[name*='position'] { width:32px;text-align: center;}
 fieldset table tr td input[name*="vacuum"] {width:50px;}
 fieldset table tr td input[name*="weight"] {width:50px;}
 fieldset table tr td input[name*="humidity"] {width:50px;}
+fieldset table tr td input[name*="conveyor"] {width:50px;}
 fieldset table tr td input[name*="temperature"] {width:45px;}
 fieldset table tr td input[name*="-sand"] {width:50px;}
 fieldset table tr td input[name*="inclusion"] {width:50px;}

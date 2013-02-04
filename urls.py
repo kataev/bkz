@@ -17,7 +17,7 @@ urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls), name='admin'),
 
     url(ur'^Склад/', include('bkz.whs.urls', namespace='whs')),
-    url(ur'^Энергоресурсы/', include('bkz.energy.urls', namespace='energy')),
+    url(ur'^Показания/', include('bkz.energy.urls', namespace='energy')),
     url(ur'^Лаборатория/', include('bkz.lab.urls', namespace='lab')),
     url(ur'^Производство/', include('bkz.make.urls', namespace='make')),
     # url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),

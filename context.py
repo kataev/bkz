@@ -13,7 +13,7 @@ nav = dict(
         ('whs:Brick-list', 'icon-align-justify', u'Склад'),
         ('lab:index', 'icon-fullscreen', u'Лаборатория'),
         ('make:index', 'icon-tasks', u'Производство'),
-#        ('energy:index', 'icon-energy', u'Энергоресурсы'),
+        ('energy:index', 'icon-energy', u'Энергоресурсы'),
         ('it:index', 'icon-hdd', u'ИТ'),
         ('price', 'icon-shopping-cart', u'Прайс'),
     ),
@@ -29,7 +29,9 @@ nav = dict(
         ('it:index', 'icon-hdd', u'ИТ'),
         ),
     energy=(
-        ('energy:index', 'icon-energy', u'Энергоресурсы'),
+        ('energy:index', 'icon-energy', u'Показания'),
+        ('energy:energy', 'icon-energy', u'Энергоресурсы'),
+        ('energy:teplo', 'icon-energy', u'Тепло'),
         ),
     lab = (
         ('lab:index',' icon-fullscreen', u'Лаборатория'),

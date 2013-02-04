@@ -5,7 +5,7 @@
 <div class="container" id='energy'>
 <div class="row">
     <div class="span6">
-        <h1>Партии <small>
+        <h1>Тепло <small>
             {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
                     за {{ datefilter.get_date|date:'F Y'|lower }} года
                 {% else %}
