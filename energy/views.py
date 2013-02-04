@@ -11,7 +11,7 @@ from bkz.energy.forms import EnergyFactory,TeploFactory
 
 def delta(queryset,fields):
     prev = 0
-    energy = []
+    array = []
     for v in queryset.reverse():
         if not prev:
             prev = v
@@ -19,9 +19,9 @@ def delta(queryset,fields):
         o = deepcopy(v)
         for f in fields[1:]:
             setattr(o,f,abs(getattr(v,f) - getattr(prev,f)) / ((v.date-prev.date).days or 1))
-        energy.append(o)
+        array.append(o)
         prev = v
-    return energy
+    return array
 
 def index(request,year=None,month=None):
     fields = ('gaz','elec4','elec16')
@@ -36,7 +36,7 @@ def index(request,year=None,month=None):
             o.append( (getattr(v,f) - getattr(prev,f)) / ((v.date-prev.date).days or 1))
         energy.append(o)
         prev = v
-    return render(request,'energy/chart.html',dict(opers=[energy]))
+    return render(request,'energy/index.html',dict(opers=[energy]))
 
 
 def energy(request):
