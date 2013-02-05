@@ -30,8 +30,8 @@ nav = dict(
         ),
     energy=(
         ('energy:index', 'icon-energy', u'Показания'),
-        ('energy:energy', 'icon-energy', u'Энергоресурсы'),
-        ('energy:teplo', 'icon-energy', u'Тепло'),
+        ('energy:energy', 'icon-magnet', u'Энергоресурсы'),
+        ('energy:teplo', 'icon-wrench', u'Тепло'),
         ),
     lab = (
         ('lab:index',' icon-fullscreen', u'Лаборатория'),
