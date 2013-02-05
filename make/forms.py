@@ -20,7 +20,7 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
                     'temperature':NumberInput(attrs={'tabindex':2}),
                     'humidity':FloatInput(attrs={'tabindex':2}),
                     'sand':FloatInput(attrs={'tabindex':2}),
-                    'k':FloatInput(attrs={'tabindex':2}),
+                    'conveyor':FloatInput(attrs={'tabindex':2}),
 
                     'density':FloatInput(),
                     'vacuum':FloatInput,
