@@ -223,3 +223,6 @@ LOGGING = {
             },
         }
 }
+
+
+handler500 = 'bkz.core.views.server_error'

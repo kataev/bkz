@@ -50,10 +50,10 @@ svg.selectAll("path.month")
     .attr("class", "month")
     .attr("d", monthPath);
 
-d3.json("energy/", function(data) {
-    var m = _(data).map(function(e){return e.gaz})
-    max = _.max(m)
-    min = _.min(m)
+d3.json("csv", function(data) {
+    var m = d3.map(data,function(e){return e.gaz})
+    max = d3.max(m)
+    min = d3.min(m)
 
     var data = d3.nest()
         .key(function(d) { return d.date; })
@@ -76,8 +76,3 @@ function monthPath(t0) {
         + "H" + (w1 + 1) * z + "V" + 0
         + "H" + (w0 + 1) * z + "Z";
 }
-
-
-$(function(){
-
-})

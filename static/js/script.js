@@ -295,7 +295,7 @@ $(function(){
             if (id.indexOf('pressure') >= 0) {
                 //Сжатие
                 v = (r/s).toFixed(2)
-                if ($('#width').val() > 1)
+                if ($('#width').val().split(' ')[0] > 1)
                     v=(v * 1.2).toFixed(2)
             }
             else {

@@ -5,4 +5,5 @@ bkz
 static/bo*
 static/js/jquery-ui/
 static/js/libs/
+static/reveal.js/
 bkz.sublime-workspace

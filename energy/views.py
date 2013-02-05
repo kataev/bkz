@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import csv
 import datetime
 from copy import deepcopy
+from django.utils import simplejson
 
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from bkz.energy.models import Energy,Teplo
 from bkz.whs.forms import YearMonthFilter
@@ -61,3 +64,12 @@ def teplo(request):
     energy = TeploFactory(request.POST or None,queryset=queryset,initial=initial)
     return render(request,'energy/teplo.html',dict(object_list=energy,datefilter=datefilter,date=date))
 
+
+def energy_csv(request):
+    datefilter = YearMonthFilter(request.GET or None,model=Energy)
+    date = datefilter.get_date
+    data = {'date__year':date.year}
+    if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
+        data['date__month']=date.month
+    queryset = Energy.objects.all()#.filter(**data)
+    return HttpResponse(simplejson.dumps(queryset))

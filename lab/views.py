@@ -102,15 +102,11 @@ def batch_tests(request,pk):
         if form.is_valid():
             batch = form.save()
             messages.success(request,  u'Характеристики сохранены!')
-        if flexion.is_valid():
+        if pressure.is_valid() and flexion.is_valid():
             flexion.save()
             fle = flexion.get_value
-            messages.success(request,  u'Испытания на изгиб сохранены!')
-        if pressure.is_valid():
             pressure.save()
             pre = pressure.get_value
-            messages.success(request,  u'Испытания на сжатие сохранены!')
-        if pressure.is_valid() and flexion.is_valid():
             volume = request.POST.get('volume','')
             if volume:
                 factory, i = volume.split('-')
@@ -123,9 +119,9 @@ def batch_tests(request,pk):
                 batch.flexion = fle['avgn']
                 batch.save()
                 messages.success(request,  u'Марка определена!')
-                return redirect(batch.get_tests_url())
             else:
                 messages.warning(request,  u'Не хватает данных для определения марки!')
+            return redirect(batch.get_tests_url())
     return render(request,'lab/batch-tests.html',{'tests':[pressure,flexion],'batch':batch,'form':form})
 
 def batch_tests_print(request,pk):

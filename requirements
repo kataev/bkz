@@ -11,3 +11,4 @@ gunicorn==0.14.2
 django-extensions==0.8
 lxml==2.3.2
 python-dateutil==1.5
+django-tastypie==0.9.11

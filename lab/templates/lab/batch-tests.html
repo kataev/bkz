@@ -10,7 +10,7 @@
     <div class='container'>
         <h1>Испытания на прочность <a href="{{ batch.get_absolute_url }}">{{ batch }}</a></h1>
 
-        <h2>Кирпич {{ batch.get_name }}</h2><input type="hidden" id='width' value='{{ batch.width }}'>
+        <h2>Кирпич {{ batch.get_name }}</h2><input type="hidden" id='width' value='{{ batch.width.value }}'>
 
         <form accept-chartset='utf-8' method="POST" action="{{ batch.get_tests_url }}" id='form'>
             {% csrf_token %}
