@@ -2,6 +2,9 @@
 {% load bkz %}
 {% block head %}
 {% endblock %}
+{% block script %}
+    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+{% endblock %}
 {% block title %}Формовка{% endblock %}
 {% block container %}
 <div class="container" id='forming'>
@@ -39,7 +42,7 @@
                         {% if forloop.first %}
                         <td class="input-prepend">
                             <span class='add-on'>
-                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
                             </span>
                             {% for f in form.hidden_fields %}
                                 {{ f }}

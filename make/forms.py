@@ -12,6 +12,7 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
         model = Forming
         widgets = { 'date': forms.HiddenInput(),
                     'cavitation':forms.HiddenInput(),
+                    'order':forms.HiddenInput(),
                     'width':forms.HiddenInput(),
                     'color':forms.HiddenInput(),
                     'size':forms.TextInput(attrs={'tabindex':2}),

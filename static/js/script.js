@@ -132,6 +132,15 @@ $(function () {
 
     setTimeout(function(e){$messages.popover('hide')},5000)
     $('body.success,body.error').animate({'background-color':'#fff'},800)
+
+    $('#forming table tbody').sortable({update:function( event, ui) {
+        $('#forming tbody tr').each(function(i){ 
+            $(this).find('.add-on a').text(i+1)
+            if (!$(this).hasClass('fake'))
+            $(this).find('input[name*="order"]').val(i+1)
+        })
+    }})
+
 })
 
 //Подсветка цветов селекта в редактировании кирпича

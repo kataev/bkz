@@ -25,7 +25,8 @@ class Forming(models.Model,UrlMixin):
     sand = models.FloatField(u'Песок',null=True,blank=True)
     stratcher = models.CommaSeparatedIntegerField(u'Ложок',max_length=300,null=True,blank=True)
     poke = models.CommaSeparatedIntegerField(u'Тычок',max_length=300,null=True,blank=True)
-    
+
+    order = models.IntegerField(u'Порядок',default=0)
 
     get_name = property(get_name)
     def __unicode__(self):
@@ -41,7 +42,7 @@ class Forming(models.Model,UrlMixin):
         verbose_name=u'Формовка'
         verbose_name_plural=u'Формовка'
         unique_together = ('date','tts')
-        ordering = ('date',)
+        ordering = ('date','order')
 
 
 class Warren(models.Model,UrlMixin):

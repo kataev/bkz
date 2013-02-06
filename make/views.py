@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from itertools import count
 
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -10,6 +11,7 @@ from bkz.make.forms import FormingFactory, WarrenFactory,WarrenTTOFactory
 from bkz.whs.forms import DateForm
 
 
+
 def index(request):
     dateform = DateForm(request.GET or None)
     if dateform.is_valid():
@@ -17,9 +19,10 @@ def index(request):
     else:
         date = datetime.date.today()
     filter = {'date':date}
-    initial={'date':date}
     queryset = Forming.objects.filter(**filter).order_by().prefetch_related('bar','raw','half')
-    factory = FormingFactory(request.POST or None,initial=[initial,]*FormingFactory.extra,queryset=queryset,prefix='warren')
+    order = max(tuple(f.order for f in queryset) or (1,))
+    initial= [{'date':date,'order':i} for i in range(order,FormingFactory.extra+order+1)]
+    factory = FormingFactory(request.POST or None,initial=initial,queryset=queryset,prefix='forming')
     if request.method == 'POST' and factory.is_valid():
         factory.save()
         messages.success(request,'Формовка сохранена')
