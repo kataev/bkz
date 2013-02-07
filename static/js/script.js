@@ -8,6 +8,10 @@ $('.carousel').carousel()
 $('.collapse').collapse()
 $('#navbar').scrollspy()
 
+function change_field_order(){
+$('fieldset table').not(':last').each(function(i){$(this).find('tr').each(function(tr){$(this).find('td input').each(function(j){$(this).attr('tabindex',i*100+j)})})})
+}
+
 function css_to_dict(prefix, val, from) {
     var css = $('#brick-' + val).attr('class')
     var brick = {}

@@ -268,7 +268,7 @@ def get_pressure_value(self):
         avg_list = [30, 25, 20, 17.5, 15, 12.5, 10]
         min_list = [25, 20, 17.5, 15, 12.5, 10, 7.5]
         mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
-        return {'avgn':avg,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
+        return {'avgn':avg,'min':round(avg*0.5,2),'max':round(avg*1.5,2),'avg':avg,'mark':mark}
 PressureFactory.get_value = property(get_pressure_value)
 PressureFactory.caption = u'Испытания на сжатие'
 
@@ -286,7 +286,7 @@ def get_flexion_value(self):
              avg_list = [2.9, 2.5, 2.3, 2.1, 1.8, 1.6, 1.4]
              min_list = [1.5, 1.3, 1.0, 1.0, 0.9, 0.8, 0.7]
         mark = max([mark for a,m,mark in zip(avg_list,min_list,marks) if min(val)>m and avg>a] or [0,])
-        return {'avgn':avgn,'min':avg*0.5,'max':avg*1.5,'avg':avg,'mark':mark}
+        return {'avgn':avgn,'min':round(avg*0.5,2),'max':round(avg*1.5,2),'avg':avg,'mark':mark}
 FlexionFactory.get_value = property(get_flexion_value)
 FlexionFactory.caption = u'Испытания на изгиб'
 
