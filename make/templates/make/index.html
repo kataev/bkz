@@ -1,85 +1,53 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
-{% block head %}
-{% endblock %}
-{% block script %}
-    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
-{% endblock %}
-{% block title %}Формовка{% endblock %}
+{% block title %}Производство{% endblock %}
 {% block container %}
-<div class="container" id='forming'>
+<div class="container">
     <div class="row">
-            <div class="span8">
-                <h1 class='datehead'>
-                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
-                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
-                </h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
-                {{ dateform.date }}
-                <input type="submit" value='Показать' class="btn">
-            </form>
+        <div class="span7">
+            <h1>Производство <small>
+                {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
+                        за {{ datefilter.get_date|date:'F Y'|lower }} года
+                    {% else %}
+                        за {{ datefilter.get_date|date:'Y' }} год
+                {% endif %}
+                </small>
+            </h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
+            {{ modelselect.model}}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            <input type="submit" class="btn">
+        </form>
     </div>
-    <form accept-chartset='utf-8' method="POST" id='form' class='row'>
-        {% csrf_token %}
-        {{ factory.management_object }}    
-        {{ factory.management_form }}  
-    <fieldset class='span12'>
-        <table>
-            <caption><h2>{{ factory.caption }}</h2></caption>
+        <table class="table table-bordered table-condensed" id=''>
             <thead>
                 <tr>
-                {% for field in factory.empty_form.visible_fields %}
-                    <th>{{ field.label|safe }}</th>
-                {% endfor %}
+                    <th width="50px">Дата</th>
+                    <th>№ телег</th>
+                    <th width="60px">Кол-во</th>
                 </tr>
             </thead>
             <tbody>
-            {% for form in factory %}
-                <tr id='{{ form.prefix }}' class='{{ form.instance.css }} {% if not form.instance.pk %}fake{% endif %}'>
-                    {% for f in form.visible_fields %}
-                        {% if forloop.first %}
-                        <td class="input-prepend">
-                            <span class='add-on'>
-                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
-                            </span>
-                            {% for f in form.hidden_fields %}
-                                {{ f }}
-                            {% endfor %}
-                            {{ f }}
-                        </td>
-                        {% elif forloop.last and form.instance.pk and form.instance.lab %}
-                        <td>
-                            {{ f }}
-                        </td>
-                        <td>
-                            {% for l in form.instance.lab %}
-                                {% if l|class_name == 'Raw' %}
-                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-success {{ l.css }}'>Н</a>
-                                {% elif l|class_name == 'Half' %}
-                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-info {{ l.css }}'>ПФ-{{ l.position }}</a>
-                                {% elif l|class_name == 'Bar' %}
-                                    <a  tabindex='-1' href='{{ l.get_absolute_url }}' title='{{ l }}' class='btn btn-primary {{ l.css }}'>Б</a>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        {% else %}
-                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
-                        {% endif %}
+            {% for d,forming in object_list %}
+                <tr>
+                    <th class="{{ forming.0.css }}"> 
+                        <a style='color:black' href="{% url make:forming %}?date={{ d.isoformat }}"> {{ d|date:'j N' }} </a>
+                    </th>
+                    <td>
+                    {% for f in forming %}
+                    <a title="{{ f }}" style="{% if f.warren %}text-decoration:line-through{% endif %}" href="{{ f.get_absolute_url }}">
+                    {{ f.tts }}</a>
+                    {% for l in f.lab %}
+                        <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'>{{ l.label }}</a>
                     {% endfor %}
+                    {% endfor %}
+                    </td>
+                    <td> {{ forming|length }} </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-    </fieldset>    
-</form>
-</div>
-<div class="form-actions">
-    <div class="container">
-        <button type="submit" class="btn btn-primary" form="form">
-            <i class="icon-ok icon-white"></i> Сохранить изменения
-        </button>
     </div>
 </div>
 {% endblock %}

@@ -78,7 +78,7 @@ class MatherialForm(BootstrapMixin,forms.ModelForm):
 
 QuarryFactory = modelformset_factory(Matherial,form=MatherialForm,extra=3,max_num=3)
 QuarryFactory.caption = u'Карьер'
-QuarryFactory.css_class = 'span4'
+QuarryFactory.css_class = 'span6'
 QuarryFactory.width = {}
 
 class ClayForm(MatherialForm):
@@ -107,7 +107,7 @@ MatherialFactory.width = {}
 
 class BarForm(BootstrapMixin,forms.ModelForm):
     class Meta:
-        exclude = ("poke_left","poke_right","stratcher_left","stratcher_right","cutter","info",'cavitation','color','width','forming')
+        exclude = ("cutter","info",'cavitation','color','width','forming')
         model = Bar
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                 'tts':NumberInput,
@@ -119,7 +119,7 @@ class BarForm(BootstrapMixin,forms.ModelForm):
         }
 BarFactory = modelformset_factory(Bar,form=BarForm,extra=2,max_num=4)
 BarFactory.caption = u'Формовка'
-BarFactory.css_class = 'span6'
+BarFactory.css_class = 'span12'
 BarFactory.width = {}
 
 

@@ -57,12 +57,11 @@ td.cause ul { list-style: none;}
 .datehead a:last-child {margin-left: 5px}
 .dateform input[type='date'] { width: 130px}
 .dateform input[type='model'] { width: 160px}
+.widthcolor .control-group {float:left;}
 
 @media (max-width:480px) {
     .brickinput select, .batchinput input {width:auto !important;}
 }
-
-
 
 @media (min-width:767px) {
     fieldset.less .control-label {width: 100px}
@@ -161,10 +160,12 @@ fieldset table tr td input[type='number'] { text-align: center}
 fieldset table tr td input[name*="tts"] {width:40px;}
 fieldset table tr td input[name*="density"] {width:50px;}
 fieldset table tr td input[name*='path'] { width:32px;text-align: center;}
+fieldset table tfoot td input[name*='brocken'] { width:82px;}
 fieldset table tr td input[name*='position'] { width:32px;text-align: center;}
 fieldset table tr td input[name*="vacuum"] {width:50px;}
 fieldset table tr td input[name*="weight"] {width:50px;}
 fieldset table tr td input[name*="humidity"] {width:50px;}
+fieldset table tr td input[name*="shrink"] {width:50px;}
 fieldset table tr td input[name*="conveyor"] {width:50px;}
 fieldset table tr td input[name*="temperature"] {width:45px;}
 fieldset table tr td input[name*="-sand"] {width:50px;}
@@ -187,7 +188,6 @@ fieldset table tr td select[name*='path'] { width:90px;}
 /*warren*/
 fieldset table tr th input[name*="number"] {width:50px;}
 fieldset table tr td input[name*="number"] {width:40px;}
-
 
 
 
@@ -214,10 +214,6 @@ form legend + .control-group {
     -webkit-margin-top-collapse: separate;
 }
 .popover-content p { text-align: center}
-.popover-content table {
-    margin-top:-14px;
-    margin-bottom: -10px
-}
 td[rel='popover'] {cursor: pointer}
 
 div.ctype div.controls, div.defect div.controls {padding-left: 20px;}

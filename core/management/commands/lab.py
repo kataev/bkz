@@ -40,9 +40,17 @@ class Command(BaseCommand):
 
     def forming(self):
         i=0
-        for h in chain(Half.objects.all(),Raw.objects.all(),Bar.objects.all()):
+        for h in Half.objects.all():
             try:
                 h.forming = Forming.objects.filter(date__lt=h.datetime.date()).filter(tts=h.tts).order_by('-date')[0]
+                h.save()
+            except IndexError:
+                print i,'DNE',h
+
+        
+        for h in chain(Raw.objects.all(),Bar.objects.all()):
+            try:
+                h.forming = Forming.objects.filter(date__lte=h.datetime.date()).filter(tts=h.tts).order_by('-date')[0]
                 h.save()
             except IndexError:
                 print i,'DNE',h

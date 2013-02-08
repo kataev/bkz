@@ -132,10 +132,9 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     temperature = models.IntegerField(u'Темп.',null=True,blank=True)
     sand = models.FloatField(u'Песок',null=True,blank=True)
 
-    poke_left = models.CommaSeparatedIntegerField(u'Тычок левый',max_length=300)
-    poke_right = models.CommaSeparatedIntegerField(u'Тычок правый',max_length=300)
-    stratcher_left = models.CommaSeparatedIntegerField(u'Ложок левый',max_length=300)
-    stratcher_right = models.CommaSeparatedIntegerField(u'Ложок правый',max_length=300)
+    stratcher = models.CommaSeparatedIntegerField(u'Ложок',max_length=300,null=True,blank=True)
+    poke = models.CommaSeparatedIntegerField(u'Тычок',max_length=300,null=True,blank=True)
+
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
@@ -144,6 +143,14 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый брус'
+
+    @property
+    def label(self):
+        return u'Б'
+
+    @property
+    def css(self):
+        return u'badge badge'
 
     class Meta():
         verbose_name = u"Брус"
@@ -169,6 +176,14 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
         else: return u'Новый сырец'
+
+    @property
+    def label(self):
+        return u'Н'
+
+    @property
+    def css(self):
+        return 'badge badge-info'
 
     class Meta():
         verbose_name = u"Сырец из накопителя"
@@ -197,8 +212,15 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='half')
 
     @property
+    def label(self):
+        return u'П'
+
+    @property
     def css(self):
-        return u'path-%d position-%d' % (self.path or 0,self.position or 0)
+        if self.position == 16:
+            return 'badge badge-warning'
+        else:
+            return 'badge badge-important'
 
     def __unicode__(self):
         if self.pk: return u'Полуфабрикат от %s с поз №%d, путь №%d, ТТС № %s' % (ru_date(self.datetime),self.position,self.path,self.tts)

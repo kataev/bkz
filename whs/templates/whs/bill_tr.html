@@ -2,7 +2,7 @@
     <td>{{ b.number }}</td>
     <td>
         {% ifchanged b.date %}<b>{% endifchanged %}
-        {{ b.date|date:'j M Y' }}
+        {{ b.date|date:'j M' }}
         {% ifchanged b.date %}</b>{% endifchanged %}
     </td>
     <td>

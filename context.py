@@ -39,7 +39,8 @@ nav = dict(
         ('lab:stats',' icon-signal', u'Характеристики'),
     ),
     make = (
-        ('make:index', 'icon-filter', u'Формовка'),
+        ('make:index','icon-align-justify',u'Производство'),
+        ('make:forming', 'icon-filter', u'Формовка'),
         ('make:warren', 'icon-resize-full', u'Садка'),
         )
 )
@@ -49,9 +50,9 @@ menu = dict(
         ('energy:Teplo-add', 'icon-Teplo', u'Тепло'),
         ),
     it=(
-        ('it:Device-add', 'icon-inbox', 'Устройство или картридж'),
-        ('it:Buy-add', 'icon-tint', 'Накладную'),
-        ('it:Plug-add', 'icon-adjust', 'Замену'),
+        ('it:Device-add', 'icon-inbox', u'Устройство или картридж'),
+        ('it:Buy-add', 'icon-tint', u'Накладную'),
+        ('it:Plug-add', 'icon-adjust', u'Замену'),
         ),
     whs=(
         ('whs:Bill-add', 'icon-Bill', u'Накладную'),
@@ -74,6 +75,7 @@ menu = dict(
     make = (
         ('make:Forming-add','',u'Формовка'),
         ('make:Warren-add','',u'Садка'),
+        ('lab:Cause-add','',u'Дефект'),  
         ),
 )
 

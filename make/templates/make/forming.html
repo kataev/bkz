@@ -1,0 +1,78 @@
+{% extends 'core/index.html' %}
+{% load bkz %}
+{% block head %}
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+{% endblock %}
+{% block title %}Формовка{% endblock %}
+{% block container %}
+<div class="container" id='forming'>
+    <div class="row">
+            <div class="span8">
+                <h1 class='datehead'>
+                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
+                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+                </h1>
+            </div>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
+                {{ dateform.date }}
+                <input type="submit" value='Показать' class="btn">
+            </form>
+    </div>
+    <form accept-chartset='utf-8' method="POST" id='form' class='row'>
+        {% csrf_token %}
+        {{ factory.management_object }}    
+        {{ factory.management_form }}  
+    <fieldset class='span3'>
+        <table>
+            <caption><h2>{{ factory.caption }}</h2></caption>
+            <thead>
+                <tr>
+                {% for field in factory.empty_form.visible_fields %}
+                    <th>{{ field.label|safe }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for form in factory %}
+                <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+                    {% for f in form.visible_fields %}
+                        {% if forloop.first %}
+                        <td class="input-prepend">
+                            <span class='add-on'>
+                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
+                            </span>
+                            {% for f in form.hidden_fields %}
+                                {{ f }}
+                            {% endfor %}
+                            {{ f }}
+                        </td>
+                        {% elif forloop.last and form.instance.pk and form.instance.lab %}
+                        <td>
+                            {{ f }}
+                        </td>
+                        {% else %}
+                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </fieldset>    
+    <fieldset class='span4'>
+            {{ widthcolor }}
+        </fieldset>
+        
+</form>
+</div>
+<div class="form-actions">
+    <div class="container">
+        <button type="submit" class="btn btn-primary" form="form">
+            <i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
+    </div>
+</div>
+{% endblock %}
