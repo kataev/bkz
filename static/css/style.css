@@ -49,7 +49,7 @@ input[name*="amount"] {background: #adff2f;}
 input[name*="humidity"] {background: #bbd8e9;}
 input[type='date'] {width:auto}
 input[name*="datetime_"][type='date'] {width:90px;margin-right: 14px}
-input[name*="datetime_"][type='time'] {width:auto;}
+input[name*="datetime_"][type='time'] {width:90px;}
 td.cause ul { list-style: none;}
 .datehead {position: relative;}
 .datehead a {top:25%;position: absolute;}
@@ -177,7 +177,7 @@ fieldset table tr td input[name*="stratcher"] {width:130px;}
 fieldset table tr td input[name*="dust"] {width:50px;}
 fieldset table tr td textarea {width:66px;}
 fieldset table tr td input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
-fieldset table tr td input[name*="datetime_"][type='time'] {width:54px;overflow: hidden;white-space: normal}
+fieldset table tr td input[name*="datetime_"][type='time'] {width:60px;overflow: hidden;white-space: normal}
 fieldset table tr td.input-append {margin: 0}
 fieldset table tr td select {padding-left: 0;}
 fieldset table tr td select[name*='cavitation'] { width:80px;}
@@ -186,9 +186,8 @@ fieldset table tr td select[name*='width'] { width:80px;}
 fieldset table tr td select[name*='path'] { width:90px;}
 
 /*warren*/
-fieldset table tr th input[name*="number"] {width:50px;}
-fieldset table tr td input[name*="number"] {width:40px;}
-
+fieldset table tr td input[name*="tto"] {width:50px;}
+fieldset table tr td input[name*="tts"] {width:40px;}
 
 
 .counter a:hover {text-decoration: none}
@@ -200,15 +199,8 @@ form fieldset.Batch div.limit .controls {margin-left: 110px}
 table td.error input,table td.error .uneditable-input {color:#B94A48; border-color:#B94A48;}
 .add-on input[type='checkbox'] { vertical-align:baseline}
 
-#Sorted td {padding: 4px;}
 #sortings a, #bricks a, #jurnal a, #Verification a {color:#333}
-#Energy thead tr th {vertical-align: top !important;}
-#Energy tbody a {display: none}
-#Energy tbody tr:hover a {display: inline-block;}
-#Energy tbody tr td.for-button {padding-top: 5px}
 li.mark a { padding: 5px; }
-#Journal .name {padding-left: 10px;}
-#Journal .amount {padding-left: 10px;}
 form legend + .control-group {
     margin-top: 18px;
     -webkit-margin-top-collapse: separate;

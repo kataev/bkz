@@ -47,39 +47,28 @@ class Warren(models.Model,UrlMixin):
     Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. Отражается на журнал оператора садочного коплекса
     """
     date = models.DateField(u'Дата', null=True,blank=True)    
-    number = models.CharField(u'ТТС', max_length=5)
-    source = models.ForeignKey('self', verbose_name=u'ТТС', related_name='consumer', null=True, blank=True)
-    brocken = models.IntegerField(u'% брака', default=0)
+
+    tts = models.IntegerField(u'ТТС')
+    tto = models.CharField(u'ТТО',null=True,blank=True,max_length=5)
+    add = models.IntegerField(u'Доп',null=True,blank=True)
+
+    brocken = models.IntegerField(u'Брак', default=0)
     cause = models.ManyToManyField('lab.Cause', verbose_name=u'Причина брака', null=True, blank=True,limit_choices_to = {'type':'warren'})
 
+    source = models.ForeignKey('self', verbose_name=u'ТТС', related_name='consumer', null=True, blank=True)
     forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens',limit_choices_to = {'pk':1})
     part = models.ForeignKey('lab.Part',verbose_name=u'Партия',null=True,blank=True,related_name='warrens',limit_choices_to = {'pk':1})
 
     order = models.IntegerField(u'Порядок',default=0)
 
-    @property
-    def tts(self):
-        if self.source:
-            return ','.join(self.consumer.all().values_list('number'))
-        else:
-            return self.number
-
-    @property
-    def tto(self):
-        if self.source:
-            return self.number
-        else:
-            return self.source.number
-            
-
     def __unicode__(self):
         if self.pk:
-            return u'Садка от %s, c ТТC № %s ' % (ru_date(self.date),self.number)
+            return u'Укладка от %s, c ТТC № %s' % (ru_date(self.date),self.tts)
         else:
-            return u'Новая садка'
+            return u'Новая укладка'
 
     class Meta:
-        ordering = ('-date',)
-        verbose_name=u'Садка'
-        verbose_name_plural=u'Садка'
+        ordering = ('-date','order')
+        verbose_name=u'Укладка'
+        verbose_name_plural=u'Укладка'
 

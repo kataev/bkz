@@ -36,7 +36,9 @@
                     </th>
                     <td>
                     {% for f in forming %}
-                    <a title="{{ f }}" style="{% if f.warren %}text-decoration:line-through{% endif %}" href="{{ f.get_absolute_url }}">
+                    <a title="{{ f }}"
+                     style="{% if f.warrens.count %}text-decoration:line-through{% endif %}"
+                     href="{{ f.get_absolute_url }}">
                     {{ f.tts }}</a>
                     {% for l in f.lab %}
                         <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'>{{ l.label }}</a>

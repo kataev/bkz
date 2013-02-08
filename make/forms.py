@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import django.forms as forms
-from django.forms.models import inlineformset_factory, modelformset_factory
+from django.forms.models import modelformset_factory
 from bkz.bootstrap.forms import BootstrapMixin
 
 from bkz.make.models import Forming, Warren
@@ -24,29 +24,17 @@ FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=26,max_num=
 class WarrenForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Warren
-        fields = ('number','date','brocken')
+        exclude = ('forming','part')
         widgets = {'date':forms.HiddenInput(),
-                    # 'number':forms.TextInput(attrs={'tabindex':'2'}),
+                    'tto':forms.TextInput(attrs={'tabindex':2}),
+                    'tts':NumberInput(attrs={'tabindex':1}),
                     'brocken':NumberInput(attrs={}),
                     'order':forms.HiddenInput(),
-                    }
-        
-class WarrenTTSForm(BootstrapMixin, forms.ModelForm):
-    class Meta:
-        model = Warren
-        exclude = ('consumer','part','forming')
-        widgets = {'date':forms.HiddenInput(),
-                    # 'number':forms.TextInput(attrs={'tabindex':'2'}),
-                    'brocken':NumberInput(attrs={'tabindex':'3'}),
+                    'source':forms.HiddenInput(),
                     'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),
-                    'order':forms.HiddenInput(),
                     }
 
-
-WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=1)
-WarrenTTSFactory = inlineformset_factory(Warren, Warren, form=WarrenTTSForm, extra=3,can_delete=False)
-
-
+WarrenFactory = modelformset_factory(Warren,form=WarrenForm,extra=26,max_num=30)
 
 class WidthColorForm(BootstrapMixin, forms.ModelForm):
     class Meta:
