@@ -6,8 +6,9 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
+from bkz.lab.models import Cause
 from bkz.make.models import Forming,Warren
-from bkz.make.forms import FormingFactory, WarrenFactory,WarrenTTSFactory,WidthColorForm
+from bkz.make.forms import FormingFactory, WarrenFactory,WidthColorForm
 from bkz.whs.forms import DateForm,YearMonthFilter
 
 
@@ -16,7 +17,10 @@ def index(request):
     queryset = Forming.objects.prefetch_related('bar','raw','half')
     if datefilter.is_valid():
         data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
-        queryset = queryset.filter(**data)
+    else:
+        date = datetime.date.today()
+        data = dict(date__year=date.year,date__month=date.month)
+    queryset = queryset.filter(**data)
     object_list = tuple([(d, list(forming)) for d,forming in groupby(queryset, key = lambda f: f.date)])
     return render(request,'make/index.html',{'datefilter':datefilter,'object_list':object_list})
 
@@ -48,30 +52,23 @@ def warren(request):
         date = dateform.cleaned_data.get('date',datetime.date.today())
     else:
         date = datetime.date.today()
-    queryset = Warren.objects.filter(source__isnull=True).filter(date=date).prefetch_related('consumer')
+    queryset = Warren.objects.filter(source__isnull=True).filter(date=date).prefetch_related('cause')
     order = max(tuple(f.order for f in queryset) or (1,))
     initial= [{'date':date,'order':i} for i in range(order,WarrenFactory.extra+order+1)]
-    tto = WarrenFactory(request.POST or None, queryset=queryset,initial=initial,prefix='tto')
-    for form in tto:
-        instance=form.instance or None
-        queryset = instance.consumer.all()
-        order = max(tuple(f.order for f in queryset) or (1,))
-        initial= [{'date':date,'order':i} for i in range(order,WarrenTTSFactory.extra+order+1)]
-        form.tts = WarrenTTSFactory(request.POST or None, instance=instance,prefix=form.prefix+'-tts',initial=initial)
-    if request.method == 'POST' and tto.is_valid() and all(form.tts.is_valid() for form in tto):
-        print 'valid'
-        tto.save()
-        tts = tuple(form.tts.save() for form in tto)
-        print tts
+    factory = WarrenFactory(request.POST or None, queryset=queryset,initial=initial,prefix='tto')
+    if request.method == 'POST' and factory.is_valid():
+        factory.save()
         messages.success(request,'Садка сохранена')
         return redirect(reverse('make:warren')+'?date=%s' % date.isoformat())
-    for form in tto:
-        for form in form.tts:
-            print form.prefix
-            for k,v in form.data.items():
-                if form.prefix in k and not form.is_valid():
-                    print '\t',k,v
     else:
-        print tto.errors,tuple(form.tts.errors for form in tto)
-    return render(request,'make/warren.html',dict(factory=tto,date=date,dateform=dateform))
+        cause = Cause.objects.filter(type='warren')
+        for form in factory:
+            form.fields['cause'].queryset = cause
+    for form in factory:
+        print form.prefix
+        for k,v in form.data.items():
+            if form.prefix in k and not form.is_valid():
+                print '\t',k,v
+
+    return render(request,'make/warren.html',dict(factory=factory,date=date,dateform=dateform))
 

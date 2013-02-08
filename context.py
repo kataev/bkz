@@ -74,7 +74,7 @@ menu = dict(
     ),
     make = (
         ('make:Forming-add','',u'Формовка'),
-        ('make:Warren-add','',u'Садка'),
+        ('make:Warren-add','',u'Укладка'),
         ('lab:Cause-add','',u'Дефект'),  
         ),
 )

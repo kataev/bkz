@@ -1,97 +1,86 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
-{% block title %}Садка за {{ date|date:'j E Y, l' }}{% endblock %}
+{% block head %}
+{% endblock %}
 {% block script %}
     <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
 {% endblock %}
+{% block title %}Укладка{% endblock %}
 {% block container %}
-<div class="container" id='warren'>
+<div class="container" id='forming'>
     <div class="row">
-            <div class="span7">
+            <div class="span8">
                 <h1 class='datehead'>
                     <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Садка <small>за {{ date|date:'j E Y, l' }}</small>
+                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
                     <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
                 </h1>
             </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
                 {{ dateform.date }}
-                <input type="submit" class="btn">
+                <input type="submit" value='Показать' class="btn">
             </form>
     </div>
-    <form accept-chartset='utf-8' method="POST" id='form' class='row less'>
+    <form accept-chartset='utf-8' method="POST" id='form' class='row'>
         {% csrf_token %}
-        {{ factory.management_object }}
-        {{ factory.management_form }}
-        {% for form in factory %}
-        <fieldset class='span3'>
-        <table>
+        {{ factory.management_object }}    
+        {{ factory.management_form }}  
+    <fieldset class='span3'>
+        <table id='warren'>
+            <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>
                 <tr>
-                    <th>№ ТТО</th>
-                    <th>ТТС</th>
-                    <th colspan="2">% брака</th>
+                {% for field in factory.empty_form.visible_fields %}
+                    <th>{{ field.label|safe }}</th>
+                {% endfor %}
                 </tr>
             </thead>
-        <tbody>
-            <tr>
-                <th>{{ form.number }}
-                    {% for field in form.hidden_fields %} {{ field }} {% endfor %}
-                    {{ form.tts.management_object }}
-                    {{ form.tts.management_form }}
-                    {{ form.errors }}
-                </th>
-                {% for f in form.tts %}
-                    {% if not forloop.first %}
-                        <tr><th class="input-prepend">
-                            {{ f.errors }}
-                            <span class='add-on' style='float:right'>
-                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ f.order.value }}</a>
+            <tbody>
+            {% for form in factory %}
+                <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+                    {% for f in form.visible_fields %}
+                        {% if forloop.first %}
+                        <td class="input-prepend">
+                            <span class='add-on'>
+                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
                             </span>
-                        </th>
-                    {% endif %}
-                    {% for field in f.visible_fields %}
-                    {% if field.name == 'cause' %}
+                            {% for f in form.hidden_fields %}
+                                {{ f }}
+                            {% endfor %}
+                            {{ f }}
+                        </td>
+                        {% elif f.name == 'cause' %}
                         <td class="input-append dropdown counter">
                             {% if forloop.first %}{% for field in form.hidden_fields %} {{ field }} {% endfor %}{% endif %}
                             <ul class="dropdown-menu" role='menu'>
-                            {{ field|removetags:'ul' }}
+                            {{ f|removetags:'ul' }}
                             </ul>
-                            <a href="#{{ field.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
-                                <span class='label {% if field.value|length %}label-warning{% endif %}'>
-                                    {{ field.value|length }}
+                            <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
+                                <span class='label {% if f.value|length %}label-warning{% endif %}'>
+                                    {{ f.value|length }}
                                 </span> <b class="caret"></b>
                             </a>
-                            
-                        </td>
-                    {% else %}
-                        <td>
-                            {% if forloop.first %}{% for field in f.hidden_fields %} {{ field }} {% endfor %}{% endif %}
-                            {{ field }}
-                        </td>
-                    {% endif %}
+                         </td>
+                        {% else %}
+                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
-                {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr> <th colspan="2" style="text-align:right"> Остаток </th>
-                 <td colspan="2"> {{ form.brocken }} </td> 
-            </tr>
-        </tfoot>
+            {% endfor %}
+            </tbody>
         </table>
+    </fieldset>    
+    <fieldset class='span4'>
+            {{ widthcolor }}
         </fieldset>
-        {% endfor %}    
-    </form>
-    <div class='alert alert-info'>
-        Для удобного переключения между полями используйте кнопку Tab
-    </div>
+        
+</form>
 </div>
 <div class="form-actions">
-        <div class="container">
-            <button type="submit" class="btn btn-primary" form="form">
-                <i class="icon-ok icon-white"></i> Сохранить изменения
-            </button>
-        </div>
+    <div class="container">
+        <button type="submit" class="btn btn-primary" form="form">
+            <i class="icon-ok icon-white"></i> Сохранить изменения
+        </button>
     </div>
+</div>
 {% endblock %}
