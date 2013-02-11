@@ -71,4 +71,3 @@ class Warren(models.Model,UrlMixin):
         ordering = ('-date','order')
         verbose_name=u'Укладка'
         verbose_name_plural=u'Укладка'
-
