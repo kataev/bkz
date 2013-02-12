@@ -32,7 +32,7 @@ def forming(request):
     else:
         date = datetime.date.today()
     filter = {'date':date}
-    queryset = Forming.objects.filter(**filter).order_by().prefetch_related('bar','raw','half')
+    queryset = Forming.objects.filter(**filter).prefetch_related('bar','raw','half')
     order = tuple(f.order for f in queryset)
     if order:
         order = max(order)+1

@@ -41,7 +41,7 @@ nav = dict(
     make = (
         ('make:index','icon-align-justify',u'Производство'),
         ('make:forming', 'icon-filter', u'Формовка'),
-        ('make:warren', 'icon-resize-full', u'Садка'),
+        ('make:warren', 'icon-resize-full', u'Укладка'),
         )
 )
 menu = dict(
@@ -73,8 +73,8 @@ menu = dict(
         ('lab:Cause-add','',u'Дефект'),
     ),
     make = (
-        ('make:Forming-add','',u'Формовка'),
-        ('make:Warren-add','',u'Укладка'),
+        ('make:Forming-add','',u'Формовку'),
+        ('make:Warren-add','',u'Укладку'),
         ('lab:Cause-add','',u'Дефект'),  
         ),
 )
