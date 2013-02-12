@@ -291,6 +291,15 @@ FlexionFactory.get_value = property(get_flexion_value)
 FlexionFactory.caption = u'Испытания на изгиб'
 
 class BatchTestsForm(BootstrapMixin,forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super(BatchTestsForm, self).__init__(*args,**kwargs)
+        choices = []
+        for k,v in self['cad'].field.choices:
+            if k:
+                v = '%s %s' % (k,v)
+            choices.append((k,v))
+        self['cad'].field.choices = choices
+
     class Meta:
         model = Batch
         fields = ('heatconduction','seonr','frost_resistance','water_absorption','chamfer',
