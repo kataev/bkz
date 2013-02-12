@@ -11,13 +11,9 @@ class Command(BaseCommand):
     help = "Commands for lagasy db"
     def handle(self, *args, **options):
         label = args[0]
-        if label == 'amount':
-            self.amount()
-        elif label =='limestone':
-            self.limestone()
-        elif label == 'forming':
-            self.forming()
-        else:
+        try:
+            getattr(self,label)()
+        except AttributeError:
             raise CommandError('Command DNE')
 
     def amount(self):
@@ -54,3 +50,8 @@ class Command(BaseCommand):
                 h.save()
             except IndexError:
                 print i,'DNE',h
+    def convert_tts(self):
+        tts = ((200,45),(300,72),(400,134),(600,74),(500,52),(222,110))
+        for m in [Forming,Warren,Raw,Bar,Half]:
+            for old,new in tts:
+                m.objects.filter(tts=old).update(tts=new)

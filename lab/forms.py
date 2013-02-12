@@ -112,7 +112,7 @@ class BarForm(BootstrapMixin,forms.ModelForm):
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                 'tts':NumberInput,
                 'weight':NumberInput,
-                'temperature':FloatInput,
+                'temperature':NumberInput,
                 'humidity':FloatInput,
                 'sand':FloatInput,
                 'humidity_transporter':FloatInput,
@@ -130,7 +130,7 @@ class RawForm(BootstrapMixin,forms.ModelForm):
         widgets = {'datetime':SplitDateTimeHTML5Widget,
                     'tts':NumberInput,
                     'weight':NumberInput,
-                    'temperature':FloatInput,
+                    'temperature':NumberInput,
                     'humidity':FloatInput,
         }
 
@@ -147,7 +147,7 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
         model = Half
         widgets = { 'datetime':SplitDateTimeHTML5Widget,
                     'weight':NumberInput,
-                    'temperature':FloatInput,
+                    'temperature':NumberInput,
                     'humidity':FloatInput,
                     'shrink':FloatInput,
                     'position':NumberInput(attrs={'max':25,'min':1,'step':1}),
