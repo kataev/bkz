@@ -156,8 +156,8 @@ def journal(request):
     factory = [half, raw, bar, clay, quarry]
     if request.method == 'POST' and all([f.is_valid() for f in factory]):
         for f in factory:
-            messages.success(request,u'Журнал сохранен')
             f.save()
+        messages.success(request,u'Журнал сохранен')
         return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
     if not all([f.is_valid() for f in factory]):
         for f in factory:
