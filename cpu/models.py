@@ -64,3 +64,10 @@ class Position(models.Model):
     class Meta:
         verbose_name=u'позиция точек и датчиков'
         verbose_name_plural=u'позиции точек и датчиков'
+
+
+class Value(models.Model):
+    code = models.IntegerField(u'Номер в сети ModBus')
+    field = models.IntegerField(u'Номер канала')
+    value = models.FloatField(u'Значение')
+    datetime = models.DateTimeField(auto_now=True)

@@ -3,8 +3,9 @@ from django.shortcuts import render
 
 from bkz.cpu.models import pos,line
 
-def main(request):
+def index(request):
     """ Главная страница """
-    return render(request, 'cpu/cpu.html',dict(positions = pos,line=line))
+
+    return render(request, 'cpu/index.html',dict(positions = pos,line=line))
 
 

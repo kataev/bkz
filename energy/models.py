@@ -5,7 +5,7 @@ from django.db import models
 from bkz.utils import UrlMixin
 
 class Energy(UrlMixin,models.Model):
-    date=models.DateField(u"Дата")
+    date=models.DateField(u"Дата",unique=True)
     elec4=models.FloatField(u"Электр 4 ячейка")
     elec16=models.FloatField(u"Электр 16 ячейка")
     iwater=models.FloatField(u"Пром. Вода")

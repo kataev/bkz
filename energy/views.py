@@ -1,30 +1,22 @@
 # -*- coding: utf-8 -*-
-import csv
 import datetime
-from copy import deepcopy
-from django.utils import simplejson
 
 from django.shortcuts import render
-from django.http import HttpResponse
 
-from bkz.energy.models import Energy,Teplo
 from bkz.whs.forms import YearMonthFilter
+from bkz.energy.models import Energy,Teplo
 from bkz.energy.forms import EnergyFactory,TeploFactory
 
+from itertools import tee, izip
 
-def delta(queryset,fields):
-    prev = 0
-    array = []
-    for v in queryset.reverse():
-        if not prev:
-            prev = v
-            continue
-        o = deepcopy(v)
-        for f in fields[1:]:
-            setattr(o,f,abs(getattr(v,f) - getattr(prev,f)) / ((v.date-prev.date).days or 1))
-        array.append(o)
-        prev = v
-    return array
+def pairwise(iterable):
+    a,b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
+
+def delta(queryset,fields=None):
+    return ([(c[k]-p[k]) / (c['date']-p['date']).days for k in p.keys() if k not in {'date','id'}] for c,p in pairwise(queryset))
+
 
 def index(request,year=None,month=None):
     fields = ('gaz','elec4','elec16')
@@ -63,13 +55,3 @@ def teplo(request):
     initial=[{'datetime':datetime.date.today()},]
     energy = TeploFactory(request.POST or None,queryset=queryset,initial=initial)
     return render(request,'energy/teplo.html',dict(object_list=energy,datefilter=datefilter,date=date))
-
-
-def energy_csv(request):
-    datefilter = YearMonthFilter(request.GET or None,model=Energy)
-    date = datefilter.get_date
-    data = {'date__year':date.year}
-    if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
-        data['date__month']=date.month
-    queryset = Energy.objects.all()#.filter(**data)
-    return HttpResponse(simplejson.dumps(queryset))

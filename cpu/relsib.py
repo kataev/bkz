@@ -149,8 +149,7 @@ registers = [22, 34] # Список регистров, 22 - влага, 34 - т
 
 
 def main():
-    sock = socket.socket()
-    sock.connect(('netbook-eth', 2004))
+    # sock = socket.socket()
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
         for id in devices: # Цикл по девайсам
@@ -163,24 +162,18 @@ def main():
                 if ser.inWaiting() != 0: # Если есть хоть один бит в буфере
                     sleep(.4) # Если меньше 9 то еще поспать 400mc
                     write = ser.read(9)[3:-2][::-1]
-                    dvt[r] = 0
-                    dvt[r] = round(unpack('f', write)[0], 3)
+                    value = round(unpack('f', write)[0], 3)
+                    dvt[r]=value
+                    cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %d,%f;', (id, r, value) )
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
-            #        print dvt
-            #        print 'INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());' % (id, dvt[34], dvt[22])
-            cur.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
-            data = []
-            for k, v in dvt.items():
-                data.append(('cpu.%d.%d' % (id, k), (time(), v)))
-            serialized_data = cPickle.dumps(data, protocol=-1)
-            length_prefix = pack("!L", len(serialized_data))
-            message = length_prefix + serialized_data
-            sock.sendall(message)
-
+            # data =[('cpu.%d.%d' % (id, k), (time(), v)) for k, v in dvt.items()]
+            # serialized_data = cPickle.dumps(data, protocol=-1)
+            # length_prefix = pack("!L", len(serialized_data))
+            # message = length_prefix + serialized_data
+            # sock.sendall(message)
         con.commit()
-
         ser.write(lrc(mes(1, 0, 24)))
         sleep(.4)
         #    print se
@@ -189,23 +182,9 @@ def main():
             ser.flushOutput()
         else:
             data = ser.read(ser.inWaiting())
-            a = sp(data[7:-4], 4)
-            cur.execute(
-                'INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' %
-                str(a)[1:-1])
-        #            d = []
-        #           for i,v in enumerate(a):
-        #                d.append(('cpu.termodat22m.%d' % (i+1),(time(),v)))
-        #            serialized_data = cPickle.dumps(d, protocol=-1)
-        #            length_prefix = pack("!L", len(serialized_data))
-        #            message = length_prefix + serialized_data
-        #            sock.sendall(message)
-        #            con.commit()
-        #            ser.flushInput()
-        #            ser.flushOutput()
-
+            for r,value in enumerate(sp(data[7:-4], 4)):
+                cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %d,%f;', (1, r, value) )
     ser.close() # Зашил порт, по идее ни когда не выполнится.
-
 
 if __name__ == '__main__':
     main()
