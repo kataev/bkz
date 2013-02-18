@@ -70,4 +70,4 @@ class Value(models.Model):
     code = models.IntegerField(u'Номер в сети ModBus')
     field = models.IntegerField(u'Номер канала')
     value = models.FloatField(u'Значение')
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
