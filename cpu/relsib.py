@@ -132,7 +132,7 @@ def main():
                     write = ser.read(9)[3:-2][::-1]
                     value = round(unpack('f', write)[0], 3)
                     dvt[r]=value
-                    cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %d,%f;', (id, r, value) )
+                    cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %s,%f;', (id, r, value) )
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
@@ -145,7 +145,7 @@ def main():
         else:
             data = ser.read(ser.inWaiting())
             for r,value in enumerate(parse_data(data[7:-4], 4)):
-                cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %d,%f;', (1, r, value) )
+                cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %s,%f;', (1, r, value) )
     ser.close() # Зашил порт, по идее ни когда не выполнится.
 
 if __name__ == '__main__':
