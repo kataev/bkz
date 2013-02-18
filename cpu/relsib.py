@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import serial
+import socket
 import psycopg2
 from struct import pack, unpack
-from time import sleep
+from time import sleep,time
 from string import rjust
-from operator import xor
 from itertools import izip_longest
 
 
@@ -112,6 +112,8 @@ def main():
     cur_bkz = con_bkz.cursor()
     con_cpu = psycopg2.connect(user='django', host='192.168.1.3', database='cpu', password='django')
     cur_cpu = con_cpu.cursor()
+    carbon = socket.socket()
+    carbon.connect(('localhost',2013))
 
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
@@ -132,8 +134,9 @@ def main():
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
+            cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
+            carbon.sendall('cpu.%d.%d %f' % (id,r,v,time()) for r,v in dvt.items())
         con_bkz.commit()
-        cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
         con_cpu.commit()
 
         # Termodat part
@@ -149,6 +152,7 @@ def main():
             a = parse_data(data[7:-4], 4)
             for r, value in enumerate(a):
                 cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value) )
+            carbon.sendall('cpu.%d.%s %f' % (1,r,v,time()) for r,v in enumerate(a))
             cur_cpu.execute('INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(a)[1:-1])
             con_cpu.commit()
             con_bkz.commit()
