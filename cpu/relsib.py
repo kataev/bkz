@@ -116,10 +116,10 @@ registers = [22, 34] # Список регистров, 22 - влага, 34 - т
 
 
 def main():
-    con_bkz = psycopg2.connect(user='bkz', host='192.1681.3', database='bkz', password='')
-    cur_bkz = con.cursor()
+    con_bkz = psycopg2.connect(user='bkz', host='192.168.1.3', database='bkz', password='')
+    cur_bkz = con_bkz.cursor()
     con_cpu = psycopg2.connect(user='django', host='192.168.1.3', database='cpu', password='django')
-    cur_cpu = con.cursor()
+    cur_cpu = con_cpu.cursor()
 
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
