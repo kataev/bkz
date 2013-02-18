@@ -139,7 +139,9 @@ def main():
         con_bkz.commit()
         cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
         con_cpu.commit()
-        ser.write(lrc(termodat(1, 0, 24)))
+        request = termodat(1, 0, 24)
+        ser.write(':'+request)
+        ser.write(lrc(request)+'\r\n')
         sleep(.4)
         if ser.inWaiting() == 0:
             ser.flushInput()
