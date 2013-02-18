@@ -3,18 +3,10 @@
 import serial
 import psycopg2
 from struct import pack, unpack
-from time import sleep, time
+from time import sleep
 from string import rjust
-
-import socket
-import cPickle
 from operator import xor
-
-con = psycopg2.connect(user='django', host='server', database='cpu', password='django')
-cur = con.cursor()
-
-def sm(c):
-    return ":" + c + hex(255 - reduce(xor, map(ord, c)) - 1)[-2:] + "\r\n"
+from itertools import izip_longest
 
 
 def bin(s):
@@ -26,20 +18,12 @@ def tb(int_type, offset):
     mask = 1 << offset
     return int_type ^ mask
 
+def inv(data):
+    return ''.join(str(tb(int(b), 0)) for b in data)
 
-def inv(q):
-    w = ""
-    i = 0
-    for i in range(len(q)):
-        w += str(tb(int(q[i]), 0))
-        i += 1
-    return w
-
-
-def out(s):
-    if s == "0000":
-        return 0
-    if s == "7D00":
+def parse_response(data):
+    s = ''.join(data)
+    if s == "0000" or s == "7D00":
         return 0
     try:
         if int(s, 16) > 20000:
@@ -47,47 +31,29 @@ def out(s):
         else:
             a = int(s, 16) / 10.
     except BaseException:
-        a = 0
+        return 0
     return a
 
 
-def sp(s, g):
-    r = 0
-    q = []
-    #    i=0
-    while r != len(s):
-    #        q['t'+str(i)]=out(s[r:r+g])
-        q.append(out(s[r:r + g]))
-        r += g
-        #        i+=1
-    return q
+def parse_data(data, n):
+    """ Parse termodat data """
+    return map(parse_response,izip_longest(*[iter(data)] * n))
+
+def termodat(a, b, n):
+    """ Generate termodat request string.
+        Address, start registers, end registers """
+    return rjust(hex(a).split("x")[1], 2, "0") + "03" + rjust(hex(b).split("x")[1], 4, "0") + rjust(hex(n).split("x")[1] , 4, "0")
 
 
-def mes(a, b, n):
-    return rjust(hex(a).split("x")[1], 2, "0") + "03" + rjust(hex(b).split("x")[1], 4, "0") + rjust(hex(n).split("x")[1]
-        , 4, "0")
+def lrc(data):
+    return chr(reduce(xor,map(ord,data)))
 
-
-def lrc(s):
-    i = 0
-    hs = ""
-    ls = ""
-    while i < len(s):
-        if i % 2 == 0:
-            hs += s[i]
-        else:
-            ls += s[i]
-        i += 1
-    i = 0
-    h = 0
-    l = 0
-    while i < len(hs):
-        h += int(hs[i], 16)
-        l += int(ls[i], 16)
-        i += 1
+def lrc_old(data):
+    l = sum(int(ch,16) for i,ch in enumerate(data) if i % 2)
+    h = sum(int(ch,16) for i,ch in enumerate(data) if not i % 2)
     hi = inv(rjust(bin(h), 4, "0"))
     li = inv(rjust(bin(l), 4, "0"))
-    return ":" + s + hex(int(hi, 2))[-1:] + hex(int(li, 2) + 1)[-1:] + "\r\n"
+    return hex(int(hi, 2))[-1:] + hex(int(li, 2) + 1)[-1:]
 
 #~ Table of CRC values for high–order byte
 auchCRCHi = [
@@ -148,8 +114,10 @@ devices = [21, 22] # Список девайсов
 registers = [22, 34] # Список регистров, 22 - влага, 34 - темп
 
 
+
 def main():
-    # sock = socket.socket()
+    con = psycopg2.connect(user='bkz', host='server', database='bkz', password='')
+    cur = con.cursor()
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
         for id in devices: # Цикл по девайсам
@@ -168,21 +136,15 @@ def main():
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
-            # data =[('cpu.%d.%d' % (id, k), (time(), v)) for k, v in dvt.items()]
-            # serialized_data = cPickle.dumps(data, protocol=-1)
-            # length_prefix = pack("!L", len(serialized_data))
-            # message = length_prefix + serialized_data
-            # sock.sendall(message)
         con.commit()
-        ser.write(lrc(mes(1, 0, 24)))
+        ser.write(lrc(termodat(1, 0, 24)))
         sleep(.4)
-        #    print se
         if ser.inWaiting() == 0:
             ser.flushInput()
             ser.flushOutput()
         else:
             data = ser.read(ser.inWaiting())
-            for r,value in enumerate(sp(data[7:-4], 4)):
+            for r,value in enumerate(parse_data(data[7:-4], 4)):
                 cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %d,%f;', (1, r, value) )
     ser.close() # Зашил порт, по идее ни когда не выполнится.
 
