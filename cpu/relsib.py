@@ -46,9 +46,6 @@ def termodat(a, b, n):
 
 
 def lrc(data):
-    return chr(reduce(xor,map(ord,data)))
-
-def lrc_old(data):
     l = sum(int(ch,16) for i,ch in enumerate(data) if i % 2)
     h = sum(int(ch,16) for i,ch in enumerate(data) if not i % 2)
     hi = inv(rjust(bin(h), 4, "0"))
@@ -150,7 +147,7 @@ def main():
         else:
             data = ser.read(ser.inWaiting())
             a = parse_data(data[7:-4], 4)
-            for r,value in enumerate(a):
+            for r, value in enumerate(a):
                 cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value) )
             cur_cpu.execute('INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(a)[1:-1])
             con_cpu.commit()
