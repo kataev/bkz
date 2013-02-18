@@ -13,7 +13,6 @@ def bin(s):
     s = int(s)
     return str(s) if s <= 1 else bin(s >> 1) + str(s & 1)
 
-
 def tb(int_type, offset):
     mask = 1 << offset
     return int_type ^ mask
@@ -34,7 +33,6 @@ def parse_response(data):
         return 0
     return a
 
-
 def parse_data(data, n):
     """ Parse termodat data """
     return map(parse_response,izip_longest(*[iter(data)] * n))
@@ -43,7 +41,6 @@ def termodat(a, b, n):
     """ Generate termodat request string.
         Address, start registers, end registers """
     return rjust(hex(a).split("x")[1], 2, "0") + "03" + rjust(hex(b).split("x")[1], 4, "0") + rjust(hex(n).split("x")[1] , 4, "0")
-
 
 def lrc(data):
     l = sum(int(ch,16) for i,ch in enumerate(data) if i % 2)
@@ -110,8 +107,6 @@ def crc16(data):
 devices = [21, 22] # Список девайсов
 registers = [22, 34] # Список регистров, 22 - влага, 34 - темп
 
-
-
 def main():
     con_bkz = psycopg2.connect(user='bkz', host='192.168.1.3', database='bkz', password='')
     cur_bkz = con_bkz.cursor()
@@ -120,6 +115,7 @@ def main():
 
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
+        # Relsib part
         for id in devices: # Цикл по девайсам
             dvt = {} # Буфер для данных
             for r in registers: # Цикл по регистрам
@@ -139,6 +135,8 @@ def main():
         con_bkz.commit()
         cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
         con_cpu.commit()
+
+        # Termodat part
         request = termodat(1, 0, 24)
         ser.write(':'+request)
         ser.write(lrc(request)+'\r\n')

@@ -205,7 +205,6 @@ INSTALLED_APPS = (
     'devserver',
     'south',
     'gunicorn',
-#    'piston',
     'webodt',
     'linaro_django_pagination',    
     )
