@@ -116,8 +116,11 @@ registers = [22, 34] # Список регистров, 22 - влага, 34 - т
 
 
 def main():
-    con = psycopg2.connect(user='bkz', host='server', database='bkz', password='')
-    cur = con.cursor()
+    con_bkz = psycopg2.connect(user='bkz', host='192.1681.3', database='bkz', password='')
+    cur_bkz = con.cursor()
+    con_cpu = psycopg2.connect(user='django', host='192.168.1.3', database='cpu', password='django')
+    cur_cpu = con.cursor()
+
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
         for id in devices: # Цикл по девайсам
@@ -132,11 +135,13 @@ def main():
                     write = ser.read(9)[3:-2][::-1]
                     value = round(unpack('f', write)[0], 3)
                     dvt[r]=value
-                    cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %s,%f;', (id, r, value) )
+                    cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (id, r, value) )
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
-        con.commit()
+        con_bkz.commit()
+        cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
+        con_cpu.commit()
         ser.write(lrc(termodat(1, 0, 24)))
         sleep(.4)
         if ser.inWaiting() == 0:
@@ -144,8 +149,12 @@ def main():
             ser.flushOutput()
         else:
             data = ser.read(ser.inWaiting())
-            for r,value in enumerate(parse_data(data[7:-4], 4)):
-                cur.execute('INSERT INTO cpu_value (code,field,value) VALUES (%d, %s,%f;', (1, r, value) )
+            a = parse_data(data[7:-4], 4)
+            for r,value in enumerate(a):
+                cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value) )
+            cur_cpu.execute('INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(a)[1:-1])
+            con_cpu.commit()
+            con_bkz.commit()
     ser.close() # Зашил порт, по идее ни когда не выполнится.
 
 if __name__ == '__main__':
