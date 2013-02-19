@@ -14,18 +14,23 @@ unit_c = (
     (u'dep',u'разряжение'),
 )
 
-class Device(models.Model):
+class CpuDevice(models.Model):
     name = models.CharField(u'Имя устройства',max_length=100)
     code = models.CharField(u'Код устройства',max_length=100)
+
+    class Meta:
+        verbose_name=u'Устройство'
+        verbose_name_plural=u'Устройства'
 
     def __unicode__(self):
         return self.name + self.code
 
 pos = {
-    101:4,
+    101:4,    # Зона нагревания
     102:4.66,
-    103:5.33,
-    201:6.66,
+    103:5.33, 
+
+    201:6.66, # Обжиг
     202:7.33,
     203:8,
     204:8.66,
@@ -33,7 +38,8 @@ pos = {
     206:10,
     207:10.66,
     208:11.33,
-    303:12.66,
+
+    303:12.66, # Охлаждение
     304:13.66,
     305:14.66
 }
@@ -54,7 +60,7 @@ line = {101: 19,
         305: 24}
 
 class Position(models.Model):
-    name = models.ForeignKey(Device,verbose_name=u'Имя устройства')
+    name = models.ForeignKey(CpuDevice,verbose_name=u'Имя устройства')
     field = models.CharField(u'Канал устойства',max_length=100,null=True,blank=True)
     place = models.CharField(u'Раположение',max_length=50,choices=places,null=True,blank=True)
     unit = models.CharField(u'Еденицы измерения',max_length=50,null=True,blank=True,choices=unit_c)
@@ -71,3 +77,7 @@ class Value(models.Model):
     field = models.IntegerField(u'Номер канала')
     value = models.FloatField(u'Значение')
     datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name=u'Значение'
+        verbose_name_plural=u'Значения'
