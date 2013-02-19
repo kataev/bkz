@@ -152,7 +152,7 @@ def main():
             a = parse_data(data[7:-4], 4)
             for r, value in enumerate(a):
                 cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value) )
-            carbon.sendall('\n'.join('cpu.%d.%s %f %d' % (1,r,v,time()) for r,v in enumerate(a)) + '\n')
+            carbon.sendall('\n'.join('cpu.%d.%s %f %d' % (1,r+1,v,time()) for r,v in enumerate(a)) + '\n')
             cur_cpu.execute('INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(a)[1:-1])
             con_cpu.commit()
             con_bkz.commit()

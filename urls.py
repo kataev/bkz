@@ -20,7 +20,6 @@ urlpatterns += patterns('',
     url(ur'^Показания/', include('bkz.energy.urls', namespace='energy')),
     url(ur'^Лаборатория/', include('bkz.lab.urls', namespace='lab')),
     url(ur'^Производство/', include('bkz.make.urls', namespace='make')),
-    url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
     url(ur'^ИТ/', include('bkz.it.urls', namespace='it'), name='it'),
 )
 

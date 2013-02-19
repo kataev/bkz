@@ -39,6 +39,7 @@ nav = dict(
         ('lab:stats',' icon-signal', u'Характеристики'),
     ),
     make = (
+        ('make:cpu:index','icon-fire',u'ЦПУ'),
         ('make:index','icon-align-justify',u'Производство'),
         ('make:forming', 'icon-filter', u'Формовка'),
         ('make:warren', 'icon-resize-full', u'Укладка'),
