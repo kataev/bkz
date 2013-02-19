@@ -203,7 +203,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'pytils',
     'devserver',
-    # 'south',
+    'south',
     'gunicorn',
     'webodt',
     'linaro_django_pagination',    
