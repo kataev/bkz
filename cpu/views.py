@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import simplejson
+from django.utils import simplejson
 
 from django.shortcuts import render
 from bkz.cpu.models import positions,line
