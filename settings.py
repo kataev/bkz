@@ -24,26 +24,26 @@ DATABASES = {
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5433', # Set to empty string for default. Not used with sqlite3.
     },
-    'server' : {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'bkz', # Or path to database file if using sqlite3.
-            'USER': 'bkz', # Not used with sqlite3.
-            'PASSWORD': 'bkz', # Not used with sqlite3.
-            'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '5432', # Set to empty string for default. Not used with sqlite3.
-        },
+    # 'server' : {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'bkz', # Or path to database file if using sqlite3.
+    #         'USER': 'bkz', # Not used with sqlite3.
+    #         'PASSWORD': 'bkz', # Not used with sqlite3.
+    #         'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
+    #         'PORT': '5432', # Set to empty string for default. Not used with sqlite3.
+    #     },
    # 'default': {
    #     'ENGINE': 'django.db.backends.sqlite3',
    #     'NAME': '../bkz_test.db', # Or path to database file if using sqlite3.
    # },
-     'old': {
-         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-         'NAME': 'disp', # Or path to database file if using sqlite3.
-         'USER': 'root', # Not used with sqlite3.
-         'PASSWORD': '89026441284', # Not used with sqlite3.
-         'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
-         'PORT': '', # Set to empty string for default. Not used with sqlite3.
-     },
+     # 'old': {
+     #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+     #     'NAME': 'disp', # Or path to database file if using sqlite3.
+     #     'USER': 'root', # Not used with sqlite3.
+     #     'PASSWORD': '89026441284', # Not used with sqlite3.
+     #     'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
+     #     'PORT': '', # Set to empty string for default. Not used with sqlite3.
+     # },
     # 'localhost': {
     #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
     #     'NAME': 'bteam', # Or path to database file if using sqlite3.
@@ -203,7 +203,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'pytils',
     'devserver',
-    'south',
+    # 'south',
     'gunicorn',
     'webodt',
     'linaro_django_pagination',    

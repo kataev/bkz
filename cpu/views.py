@@ -6,6 +6,6 @@ from bkz.cpu.models import positions,line
 
 def index(request):
     """ Главная страница """
-    return render(request, 'cpu/index.html',dict(positions = simplejson.dumps(positions),line=simplejson.dumps(line)))
-
-
+    firing = list({'field':k,'point':v,'position':positions.get(v,'')} for k,v in line.items())
+    firing.sort(key=lambda x: x['position'])
+    return render(request, 'cpu/index.html', dict(firing = simplejson.dumps(firing)))
