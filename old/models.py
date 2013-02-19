@@ -64,7 +64,8 @@ class DispJurnal(models.Model):
             return u'workshop %d' % self.workshop
         else:
             return u'x3'
-
+    def m(self):
+        return self.price * self.minus
 
     class Meta:
         db_table = u'jurnal'
