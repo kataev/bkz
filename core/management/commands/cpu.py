@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-from django.core.management.base import BaseCommand
-
-from bkz.cpu.relsib import lrc,termodat,lrc_old,parse_data
 import psycopg2
+
+from django.core.management.base import BaseCommand
+from BeautifulSoup import BeautifulStoneSoup
+
+from bkz.cpu.relsib import lrc,termodat,parse_data
+from itertools import *
+from collections import Counter
+
 
 class Command(BaseCommand):
     help = "Commands for lagasy db"
     def handle(self, *args, **options):
-        self.relsib_test()
+        #self.relsib_test()
+        self.svg()
+
 
     def relsib_test(self):
     	con = psycopg2.connect(user='bteam', host='', database='bteam', password='bteam',port='5433')
@@ -24,3 +31,39 @@ class Command(BaseCommand):
     	for r,value in enumerate(data):
     		print r,value
     		cur.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(),%d, %s, %f);' % (1, r+1, value) )
+    
+
+    def svg(self):
+        xml = ''.join(l for l in file('/home/bteam/Dropbox/mm/bkz/striped.svg').readlines())
+        soup = BeautifulStoneSoup(xml,selfClosingTags=[u'polygon', u'polyline', u'path', u'line', u'rect'])
+        for name in [u'polygon',  u'polyline', u'text', u'path', u'line', u'rect']:
+            tags = soup.findAll(name)
+            # print name.upper()
+            css = {}
+            for k,g in groupby(sorted(chain.from_iterable(t.attrs for t in tags)),key=lambda x: str(x[0])):
+                if 'y' not in k and 'x' not in k and k not in ('d','transform','points'):
+                    c = Counter(v for k,v in g)
+                    i=0
+                    for ke,v in c.items():
+                        # if v==len(tags):
+                        #     print name,k,ke,v
+                        #     css[name]=u'%s:%s' % (k,ke)
+                        #     for j,t in enumerate(soup.findAll(attrs={k:ke})):
+                        #         del t[k]
+                        i+=1
+                        if v > 10:
+                            css[u'.%s%d' % (k[:3]+k[-3:],i)] = u'%s:%s' % (k,ke)
+                            for j,t in enumerate(soup.findAll(attrs={k:ke})):
+                                del t[k]
+                                t['class']=t.get('class',u'') + u' %s%d' % (k[:3]+k[-3:],i)
+                            
+        for t in soup.findAll('text'):
+            t['fill']='#000'
+        new = file('bkz.html','w')
+        style= unicode(u'\n'.join(u'%s {%s}' % (k,v) for k,v in css.items()))
+        new.write('<html> <head> <title>BKZ</title> <style>')
+        new.write(style)
+        new.write('</style> </head> <body>')
+        new.write(soup.prettify())
+        new.write('</body> </html>')
+        new.close()

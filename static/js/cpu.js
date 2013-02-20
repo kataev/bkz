@@ -26,9 +26,10 @@ var positions = d3.scale.linear()
     .range([0, width])
     .domain([4,16])
 
-// var points = d3.scale.linear()
-//     .range([0, width])
-//     .domain(d3.extent(_(data).pluck('position')))
+var points = d3.scale.ordinal()
+    .range([0, width])
+    .domain(d3.extent(_(data).pluck('position')))
+    .rangePoints([0, width])
 
 
 var xAxis = d3.svg.axis()
@@ -39,9 +40,9 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
 
-// var pointAxis = d3.svg.axis()
-//     .scale(points)
-//     .orient("bottom")
+var pointAxis = d3.svg.axis()
+    .scale(points)
+    .orient("bottom")
 
 var line = d3.svg.line()
     // .interpolate("basis")
@@ -60,10 +61,10 @@ var svg = d3.select("#firing").append("svg")
       .attr("transform", "translate(0," + (height+25) + ")")
       .call(xAxis);
 
-  // svg.append("g")
-  //     .attr("class", "x axis points")
-  //     .attr("transform", "translate(0," + height + ")")
-  //     .call(pointAxis);
+  svg.append("g")
+      .attr("class", "x axis points")
+      .attr("transform", "translate(0," + height + ")")
+      .call(pointAxis);
 
   svg.append("g")
       .attr("class", "y axis")
