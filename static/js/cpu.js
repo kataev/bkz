@@ -9,12 +9,13 @@ $(function(){
     data = {}
     json.forEach(function(e, index, array){
       var value = e.datapoints[0][0]
-      this[parseInt(e.target.split('.')[2])+1] = value 
+      this[parseInt(e.target.split('.')[2])] = value 
       },data)
     firing.filter(function(e,i,a){return e.position && data[e.field]})
     
 
     firing.forEach(function(e,index,array){
+       $('<tr><td>'+e.field+'</td><td>'+e.point+'</td><td>'+this[e.field]+'</td><td>'+e.position+'</td></tr>').appendTo('#firing_table')
       console.log(e.field,e.point,this[e.field],e.position)
     },data)
 
