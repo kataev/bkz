@@ -15,7 +15,7 @@ $(function(){
 var $chart = $('#firing')
 var margin = {top: 20, right: 80, bottom: 60, left: 50},
     width = $chart.width() - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    height = 400 - margin.top - margin.bottom;
 
 var y = d3.scale.linear()
     .range([height, 0])
@@ -29,7 +29,7 @@ var positions = d3.scale.linear()
 
 var points = d3.scale.ordinal()
     .range([0, width])
-    .domain(d3.extent(_(data).pluck('position')))
+    .domain([4,16])
     .rangePoints([0, width])
 
 
