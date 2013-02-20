@@ -1,10 +1,4 @@
 $(function(){
-  d3.csv("/static/firing.csv", function(data) {
-    console.log(data)
-
-  })
-
-
   json_parse = function(json){
     data = {}
     json.forEach(function(e, index, array){
@@ -15,7 +9,6 @@ $(function(){
     
 
     firing.forEach(function(e,index,array){
-       $('<tr><td>'+e.field+'</td><td>'+e.point+'</td><td>'+this[e.field]+'</td><td>'+e.position+'</td></tr>').appendTo('#firing_table')
       console.log(e.field,e.point,this[e.field],e.position)
     },data)
 
