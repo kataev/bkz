@@ -1,12 +1,13 @@
 $(function(){
   json_parse = function(json){
+    if (!json) return;
     data = {}
     json.forEach(function(e, index, array){
       var value = e.datapoints[0][0]
       this[parseInt(e.target.split('.')[2])] = value 
       },data)
     firing.filter(function(e,i,a){return e.position && data[e.field]})
-    
+        
     
     var tr3 = $('<tr><th>Значение</th></tr>').appendTo('table#help'),
         tr4 = $('<tr><th>Рассогласование</th></tr>').appendTo('table#help'),
@@ -21,7 +22,7 @@ $(function(){
       $('<td>').text((e.target[2]-this[e.field]).toFixed(1)).appendTo(tr4)
     },data)
 
-var $chart = $('#firing')
+var $chart = $('#firing').empty()
 var margin = {top: 20, right: 10, bottom: 70, left: 50},
     width = $chart.width() - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
@@ -123,5 +124,9 @@ svg.append("g")
       .attr("d", target)
 }
   // json_parse([{"target": "cpu.1.0", "datapoints": [[null, 1361418750], [null, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.1", "datapoints": [[49.6, 1361418750], [49.6, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.10", "datapoints": [[609.0, 1361418750], [608.9, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.11", "datapoints": [[717.2, 1361418750], [717.2, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.12", "datapoints": [[825.0, 1361418750], [825.0, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.13", "datapoints": [[873.0, 1361418750], [872.9, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.14", "datapoints": [[945.9, 1361418750], [945.8, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.15", "datapoints": [[978.5, 1361418750], [978.6, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.16", "datapoints": [[978.7, 1361418750], [978.6, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.17", "datapoints": [[947.1, 1361418750], [947.3, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.18", "datapoints": [[47.5, 1361418750], [47.5, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.19", "datapoints": [[470.5, 1361418750], [470.5, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.2", "datapoints": [[54.2, 1361418750], [54.2, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.20", "datapoints": [[530.2, 1361418750], [530.2, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.21", "datapoints": [[553.7, 1361418750], [553.7, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.22", "datapoints": [[801.1, 1361418750], [801.1, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.23", "datapoints": [[693.8, 1361418750], [693.7, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.24", "datapoints": [[552.2, 1361418750], [552.1, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.3", "datapoints": [[49.1, 1361418750], [49.1, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.4", "datapoints": [[59.9, 1361418750], [60.0, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.5", "datapoints": [[44.2, 1361418750], [44.3, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.6", "datapoints": [[50.1, 1361418750], [50.3, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.7", "datapoints": [[0.0, 1361418750], [0.0, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.8", "datapoints": [[0.2, 1361418750], [0.2, 1361418760], [null, 1361418770]]}, {"target": "cpu.1.9", "datapoints": [[2.6, 1361418750], [2.5, 1361418760], [null, 1361418770]]}])
-   d3.json('/carbon/render/?target=cpu.1.*&format=json&from=-30s',json_parse)
+   
+  var refresh = function () {
+    d3.json('/carbon/render/?target=cpu.1.*&format=json&from=-30s',json_parse)
+    setTimeout(refresh, 10000);
+  }()
 })

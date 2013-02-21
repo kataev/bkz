@@ -11,7 +11,6 @@
     <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
     <link type="text/css" rel="stylesheet" href="/static/css/cpu.css"/>
 <style>
-
 .axis path,
 .axis line {
   fill: none;
@@ -19,9 +18,8 @@
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
-  display: none;
-}
+.x.axis path {display: none; }
+
 circle {
   fill:white;
   stroke-width:3px;
@@ -30,17 +28,10 @@ circle {
 .line {
   fill: none;
   stroke-width: 1.5px;
-
 }
 
-.firing {
-  stroke:#468847;
-}
-
-.target {
-  stroke: #999999;
-}
-
+.firing {stroke: #468847; }
+.target {stroke: #999999; }
 </style>
 {% endblock %}
 {% block title %}ЦПУ{% endblock %}
@@ -52,7 +43,6 @@ circle {
       <li class='muted'>График № 4</li>
     </ul>
     <div id='firing' class="span12"></div>
-    
     <table id='help' class='span12 table table-bordered'>
     </table>
 </div>
