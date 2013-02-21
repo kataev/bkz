@@ -13,7 +13,7 @@ $(function(){
     },data)
 
 var $chart = $('#firing')
-var margin = {top: 20, right: 80, bottom: 60, left: 50},
+var margin = {top: 20, right: 80, bottom: 70, left: 50},
     width = $chart.width() - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -26,24 +26,21 @@ var color = d3.scale.category10();
 var positions = d3.scale.linear()
     .range([0, width])
     .domain([4,16])
-
-var points = d3.scale.ordinal()
-    .range([0, width])
-    .domain([4,16])
-    .rangePoints([0, width])
-
+    .clamp(false)
 
 var xAxis = d3.svg.axis()
     .scale(positions)
     .orient("bottom")
 
+var points = d3.svg.axis()
+    .scale(positions)
+    .orient("bottom")
+    .ticks(2)
+    .tickValues(firing.map(function(e,i){return e.position}))
+
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-
-var pointAxis = d3.svg.axis()
-    .scale(points)
-    .orient("bottom")
 
 var line = d3.svg.line()
     // .interpolate("basis")
@@ -65,23 +62,26 @@ var svg = d3.select("#firing").append("svg")
 
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height+25) + ")")
+      .attr("transform", "translate(0," + (height+35) + ")")
       .call(xAxis);
 
-  // svg.append("g")
-  //     .attr("class", "x axis points")
-  //     .attr("transform", "translate(0," + height + ")")
-  //     .call(pointAxis);
+svg.append("g")
+      .attr("class", "x axis points")
+      .attr("transform", "translate(0," + (height+10) + ")")
+      .call(points);
 
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
 
+  svg.select('.points').selectAll('text')
+      .data(firing)
+      .text(function(e){return e.point})
+
   svg.append("path")
       .datum(firing)
       .attr("class", "line")
       .attr("d", line)
-
 
   svg.append("path")
       .datum(firing)
