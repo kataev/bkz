@@ -137,6 +137,9 @@ var svg = d3.select("#chart").append("svg")
         {{ factory.management_object }}    
         {{ factory.management_form }}  
     <fieldset class='span3'>
+        {% for e in factory.non_form_errors %}
+        {{ e }}
+        {% endfor %}
         <table id="forming">
             <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>
@@ -168,6 +171,9 @@ var svg = d3.select("#chart").append("svg")
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
                     {% endfor %}
+                    {% if form.instance.pk and form.instance.warren %}
+                    <td><b title="{{ form.instance.warren }}">W</b></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

@@ -23,21 +23,22 @@
         <table class="table table-bordered table-condensed" id=''>
             <thead>
                 <tr>
-                    <th width="50px">Дата</th>
-                    <th>№ телег</th>
-                    <th width="60px">Кол-во</th>
+                    <th width="50px" rowspan="2">Дата</th>
+                    <th rowspan="2">№ телег</th>
+                    <th colspan="2">Кол-во</th>
+                </tr>
+                <tr>
+                    <th>Фор.</th>
+                    <th>Укл.</th>
                 </tr>
             </thead>
             <tbody>
-            {% for d,forming in object_list %}
+            {% for d,forming,warren in object_list %}
                 <tr>
-                    <th class="{{ forming.0.css }}"> 
-                        <a style='color:black' href="{% url make:forming %}?date={{ d.isoformat }}"> {{ d|date:'j N' }} </a>
-                    </th>
+                    <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
                     <td>
                     {% for f in forming %}
-                    <a title="{{ f }}"
-                     style="{% if f.warrens.count %}text-decoration:line-through{% endif %}"
+                    <a title="{{ f }}" style="{% if f.warren %}text-decoration:line-through;{% else %} color:red; {% endif %}"
                      href="{{ f.get_absolute_url }}">
                     {{ f.tts }}</a>
                     {% for l in f.lab %}
@@ -45,7 +46,8 @@
                     {% endfor %}
                     {% endfor %}
                     </td>
-                    <td> {{ forming|length }} </td>
+                    <td> <a style='color:black' href="{% url make:forming %}?date={{ d.isoformat }}">  {{ forming|length }} </a> </td>
+                <td> <a style='color:black' href="{% url make:warren %}?date={{ d.isoformat }}">  {{ warren|length }} </a> </td>
                 </tr>
             {% endfor %}
             </tbody>

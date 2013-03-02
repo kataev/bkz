@@ -12,7 +12,7 @@
             <div class="span8">
                 <h1 class='datehead'>
                     <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
+                    Укладка <small>за {{ date|date:'j E Y, l' }}</small>
                     <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
                 </h1>
             </div>
@@ -26,6 +26,9 @@
         {{ factory.management_object }}    
         {{ factory.management_form }}  
     <fieldset class='span3'>
+        {% for e in factory.non_form_errors %}
+        {{ e }}
+        {% endfor %}
         <table id='warren'>
             <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>
@@ -43,6 +46,7 @@
                         <td class="input-prepend">
                             <span class='add-on'>
                                 <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
+
                             </span>
                             {% for f in form.hidden_fields %}
                                 {{ f }}
@@ -65,6 +69,9 @@
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
                     {% endfor %}
+                    {% if form.instance.forming %}
+                    <td><b title="{{ form.instance.forming }}">F</b></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

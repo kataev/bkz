@@ -56,7 +56,7 @@ class Warren(models.Model,UrlMixin):
     cause = models.ManyToManyField('lab.Cause', verbose_name=u'Причина брака', null=True, blank=True,limit_choices_to = {'type':'warren'})
 
     source = models.ForeignKey('self', verbose_name=u'ТТС', related_name='consumer', null=True, blank=True)
-    forming = models.ForeignKey(Forming,verbose_name=u'Формовка',null=True,blank=True,related_name='warrens',limit_choices_to = {'pk':1})
+    forming = models.OneToOneField(Forming,verbose_name=u'Формовка',null=True,blank=True)
     part = models.ForeignKey('lab.Part',verbose_name=u'Партия',null=True,blank=True,related_name='warrens',limit_choices_to = {'pk':1})
 
     order = models.IntegerField(u'Порядок',default=0)
@@ -71,3 +71,4 @@ class Warren(models.Model,UrlMixin):
         ordering = ('-date','order')
         verbose_name=u'Укладка'
         verbose_name_plural=u'Укладка'
+        unique_together = ('date','tts')
