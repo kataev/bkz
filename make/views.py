@@ -73,7 +73,7 @@ def warren(request):
     if request.method == 'POST' and factory.is_valid():
         factory.save()
         for w in Warren.objects.filter(date=date).order_by('order'):
-            if w.tts:
+            if w.tto:
                 source = w
             w.source = source
             try:
