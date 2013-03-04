@@ -337,11 +337,29 @@ PartAddFormSet = modelformset_factory(Part,form=PartAddForm, extra=0)
 
 
 model_c = (
-    ('Matherial',u'Глина по позициям'),
+    ('Matherial',u'Сырьё'),
     ('Bar',u'Формовка'),
     ('Raw',u'Сырец'),
     ('Half',u'Полуфабрикат'),
     )
 
+filter_c = (
+    ('Matherial', (
+        (1,u'1 позиция'),
+        (2,u'2 позиция'),
+        (3,u'3 позиция'),
+        (4,u'4 позиция'),
+        (5,u'5 позиция'),
+        (6,u'Конвейер'),
+        (7,u'Белая глина'),
+        (8,u'Карьер'),
+        (9,u'Песок'), ) ),
+    ('Bar', () ),
+    ('Raw', () ),
+    ('Half', () ),
+
+    )
+
 class ModelSelect(forms.Form):
     model = forms.ChoiceField(choices=model_c)
+    # filter = forms.ChoiceField(choices=filter_c,null=True)
