@@ -1,1 +1,7 @@
 {% extends 'core/form.html' %}
+{% block bonus-button %}
+<a href="{% url make:forming %}?date={{ form.instance.date.isoformat }}" class='btn'>Смена</a>
+{% if form.instance.pk and form.instance.warren %}
+<a class='btn' href='{{ form.instance.warren.get_absolute_url }}'title="{{ form.instance.warren }}">Укладка</a>
+{% endif %}
+{% endblock %}

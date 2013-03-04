@@ -360,7 +360,7 @@ class Batch(UrlMixin,models.Model):
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
 
     def __unicode__(self):
-        if self.pk: return u'Партия № %d, %dг' % (self.number,self.date.year)
+        if self.pk: return u'Партия № %d, %s' % (self.number,ru_date(self.date))
         else: return u'Новая партия'
 
     @property

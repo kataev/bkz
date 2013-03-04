@@ -65,7 +65,7 @@ class Command(BaseCommand):
                     b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(, %d,)|(, %d\])' % ((tto,)*3)).order_by('date')[0]
                     for p in b.parts.all():
                         if tto in p.get_tto:
-                            w.part
+                            w.part = p
                             w.save()
                             print 'saved'
                 except IndexError:

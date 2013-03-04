@@ -26,7 +26,7 @@ def index(request):
     warren = Warren.objects.filter(**data)
     warren = dict((d,list(warren)) for d,warren in groupby(warren, key=lambda f: f.date))
     object_list = tuple([(d, list(forming),list(warren.get(d,[]))) for d, forming in groupby(forming, key=lambda f: f.date)])
-    return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list})
+    return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list,'olo':1})
 
 
 def forming(request):
@@ -72,6 +72,7 @@ def warren(request):
 
     if request.method == 'POST' and factory.is_valid():
         factory.save()
+        source = Warren.objects.filter(tto__isnull=False,date=date-datetime.timedelta(1)).latest('order')
         for w in Warren.objects.filter(date=date).order_by('order'):
             if w.tto:
                 source = w

@@ -343,23 +343,25 @@ model_c = (
     ('Half',u'Полуфабрикат'),
     )
 
-filter_c = (
-    ('Matherial', (
-        (1,u'1 позиция'),
-        (2,u'2 позиция'),
-        (3,u'3 позиция'),
-        (4,u'4 позиция'),
-        (5,u'5 позиция'),
+position_c = (
+    (u'Сырьё', (
+        (0,u'Склад глины'),
         (6,u'Конвейер'),
         (7,u'Белая глина'),
         (8,u'Карьер'),
         (9,u'Песок'), ) ),
-    ('Bar', () ),
-    ('Raw', () ),
-    ('Half', () ),
+    (u'Полуфабрикат', (
+        (16,u'16 позиция'),
+        (25,u'25 позиция')
+        ) ),
+    )
 
+path_c = (
+    (5,u'5 путь'),
+    (7,u'7 путь')
     )
 
 class ModelSelect(forms.Form):
     model = forms.ChoiceField(choices=model_c)
-    # filter = forms.ChoiceField(choices=filter_c,null=True)
+    position = forms.ChoiceField(choices=position_c,required=False)
+    path = forms.ChoiceField(choices=path_c,required=False)

@@ -70,7 +70,12 @@
                         {% endif %}
                     {% endfor %}
                     {% if form.instance.forming %}
-                    <td><b title="{{ form.instance.forming }}">F</b></td>
+                    <td><a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}' 
+                        title="{{ form.instance.forming }}">Формовка</a></td>
+                    {% endif %}
+                    {% if form.instance.part %}
+                    <td><a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}' 
+                        title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}

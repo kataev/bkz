@@ -56,7 +56,7 @@ class Warren(models.Model,UrlMixin):
     add = models.IntegerField(u'Доп',null=True,blank=True)
 
     brocken = models.IntegerField(u'Брак', default=0)
-    cause = models.ManyToManyField('lab.Cause', verbose_name=u'Причина брака', null=True, blank=True,limit_choices_to = {'type':'warren'})
+    cause = models.ManyToManyField('lab.Cause', verbose_name=u'Прич. брака', null=True, blank=True,limit_choices_to = {'type':'warren'})
 
     source = models.ForeignKey('self', verbose_name=u'ТТС', related_name='consumer', null=True, blank=True)
     forming = models.OneToOneField(Forming,verbose_name=u'Формовка',null=True,blank=True)
@@ -69,6 +69,14 @@ class Warren(models.Model,UrlMixin):
             return u'Укладка от %s, c ТТC № %s' % (ru_date(self.date),self.tts)
         else:
             return u'Новая укладка'
+
+    @property
+    def warren(self):
+        return self.forming
+
+    @property
+    def lab(self):
+        return self.forming.lab
 
     @property
     def get_tto(self):

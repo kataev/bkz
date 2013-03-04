@@ -23,7 +23,7 @@
         <table class="table table-bordered table-condensed" id=''>
             <thead>
                 <tr>
-                    <th width="50px" rowspan="2">Дата</th>
+                    <th width="60px" rowspan="2">Дата</th>
                     <th rowspan="2">№ телег</th>
                     <th colspan="2">Кол-во</th>
                 </tr>
@@ -34,21 +34,21 @@
             </thead>
             <tbody>
             {% for d,forming,warren in object_list %}
-                <tr>
-                    <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
-                    <td>
-                    {% for f in forming %}
-                    <a title="{{ f }}" style="{% if f.warren %}text-decoration:line-through;{% else %} color:red; {% endif %}"
-                     href="{{ f.get_absolute_url }}">
-                    {{ f.tts }}</a>
-                    {% for l in f.lab %}
-                        <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'>{{ l.label }}</a>
-                    {% endfor %}
-                    {% endfor %}
-                    </td>
-                    <td> <a style='color:black' href="{% url make:forming %}?date={{ d.isoformat }}">  {{ forming|length }} </a> </td>
-                <td> <a style='color:black' href="{% url make:warren %}?date={{ d.isoformat }}">  {{ warren|length }} </a> </td>
-                </tr>
+            <tr>
+                <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
+                <td>
+                {% for f in forming %}
+                <a title="{{ f }}" rel='tooltip'  {% if not f.warren %}class="muted" {% endif %}
+                 href="{{ f.get_absolute_url }}">
+                {{ f.tts }}</a>
+                {% for l in f.lab %}
+                    <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'>{{ l.label }}</a>
+                {% endfor %}
+                {% endfor %}
+                </td>
+                <td> <a href="{% url make:forming %}?date={{ d.isoformat }}">  {{ forming|length }} </a> </td>
+            <td> <a href="{% url make:warren %}?date={{ d.isoformat }}">  {{ warren|length }} </a> </td>
+            </tr>
             {% endfor %}
             </tbody>
         </table>

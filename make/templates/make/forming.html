@@ -28,7 +28,7 @@
 var $chart = $('#chart')
 var margin = {top: 20, right: 80, bottom: 30, left: 50},
     width = $chart.width() - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    height = 300 - margin.top - margin.bottom;
 
 data = $('tbody tr').not('.fake').map(function(){ 
         var tts = $(this).find('input[name*="tts"]').val()
@@ -172,14 +172,15 @@ var svg = d3.select("#chart").append("svg")
                         {% endif %}
                     {% endfor %}
                     {% if form.instance.pk and form.instance.warren %}
-                    <td><b title="{{ form.instance.warren }}">W</b></td>
+                    <td><a class='btn btn-link' href='{{ form.instance.warren.get_absolute_url }}' 
+                        title="{{ form.instance.warren }}">Укладка</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </fieldset>    
-    <fieldset class='span4'>
+    <fieldset class='span4' style='padding-left:10px'>
             {{ widthcolor }}
     </fieldset>
     <div class="span9" id="chart">
