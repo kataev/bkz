@@ -348,7 +348,7 @@ class Batch(UrlMixin,models.Model):
     density = models.FloatField(u'Плотность',null=True,blank=True)
     weight = models.IntegerField(u'Масса',null=True,blank=True)
 
-    tto = models.CharField(u'№ ТТО',max_length=20,null=True,blank=True)
+    tto = models.CommaSeparatedIntegerField(u'№ ТТО',max_length=80,null=True,blank=True)
     amount = models.IntegerField(u'Кол-во',null=True,blank=True)
     pressure = models.FloatField(u'При сжатии',null=True,blank=True)
     flexion = models.FloatField(u'При изгибе',null=True,blank=True)

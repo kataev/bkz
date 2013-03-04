@@ -9,6 +9,7 @@ from django.views.generic import UpdateView
 from bkz.lab.models import *
 from bkz.lab.forms import *
 from bkz.whs.forms import DateForm,YearMonthFilter
+from bkz.lab.utils import convert_tto
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -41,15 +42,13 @@ class BatchUpdateView(UpdateView):
                 part.rows.save()
         if self.parts.is_valid():
             self.parts.save()
-        self.object.amount = sum([r.instance.out or 0 for r in self.parts])
-        self.object.tto = ','.join([r.instance.tto or '' for r in self.parts])
+        self.object.amount = sum(r.instance.out or 0 for r in self.parts)
+        self.object.tto = list(set((convert_tto(','.join(r.instance.tto or '' for r in self.parts)))))
         self.object.save()
-        if all([p.is_valid() and p.rows.is_valid() for p in self.parts]):
+        if all(p.is_valid() and p.rows.is_valid() for p in self.parts):
             messages.success(self.request, u'Партия сохранена успешно!')
             return redirect(self.get_success_url())
         return self.render_to_response(context)
-
-
 
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
@@ -153,13 +152,13 @@ def journal(request):
     # sand = SandForm(request.POST or None,instance=(Matherial.objects.filter(**filter).filter(position=9) or [None,])[0],initial={'position':9},prefix='sand')
 
 
-    factory = [half, raw, bar, clay, quarry]
-    if request.method == 'POST' and all([f.is_valid() for f in factory]):
+    factory = (half, raw, bar, clay, quarry)
+    if request.method == 'POST' and all(f.is_valid() for f in factory):
         for f in factory:
             f.save()
         messages.success(request,u'Журнал сохранен')
         return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
-    if not all([f.is_valid() for f in factory]):
+    if not all(f.is_valid() for f in factory):
         for f in factory:
             print f.prefix,f.errors
     add = True
@@ -171,7 +170,7 @@ def slice(request):
     data = {'datetime__year':date.year}
     if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
         data['datetime__month']=date.month
-    queryset = Batch.objects.filter(**dict([(k.replace('datetime','date'),v) for k,v in data.items()]))
+    # queryset = Batch.objects.filter(**dict((k.replace('datetime','date'),v) for k,v in data.items()))
     return render(request,'index.html')
 
 

@@ -79,7 +79,7 @@
             {% endif %}
 
             {% if form.instance.pk %}
-                <tr class='{{ form.instance.css }}'>
+                <tr class=''>
                     {% for field in form.visible_fields %}
                         {% if forloop.first %}
                             <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import re
 import datetime
 
 from django.db import models
 
 from bkz.utils import UrlMixin,ru_date
 from bkz.whs.constants import cavitation_c,color_c,get_name,css_dict
+
+tto_regexp = re.compile(r'(\d+)+')
 
 class Forming(models.Model,UrlMixin):
     """
@@ -66,6 +69,10 @@ class Warren(models.Model,UrlMixin):
             return u'Укладка от %s, c ТТC № %s' % (ru_date(self.date),self.tts)
         else:
             return u'Новая укладка'
+
+    @property
+    def get_tto(self):
+        return map(int,tto_regexp.findall(self.tto))
 
     class Meta:
         ordering = ('-date','order')

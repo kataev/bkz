@@ -4,17 +4,14 @@ from bkz.lab.models import *
 from bkz.whs.models import Width
 from bkz.make.models import Warren,Forming
 from random import randint,random,shuffle,uniform
-from itertools import cycle,chain
+from itertools import chain,groupby,tee
 import datetime
-
 class Command(BaseCommand):
-    help = "Commands for lagasy db"
+    help = "Commands for lab app"
     def handle(self, *args, **options):
         label = args[0]
-        try:
+        if label:
             getattr(self,label)()
-        except AttributeError:
-            raise CommandError('Command DNE')
 
     def amount(self):
         for p in Part.objects.prefetch_related('rows'):
@@ -50,8 +47,45 @@ class Command(BaseCommand):
                 h.save()
             except IndexError:
                 print i,'DNE',h
+
+
     def convert_tts(self):
         tts = ((200,45),(300,72),(400,134),(600,74),(500,52),(222,110))
         for m in [Forming,Warren,Raw,Bar,Half]:
             for old,new in tts:
                 m.objects.filter(tts=old).update(tts=new)
+
+
+    def parts(self):
+        for w in Warren.objects.filter(tto__isnull=False).order_by('date'):
+            d1 = w.date 
+            d2 = w.date + datetime.timedelta(7)
+            for tto in set(w.get_tto):
+                try:
+                    b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(, %d,)|(, %d\])' % ((tto,)*3)).order_by('date')[0]
+                    for p in b.parts.all():
+                        if tto in p.get_tto:
+                            w.part
+                            w.save()
+                            print 'saved'
+                except IndexError:
+                    print d1,'<',w.date,'<',d2,w,w.tto,tto
+
+    def enumerated(self):
+        line = []
+        for b in Batch.objects.filter(date__year=2012,date__month=1).order_by('date'):
+            data = sorted(convert_tto(','.join(r.tto or '' for r in b.parts.all())))
+            # print b.date,data
+            if (max(data) - min(data)) > 10:
+                data = sum(sorted((list(g) for v,g in groupby(data,lambda x: x>20)),reverse=True),[])
+                # if min(data) != 1:
+            print b.pk,b.date,data,[t.tto for t in b.parts.all()]
+            line+=data
+
+        def pairwice(iterable):
+            a,b = tee(iterable)
+            next(b, None)
+            return zip(a,b)
+        for a,b in pairwice(line):
+            if a-b > 1:
+                print a,b
