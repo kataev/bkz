@@ -25,7 +25,7 @@ def index(request):
     forming = forming.filter(**data)
     warren = Warren.objects.filter(**data)
     warren = dict((d,list(warren)) for d,warren in groupby(warren, key=lambda f: f.date))
-    object_list = tuple([(d, list(forming),list(warren.get(d,[]))) for d, forming in groupby(forming, key=lambda f: f.date)])
+    object_list = tuple((d, list(forming),list(warren.get(d,[]))) for d, forming in groupby(forming, key=lambda f: f.date))
     return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list,'olo':1})
 
 
