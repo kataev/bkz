@@ -27,7 +27,7 @@ class Forming(models.Model,UrlMixin):
     get_name = property(get_name)
     def __unicode__(self):
         if self.pk:
-            return u'Формовка %s от %s на телегу № %d' % (self.get_name,ru_date(self.date),self.tts)
+            return u'Формовка %s от %s на телегу № %d' % (self.get_name,self.date,self.tts)
         else:
             return u'Новая формовка'
     @property
@@ -66,7 +66,7 @@ class Warren(models.Model,UrlMixin):
 
     def __unicode__(self):
         if self.pk:
-            return u'Укладка от %s, c ТТC № %s' % (ru_date(self.date),self.tts)
+            return u'Укладка от %s, c ТТC № %s' % (self.date,self.tts)
         else:
             return u'Новая укладка'
 

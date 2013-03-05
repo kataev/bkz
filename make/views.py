@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-from itertools import groupby
+from itertools import groupby,tee
+from operator import itemgetter,attrgetter
 
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -18,15 +19,15 @@ def index(request):
     datefilter = YearMonthFilter(request.GET or None, model=Forming)
     forming = Forming.objects.select_related('width','warren').prefetch_related('bar', 'raw', 'half')
     if datefilter.is_valid():
-        data = dict(filter(lambda i: i[1], datefilter.cleaned_data.items()))
+        data = dict(filter(itemgetter(1), datefilter.cleaned_data.items()))
     else:
         date = datetime.date.today()
         data = dict(date__year=date.year, date__month=date.month)
     forming = forming.filter(**data)
     warren = Warren.objects.filter(**data).select_related('forming').prefetch_related('forming__bar', 'forming__raw', 'forming__half')
-    warren = dict((d,list(warren)) for d,warren in groupby(warren, key=lambda f: f.date))
-    object_list = tuple((d, list(forming),list(warren.get(d,[]))) for d, forming in groupby(forming, key=lambda f: f.date))
-    return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list,'olo':1})
+    warren = dict((d,list(warren)) for d,warren in groupby(warren, key=attrgetter('date')))
+    object_list = tuple((d, list(forming),warren.get(d,[])) for d, forming in groupby(forming, key=attrgetter('date')))
+    return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list})
 
 
 def forming(request):
@@ -73,7 +74,7 @@ def warren(request):
     if request.method == 'POST' and factory.is_valid():
         factory.save()
         source = Warren.objects.filter(tto__isnull=False,date=date-datetime.timedelta(1)).latest('order')
-        for w in Warren.objects.filter(date=date).order_by('order'):
+        for w in Warren.objects.filter(date=date).filter(cause__isnull=True).order_by('order'):
             if w.tto:
                 source = w
             w.source = source

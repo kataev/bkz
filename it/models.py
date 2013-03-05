@@ -24,7 +24,7 @@ class Device(models.Model,UrlMixin):
                     v = p.bill.cartridge.value
                 else:
                     values.append((v,p.date-d))
-            a = map(lambda x:x[0]/x[1].days,values)
+            a = [x[0]/x[1].days for x in values]
             return sum(a)/len(a)
 
     def __unicode__(self):

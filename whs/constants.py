@@ -99,7 +99,7 @@ def get_name(self):
 def get_full_name(self):
     name = u'%s ' % get_name(self) 
     if not self.mark == 9000:
-        name += '/'.join(map(unicode,(self.width.value,self.mark or '?',self.cad or u'?')))
+        name += '/'.join(unicode(s) for s in (self.width.value,self.mark or '?',self.cad or u'?'))
 
     if self.frost_resistance:
         name += u'/%s ' % self.frost_resistance.value

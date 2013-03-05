@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def call(self):
         context = {'models':[]}
-        for app in map(get_app,['whs','lab','make']):
+        for app in (get_app(name) for name in ('whs','lab','make')):
             for model in get_models(app):
                 m = {'name':model.__name__,'fields':[]}
                 for f in model._meta.fields:

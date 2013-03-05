@@ -4,6 +4,8 @@ import csv
 import datetime
 import logging
 
+from operator import itemgetter
+
 from exceptions import ValueError
 from dateutil.relativedelta import relativedelta
 
@@ -134,7 +136,7 @@ def bills(request):
     datefilter = YearMonthFilter(request.GET or None,model=Bill)
     rpp = request.GET.get('rpp',20)
     if billfilter.is_valid():
-        data = dict(filter(lambda i:i[1],billfilter.cleaned_data.items()))
+        data = dict(filter(itemgetter(1),billfilter.cleaned_data.items()))
         if data.has_key('page'):
             data.pop('page')
         if data.has_key('brick'):
@@ -143,7 +145,7 @@ def bills(request):
             data.pop('rpp')
         queryset = queryset.filter(**data)
     if datefilter.is_valid():
-        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        data = dict(filter(itemgetter(1),datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
     return render(request,'whs/bills.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
@@ -180,7 +182,7 @@ def batchs(request):
         return redirect(reverse_lazy('whs:Add-list'))
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():
-        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        data = dict(filter(itemgetter(1),datefilter.cleaned_data.items()))
         queryset = queryset.filter(**data)
     return render(request, 'whs/batchs.html', dict(object_list=queryset,rpp=rpp,
         datefilter=datefilter,factory=factory))
@@ -197,7 +199,7 @@ def sortings(request):
     datefilter = YearMonthFilter(request.GET or None,model=Sorting)
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():
-        data = dict(filter(lambda i:i[1],datefilter.cleaned_data.items()))
+        data = dict(filter(itemgetter(1),datefilter.cleaned_data.items()))
         queryset = q2.filter(**data)
     else:
         date = datetime.date.today()
@@ -278,8 +280,7 @@ def transfers(request):
         date = datetime.date.today()
         data = {'doc__date__year':date.year,'doc__date__month':date.month}
     queryset = queryset.filter(**data)
-    d = dict(map(lambda x: (x[0],0),mark_c))
-    out = OrderedDict()
+    out = OrderedDict((mark,OrderedDict((m,0) for m,l in mark_c)) for mark,l in mark_c)
     for m,l in mark_c:
         out[m]=OrderedDict()
         for w,l in mark_c:
@@ -289,7 +290,6 @@ def transfers(request):
         q = out.get(s['brick_from__mark'],d)
         q[s['brick__mark']]=s['amount__sum']
         out[s['brick_from__mark']]=q
-    print out
     return render(request,'whs/transfers.html',{'data':out,'datefilter':datefilter})
 
 from webodt.shortcuts import render_to_response

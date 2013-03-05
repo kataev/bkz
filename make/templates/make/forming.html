@@ -136,10 +136,13 @@ var svg = d3.select("#chart").append("svg")
         {% csrf_token %}
         {{ factory.management_object }}    
         {{ factory.management_form }}  
-    <fieldset class='span3'>
         {% for e in factory.non_form_errors %}
-        {{ e }}
+        <div class='span12 alert alert-error'>
+          Ошибка! {{ e }}
+        </div>
         {% endfor %}
+    <fieldset class='span3'>
+        
         <table id="forming">
             <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>

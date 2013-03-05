@@ -377,15 +377,15 @@ class Batch(UrlMixin,models.Model):
 
     @property
     def gost(self):
-        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='gost']),defect_c[:-1]))
+        return sum(map(lambda x:sum(p.out for p in self.parts.all() if p.defect=='gost'),defect_c[:-1]))
 
     @property
     def l20(self):
-        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='<20']),defect_c[:-1]))
+        return sum(map(lambda x:sum(p.out for p in self.parts.all() if p.defect=='<20'),defect_c[:-1]))
 
     @property
     def m20(self):
-        return sum(map(lambda x:sum([p.out for p in self.parts.all() if p.defect=='>20']),defect_c[:-1]))
+        return sum(map(lambda x:sum(p.out for p in self.parts.all() if p.defect=='>20'),defect_c[:-1]))
 
 
     get_name = property(get_name)

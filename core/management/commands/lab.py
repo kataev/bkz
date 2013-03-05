@@ -4,7 +4,7 @@ from bkz.lab.models import *
 from bkz.whs.models import Width
 from bkz.make.models import Warren,Forming
 from random import randint,random,shuffle,uniform
-from itertools import chain,groupby,tee
+from itertools import chain,groupby,tee,izip
 import datetime
 class Command(BaseCommand):
     help = "Commands for lab app"
@@ -85,7 +85,7 @@ class Command(BaseCommand):
         def pairwice(iterable):
             a,b = tee(iterable)
             next(b, None)
-            return zip(a,b)
+            return izip(a,b)
         for a,b in pairwice(line):
             if a-b > 1:
                 print a,b

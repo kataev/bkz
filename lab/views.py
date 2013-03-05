@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from itertools import chain
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -94,7 +96,7 @@ def batch_print_doc(request, pk):
 def batch_tests(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     def preparation(w):
-        return [{'type':w,'row':x} for x in sum(map(lambda x: [pow(2,x)]*2,[x for x in xrange(1,5) if x!=2]),[])]
+        return [{'type':w,'row':2**x} for x in sorted(range(1,5)*2) if x!=2]
     flexion = FlexionFactory(request.POST or None, instance=batch,initial=preparation('flexion'),
                             queryset=batch.tests.filter(type='flexion'),prefix='flexion')
     pressure = PressureFactory(request.POST or None, instance=batch,initial=preparation('pressure'),

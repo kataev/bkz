@@ -5,7 +5,7 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-INTERNAL_IPS = ('127.0.0.1','192.168.1.2','192.168.0.72')
+INTERNAL_IPS = ('127.0.0.1','192.168.1.2','192.168.0.71')
 DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS' : False}
 
 DEVSERVER_MODULES = ()
@@ -13,6 +13,7 @@ DEVSERVER_MODULES = ()
 WEBODT_CONVERTER = 'webodt.converters.openoffice.OpenOfficeODFConverter'
 WEBODT_TEMPLATE_PATH = 'core/templates/'
 
+PROFILE_LOG_BASE = '/home/bteam/projects/logs/'
 ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
 DATABASES = {
