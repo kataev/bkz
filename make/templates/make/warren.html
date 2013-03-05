@@ -69,14 +69,14 @@
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
                     {% endfor %}
-                    {% if form.instance.forming %}
-                    <td><a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}' 
-                        title="{{ form.instance.forming }}">Формовка</a></td>
-                    {% endif %}
-                    {% if form.instance.part %}
-                    <td><a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}' 
-                        title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a></td>
-                    {% endif %}
+                    <td> {% if form.instance.forming %}
+                    <a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}' 
+                        title="{{ form.instance.forming }}">Формовка</a>
+                    {% endif %}</td>
+                    <td>{% if form.instance.part %}
+                    <a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}' 
+                        title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a>
+                    {% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>

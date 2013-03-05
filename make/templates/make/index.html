@@ -38,8 +38,7 @@
                 <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
                 <td>
                 {% for f in forming %}
-                <a title="{{ f }}" rel='tooltip' {% if not f.warren %}class="muted"{% endif %}
-                 href="{{ f.get_absolute_url }}"> {{ f.tts }} </a>
+                <a title="{{ f }}" {% if not f.warren %}class="muted"{% endif %} href="{{ f.get_absolute_url }}"> {{ f.tts }} </a>
                 {% for l in f.lab %}
                     <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'> {{ l.label }} </a>
                 {% endfor %}

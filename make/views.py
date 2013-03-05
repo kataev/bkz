@@ -16,14 +16,14 @@ from bkz.whs.forms import DateForm, YearMonthFilter
 
 def index(request):
     datefilter = YearMonthFilter(request.GET or None, model=Forming)
-    forming = Forming.objects.select_related('width').prefetch_related('bar', 'raw', 'half', 'warren')
+    forming = Forming.objects.select_related('width','warren').prefetch_related('bar', 'raw', 'half')
     if datefilter.is_valid():
         data = dict(filter(lambda i: i[1], datefilter.cleaned_data.items()))
     else:
         date = datetime.date.today()
         data = dict(date__year=date.year, date__month=date.month)
     forming = forming.filter(**data)
-    warren = Warren.objects.filter(**data)
+    warren = Warren.objects.filter(**data).select_related('forming').prefetch_related('forming__bar', 'forming__raw', 'forming__half')
     warren = dict((d,list(warren)) for d,warren in groupby(warren, key=lambda f: f.date))
     object_list = tuple((d, list(forming),list(warren.get(d,[]))) for d, forming in groupby(forming, key=lambda f: f.date))
     return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list,'olo':1})
@@ -61,7 +61,7 @@ def warren(request):
     else:
         date = datetime.date.today()
     timedelta = datetime.timedelta(10)
-    queryset = Warren.objects.filter(date=date).prefetch_related('cause')
+    queryset = Warren.objects.filter(date=date).select_related('forming','forming__width').prefetch_related('part','part__batch','part__rows','part__batch__width','cause')
     order = tuple(f.order for f in queryset)
     if order:
         order = max(order) + 1
@@ -83,17 +83,8 @@ def warren(request):
                 messages.error(request, 'Телеги №%d нет в формовке' % w.tts)
             w.save()
         messages.success(request, 'Садка сохранена')
-        return redirect(reverse('make:warren') + '?date=%s&success=True' % date.isoformat())
-    else:
-        cause = Cause.objects.filter(type='warren')
-        print factory.errors
-        for form in factory:
-            form.fields['cause'].queryset = cause
-
-    # for form in factory:
-    #     print form.prefix
-    #     for k, v in form.data.items():
-    #         if form.prefix in k and not form.is_valid():
-    #             print '\t', k, v
-
+        return redirect(reverse('make:warren') + '?date=%s&s=1' % date.isoformat())
+    cause = Cause.objects.filter(type='warren')
+    for form in factory:
+        form.fields['cause'].queryset = cause
     return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform))

@@ -4,6 +4,8 @@ from django.forms.models import modelformset_factory
 from bkz.bootstrap.forms import BootstrapMixin
 
 from bkz.make.models import Forming, Warren
+from bkz.lab.models import Cause
+
 from bkz.whs.forms import NumberInput,FloatInput
 from bkz.lab.forms import PopUpCheckboxSelectMultiple
 
