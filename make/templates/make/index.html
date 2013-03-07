@@ -1,6 +1,19 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
 {% block title %}Производство{% endblock %}
+{% block script %}
+<script type="text/javascript">
+$(function(){
+    var tts = $('table a.tts')
+    tts.hover(function(e){
+        var number = $(this).text()
+        tts.filter(function(){ return $(this).text() != number }).addClass('muted')
+    },function(e){
+        tts.removeClass('muted')
+    })
+})
+</script>
+{% endblock %}
 {% block container %}
 <div class="container">
     <div class="row">
@@ -38,7 +51,11 @@
                 <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
                 <td>
                 {% for f in forming %}
-                <a title="{{ f }}" {% if not f.warren %}class="muted"{% endif %} href="{{ f.get_absolute_url }}"> {{ f.tts }} </a>
+                {% if f.warren %}
+                    <del><a title="{{ f }}" class="tts" href="{{ f.get_absolute_url }}">{{ f.tts }}</a></del>
+                {% else %}
+                    <a title="{{ f }}" class="tts {% if not f.warren %}{% endif %}" href="{{ f.get_absolute_url }}">{{ f.tts }}</a>
+                {% endif %}
                 {% for l in f.lab %}
                     <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'> {{ l.label }} </a>
                 {% endfor %}

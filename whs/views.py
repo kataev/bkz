@@ -251,14 +251,14 @@ def bricks(request):
         dict(Bricks=Bricks, order=Brick.order, form=form,brick_menu = get_menu(), 
             begin=begin, end=end - datetime.timedelta(1)))
 
-
+from operator import itemgetter
 def verification(request):
     form = VerificationForm(request.POST or None, request.FILES or None)
     deriv, total, c = [], {}, {}
     if form.is_valid():
-        id, f = form.cleaned_data['id'], form.cleaned_data['field']
+        id, f = [ form.cleaned_data[k] for k in ('id','field')]
         oborot = csv.reader(form.cleaned_data['csv'], delimiter=';')
-        oborot = filter(lambda r: r and isinstance(r, list) and r[0] and r[1] and r[f], oborot)
+        oborot = filter(lambda r: r and isinstance(r, list) and all(itemgetter(0,1,f)), oborot)
         c = Counter([int(r[id]) for r in oborot if r[id]])
         c = [k for k, v in c.iteritems() if v > 1]
         for r in oborot:
@@ -273,24 +273,16 @@ from bkz.whs.constants import mark_c
 from collections import OrderedDict
 def transfers(request):
     datefilter = YearMonthFilter(request.GET or None,model=Bill)
-    queryset = Sold.objects.filter(brick_from__isnull=False).values('brick__mark','brick_from__mark').annotate(Sum('amount'))
+    queryset = Sold.objects.filter(brick_from__isnull=False).values_list('brick__mark','brick_from__mark').annotate(Sum('amount'))
     if datefilter.is_valid():
-        data = dict([('doc__'+k,v) for k,v in datefilter.cleaned_data.items() if v])
+        data = dict(('doc__'+k,v) for k,v in datefilter.cleaned_data.items() if v)
     else:
         date = datetime.date.today()
         data = {'doc__date__year':date.year,'doc__date__month':date.month}
-    queryset = queryset.filter(**data)
     out = OrderedDict((mark,OrderedDict((m,0) for m,l in mark_c)) for mark,l in mark_c)
-    for m,l in mark_c:
-        out[m]=OrderedDict()
-        for w,l in mark_c:
-            out[m][w]=0
-    d = out
-    for s in queryset:
-        q = out.get(s['brick_from__mark'],d)
-        q[s['brick__mark']]=s['amount__sum']
-        out[s['brick_from__mark']]=q
-    return render(request,'whs/transfers.html',{'data':out,'datefilter':datefilter})
+    for mark,mark_from,amount in queryset.filter(**data):
+        out[mark][mark_from]+=amount
+    return render(request,'whs/transfers.html',{'data':out,'datefilter':datefilter,'label':dict(mark_c)})
 
 from webodt.shortcuts import render_to_response
 def bill_print(request, pk):

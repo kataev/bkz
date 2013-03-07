@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
-from itertools import groupby,tee
+from itertools import groupby
 from operator import itemgetter,attrgetter
 
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-
-from bkz.log import construct_change_message, log_addition, log_change, log_deletion
 
 from bkz.lab.models import Cause
 from bkz.make.models import Forming, Warren
@@ -19,14 +17,14 @@ def index(request):
     datefilter = YearMonthFilter(request.GET or None, model=Forming)
     forming = Forming.objects.select_related('width','warren').prefetch_related('bar', 'raw', 'half')
     if datefilter.is_valid():
-        data = dict(filter(itemgetter(1), datefilter.cleaned_data.items()))
+        data = dict( (k,v) for k,v in datefilter.cleaned_data.items() if v)
     else:
         date = datetime.date.today()
         data = dict(date__year=date.year, date__month=date.month)
     forming = forming.filter(**data)
-    warren = Warren.objects.filter(**data).select_related('forming').prefetch_related('forming__bar', 'forming__raw', 'forming__half')
+    warren = Warren.objects.filter(cause__isnull=True).filter(**data).select_related('forming')#.prefetch_related('forming__bar', 'forming__raw', 'forming__half')
     warren = dict((d,list(warren)) for d,warren in groupby(warren, key=attrgetter('date')))
-    object_list = tuple((d, list(forming),warren.get(d,[])) for d, forming in groupby(forming, key=attrgetter('date')))
+    object_list = [(d, tuple(forming),warren.get(d,())) for d, forming in groupby(forming, key=attrgetter('date'))]
     return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list})
 
 
@@ -61,8 +59,8 @@ def warren(request):
         date = dateform.cleaned_data.get('date', datetime.date.today())
     else:
         date = datetime.date.today()
-    timedelta = datetime.timedelta(10)
-    queryset = Warren.objects.filter(date=date).select_related('forming','forming__width').prefetch_related('part','part__batch','part__rows','part__batch__width','cause')
+    timedelta = datetime.timedelta(6)
+    queryset = Warren.objects.filter(date=date).select_related('forming','forming__width','part').prefetch_related('part__batch','part__rows','part__batch__width','cause')
     order = tuple(f.order for f in queryset)
     if order:
         order = max(order) + 1
@@ -70,16 +68,18 @@ def warren(request):
         order = 1
     initial = [{'date':date, 'order':i} for i in range(order, WarrenFactory.extra + order + 1)]
     factory = WarrenFactory(request.POST or None, queryset=queryset, initial=initial, prefix='tto')
-
     if request.method == 'POST' and factory.is_valid():
         factory.save()
-        source = Warren.objects.filter(tto__isnull=False,date=date-datetime.timedelta(1)).latest('order')
-        for w in Warren.objects.filter(date=date).filter(cause__isnull=True).order_by('order'):
+        try:
+            source = Warren.objects.filter(tto__isnull=False,date=date-datetime.timedelta(1)).latest('order')
+        except Warren.DoesNotExist:
+            source = None
+        for w in Warren.objects.filter(date=date).order_by('order'):
             if w.tto:
                 source = w
             w.source = source
             try:
-                w.forming = Forming.objects.filter(date__lt=w.date,date__gt=w.date-timedelta).filter(tts=w.tts).order_by('-date')[0]
+                w.forming = Forming.objects.filter(date__lt=w.date,date__gte=w.date-timedelta).filter(tts=w.tts).order_by('-date')[0]
             except IndexError:
                 messages.error(request, 'Телеги №%d нет в формовке' % w.tts)
             w.save()
