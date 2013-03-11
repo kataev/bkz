@@ -72,14 +72,6 @@ class Warren(models.Model,UrlMixin):
             return u'Новая укладка'
 
     @property
-    def warren(self):
-        return self.forming
-
-    @property
-    def lab(self):
-        return self.forming.lab
-
-    @property
     def get_tto(self):
         return map(int,tto_regexp.findall(self.tto))
 

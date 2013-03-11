@@ -1,6 +1,7 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
-{% block head %}
+{% block script %}
+    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
 {% endblock %}
 {% block title %}Журнал за {{ date|date:'j E Y' }}{% endblock %}
 {% block container %}
@@ -28,7 +29,7 @@
     <fieldset class='{{ f.css_class }} {{ f.model|class_name }}'>
     {{ f.management_object }}    
     {{ f.management_form }}  
-    <table>
+    <table class='sortable'>
     	    {% if f.prefix == 'quarry' %}
             <caption><h2>{{ f.caption }}</h2></caption>
             <thead>
@@ -125,7 +126,7 @@
                         {% if forloop.first %}
                         <td class="input-prepend">
                             <span class='add-on'>
-                                <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                                <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
                             </span>
                             {% for f in form.hidden_fields %}
                                 {{ f }}

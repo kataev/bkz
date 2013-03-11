@@ -55,6 +55,18 @@ class Command(BaseCommand):
             for old,new in tts:
                 m.objects.filter(tts=old).update(tts=new)
 
+    def order(self):
+        date = datetime.date.today()
+        for model in (Half, Raw, Bar, Matherial):
+            for m in model.objects.order_by('datetime'):
+                if m.datetime.date != date:
+                    date = m.datetime.date
+                    order = 1
+                else:
+                    order+=1
+                m.order = order
+                m.save()
+
 
     def parts(self):
         for w in Warren.objects.filter(tto__isnull=False).order_by('date'):

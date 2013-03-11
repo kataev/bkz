@@ -142,8 +142,7 @@ var svg = d3.select("#chart").append("svg")
         </div>
         {% endfor %}
     <fieldset class='span4'>
-        
-        <table id="forming">
+        <table id="forming" class='sortable'>
             <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>
                 <tr>
@@ -168,15 +167,26 @@ var svg = d3.select("#chart").append("svg")
 
                         </td>
                         {% elif f.name = 'empty' %}
-                        <td class='input-prepend' style='text-align:center'>{{ f }}</td>
+                        <td> <label style='margin-left:10px' class='checkbox'> {{ f }} </label> </td>
                         {% else %}
                         <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
                     {% endfor %}
-                    {% if form.instance.pk and form.instance.warren %}
-                    <td class="input-append">
-                      <a class='add-on' href='{{ form.instance.warren.get_absolute_url }}' 
-                        title="{{ form.instance.warren }}">Укладка</a></td>
+                    <td>
+                      {% if form.instance.pk and form.instance.warren %}
+                      <a href='{{ form.instance.warren.get_absolute_url }}'title="{{ form.instance.warren }}">Укладка</a>
+                      {% elif form.instance.pk and not form.instance.empty %}
+                      <a href='#'>Еще не уложена</a>
+                      {% elif form.instance.empty %}
+                      <a href='#'>Пустая</a>
+                      {% endif %}
+                    </td>
+                    {% if form.errors %}
+                    <td>
+                      {% for k,e in form.errors.items %}
+                      {{ e|removetags:'ul li' }}
+                      {% endfor %}
+                    </td>
                     {% endif %}
                 </tr>
             {% endfor %}
@@ -197,7 +207,7 @@ var svg = d3.select("#chart").append("svg")
         <button type="submit" class="btn btn-primary" form="form">
             <i class="icon-ok icon-white"></i> Сохранить изменения
         </button>
-        <button class='btn' onclick="change_field_order"></button>
+        <a class='btn' href='{% url make:warren %}?date={{ date.isoformat }}'>Садка за этот же день</a>
     </div>
 </div>
 {% endblock %}

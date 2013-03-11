@@ -67,6 +67,7 @@ class MatherialForm(BootstrapMixin,forms.ModelForm):
     class Meta:
         model = Matherial
         widgets = {'datetime':SplitDateTimeHTML5Widget,
+                    'order':forms.HiddenInput(),
                     'humidity':FloatInput(attrs={'autocomplete':'off'}),
                     'sand':FloatInput(attrs={'autocomplete':'off'}),
                     'inclusion':FloatInput(attrs={'autocomplete':'off'}),
@@ -87,7 +88,7 @@ class ClayForm(MatherialForm):
 
 
 ClayFactory = modelformset_factory(Matherial,form=ClayForm,extra=3,max_num=10)
-ClayFactory.caption = u'Склад'
+ClayFactory.caption = u'Глина'
 ClayFactory.css_class = 'span4'
 ClayFactory.width = {}
 
@@ -110,6 +111,7 @@ class BarForm(BootstrapMixin,forms.ModelForm):
         exclude = ("cutter","info",'cavitation','color','width','forming')
         model = Bar
         widgets = {'datetime':SplitDateTimeHTML5Widget,
+                'order':forms.HiddenInput(),
                 'tts':NumberInput,
                 'weight':NumberInput,
                 'temperature':NumberInput,
@@ -128,6 +130,7 @@ class RawForm(BootstrapMixin,forms.ModelForm):
         exclude = (u'info','cavitation','color','width','forming')
         model = Raw
         widgets = {'datetime':SplitDateTimeHTML5Widget,
+                    'order':forms.HiddenInput(),
                     'tts':NumberInput,
                     'weight':NumberInput,
                     'temperature':NumberInput,
@@ -146,6 +149,7 @@ class HalfForm(BootstrapMixin,forms.ModelForm):
         exclude = (u'info','cavitation','color','width','forming'   )
         model = Half
         widgets = { 'datetime':SplitDateTimeHTML5Widget,
+                    'order':forms.HiddenInput(),
                     'weight':NumberInput,
                     'temperature':NumberInput,
                     'humidity':FloatInput,
@@ -209,7 +213,7 @@ class PartForm(BootstrapMixin, forms.ModelForm):
             'half':FloatInput,
             'dnumber':FloatInput,
             'limestone':forms.TextInput(attrs={"placeholder":'№ ТТО с известняком',
-                'title':u'Можно узкаывать через запятую или тире','autocomplete':'off'}),
+            'title':u'Можно узкаывать через запятую или тире','autocomplete':'off'}),
         }
 PartFactory = inlineformset_factory(Batch, Part, PartForm, extra=2,max_num=3)
 

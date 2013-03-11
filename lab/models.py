@@ -82,6 +82,8 @@ class Matherial(models.Model,ShiftMixin,UrlMixin):
     module_size = models.FloatField(u'<abbr title="Модуль крупности">МК</abbr>',null=True, blank=True)
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
+    order = models.IntegerField(u'Порядок',default=0)
+
     def css(self):
         if self.position < 6:
             return 'success'
@@ -139,6 +141,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000)
 
     forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bar')
+    order = models.IntegerField(u'Порядок',default=0)
 
     def __unicode__(self):
         if self.pk: return u'Брус от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -172,6 +175,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raw')
+    order = models.IntegerField(u'Порядок',default=0)
 
     def __unicode__(self):
         if self.pk: return u'Сырец от %s с телеги №%s' % (ru_date(self.datetime),self.tts)
@@ -210,6 +214,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
     forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='half')
+    order = models.IntegerField(u'Порядок',default=0)
 
     @property
     def label(self):

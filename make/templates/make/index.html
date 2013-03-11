@@ -7,9 +7,9 @@ $(function(){
     var tts = $('table a.tts')
     tts.hover(function(e){
         var number = $(this).text()
-        tts.filter(function(){ return $(this).text() != number }).addClass('muted')
+        tts.filter(function(){ return $(this).text() != number }).css({opacity:0.35})
     },function(e){
-        tts.removeClass('muted')
+        tts.removeAttr('style')
     })
 })
 </script>
@@ -50,15 +50,13 @@ $(function(){
             <tr>
                 <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
                 <td>
-                {% for f in forming %}
-                {% if f.warren %}
-                    <del><a title="{{ f }}" class="tts" href="{{ f.get_absolute_url }}">{{ f.tts }}</a></del>
+                {% for d,pk,tts,em,warren,half,raw,bar in forming %}
+                {# {{ warren }} #}
+                {% if warren %}
+                    <del><a title="{{ f }}" class="tts" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a></del>
                 {% else %}
-                    <a title="{{ f }}" class="tts {% if not f.warren %}{% endif %}" href="{{ f.get_absolute_url }}">{{ f.tts }}</a>
+                    <a title="{{ f }}" class="tts {% if em %}muted{% endif %}" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a>
                 {% endif %}
-                {% for l in f.lab %}
-                    <a href="{{ l.get_absolute_url }}" title='{{ l }}' class='{{ l.css }}'> {{ l.label }} </a>
-                {% endfor %}
                 {% endfor %}
                 </td>
                 <td> <a href="{% url make:forming %}?date={{ d.isoformat }}"> {{ forming|length }} </a> </td>

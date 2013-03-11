@@ -17,8 +17,8 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
                     'width':forms.HiddenInput(),
                     'color':forms.HiddenInput(),
 
-                    'density':FloatInput(),
-                    'vacuum':FloatInput,
+                    'density':FloatInput(attrs={'autocomplete':'off'}),
+                    'vacuum':FloatInput(attrs={'autocomplete':'off'}),
                     'empty':forms.CheckboxInput(attrs={'class':'add-on'}),
          }
 FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=26,max_num=30)
@@ -28,8 +28,8 @@ class WarrenForm(BootstrapMixin, forms.ModelForm):
         model = Warren
         exclude = ('forming','part')
         widgets = {'date':forms.HiddenInput(),
-                    'tto':forms.TextInput(attrs={'tabindex':2}),
-                    'tts':NumberInput(attrs={'tabindex':1}),
+                    'tto':forms.TextInput(attrs={'tabindex':2,'autocomplete':'off'}),
+                    'tts':NumberInput(attrs={'tabindex':1,'autocomplete':'off'}),
                     'brocken':NumberInput(attrs={}),
                     'order':forms.HiddenInput(),
                     'source':forms.HiddenInput(),

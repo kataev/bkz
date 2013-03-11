@@ -15,16 +15,15 @@ from bkz.whs.forms import DateForm, YearMonthFilter
 
 def index(request):
     datefilter = YearMonthFilter(request.GET or None, model=Forming)
-    forming = Forming.objects.select_related('width','warren').prefetch_related('bar', 'raw', 'half')
     if datefilter.is_valid():
         data = dict( (k,v) for k,v in datefilter.cleaned_data.items() if v)
     else:
         date = datetime.date.today()
         data = dict(date__year=date.year, date__month=date.month)
-    forming = forming.filter(**data)
-    warren = Warren.objects.filter(cause__isnull=True).filter(**data).select_related('forming')#.prefetch_related('forming__bar', 'forming__raw', 'forming__half')
-    warren = dict((d,list(warren)) for d,warren in groupby(warren, key=attrgetter('date')))
-    object_list = [(d, tuple(forming),warren.get(d,())) for d, forming in groupby(forming, key=attrgetter('date'))]
+    forming = Forming.objects.filter(**data).values_list('date','pk','tts','empty','warren','half','raw','bar',)
+    warren = Warren.objects.filter(cause__isnull=True).filter(**data).values_list('date','pk')
+    warren = dict((d,list(warren)) for d,warren in groupby(warren, key=itemgetter(0)))
+    object_list = [(d, tuple(forming),warren.get(d,())) for d, forming in groupby(forming, key=itemgetter(0))]
     return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list})
 
 
@@ -36,11 +35,7 @@ def forming(request):
         date = datetime.date.today()
     filter = {'date': date}
     queryset = Forming.objects.filter(**filter).prefetch_related('bar', 'raw', 'half')
-    order = tuple(f.order for f in queryset)
-    if order:
-        order = max(order) + 1
-    else:
-        order = 1
+    order = max(f.order for f in queryset or (Forming(),)) + 1
     initial = [{'date':date, 'order':i} for i in range(order, FormingFactory.extra + order + 1)]
     factory = FormingFactory(request.POST or None, initial=initial, queryset=queryset, prefix='forming')
     instance = queryset[0] if len(queryset) > 0 else None
@@ -59,13 +54,10 @@ def warren(request):
         date = dateform.cleaned_data.get('date', datetime.date.today())
     else:
         date = datetime.date.today()
-    timedelta = datetime.timedelta(6)
+    timedelta = datetime.timedelta(10)
+    delay = datetime.timedelta(1)
     queryset = Warren.objects.filter(date=date).select_related('forming','forming__width','part').prefetch_related('part__batch','part__rows','part__batch__width','cause')
-    order = tuple(f.order for f in queryset)
-    if order:
-        order = max(order) + 1
-    else:
-        order = 1
+    order = max(f.order for f in queryset or (Warren(),)) + 1
     initial = [{'date':date, 'order':i} for i in range(order, WarrenFactory.extra + order + 1)]
     factory = WarrenFactory(request.POST or None, queryset=queryset, initial=initial, prefix='tto')
     if request.method == 'POST' and factory.is_valid():
@@ -79,13 +71,10 @@ def warren(request):
                 source = w
             w.source = source
             try:
-                w.forming = Forming.objects.filter(date__lt=w.date,date__gte=w.date-timedelta).filter(tts=w.tts).order_by('-date')[0]
+                w.forming = Forming.objects.filter(date__lt=w.date-delay,date__gte=w.date-timedelta).filter(tts=w.tts,warren__isnull=True).order_by('-date')[0]
             except IndexError:
-                messages.error(request, 'Телеги №%d нет в формовке' % w.tts)
+                pass
             w.save()
         messages.success(request, 'Садка сохранена')
         return redirect(reverse('make:warren') + '?date=%s&s=1' % date.isoformat())
-    cause = Cause.objects.filter(type='warren')
-    for form in factory:
-        form.fields['cause'].queryset = cause
     return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform))

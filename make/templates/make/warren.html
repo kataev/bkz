@@ -29,7 +29,7 @@
         {% for e in factory.non_form_errors %}
         {{ e }}
         {% endfor %}
-        <table id='warren'>
+        <table id='warren' class='sortable'>
             <caption><h2>{{ factory.caption }}</h2></caption>
             <thead>
                 <tr>
@@ -73,10 +73,17 @@
                     <a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}' 
                         title="{{ form.instance.forming }}">Формовка</a>
                     {% endif %}</td>
-                    <td>{% if form.instance.part %}
-                    <a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}' 
-                        title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a>
-                    {% endif %}</td>
+                    {# <td>{% if form.instance.part %} #}
+                    {# <a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}'  #}
+                        {# title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a> #}
+                    {# {% endif %}</td> #}
+                    {% if form.errors %}
+                    <td>
+                      {% for k,e in form.errors.items %}
+                      {{ e|removetags:'ul li' }}
+                      {% endfor %}
+                    </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -93,6 +100,7 @@
         <button type="submit" class="btn btn-primary" form="form">
             <i class="icon-ok icon-white"></i> Сохранить изменения
         </button>
+        <a class='btn' href='{% url make:forming %}?date={{ date.isoformat }}'>Формовка за этот же день</a>
     </div>
 </div>
 {% endblock %}

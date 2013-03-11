@@ -137,7 +137,7 @@ $(function () {
     setTimeout(function(e){$messages.popover('hide')},5000)
     $('body.success,body.error').animate({'background-color':'#fff'},800)
     if ($('').sortable) {
-    $('table tbody').sortable({update:function( event, ui) {
+    $('table.sortable tbody').sortable({update:function( event, ui) {
         $(this).find('tr').each(function(i){ 
             $(this).find('.add-on a').text(i+1)
             if (!$(this).hasClass('fake'))

@@ -143,19 +143,21 @@ def journal(request):
         date = datetime.date.today()
     date = datetime.datetime.combine(date,datetime.time(8))
     filter = dict(datetime__range=(date,date+datetime.timedelta(hours=23,minutes=59)))
-    initial={'datetime':date}
-    bar = BarFactory(request.POST or None, queryset=Bar.objects.filter(**filter), prefix='bar',initial=[initial,]*BarFactory.extra)
-    raw = RawFactory(request.POST or None, queryset=Raw.objects.filter(**filter), prefix='raw',initial=[initial,]*RawFactory.extra)
+    def prepare_factory(factory,queryset):
+        queryset = queryset.extra(select = {'date':'DATE(datetime)'}).order_by('date','order')
+        order = max(f.order for f in queryset or (factory.model(),)) + 1
+        initial = [{'datetime':date, 'order':i} for i in range(order, factory.extra + order + 1)]
+        name = id(factory)
+        return factory(request.POST or None, queryset=queryset, prefix=name, initial=initial)
+    bar = prepare_factory(BarFactory, Bar.objects.filter(**filter) )
+    raw = prepare_factory(RawFactory, Raw.objects.filter(**filter) )
+    quarry = prepare_factory(QuarryFactory, Matherial.objects.filter(**filter).filter(position=8))
+    clay = prepare_factory(ClayFactory, Matherial.objects.filter(**filter).filter(position__lte=7))
 
-    quarry = QuarryFactory(request.POST or None, queryset=Matherial.objects.filter(**filter).filter(position=8), prefix='quarry',initial=[dict(initial,position=8),]*QuarryFactory.extra)
-    clay = ClayFactory(request.POST or None, queryset=Matherial.objects.filter(**filter).filter(position__lte=7), prefix='clay',initial=[dict(initial),]*ClayFactory.extra)
-    # sand = SandForm(request.POST or None, instance=Matherial.objects.filter(**filter).filter(position=9).get(), prefix='clay',initial=dict(initial,position=9))
-
-
-    initial = [dict(initial,position=position,path=path) for path,position in zip([5,5,7,7],[16,25,16,25])]
-    half = HalfFactory(request.POST or None, queryset=Half.objects.filter(**filter), prefix='half',initial=initial)
-    # sand = SandForm(request.POST or None,instance=(Matherial.objects.filter(**filter).filter(position=9) or [None,])[0],initial={'position':9},prefix='sand')
-
+    queryset=Half.objects.filter(**filter).extra(select = {'date':'DATE(datetime)'}).order_by('date','order')
+    order = max(f.order for f in queryset or (Half(),)) + 1
+    initial = [{'datetime':date, 'order':i,'position':position,'path':path} for i,path,position in zip(range(order, HalfFactory.extra + order + 1),[5,5,7,7],[16,25,16,25])]
+    half = HalfFactory(request.POST or None, queryset=queryset, prefix='half',initial=initial)
 
     factory = (half, raw, bar, clay, quarry)
     if request.method == 'POST' and all(f.is_valid() for f in factory):
