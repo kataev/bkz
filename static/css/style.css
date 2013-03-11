@@ -177,7 +177,7 @@ fieldset table tr td input[name*="stratcher"] {width:130px;}
 fieldset table tr td input[name*="dust"] {width:50px;}
 fieldset table tr td textarea {width:66px;}
 fieldset table tr td input[name*="datetime_"][type='date'] {width:95px;margin-right: 2px}
-fieldset table tr td input[name*="datetime_"][type='time'] {width:60px;overflow: hidden;white-space: normal}
+fieldset table tr td input[name*="datetime_"][type='time'] {width:55px;overflow: hidden;white-space: normal}
 fieldset table tr td.input-append {margin: 0}
 fieldset table tr td select {padding-left: 0;}
 fieldset table tr td select[name*='cavitation'] { width:80px;}

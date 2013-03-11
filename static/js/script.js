@@ -39,6 +39,12 @@ function css_to_dict(prefix, val, from) {
     return base
 }
 
+$(function(){
+    $("#form").FormNavigate({
+      message: "Содержимое было изменено!\nВы уверены, что хотите покинуть страницу без сохранения?",
+      aOutConfirm: "button[type='submit']"
+    });
+});
 
 $(function () {
     $('select[name*="defect"]').change(function(e){
@@ -46,6 +52,7 @@ $(function () {
         if ($(this).val() == 'gost')$cause.hide();
          else $cause.show();
     })
+
 
     $('.form-add').click(function (e) {
         e.preventDefault()
