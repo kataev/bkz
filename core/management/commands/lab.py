@@ -5,6 +5,7 @@ from bkz.whs.models import Width
 from bkz.make.models import Warren,Forming
 from random import randint,random,shuffle,uniform
 from itertools import chain,groupby,tee,izip
+from operator import attrgetter
 import datetime
 class Command(BaseCommand):
     help = "Commands for lab app"
@@ -56,16 +57,12 @@ class Command(BaseCommand):
                 m.objects.filter(tts=old).update(tts=new)
 
     def order(self):
-        date = datetime.date.today()
         for model in (Half, Raw, Bar, Matherial):
-            for m in model.objects.order_by('datetime'):
-                if m.datetime.date != date:
-                    date = m.datetime.date
-                    order = 1
-                else:
-                    order+=1
-                m.order = order
-                m.save()
+            queryset = model.objects.extra(select = {'date':'DATE(datetime)'}).order_by('date','order')
+            for g,l in groupby(queryset,key=attrgetter('date')):
+                for i,m in enumerate(l):
+                    m.order = i+1
+                    m.save()
 
 
     def parts(self):

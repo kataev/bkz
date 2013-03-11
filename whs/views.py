@@ -20,8 +20,8 @@ from django.views.generic import UpdateView, CreateView, ListView
 from whs.forms import DateForm, VerificationForm, AgentForm, AgentCreateOrSelectForm,BillFilter, YearMonthFilter
 from whs.forms import SoldFactory, PalletFactory
 from whs.models import *
-from lab.models import Batch,Part
-from lab.forms import BatchFilter,PartAddFormSet
+from bkz.lab.models import Batch,Part
+from bkz.lab.forms import BatchFilter,PartAddFormSet
 
 
 from whs.utils import operations, calc

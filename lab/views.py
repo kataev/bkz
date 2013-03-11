@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from itertools import chain
+from itertools import chain, cycle
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.urlresolvers import reverse
@@ -12,6 +12,7 @@ from bkz.lab.models import *
 from bkz.lab.forms import *
 from bkz.whs.forms import DateForm,YearMonthFilter
 from bkz.lab.utils import convert_tto
+
 
 class BatchCreateView(BillCreateView):
     form_class=BatchForm
@@ -30,6 +31,7 @@ class BatchCreateView(BillCreateView):
         self.object.save()
         messages(self.request,u'Партия созданна')
         return redirect(self.get_success_url())
+
 
 class BatchUpdateView(UpdateView):
     form_class=BatchForm
@@ -59,6 +61,7 @@ class BatchUpdateView(UpdateView):
             part.rows = RowFactory(self.request.POST or None, instance=part.instance,prefix=part.prefix+'-row')
         context['parts'] = self.parts
         return context
+
 
 def index(request):
     queryset = Batch.objects.all().select_related('frost_resistance','width')\
@@ -90,7 +93,6 @@ def batch_print_doc(request, pk):
     if len(parts)==2 and parts[1].defect =='gost':
         part2 = parts[1]
     return render_to_response('webodt/document-the-quality-of.odt',{'part':part,'part2':part2},format='pdf',inline=True)
-
 
 
 def batch_tests(request,pk):
@@ -128,6 +130,7 @@ def batch_tests(request,pk):
             return redirect(batch.get_tests_url())
     return render(request,'lab/batch-tests.html',{'tests':[pressure,flexion],'batch':batch,'form':form})
 
+
 def batch_tests_print(request,pk):
     batch = get_object_or_404(Batch.objects.select_related(), pk=pk)
     flexion = batch.tests.filter(type='flexion')
@@ -143,33 +146,31 @@ def journal(request):
         date = datetime.date.today()
     date = datetime.datetime.combine(date,datetime.time(8))
     filter = dict(datetime__range=(date,date+datetime.timedelta(hours=23,minutes=59)))
-    def prepare_factory(factory,queryset):
+    def prepare_factory(factory,queryset,initial=({},)):
         queryset = queryset.extra(select = {'date':'DATE(datetime)'}).order_by('date','order')
         order = max(f.order for f in queryset or (factory.model(),)) + 1
-        initial = [{'datetime':date, 'order':i} for i in range(order, factory.extra + order + 1)]
-        name = id(factory)
+        initial = [ dict(init,datetime=date,order=i) for init,i in zip(cycle(initial),range(order, factory.extra + order + 1))]
+        name = factory.__name__
         return factory(request.POST or None, queryset=queryset, prefix=name, initial=initial)
+
     bar = prepare_factory(BarFactory, Bar.objects.filter(**filter) )
     raw = prepare_factory(RawFactory, Raw.objects.filter(**filter) )
-    quarry = prepare_factory(QuarryFactory, Matherial.objects.filter(**filter).filter(position=8))
+    quarry = prepare_factory(QuarryFactory, Matherial.objects.filter(**filter).filter(position=8),initial=({'position':8},))
     clay = prepare_factory(ClayFactory, Matherial.objects.filter(**filter).filter(position__lte=7))
 
-    queryset=Half.objects.filter(**filter).extra(select = {'date':'DATE(datetime)'}).order_by('date','order')
-    order = max(f.order for f in queryset or (Half(),)) + 1
-    initial = [{'datetime':date, 'order':i,'position':position,'path':path} for i,path,position in zip(range(order, HalfFactory.extra + order + 1),[5,5,7,7],[16,25,16,25])]
-    half = HalfFactory(request.POST or None, queryset=queryset, prefix='half',initial=initial)
+    initial = [{'position':position,'path':path} for path,position in zip([5,5,7,7],[16,25,16,25])]
+    half = prepare_factory(HalfFactory, Half.objects.filter(**filter), initial=initial )
 
     factory = (half, raw, bar, clay, quarry)
     if request.method == 'POST' and all(f.is_valid() for f in factory):
         for f in factory:
             f.save()
         messages.success(request,u'Журнал сохранен')
-        return redirect(reverse('lab:journal')+'?date=%s' % date.date().isoformat())
+        return redirect(reverse('lab:journal')+'?date=%s&s=1' % date.date().isoformat())
     if not all(f.is_valid() for f in factory):
         for f in factory:
             print f.prefix,f.errors
-    add = True
-    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':dateform,'add':add})
+    return render(request,'lab/journal.html',{'factory':factory,'date':date,'dateform':dateform,'add':True})
 
 
 def slice(request):

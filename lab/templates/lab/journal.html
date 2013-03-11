@@ -19,7 +19,6 @@
                 <input type="submit" value='Показать' class="btn">
             </form>
     </div>
-    
     <form accept-chartset='utf-8' method="POST" id='form' class='row'>
         {% csrf_token %}
     {% for f in factory %}
@@ -30,7 +29,7 @@
     {{ f.management_object }}    
     {{ f.management_form }}  
     <table class='sortable'>
-    	    {% if f.prefix == 'quarry' %}
+    	    {% if f.prefix == 'QuarryFactory' %}
             <caption><h2>{{ f.caption }}</h2></caption>
             <thead>
                 <tr>
@@ -53,7 +52,7 @@
                 {% with form=f.1 %}
                 <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                         <td class="input-prepend">
-                            <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>1</a> </span>
+                            <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>2</a> </span>
                             {% for f in form.hidden_fields %} {{ f }} {% endfor %} {{ form.datetime }}
                         </td>
                         <td> {{ form.humidity }}</td>
@@ -64,7 +63,7 @@
                 {% with form=f.2 %}
                 <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                         <td class="input-prepend">
-                            <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>1</a> </span>
+                            <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>3</a> </span>
                             {% for f in form.hidden_fields %} {{ f }} {% endfor %} {{ form.datetime }}
                         </td>
                         <td> {{ form.humidity }}</td>
@@ -79,36 +78,7 @@
                     </td>
                     <th><input type='text' value='Пылев:' disabled='disabled' style='width:60px;text-align:right'></th>
                     <td>{{ f.0.particle_size }}</td>
-
                 </tr>
-            {% elif f.prefix == 'sand' %}
-            <caption><h2>Песок</h2></caption>
-            <thead>
-                <tr>
-                    <th>Назв</th>
-                    <th>Хар-ка</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for f in f.visible_fields %}
-                <tr>
-                    <td class="input-prepend">
-                            <span class='add-on' style='width:40px'>
-                               {{ f.label|safe }}
-                            </span>
-                    </td><td>
-                    {% if forloop.first %}
-                        {% for f in form.hidden_fields %}
-                            {{ f }}
-                        {% endfor %}
-                    {% endif %}
-                    {{ f }}
-                        </td>
-                    </tr>
-                {% endfor %}
-
-            </tbody>
-            
             {% else %}
             <caption><h2>{{ f.caption }}</h2></caption>
             <thead>

@@ -81,16 +81,17 @@ QuarryFactory = modelformset_factory(Matherial,form=MatherialForm,extra=3,max_nu
 QuarryFactory.caption = u'Карьер'
 QuarryFactory.css_class = 'span6'
 QuarryFactory.width = {}
+QuarryFactory.__name__ =  'QuarryFactory'
 
 class ClayForm(MatherialForm):
     class Meta(MatherialForm.Meta):
-        fields = ('datetime','position','humidity')
-
+        fields = ('datetime','position','humidity','order')
 
 ClayFactory = modelformset_factory(Matherial,form=ClayForm,extra=3,max_num=10)
 ClayFactory.caption = u'Глина'
 ClayFactory.css_class = 'span4'
 ClayFactory.width = {}
+ClayFactory.__name__ = 'ClayFactory'
 
 class SandForm(MatherialForm):
     def __init__(self, *args, **kwargs):
