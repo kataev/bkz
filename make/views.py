@@ -72,7 +72,9 @@ def warren(request):
                 source = w
             w.source = source
             try:
-                w.forming = Forming.objects.filter(date__lt=w.date - delay, date__gte=w.date - timedelta).filter(tts=w.tts,warren__isnull=True).order_by('-date')[0]
+                w.forming.warren = w
+                w.forming.save()
+                w.forming = Forming.objects.filter(date__lt=w.date - delay, date__gte=w.date - timedelta).filter(tts=w.tts).order_by('-date')[0]
             except IndexError:
                 pass
             w.save()
