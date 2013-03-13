@@ -72,10 +72,8 @@ def warren(request):
                 source = w
             w.source = source
             try:
-                if w.forming:
-                    w.forming.warren = w
-                    w.forming.save()
                 w.forming = Forming.objects.filter(date__lt=w.date - delay, date__gte=w.date - timedelta).filter(tts=w.tts).order_by('-date')[0]
+                Warren.objects.filter(forming__id=w.forming_id).update(forming=None)
             except IndexError:
                 pass
             w.save()
