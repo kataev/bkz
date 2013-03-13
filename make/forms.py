@@ -21,7 +21,7 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
                     'vacuum':FloatInput(attrs={'autocomplete':'off'}),
                     'empty':forms.CheckboxInput(attrs={'class':'add-on'}),
          }
-FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=26,max_num=30)
+FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=30,max_num=32)
 
 class WarrenForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -30,7 +30,6 @@ class WarrenForm(BootstrapMixin, forms.ModelForm):
         widgets = {'date':forms.HiddenInput(),
                     'tto':forms.TextInput(attrs={'tabindex':2,'autocomplete':'off'}),
                     'tts':NumberInput(attrs={'tabindex':1,'autocomplete':'off'}),
-                    'brocken':NumberInput(attrs={}),
                     'order':forms.HiddenInput(),
                     'source':forms.HiddenInput(),
                     'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),

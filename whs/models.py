@@ -16,6 +16,7 @@ class Width(models.Model):
     size = models.CharField(u'Номинальные размеры',max_length=20)
     value = models.CharField(u'Обозначение размера',max_length=10)
     type = models.BooleanField(u'Тип',choices=((False,u'Кирпич'),(True,u'Камень')),)
+    tts = models.IntegerField(u'Кол-во полуфабрика на ТТС',default=0)
 
     def __unicode__(self):
         return u'%s %s' % (self.value,self.name,)

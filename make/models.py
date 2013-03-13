@@ -57,9 +57,9 @@ class Warren(models.Model, UrlMixin):
 
     tts = models.IntegerField(u'ТТС')
     tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
-    add = models.IntegerField(u'Доп', null=True, blank=True)
+    add = models.IntegerField(u'Кол-во', null=True, blank=True)
 
-    brocken = models.IntegerField(u'Брак', default=0)
+    brocken = models.CharField(u'Брак', null=True,blank=True, max_length=10)
     cause = models.ManyToManyField('lab.Cause', verbose_name=u'Прич. брака', null=True, blank=True,
                                    limit_choices_to={'type': 'warren'})
 

@@ -42,7 +42,7 @@ function css_to_dict(prefix, val, from) {
 $(function(){
     $("#form").FormNavigate({
       message: "Содержимое было изменено!\nВы уверены, что хотите покинуть страницу без сохранения?",
-      aOutConfirm: "button[type='submit']"
+      aOutConfirm: "button[type='submit'],.dropdown-toggle"
     });
 });
 

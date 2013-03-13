@@ -33,7 +33,7 @@ def forming(request):
     else:
         date = datetime.date.today()
     filter = {'date': date}
-    queryset = Forming.objects.filter(**filter).prefetch_related('bar', 'raw', 'half')
+    queryset = Forming.objects.filter(**filter).prefetch_related('bars', 'raws', 'halfs')
     order = max(f.order for f in queryset or (Forming(),)) + 1
     initial = [{'date': date, 'order': i} for i in range(order, FormingFactory.extra + order + 1)]
     factory = FormingFactory(request.POST or None, initial=initial, queryset=queryset, prefix='forming')
