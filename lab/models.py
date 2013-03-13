@@ -140,7 +140,7 @@ class Bar(models.Model,ShiftMixin,UrlMixin):
     cutter = models.CommaSeparatedIntegerField(u'Отрезчик',max_length=3000)
     info = models.TextField(u'Примечание',max_length=3000)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bar')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='bars')
     order = models.IntegerField(u'Порядок',default=0)
 
     def __unicode__(self):
@@ -174,7 +174,7 @@ class Raw(models.Model,ShiftMixin,UrlMixin):
     temperature = models.IntegerField(u'Темп.')
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raw')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='raws')
     order = models.IntegerField(u'Порядок',default=0)
 
     def __unicode__(self):
@@ -213,7 +213,7 @@ class Half(models.Model,ShiftMixin,UrlMixin):
     
     info = models.TextField(u'Примечание',max_length=3000,null=True,blank=True)
 
-    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='half')
+    forming = models.ForeignKey('make.Forming',verbose_name=u'Формовка',null=True,blank=True,related_name='halfs')
     order = models.IntegerField(u'Порядок',default=0)
 
     @property

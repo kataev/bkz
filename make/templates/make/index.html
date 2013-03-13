@@ -50,7 +50,7 @@ $(function(){
             <tr>
                 <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
                 <td>
-                {% for d,pk,tts,em,warren,half,raw,bar in forming %}
+                {% for d,pk,tts,em,warren in forming %}
                 {# {{ warren }} #}
                 {% if warren %}
                     <del><a title="{{ f }}" class="tts" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a></del>

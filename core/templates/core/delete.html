@@ -4,7 +4,7 @@
 {% block title %}{{ object|model_verbose_name }} {{ object }}{% endblock %}
 {% block container %}
 <div class="container">
-    <form accept-chartset='utf-8' class='' action="" method="post">
+    <form accept-chartset='utf-8' action="" method="post" id='form'>
         {% csrf_token %}
         <h1>Вы уверены?</h1>
         <p>что хотите удалить <b>{{ object|model_verbose_name }} {{ object }}?</b></p>

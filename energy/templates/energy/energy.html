@@ -20,7 +20,7 @@
         <input type="submit" class="btn">
     </form>
 </div>
-<form accept-chartset='utf-8' accept-chartset='utf-8' method="POST" action="{{ data.model.get_absolute_url }}" class='row'>
+<form accept-chartset='utf-8' accept-chartset='utf-8' method="POST" action="{{ data.model.get_absolute_url }}" class='row' id='form'>
     {% csrf_token %}
     <fieldset class='span12'>
     <table>

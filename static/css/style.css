@@ -126,7 +126,7 @@ table input::-webkit-inner-spin-button
 input[name*='pf']{width: 52px;}
 input[name*='pct']{width: 52px;}
 input[name*='chamfer']{width: 52px;}
-fieldset table tr td input[name*='-size']{width: 105px; text-align: center;}
+fieldset table tr td input[name*='-size']{width: 115px; text-align: center;}
 
 #journal fieldset table, #tests fieldset table {margin-right: auto;margin-left: auto;}
 .tests .pressure input[name*='-size']{width: 145px !important; text-align: center;}
