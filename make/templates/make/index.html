@@ -55,7 +55,7 @@ $(function(){
                 {% if warren %}
                     <del><a title="{{ f }}" class="tts" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a></del>
                 {% else %}
-                    <a title="{{ f }}" class="tts {% if em %}muted{% endif %}" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a>
+                    <a title="{{ f }}" class="tts text-error{% if em %}muted{% endif %}" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a>
                 {% endif %}
                 {% endfor %}
                 </td>

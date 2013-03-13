@@ -54,7 +54,7 @@ def warren(request):
         date = dateform.cleaned_data.get('date', datetime.date.today())
     else:
         date = datetime.date.today()
-    timedelta = datetime.timedelta(10)
+    timedelta = datetime.timedelta(20)
     delay = datetime.timedelta(1)
     queryset = Warren.objects.filter(date=date).select_related('forming', 'forming__width', 'part').prefetch_related(
         'part__batch', 'part__rows', 'part__batch__width', 'cause')
