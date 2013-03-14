@@ -18,3 +18,18 @@ class Command(BaseCommand):
     	print date
     	for f,w in izip_longest(formings,warrens,fillvalue=Forming()):
     		print (f.tts == w.tts),f.tts,w.tts
+    
+    def warren_source(self):
+        Warren.objects.all().update(source=None)
+        source = None
+        for w in Warren.objects.all().order_by('date','order'):
+            if w.tto:
+                source = w
+            w.source = source
+            w.save()
+
+    def warren_forming(self):
+        Warren.objects.all().update(forming=None)
+        delay = datetime.timedelta(1)
+        for w in Warren.objects.all().order_by('date','order'):
+            forming = Forming.objects.filter(date__lt=w.date - delay).filter(tts=w.tts).order_by('-date')

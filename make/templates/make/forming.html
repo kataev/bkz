@@ -116,7 +116,7 @@ var svg = d3.select("#chart").append("svg")
 });
     </script>
 {% endblock %}
-{% block title %}Формовка{% endblock %}
+{% block title %}Формовка {{ date|date:'j E Y, l' }}{% endblock %}
 {% block container %}
 <div class="container" id='forming'>
     <div class="row">

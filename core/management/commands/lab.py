@@ -74,8 +74,7 @@ class Command(BaseCommand):
             d2 = w.date + datetime.timedelta(7)
             for tto in set(w.get_tto):
                 try:
-                    b = Batch.objects.filter(date__gt=d1).filter(
-                        tto__regex=r'^(\[%d,)|(, %d,)|(, %d\])' % ((tto,) * 3)).order_by('date')[0]
+                    b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(, %d,)|(, %d\])' % ((tto,) * 3)).order_by('date')[0]
                     for p in b.parts.all():
                         if tto in p.get_tto:
                             w.part = p

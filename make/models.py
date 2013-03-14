@@ -80,6 +80,21 @@ class Warren(models.Model, UrlMixin):
     def get_tto(self):
         return map(int, tto_regexp.findall(self.tto))
 
+    @property
+    def pie(self):
+        if self.tto:
+            queryset = self.consumer.all()
+            return [ (round(1./len(queryset),2),w.tts) for w in queryset ]
+        else:
+            if self.brocken:
+                if u'%' in self.brocken:
+                    n, = self.brocken.split('%')
+                    return n/100.
+                elif u'п' in self.brocken:
+                    return 1
+                else:
+                    return 1
+
     class Meta:
         ordering = ('-date', 'order')
         verbose_name = u'Укладка'

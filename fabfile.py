@@ -3,7 +3,7 @@
 from fabric.api import *
 
 env = env
-env.hosts = ['localhost']
+env.hosts = ['localhost','server']
 
 env.dev_branch = 'dev'
 env.master_branch = 'master'
