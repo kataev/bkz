@@ -12,3 +12,4 @@ django-extensions==0.8
 lxml==2.3.2
 python-dateutil==1.5
 django-tastypie==0.9.11
+fabtools==0.12.0
