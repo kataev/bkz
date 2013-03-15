@@ -35,6 +35,11 @@ class Forming(models.Model, UrlMixin):
             return u'Новая формовка'
 
     @property
+    def amount(self):
+        return self.width.tts
+
+
+    @property
     def lab(self):
         return list(self.half.all()) + list(self.raw.all()) + list(self.bar.all())
 

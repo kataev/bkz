@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
-__author__ = 'bteam'
-
 from django.contrib import admin
-from bkz.old.models import *
+from old.models import *
 
-class TovarAdmin(admin.ModelAdmin):
-    list_display = ('prim','total')
 
-class JurnalAdmin(admin.ModelAdmin):
-    list_display = ('tov','date','plus','minus','makt','pakt')
-
-class ScladAdmin(admin.ModelAdmin):
+class DispAgentAdmin(admin.ModelAdmin):
     pass
 
-class AgentAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+class DispJurnalAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(DispTovar,TovarAdmin)
-admin.site.register(DispSclad,ScladAdmin)
-admin.site.register(DispJurnal,JurnalAdmin)
-admin.site.register(DispAgent,AgentAdmin)
+class DispScladAdmin(admin.ModelAdmin):
+    pass
+
+class DispTovarAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(DispAgent,DispAgentAdmin)
+admin.site.register(DispJurnal,DispJurnalAdmin)
+admin.site.register(DispSclad,DispScladAdmin)
+admin.site.register(DispTovar,DispTovarAdmin)

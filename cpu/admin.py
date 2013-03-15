@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from bkz.cpu.models import CpuDevice, Position
+from cpu.models import *
+
 
 class CpuDeviceAdmin(admin.ModelAdmin):
-	pass
-
-admin.site.register(CpuDevice,CpuDeviceAdmin)
+    pass
 
 class PositionAdmin(admin.ModelAdmin):
-	pass
+    pass
 
+class ValueAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(CpuDevice,CpuDeviceAdmin)
 admin.site.register(Position,PositionAdmin)
+admin.site.register(Value,ValueAdmin)

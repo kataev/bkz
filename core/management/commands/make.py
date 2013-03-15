@@ -33,3 +33,4 @@ class Command(BaseCommand):
         delay = datetime.timedelta(1)
         for w in Warren.objects.all().order_by('date','order'):
             forming = Forming.objects.filter(date__lt=w.date - delay).filter(tts=w.tts).order_by('-date')
+            

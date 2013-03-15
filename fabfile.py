@@ -13,7 +13,7 @@ def commit():
 
 def merge():
     local('git checkout %s' % env.master_branch)
-    local('git merge --no-ff %s' % env.dev_branch)
+    local('git merge %s' % env.dev_branch)
 
 def push():
     merge()
@@ -25,7 +25,7 @@ def dbstart():
 
 def production_env():
 	env.user = 'bkz'
-	env.python = '/home/bkz/env/bin/python'
+	env.python = '~/env/bin/python'
 	env.project_root = '~/bkz'
 
 @roles('production')
@@ -40,6 +40,5 @@ def deploy():
 		run('git merge origin/master')
 		with fabtools.python.virtualenv('/home/bkz/env'):
 			run('./manage.py collectstatic --noinput')
-
-	# sudo('supervisorctl restart bkz',shell=False)
-	
+			run('./manage.py migrate --noinput')
+	sudo('supervisorctl restart bkz',shell=False)
