@@ -14,6 +14,7 @@ def commit():
 def merge():
     local('git checkout %s' % env.master_branch)
     local('git merge %s' % env.dev_branch)
+    local('git checkout %s' % env.dev_branch)
 
 def push():
     merge()

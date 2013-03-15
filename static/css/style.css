@@ -132,7 +132,7 @@ fieldset table tr td input[name*='-size']{width: 115px; text-align: center;}
 .tests .pressure input[name*='-size']{width: 145px !important; text-align: center;}
 .tests .pressure input[name*='tto']{width: 52px;text-align: center;}
 .tests .flexion  input[name*='tto']{width: 32px;text-align: center;}
-.tests input[name*='row']{width: 32px;text-align: center;}
+.tests input[name*='row'],.tests input[name*='poddon']{width: 32px;text-align: center;}
 
 .tests input[name*='area']{width: 58px;text-align: center;}
 .tests input[name*='readings']{width: 52px;text-align: center;}

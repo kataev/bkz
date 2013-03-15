@@ -24,7 +24,7 @@
                             <thead>
                             <tr>
                                 {% for f in t.empty_form.visible_fields %}
-                                    <th>{{ f.label }}</th>
+                                    <th>{{ f.label|safe }}</th>
                                 {% endfor %}
                             </tr>
                             </thead>
@@ -40,14 +40,6 @@
                                                 {% endfor %}
                                                 {{ f }}
                                             </td>
-                                        {% elif forloop.last %}
-                                        <td class='input-append'>
-                                            {{ f }}
-                                            <span class='add-on' title='Выберите образец по размерам котрого будет вычислятся плотность'>
-                                                <input name='volume' type='radio' value='{{ form.prefix }}' 
-                                                {% if form.instance.pk and form.instance.pk == batch.volume_id %}checked="checked"{% endif %} tabindex='-1'>
-                                            </span>
-                                        </td>
                                         {% else %}
                                             <td>{{ f }}</td>
                                         {% endif %}
