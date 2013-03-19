@@ -74,12 +74,11 @@ class Command(BaseCommand):
             d2 = w.date + datetime.timedelta(7)
             for tto in set(w.get_tto):
                 try:
-                    b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(, %d,)|(, %d\])' % ((tto,) * 3)).order_by('date')[0]
+                    b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(,%d,)|(,%d\])' % ((tto,) * 3)).order_by('date')[0]
                     for p in b.parts.all():
                         if tto in p.get_tto:
                             w.part = p
                             w.save()
-                            print 'saved'
                 except IndexError:
                     print d1, '<', w.date, '<', d2, w, w.tto, tto
 
@@ -90,7 +89,6 @@ class Command(BaseCommand):
             # print b.date,data
             if (max(data) - min(data)) > 10:
                 data = sum(sorted((list(g) for v, g in groupby(data, lambda x: x > 20)), reverse=True), [])
-                # if min(data) != 1:
             print b.pk, b.date, data, [t.tto for t in b.parts.all()]
             line += data
 

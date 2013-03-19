@@ -83,7 +83,13 @@ class Warren(models.Model, UrlMixin):
 
     @property
     def get_tto(self):
-        return map(int, tto_regexp.findall(self.tto))
+        if self.tto:
+            tto = self.tto
+        elif self.source:
+            tto = self.source.tto
+        else:
+            tto = ''
+        return map(int, tto_regexp.findall(tto))
 
     @property
     def pie(self):
