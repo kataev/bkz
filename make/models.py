@@ -21,7 +21,7 @@ class Forming(models.Model, UrlMixin):
 
     tts = models.IntegerField(u'№ ТТС')
     density = models.FloatField(u'Плот.')
-    vacuum = models.FloatField(u'Вак.')
+    vacuum = models.FloatField(u'Вак.',null=True,blank=True)
     empty = models.BooleanField('Пуст.', default=False)
 
     order = models.IntegerField(u'Порядок', default=0)

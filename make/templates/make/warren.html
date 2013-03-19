@@ -4,6 +4,8 @@
 {% endblock %}
 {% block script %}
     <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
+    {# <script type="text/javascript" src="/static/js/warren.js"></script> #}
 {% endblock %}
 {% block title %}Укладка {{ date|date:'j E Y, l' }}{% endblock %}
 {% block container %}
@@ -25,7 +27,7 @@
         {% csrf_token %}
         {{ factory.management_object }}    
         {{ factory.management_form }}  
-    <fieldset class='span3'>
+    <fieldset class='span5'>
         {% for e in factory.non_form_errors %}
         {{ e }}
         {% endfor %}
@@ -89,10 +91,9 @@
             </tbody>
         </table>
     </fieldset>    
-    <fieldset class='span4'>
-            {{ widthcolor }}
-        </fieldset>
-        
+    <div class="span7" id="chart">
+
+    </div>
 </form>
 </div>
 <div class="form-actions">

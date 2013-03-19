@@ -16,6 +16,8 @@ WEBODT_TEMPLATE_PATH = 'core/templates/'
 PROFILE_LOG_BASE = '/home/bteam/projects/logs/'
 ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
+SHELL_PLUS_DONT_LOAD = ['sites','sessions','flatpages','south','admin','ipaccess']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

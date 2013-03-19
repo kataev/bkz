@@ -80,3 +80,12 @@ def warren(request):
         messages.success(request, 'Садка сохранена')
         return redirect(reverse('make:warren') + '?date=%s&s=1' % date.isoformat())
     return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform))
+
+import simplejson
+from django.http import HttpResponse
+def json(request):
+    warrens = Warren.objects.filter(date='2012-01-15').exclude(tto='').values_list('tto','consumer__tts')
+    warrens = list( {'tto':g,'tts':[ w[1] for w in warren ]} for g,warren in groupby(warrens,key=itemgetter(0)))
+    return HttpResponse(simplejson.dumps(warrens))
+
+

@@ -18,8 +18,8 @@ class FormingForm(BootstrapMixin, forms.ModelForm):
                     'color':forms.HiddenInput(),
 
                     'density':FloatInput(attrs={'autocomplete':'off'}),
-                    'vacuum':FloatInput(attrs={'autocomplete':'off'}),
-                    'empty':forms.CheckboxInput(attrs={'class':'add-on'}),
+                    'vacuum':FloatInput(attrs={'autocomplete':'off','tabindex':'-1'}),
+                    'empty':forms.CheckboxInput(attrs={'class':'add-on','tabindex':'-1'}),
          }
 FormingFactory = modelformset_factory(Forming,form=FormingForm,extra=30,max_num=32)
 

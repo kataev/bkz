@@ -7,6 +7,7 @@ urlpatterns = patterns('bkz.make.views',
     url(ur'^Формовка$', 'forming', name='forming'),
     url(ur'^Укладка$', 'warren', name='warren'),
     url(ur'^ЦПУ/', include('bkz.cpu.urls', namespace='cpu')),
+    url(ur'^json$', 'json', name='json'),
 )
 
 urlpatterns += app_urlpatterns('make')
