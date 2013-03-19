@@ -3,12 +3,12 @@ var $chart = $('#chart')
 var margin = {top: 20, right: 80, bottom: 30, left: 50},
     width = $chart.width() - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
-
+var vacuum = 0
 data = $('tbody tr').not('.fake').map(function(){ 
         var tts = $(this).find('input[name*="tts"]').val()
         var density = $(this).find('input[name*="density"]').val()
-        var vacuum = $(this).find('input[name*="vacuum"]').val()
-        if (density * vacuum) {
+        vacuum = $(this).find('input[name*="vacuum"]').val() || vacuum
+        if (density) {
         return {tts:+tts,"Плотность":parseFloat(density),"Вакуум":parseFloat(vacuum)}
         }
      })
