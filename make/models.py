@@ -6,6 +6,7 @@ from django.db import models
 
 from bkz.utils import UrlMixin, ru_date
 from bkz.whs.constants import cavitation_c, color_c, get_name, css_dict
+from bkz.make.fields import BrockenCharField
 
 tto_regexp = re.compile(r'(\d+)+')
 
@@ -35,11 +36,6 @@ class Forming(models.Model, UrlMixin):
             return u'Новая формовка'
 
     @property
-    def amount(self):
-        return self.width.tts
-
-
-    @property
     def lab(self):
         return list(self.half.all()) + list(self.raw.all()) + list(self.bar.all())
 
@@ -65,6 +61,9 @@ path_c = (
     (8,u'8 путь'), # Перед сушкой
     )
 
+
+
+
 class Warren(models.Model, UrlMixin):
     """
     Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. Отражается на журнал оператора садочного коплекса
@@ -76,7 +75,7 @@ class Warren(models.Model, UrlMixin):
     tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
     add = models.IntegerField(u'Кол-во', null=True, blank=True)
 
-    brocken = models.CharField(u'Брак', null=True,blank=True, max_length=10)
+    brocken = BrockenCharField(u'Брак', null=True,blank=True, max_length=10)
     cause = models.ManyToManyField('lab.Cause', verbose_name=u'Прич. брака', null=True, blank=True,
                                    limit_choices_to={'type': 'warren'})
 
@@ -104,6 +103,31 @@ class Warren(models.Model, UrlMixin):
         return map(int, tto_regexp.findall(tto))
 
     @property
+    def length(self):
+        if self.forming:
+            length = self.forming.width.tts
+            amount = 0
+            if self.brocken:
+                if u'%' in self.brocken:
+                    amount = int(self.brocken.replace('%',''))
+                    amount = (1 - amount / 100. ) * length
+                elif u'п' in self.brocken:
+                    amount = int(self.brocken.replace(u'п',''))
+                    amount = (1 - amount * 0.33) * length
+                else:
+                    amount = int(self.brocken)
+            return int(round(amount,0))
+
+    @property
+    def percent(self):
+        if self.forming and self.tto:
+            tto = (self.forming.width.tto * 2 / 3)
+            tts = sum(w.forming.width.tts for w in self.consumer.all() if w.forming)
+            print tto,tts
+            return round((tts - tto)/tto,2)
+
+
+    @property
     def pie(self):
         if self.tto:
             queryset = self.consumer.all()
@@ -123,3 +147,6 @@ class Warren(models.Model, UrlMixin):
         verbose_name = u'Укладка'
         verbose_name_plural = u'Укладка'
         unique_together = ('date', 'tts')
+
+
+

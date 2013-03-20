@@ -4,6 +4,7 @@ import datetime
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.query import QuerySet
 
 from bkz.whs.constants import *
 from bkz.utils import UrlMixin,ru_date
@@ -332,6 +333,24 @@ class HeatConduction(models.Model,UrlMixin):
         elif 0.46 < self.value:
             return u'Малоэффективные'
 
+
+class BatchQuerySet(QuerySet):
+    def tto(self,tto):
+        """Filter batchs by tto"""
+        if tto:
+            return self.filter(tto__regex=r'(^%d,)|(,%d,)|(,%d$)' % ((tto,) * 3))
+        else:
+            return self.none()
+
+class BatchManager(models.Manager):
+    def get_query_set(self):
+        return BatchQuerySet(self.model)
+
+    def __getattr__(self, attr, *args):
+        if attr.startswith('_'):
+            raise AttributeError
+        return getattr(self.get_query_set(), attr, *args)
+
 class Batch(UrlMixin,models.Model):
     """Сущность партии готовой продукции, отражается на документ о качестве. """
     date = models.DateField(u'Дата', default=datetime.date.today())
@@ -363,6 +382,8 @@ class Batch(UrlMixin,models.Model):
     pf = models.FloatField(u'Пустотность фактическая',null=True,blank=True)
     pct = models.FloatField(u'Пустотность приведенная к фактической',null=True,blank=True)
     info = models.TextField(u'Примечание',max_length=300,blank=True,null=True)
+
+    objects = BatchManager()
 
     def __unicode__(self):
         if self.pk: return u'Партия № %d, %s' % (self.number,ru_date(self.date))

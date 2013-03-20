@@ -69,18 +69,23 @@ class Command(BaseCommand):
 
 
     def parts(self):
-        for w in Warren.objects.filter(tto__isnull=False).order_by('date'):
+        Warren.objects.all().update(part=None)
+        for w in Warren.objects.exclude(tto=u'').order_by('date'):
             d1 = w.date
             d2 = w.date + datetime.timedelta(7)
             for tto in set(w.get_tto):
                 try:
-                    b = Batch.objects.filter(date__gt=d1).filter(tto__regex=r'^(\[%d,)|(,%d,)|(,%d\])' % ((tto,) * 3)).order_by('date')[0]
+                    b = Batch.objects.filter(date__gt=d1).tto(tto).order_by('date')[0]
                     for p in b.parts.all():
                         if tto in p.get_tto:
                             w.part = p
                             w.save()
                 except IndexError:
                     print d1, '<', w.date, '<', d2, w, w.tto, tto
+        args = {'date__year':2012,'date__month':1}
+        for w in Warren.objects.exclude(tto=u'').filter(**args).order_by('date'):
+            if not w.part:
+                print 'dne',w,w.tto
 
     def enumerated(self):
         line = []

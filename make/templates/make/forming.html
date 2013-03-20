@@ -85,7 +85,7 @@
                       {% if form.instance.pk and form.instance.warren %}
                       <a href='{{ form.instance.warren.get_absolute_url }}'title="{{ form.instance.warren }}">Укладка</a>
                       {% elif form.instance.pk and not form.instance.empty %}
-                      <a href='#'>Еще не уложена</a>
+                      <a href='#'></a>
                       {% elif form.instance.empty %}
                       <a href='#'>Пустая</a>
                       {% endif %}

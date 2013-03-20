@@ -25,17 +25,15 @@ class Command(BaseCommand):
             getattr(self, label)()
 
 
-    def start(self):
+    def export(self):
     	writer = csv.writer(open('../pandas.csv','wb'))
-        writer.writerow(['forming_date','density','warren_date','tts','tto','batch_date','defect'])
-    	for p in Part.objects.using('server').filter(warrens__isnull=False):
-		    for w in p.warrens.all():
-		        for q in w.consumer.all():
-		            if q.forming:
-		            	writer.writerow([q.forming.date,q.forming.density,q.date,q.tts,w.tto,p.batch.date,p.defect])
-    	
-		
+        writer.writerow(['forming_date','density','amount','warren_date','tts','tto','batch_date','defect'])
+    	for p in Part.objects.filter(warrens__isnull=False):
+            for w in p.warrens.all():
+                for q in w.consumer.filter(forming__isnull=False):
+                    writer.writerow([q.forming.date,q.forming.density,q.forming.width.tts,q.date,q.tts,w.tto,p.batch.date,p.batch.number,p.defect])
 
-    def pandas(self):
+
+    def show(self):
     	data = read_csv('../pandas.csv')
-    	print data.ix[:12].to_string()
+        print data.describe()
