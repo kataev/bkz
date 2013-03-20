@@ -72,8 +72,8 @@ class Warren(models.Model, UrlMixin):
     date = models.DateField(u'Дата', null=True, blank=True)
 
     tts = models.IntegerField(u'ТТС')
-    tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
     path = models.IntegerField(u'Путь',default=0)
+    tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
     add = models.IntegerField(u'Кол-во', null=True, blank=True)
 
     brocken = models.CharField(u'Брак', null=True,blank=True, max_length=10)
