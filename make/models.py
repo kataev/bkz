@@ -53,6 +53,17 @@ class Forming(models.Model, UrlMixin):
         unique_together = ('date', 'tts')
         ordering = ('-date', 'order')
 
+path_c = (
+    (0,u'Неизвестно'),
+    (3,u'3 путь'), # Нак после сушки
+
+    (4,u'4 путь'), # Сушка
+    (5,u'5 путь'),
+    (6,u'6 путь'),
+    (7,u'7 путь'),
+
+    (8,u'8 путь'), # Перед сушкой
+    )
 
 class Warren(models.Model, UrlMixin):
     """
@@ -62,6 +73,7 @@ class Warren(models.Model, UrlMixin):
 
     tts = models.IntegerField(u'ТТС')
     tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
+    path = models.IntegerField(u'Путь',default=0)
     add = models.IntegerField(u'Кол-во', null=True, blank=True)
 
     brocken = models.CharField(u'Брак', null=True,blank=True, max_length=10)

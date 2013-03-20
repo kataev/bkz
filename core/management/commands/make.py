@@ -56,7 +56,7 @@ class Command(BaseCommand):
     def forming_warren(self):
         Warren.objects.all().update(forming=None,part=None)
         delay = datetime.timedelta(1)
-        for f in Forming.objects.filter(date__year=2012,date__month=1).order_by('date','order'):
+        for f in Forming.objects.filter(date__year=2012,date__month=1).order_by('-date','order'):
             warrens = Warren.objects.filter(Q(date=f.date) | Q(date=f.date - delay)).filter(tts=f.tts).order_by('-date')
             if warrens:
                 w = warrens[0]
@@ -83,10 +83,30 @@ class Command(BaseCommand):
             f.save()
 
     def show(self):
-        tts= self.args[1]
+        if len(self.args[1]) > 3:
+            args = dict(date = self.args[1])
+        else:
+            args = dict(tts = self.args[1])
         print 'forming'
-        for f in Forming.objects.filter(tts=tts):
-            print '\t',f.date,f.get_color_display(),f.width
+        for f in Forming.objects.filter(**args).order_by('-date','order'):
+            print f.pk,'\t', f.date, f.tts,'\t',f.get_color_display(),f.width
         print 'warren'
-        for f in Warren.objects.filter(tts=tts):
-            print '\t',f.date, f.get_tto,f.source.part,f.source.part.batch,f.source.part.batch.get_color_display()
+        for f in Warren.objects.filter(**args).order_by('-date','order'):
+            print f.pk,'\t',f.date, f.tts,'\t', f.get_tto,f.source.part,f.source.part.batch,f.source.part.batch.get_color_display()
+
+
+    def set(self):
+        if len(self.args) > 3:
+            if self.args[1] == 'warren':
+                model = Warren
+            elif self.args[1] == 'forming':
+                model = Forming
+            model.objects.filter(pk=self.args[2]).update(tts=self.args[3])
+    
+    def test_order(self):
+        args = {'date__year':2012,'date__month':1}
+        form = ' '.join( str(f.tts) for f in Forming.objects.filter(**args))
+        for d in Forming.objects.filter(**args).dates('date','day'):
+            warrens = ' '.join( str(f.tts) for f in Warren.objects.filter(date=d))
+            formings = ' '.join( str(f.tts) for f in Forming.objects.filter(date=d))
+            print d, (warrens in formings),len(formings),len(warrens)

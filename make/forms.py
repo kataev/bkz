@@ -30,6 +30,7 @@ class WarrenForm(BootstrapMixin, forms.ModelForm):
         widgets = {'date':forms.HiddenInput(),
                     'tto':forms.TextInput(attrs={'tabindex':2,'autocomplete':'off'}),
                     'tts':NumberInput(attrs={'tabindex':1,'autocomplete':'off'}),
+                    'path':NumberInput(attrs={'tabindex':3,'autocomplete':'off','max':8}),
                     'order':forms.HiddenInput(),
                     'source':forms.HiddenInput(),
                     'cause':PopUpCheckboxSelectMultiple(attrs={'class':'checkbox'}),
