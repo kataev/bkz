@@ -74,9 +74,7 @@ def index(request):
     if datefilter.is_valid() and datefilter.cleaned_data.get('date__month') is not None:
         data['date__month'] = date.month
     queryset = queryset.filter(**data)
-    half = {d.date() for d in
-            Half.objects.filter(**dict((k.replace('date', 'datetime'), v) for k, v in data.items())).dates('datetime',
-                                                                                                           'day')}
+    half = {d.date() for d in Half.objects.filter(**{k.replace('date', 'datetime'):v for k, v in data.items()}).dates('datetime', 'day')}
     for b in queryset:
         b.journal = b.date in half
     return render(request, 'lab/index.html', dict(object_list=queryset, datefilter=datefilter, date=date))

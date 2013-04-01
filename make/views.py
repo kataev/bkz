@@ -15,13 +15,13 @@ from bkz.whs.forms import DateForm, YearMonthFilter
 def index(request):
     datefilter = YearMonthFilter(request.GET or None, model=Forming)
     if datefilter.is_valid():
-        data = dict((k, v) for k, v in datefilter.cleaned_data.items() if v)
+        data = {k:v for k, v in datefilter.cleaned_data.items() if v}
     else:
         date = datetime.date.today()
         data = dict(date__year=date.year, date__month=date.month)
     forming = Forming.objects.filter(**data).values_list('date', 'pk', 'tts', 'empty', 'warren')
     warren = Warren.objects.filter(cause__isnull=True).filter(**data).values_list('date', 'pk')
-    warren = dict((d, list(warren)) for d, warren in groupby(warren, key=itemgetter(0)))
+    warren = {d:list(warren) for d, warren in groupby(warren, key=itemgetter(0))}
     object_list = [(d, tuple(forming), warren.get(d, ())) for d, forming in groupby(forming, key=itemgetter(0))]
     return render(request, 'make/index.html', {'datefilter': datefilter, 'object_list': object_list})
 

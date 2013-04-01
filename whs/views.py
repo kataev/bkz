@@ -145,7 +145,7 @@ def bills(request):
             data.pop('rpp')
         queryset = queryset.filter(**data)
     if datefilter.is_valid():
-        data = dict(filter(itemgetter(1),datefilter.cleaned_data.items()))
+        data = { k:v for k,v in datefilter.cleaned_data.items() if v}
         queryset = queryset.filter(**data)
     return render(request,'whs/bills.html',dict(filter=billfilter,datefilter=datefilter,
         object_list=queryset,rpp=rpp))
@@ -199,7 +199,7 @@ def sortings(request):
     datefilter = YearMonthFilter(request.GET or None,model=Sorting)
     rpp = request.GET.get('rpp',20)
     if datefilter.is_valid():
-        data = dict(filter(itemgetter(1),datefilter.cleaned_data.items()))
+        data = { k:v for k,v in datefilter.cleaned_data.items() if v }
         queryset = q2.filter(**data)
     else:
         date = datetime.date.today()
@@ -214,7 +214,7 @@ def bricks(request):
     Bricks = Brick.objects.all()
     form = YearMonthFilter(request.GET or None,model=Bill)
     if form.is_valid():
-        data = dict([(k, v) for k, v in form.cleaned_data.items() if v is not None])
+        data = { k:v for k,v in datefilter.cleaned_data.items() if v is not None}
         if data.has_key('date__month'):
             begin = datetime.date(year=data['date__year'], month=data['date__month'], day=1)
             end = begin + relativedelta(months=1)
@@ -275,7 +275,7 @@ def transfers(request):
     datefilter = YearMonthFilter(request.GET or None,model=Bill)
     queryset = Sold.objects.filter(brick_from__isnull=False).values_list('brick__mark','brick_from__mark').annotate(Sum('amount'))
     if datefilter.is_valid():
-        data = dict(('doc__'+k,v) for k,v in datefilter.cleaned_data.items() if v)
+        data = {'doc__'+k:v for k,v in datefilter.cleaned_data.items() if v}
     else:
         date = datetime.date.today()
         data = {'doc__date__year':date.year,'doc__date__month':date.month}

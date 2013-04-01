@@ -542,7 +542,7 @@ class Test(models.Model):
     timestamp = models.DateTimeField(u'Время создания',auto_now=True,)
     batch = models.ForeignKey(Batch,verbose_name=u'Партия',related_name=u'tests')
     tto = models.CharField(u'№ ТТО',max_length=20)
-    poddon = models.IntegerField(u'<abbr title="№ поддона">Под</abbr>',default=0)
+    poddon = models.CommaSeparatedIntegerField(u'<abbr title="№ поддона">Под</abbr>',default=0,max_length=10)
     row = models.IntegerField(u'Ряд')
     size = models.CharField(u'Размеры',max_length=20)
     area = models.FloatField(u'S²')

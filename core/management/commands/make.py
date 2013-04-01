@@ -24,7 +24,7 @@ class Command(BaseCommand):
             for i in range(int(self.args[2])):
                 formings.next()
     	for f,w in izip_longest(formings,warrens,fillvalue=Forming()):
-    		print (f.tts == w.tts),f.tts,w.tts,'\t',f.pk,w.pk
+    		print (f.tts == w.tts),'\t',rjust(str(f.tts),4),rjust(str(w.tts),4),'\t',rjust(str(f.pk),4),rjust(str(w.pk),4)
     
     def warren_source(self):
         Warren.objects.all().update(source=None)
@@ -43,7 +43,7 @@ class Command(BaseCommand):
         Warren.objects.all().update(forming=None,part=None)
         delay = datetime.timedelta(1)
         for w in Warren.objects.filter(date__year=2012,date__month=1).order_by('-date','order'):
-            forming = Forming.objects.filter(date__lt=w.date - delay).filter(tts=w.tts).order_by('-date')
+            forming = Forming.objects.filter(date__lt=w.date - delay).filter(empty=False).filter(tts=w.tts).order_by('-date')
             if forming:
                 w.forming = forming[0]
                 try:
@@ -112,7 +112,6 @@ class Command(BaseCommand):
     
     def test_order(self):
         args = {'date__year':2012,'date__month':1}
-        form = ' '.join( str(f.tts) for f in Forming.objects.filter(**args))
         for d in Forming.objects.filter(**args).dates('date','day'):
             warrens = ' '.join( str(f.tts) for f in Warren.objects.filter(date=d))
             formings = ' '.join( str(f.tts) for f in Forming.objects.filter(date=d))

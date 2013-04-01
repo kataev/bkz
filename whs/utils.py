@@ -3,13 +3,12 @@ from whs.models import Sorting, Sold, Write_off
 from lab.models import Part
 
 def operations(filter):
-    print filter
     m_from = Sorting.objects.filter(type=0).filter(**filter)
     m_to = Sorting.objects.filter(type=1).filter(**filter)
     m_rmv = Sorting.objects.filter(type=2).filter(**filter)
-    part_filter = dict([('batch__%s' % k, v) for k, v in filter.items()])
+    part_filter = {'batch__%s' % k:v for k, v in filter.items()}
     add = Part.objects.filter(**part_filter)
-    doc_filter = dict([('doc__%s' % k, v) for k, v in filter.items()])
+    doc_filter = {'doc__%s' % k:v for k, v in filter.items()}
     sold = Sold.objects.filter(**doc_filter)
     t_from = Sold.objects.filter(**doc_filter).filter(brick_from__isnull=False)
     t_to = Sold.objects.filter(**doc_filter).filter(brick_from__isnull=False)
