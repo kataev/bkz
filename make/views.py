@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import simplejson
 from itertools import groupby
 from operator import itemgetter
 
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.contrib import messages
 
 from bkz.make.models import Forming, Warren
@@ -79,10 +81,10 @@ def warren(request):
             w.save()
         messages.success(request, 'Садка сохранена')
         return redirect(reverse('make:warren') + '?date=%s&s=1' % date.isoformat())
-    return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform))
+    json = [ {'number':w.tto,'tts':[ c.tts for c in w.consumer.all() if c.date==w.date],'rows':c.add} for w in queryset if w.tto]
 
-import simplejson
-from django.http import HttpResponse
+    return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform,json=simplejson.dumps(json)))
+
 def json(request):
     warrens = Warren.objects.filter(date='2012-01-15').exclude(tto='').values_list('tto','consumer__tts')
     warrens = list( {'tto':g,'tts':[ w[1] for w in warren ]} for g,warren in groupby(warrens,key=itemgetter(0)))

@@ -1,44 +1,59 @@
 $(function(){
-var $chart = $('#chart')
-var margin = {top: 20, right: 20, bottom: 20, left: 20},
-    width = $chart.width() - margin.left - margin.right,
-    height = 260 - margin.top - margin.bottom;
+$chart = $('#chart')
+margin = {top: 20, right: 20, bottom: 30, left: 30},
+width = $chart.width() - margin.left - margin.right,
+height = 160 - margin.top - margin.bottom;
 
-var svg = d3.select("#chart").append("svg")
+svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
 
-tto_width = 82
-tto_height = 6
+data = [{number:'1/2',tts:[11,28,32]},{number:'2',tts:[15,46,71,85]},{number:3,tts:[9,43],rows:9}]
+data = json
 
-svg.selectAll('.tto')
-	.data([1])
-	.enter().append('g')
-		.attr('class','tto')
-		.attr("transform", "translate(40,40)")
-			.append('rect')
-			.attr('width',tto_width)
-			.attr('height',tto_height)
+yScale = d3.scale.linear().range([0,height]).domain([16,0])
 
-svg.select('.tto').selectAll('circle')
-	.data([1,2])
-	.enter().append('circle')
-		.attr('r', 4)
-		.attr('cx', function(d){ return d*52-37 })
-		.attr('cy', 12)
-
-svg.select('.tto').selectAll('.poddon')
-	.data([1,2,3,3,4,5])
+svg.selectAll('g.tto')
+	.data(data)
 	.enter()
-		.append('rect')
-		.attr('width',20)
-		.attr('height',20)
-		.attr('x',function(d){ return d*7 })
-		.attr('y',function(d){ return -d*2 })
+		.append('g')
+		.attr('class','tto')
+		.attr("transform", function(d,i){return "translate(" + (i*yScale(6)) + ","+ 0 +")"})
+		.selectAll('rect')
+		.data(function(d,i){
+			var tts = this.parentNode.__data__.tts;
+			var rows = this.parentNode.__data__.rows || 16;
+			return tts.map(function(e){ return {number:e,size:rows/tts.length} }) })
+		.enter()
+			.append('rect')
+			.attr('class','poddon')
+			.attr('y',function(d,i){ return yScale((i+1)*d.size) })
+			.attr('width',yScale(6))
+			.attr('height',function(d,i){ return yScale(16-d.size) })
+
+svg.selectAll('g.tto')
+	.data(data)
+		.selectAll('text')
+		.data(function(d,i){
+			var tts = this.parentNode.__data__.tts;
+			var rows = this.parentNode.__data__.rows || 16;
+			return tts.map(function(e){ return {number:e,size:(rows/tts.length) } }) })
+		.enter()
+			.append('text')
+			.attr('y',function(d,i){ return yScale((i+0.45)*d.size) })
+			.attr('x',function(d,i){ return yScale(11) })
+			.text(function(d){ return d.number })
 
 
+var yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient("left")
+
+svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
 
 })
