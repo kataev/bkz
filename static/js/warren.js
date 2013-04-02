@@ -21,7 +21,7 @@ svg.selectAll('g.tto')
 	.enter()
 		.append('g')
 		.attr('class','tto')
-		.attr("transform", function(d,i){return "translate(" + (i*yScale(6)) + ","+ 0 +")"})
+		.attr("transform", function(d,i){ return "translate(" + (1.05*i*yScale(6)) + "," + 0 +")"})
 		.selectAll('rect')
 		.data(function(d,i){
 			var tts = this.parentNode.__data__.tts;
@@ -47,6 +47,13 @@ svg.selectAll('g.tto')
 			.attr('x',function(d,i){ return yScale(11) })
 			.text(function(d){ return d.number })
 
+svg.selectAll('g.tto text.label')
+	.data(data)
+	.enter()
+		.append('text')
+		.attr('class','label')
+		.attr("transform", function(d,i){ return "translate(" + (i*yScale(6)+yScale(11)) + "," + yScale(-2) + ")" })
+		.text(function(d){ return d.number })
 
 var yAxis = d3.svg.axis()
     .scale(yScale)

@@ -141,3 +141,15 @@ class Command(BaseCommand):
             path += rjust(p,4)
         print tts
         print path
+
+    def chart(self):
+        warrens = Warren.objects.filter(date='2012-01-14')
+        previos = Warren.objects.filter(date=warrens[0].date-datetime.timedelta(1)).filter(add__gt=0).get()
+        lt = previos.row * (16 - previos.add) * -1
+        print lt,previos.add
+        amount_axis = [lt,]
+        for w in warrens:
+            amount_axis.append(amount_axis[-1]+w.length)
+
+        # ammout_axis = [ [w.tts,w.length] for w in warrens ]
+        print amount_axis

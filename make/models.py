@@ -66,7 +66,8 @@ path_c = (
 
 class Warren(models.Model, UrlMixin):
     """
-    Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. Отражается на журнал оператора садочного коплекса
+    Хранит в себе информацию о садке продукции с сушильных телег на обжиговые телеги. 
+    Отражается на журнал оператора садочного коплекса.
     """
     date = models.DateField(u'Дата', null=True, blank=True)
 
@@ -116,7 +117,7 @@ class Warren(models.Model, UrlMixin):
                     amount = (1 - amount * 0.33) * length
                 else:
                     amount = int(self.brocken)
-            return int(round(amount,0))
+            return int(round(length-amount,0))
 
     @property
     def percent(self):
@@ -129,18 +130,39 @@ class Warren(models.Model, UrlMixin):
 
     @property
     def pie(self):
-        if self.tto:
-            queryset = self.consumer.all()
-            return [ (round(1./len(queryset),2),w.tts) for w in queryset ]
+        def get_add(previos):
+            try:
+                previos = previos.get()
+                add = previos.add 
+            except Warren.DoesNotExist:
+                add = 16
+            except Warren.MultipleObjectsReturned:
+                add = previos[0].add
+            return add
+        
+        if self.forming is not None:
+            forming = self.forming
         else:
-            if self.brocken:
-                if u'%' in self.brocken:
-                    n, = self.brocken.split('%')
-                    return n/100.
-                elif u'п' in self.brocken:
-                    return 1
-                else:
-                    return 1
+            try:
+                forming = Warren.objects.filter(date=self.date).filter(forming__isnull=False)[0].forming
+            except IndexError:
+                return 0
+        row = forming.width.tto / (3 * 16)
+
+        add = get_add(Warren.objects.filter(date=self.date-datetime.timedelta(1)).filter(add__gt=0))
+        amount =  (16 - add) * row * 2
+        add = get_add(Warren.objects.filter(date=self.date).filter(add__gt=0))
+        amount -= (16 - add) * row * 2
+        amount += Warren.objects.filter(date=self.date).exclude(tto='').count() * row * 16 * 2
+        return amount
+
+    @property
+    def row(self):
+        if self.forming:
+            return 2 * self.forming.width.tto / (3 * 16) 
+        else:
+            return 0 
+
 
     class Meta:
         ordering = ('-date', 'order')

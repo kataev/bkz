@@ -45,7 +45,7 @@ def forming(request):
         factory.save()
         Forming.objects.filter(date=date).update(**widthcolor.cleaned_data)
         messages.success(request, 'Формовка сохранена')
-        return redirect(reverse('make:forming') + '?date=%s&success=True' % date.isoformat())
+        return redirect(reverse('make:forming') + '?date=%s&s=%d' % (date.isoformat(),id(factory)))
     return render(request, 'make/forming.html',
                   {'factory': factory, 'date': date, 'dateform': dateform, 'widthcolor': widthcolor})
 
@@ -80,7 +80,7 @@ def warren(request):
                 pass
             w.save()
         messages.success(request, 'Садка сохранена')
-        return redirect(reverse('make:warren') + '?date=%s&s=1' % date.isoformat())
+        return redirect(reverse('make:warren') + '?date=%s&s=%d' % (date.isoformat(),id(factory)))
     json = [ {'number':w.tto,'tts':[ c.tts for c in w.consumer.all() if c.date==w.date],'rows':c.add} for w in queryset if w.tto]
 
     return render(request, 'make/warren.html', dict(factory=factory, date=date, dateform=dateform,json=simplejson.dumps(json)))
