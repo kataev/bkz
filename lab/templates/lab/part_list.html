@@ -4,87 +4,91 @@
     {{ parts.management_object }}
     {{ parts.management_form }}
     {% for form in parts %}
-        <div class="row {{ form.instance.get_css_class }}" {% if not forloop.first and not form.instance.pk %}style='display: none;'{% endif %}>
-            {{ form.rows.management_object }}
-            {{ form.rows.management_form }}
-            {% for field in form.hidden_fields %}
-                {{ field }}
-            {% endfor %}
-        {% for e in parts.non_form_errors %}
-            {{ e }}
-            {% endfor %}
-            <table class='span4'>
-                <thead>
-                <tr>
-                    <th>ТТО</th>
-                    <th>Кол-во</th>
-                    <th>Бой</th>
-                    <th>Исп</th>
-                </tr>
-                </thead>
-                <tbody id='{{ form.rows.prefix }}'>
-                {% for row in form.rows %}
-                    {% include 'lab/row_form.html' with row=row forloop=forloop only %}
-                {% endfor %}
-                </tbody>
-                <tfoot style='display: none;'>
-                {% with row=form.rows.empty_form %}
-                    {% include 'lab/row_form.html' with row=row only %}
-                {% endwith %}
-                </tfoot>
-                <tfoot>
-                <tr>
-                    <td style='position: relative;padding-right:6px;' colspan="4" {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
-                        <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
-                            <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
-                               tabindex="0"
-                               data-prefix='{{ form.rows.prefix }}'
-                               href='#'><i class='icon-plus-sign'></i></a>
-                        </div>
-                        {{ form.info }}
-                        </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style='vertical-alighn:-webkit-baseline-middle;text-align:right;padding:right:2px;'>
-                        № ТТО с изв.вкл. S < 1см&sup2;:
-                    </td>
-                    <td colspan="2">
-                        {{ form.limestone }}
-                    </td>
-                </tr>
-
-                </tfoot>
-            </table>
-            <table class="span3" style='margin-left: 10px;'>
-            <thead>
-            <tr>
-                <th>Качество</th>
-                <th><abbr title='Половняк'>П.</abbr></th>
-                <th><abbr title='Браковочное число'>Б.ч.</abbr></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td {% include 'bootstrap/errors.html' with errors=form.defect.errors %}> {{ form.defect }} </td>
-                <td class='input-box'> {{ form.half }} </td>
-                <td class='input-box'> {{ form.dnumber }} </td>
-            </tr>
-            <tr>
-                <td colspan='3'>
-                    <label {% if form.defect.value == 'gost' or not form.defect.value %}style='display: none;'{% endif %} {% include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
-                        брака
-                        {{ form.cause }}
-                    </label>
-                </td>
-            </tr>
-            </tbody>
-            </table>
-            {% if form.instance.pk %}
-            <div style='margin-top:-4px;'>
-            {{ form.DELETE }}
+    <div class="row {{ form.instance.get_css_class }}"
+    {% if not forloop.first and not form.instance.pk %}style='display: none;'{% endif %}>
+    {{ form.rows.management_object }}
+    {{ form.rows.management_form }}
+    {% for field in form.hidden_fields %}
+    {{ field }}
+    {% endfor %}
+    {% for e in parts.non_form_errors %}
+    {{ e }}
+    {% endfor %}
+    <table class='span4'>
+        <thead>
+        <tr>
+            <th>ТТО</th>
+            <th>Кол-во</th>
+            <th>Бой</th>
+            <th>Исп</th>
+        </tr>
+        </thead>
+        <tbody id='{{ form.rows.prefix }}'>
+        {% for row in form.rows %}
+        {% include 'lab/row_form.html' with row=row forloop=forloop only %}
+        {% endfor %}
+        </tbody>
+        <tfoot style='display: none;'>
+        {% with row=form.rows.empty_form %}
+        {% include 'lab/row_form.html' with row=row only %}
+        {% endwith %}
+        </tfoot>
+        <tfoot>
+        <tr>
+            <td style='position: relative;padding-right:6px;' colspan="4"
+            {% include 'bootstrap/errors.html' with errors=form.info.errors %}>
+            <div class="input-prepend" style='position: absolute; left:-25px;' title='Добавить еще строку'>
+                <a class="btn add-on form-add btn-info" data-append="#{{ form.rows.prefix }}"
+                   tabindex="0"
+                   data-prefix='{{ form.rows.prefix }}'
+                   href='#'><i class='icon-plus-sign'></i></a>
             </div>
-            {% endif %}
-        </div>
+            {{ form.info }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style='vertical-alighn:-webkit-baseline-middle;text-align:right;padding:right:2px;'>
+                № ТТО с изв.вкл. S < 1см&sup2;:
+            </td>
+            <td colspan="2">
+                {{ form.limestone }}
+            </td>
+        </tr>
+
+        </tfoot>
+    </table>
+    <table class="span3" style='margin-left: 10px;'>
+        <thead>
+        <tr>
+            <th>Качество</th>
+            <th><abbr title='Половняк'>П.</abbr></th>
+            <th><abbr title='Браковочное число'>Б.ч.</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td
+            {% include 'bootstrap/errors.html' with errors=form.defect.errors %}> {{ form.defect }} </td>
+            <td class='input-box'> {{ form.half }}</td>
+            <td class='input-box'> {{ form.dnumber }}</td>
+        </tr>
+        <tr>
+            <td colspan='3'>
+                <label {% if form.defect.value == 'gost' or not form.defect.value %}style='display: none;'{% endif %} {%
+                include 'bootstrap/errors.html' with errors=form.cause.errors %}>Причина
+                брака
+                {{ form.cause }}
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% if form.instance.pk %}
+    <div style='margin-top:-4px;'>
+        {{ form.DELETE }}
+    </div>
+    {% endif %}
+    </div>
     {% endfor %}
     <a href="#" class="show btn btn-mini btn-info">Добавить еще акт</a>
 </fieldset>

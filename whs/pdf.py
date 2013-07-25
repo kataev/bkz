@@ -18,35 +18,35 @@ class BillMixin(object):
 
     @property
     def amount(self):
-        return sum([s.amount for s in self.solds.all()],0)
+        return sum([s.amount for s in self.solds.all()], 0)
 
     @property
     def netto(self):
-        return sum([x.netto for x in self.opers],0)
+        return sum([x.netto for x in self.opers], 0)
 
     @property
     def brutto(self):
-        return sum([x.brutto for x in self.opers],0)
+        return sum([x.brutto for x in self.opers], 0)
 
     @property
     def tara(self):
-        return sum([s.tara for s in self.solds.all()],0)
+        return sum([s.tara for s in self.solds.all()], 0)
 
     @property
     def items(self):
-        return sum([x.items for x in self.opers],0)
+        return sum([x.items for x in self.opers], 0)
 
     @property
     def money(self):
-        return sum([x.money for x in self.opers],0)
+        return sum([x.money for x in self.opers], 0)
 
     @property
     def nds(self):
-        return sum([x.nds for x in self.opers],0)
+        return sum([x.nds for x in self.opers], 0)
 
     @property
     def in_total(self):
-        return sum([x.in_total for x in self.opers],0)
+        return sum([x.in_total for x in self.opers], 0)
 
     @property
     def pages(self):
@@ -56,10 +56,11 @@ class BillMixin(object):
     def rubles(self):
         return rubles(self.in_total)
 
+
 class PalletMixin(object):
     @property
     def nomenclature(self):
-        return dict(title=u'Поддоны - Возвратная тара',intcode=131)
+        return dict(title=u'Поддоны - Возвратная тара', intcode=131)
 
     @property
     def netto(self):
@@ -84,6 +85,7 @@ class PalletMixin(object):
     @property
     def in_total(self):
         return self.money
+
 
 class SoldMixin(object):
     @property
@@ -120,7 +122,7 @@ class SoldMixin(object):
 
     @property
     def nds(self):
-        return round(self.doc.seller.nds * self.money,2)
+        return round(self.doc.seller.nds * self.money, 2)
 
     @property
     def get_nds_display(self):

@@ -2,28 +2,35 @@
 <table class='table table-condensed table-bordered' style='margin-top: 20px;'>
     <caption><i class="icon-bookmark"></i> История операций</caption>
     <thead>
-    {#                <tr>#}
-    {#                    <th ></th>#}
-    {#                    <th></th>#}
-    {#                </tr>#}
+    {#
+    <tr>#}
+        {#
+        <th></th>
+        #}
+        {#
+        <th></th>
+        #}
+        {#
+    </tr>
+    #}
     </thead>
     <tbody>
     {% for l in log %}
-        <tr rel="popover" data-original-title='{{ l.action_time }}'
-            data-content="Автор изменений: {{ user.first_name }} {{ user.last_name }}">
-            <td style='width: 14px;'>
-                {% if l.action_flag == 1 %}
-                    <i title="Добавлние" class="icon-plus-sign"></i>
-                {% endif %}
-                {% if l.action_flag == 2 %}
-                    <i title="Изменение" class="icon-info-sign"></i>
-                {% endif %}
-                {% if l.action_flag == 3 %}
-                    <i title="Удаление" class="icon-remove-sign"></i>
-                {% endif %}
-            </td>
-            <td> {{ l.change_message }} </td>
-        </tr>
+    <tr rel="popover" data-original-title='{{ l.action_time }}'
+        data-content="Автор изменений: {{ user.first_name }} {{ user.last_name }}">
+        <td style='width: 14px;'>
+            {% if l.action_flag == 1 %}
+            <i title="Добавлние" class="icon-plus-sign"></i>
+            {% endif %}
+            {% if l.action_flag == 2 %}
+            <i title="Изменение" class="icon-info-sign"></i>
+            {% endif %}
+            {% if l.action_flag == 3 %}
+            <i title="Удаление" class="icon-remove-sign"></i>
+            {% endif %}
+        </td>
+        <td> {{ l.change_message }}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>

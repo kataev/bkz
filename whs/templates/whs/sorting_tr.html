@@ -1,29 +1,29 @@
 <tr class='Sorting {{ s.get_type_class_display }}' data-opers='Sorting_{{ s.pk }}'>
-	<th>{{ s.get_type_display }}</th>
-    <td> {{ s.date|date:'j M Y' }} </td>
+    <th>{{ s.get_type_display }}</th>
+    <td> {{ s.date|date:'j M Y' }}</td>
     <td>{{ s.get_batch_display }}</td>
     <td class='{{ s.brick.css }}'><a href='{{ s.get_absolute_url }}'>{{ s.brick }} </a>
         {# {% if s.total %} #}
-            <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=1' class='btn btn-mini pull-right btn-success'>
-                Из цеха</a> 
-            <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=2' class='btn btn-mini pull-right btn-warning'>
-                Списать</a>
+        <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=1' class='btn btn-mini pull-right btn-success'>
+            Из цеха</a>
+        <a href='{% url whs:Sorting-add %}?source={{ s.pk }}&type=2' class='btn btn-mini pull-right btn-warning'>
+            Списать</a>
         {# {% endif %} #}
     </td>
     <td>{{ s.amount }}</td>
 </tr>
 <tbody class="opers" id='Sorting_{{ s.pk }}'>
-	{% for so in s.sorted.all %}
-    	<tr class='Sorting {{ so.get_type_class_display }}'>
-			<td>{{ so.get_type_display }}</td>
-    		<td> {{ so.date|date:'j M Y' }} 
-    			<span class='badge badge-success' title='Провело дней в работе'>{{ so.get_days_in_work }}</span> 
-    		</td>
-    		<td>{{ so.get_batch_display }}</td>
-			<td class='{{ s.brick.css }}'><a href='{{ so.get_absolute_url }}'>{{ so.brick }} </a></td>
-    		<td>{{ so.amount }}</td>
-		</tr>	
-	{% endfor %}
+{% for so in s.sorted.all %}
+<tr class='Sorting {{ so.get_type_class_display }}'>
+    <td>{{ so.get_type_display }}</td>
+    <td> {{ so.date|date:'j M Y' }}
+        <span class='badge badge-success' title='Провело дней в работе'>{{ so.get_days_in_work }}</span>
+    </td>
+    <td>{{ so.get_batch_display }}</td>
+    <td class='{{ s.brick.css }}'><a href='{{ so.get_absolute_url }}'>{{ so.brick }} </a></td>
+    <td>{{ so.amount }}</td>
+</tr>
+{% endfor %}
 </tbody>
 <tr>
     <th colspan="4" style='text-align:right'>Остаток от партии № {{ s.get_batch_display }}</th>

@@ -1,14 +1,14 @@
 rect {
     /*fill: steelblue;*/
     /*stroke: white;*/
-    }
-
+}
 
 .label {
     fill: none;
     stroke: #000;
     stroke-width: 2px;
 }
+
 .thumbnail > div {
     display: block;
     max-width: 100%;
@@ -21,14 +21,17 @@ svg {
     shape-rendering: crispEdges;
 }
 
-text {dominant-baseline: central;}
+text {
+    dominant-baseline: central;
+}
 
 .block {
     stroke: black;
     stroke-width: 2px;
 }
+
 .rct {
-    fill:none;
+    fill: none;
     stroke: #ccc;
     stroke-width: 1px;
 }

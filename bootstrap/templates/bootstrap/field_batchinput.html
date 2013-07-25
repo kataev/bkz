@@ -1,14 +1,14 @@
 {% if 'number' in bf_raw.name  %}
 <div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
-     class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %} batchinput">
-    <label class="control-label" for="{{ label_id }}">{{ label }}</label>
-    <div class="controls">
-{% endif %}
-        {{ bf }}
-        <div class="help-inline">
-            {% include 'bootstrap/help_text.html' %}
-        </div>
-{% if 'year' in bf_raw.name %}
+class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %} batchinput">
+<label class="control-label" for="{{ label_id }}">{{ label }}</label>
+<div class="controls">
+    {% endif %}
+    {{ bf }}
+    <div class="help-inline">
+        {% include 'bootstrap/help_text.html' %}
     </div>
-    </div>
+    {% if 'year' in bf_raw.name %}
+</div>
+</div>
 {% endif %}

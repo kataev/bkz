@@ -2,7 +2,7 @@
 {% block bonus-button %}
 {{ block.super }}
 {% if object.pk %}
-	<a href="{% url whs:Bill-list %}?agent={{ object.pk }}" class="btn btn-primary">
-                    <i class="icon-eye-open icon-white"></i> Показать накладные</a>
+<a href="{% url whs:Bill-list %}?agent={{ object.pk }}" class="btn btn-primary">
+    <i class="icon-eye-open icon-white"></i> Показать накладные</a>
 {% endif %}
 {% endblock %}

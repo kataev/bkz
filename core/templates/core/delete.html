@@ -7,6 +7,7 @@
     <form accept-chartset='utf-8' action="" method="post" id='form'>
         {% csrf_token %}
         <h1>Вы уверены?</h1>
+
         <p>что хотите удалить <b>{{ object|model_verbose_name }} {{ object }}?</b></p>
         <button type="submit" class="btn btn-danger">Да, уверен</button>
         <a href="{{ object.get_absolute_url }}" class='btn'>Вернутся</a>

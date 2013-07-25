@@ -1,23 +1,24 @@
 <select class="span1" name="{{ year.name }}" style='min-width:70px'>
     <option value="">Год</option>
     {% for d in form.dates %}
-        {% ifchanged d.year %}
-            <option
-                    {% if d.year == year.value|add:0 %}selected="selected" {% endif %}
-                    value="{{ d.year }}">{{ d.year }}</option>
-        {% endifchanged %}
+    {% ifchanged d.year %}
+    <option
+    {% if d.year == year.value|add:0 %}selected="selected" {% endif %}
+    value="{{ d.year }}">{{ d.year }}</option>
+    {% endifchanged %}
     {% endfor %}
 </select>
 <select class="span2" name="{{ month.name }}" style='min-width:146px'>
     <optgroup label="Выберите месяц">
         <option value="">Месяц</option>
         {% for d in form.dates %}
-            {% ifchanged d.year %}
-                </optgroup>
-                <optgroup label="{{ d|date:'Y'  }}">
-            {% endifchanged %}
-            <option {% if d.month == month.value|add:0 and d.year == year.value|add:0 %}selected="selected"{% endif %}
-                    value="{{ d.month }}">{{ d|date:'F' }}</option>
+        {% ifchanged d.year %}
+    </optgroup>
+    <optgroup label="{{ d|date:'Y'  }}">
+        {% endifchanged %}
+        <option
+        {% if d.month == month.value|add:0 and d.year == year.value|add:0 %}selected="selected"{% endif %}
+        value="{{ d.month }}">{{ d|date:'F' }}</option>
         {% endfor %}
-        </optgroup>
+    </optgroup>
 </select>

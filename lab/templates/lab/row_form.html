@@ -1,23 +1,27 @@
 <tr id='{{ row.prefix }}'>
-    <td style='position: relative;' {% include 'bootstrap/errors.html' with errors=row.tto.errors %}>
-        <div class="input-prepend" style='position: absolute; left:-25px;'
-                {% if '__prefix__' in row.prefix %}
-             title='Удалить эту строку'
-                {% else %}
-             title='Пометить на удаление'
-                {% endif %}>
-            <a class="btn add-on delete btn-warning" href='#{{ row.prefix }}' tabindex="0">
-                <i class='icon-remove'></i></a>
-        </div>
-        {{ row.tto }}
-        {% for field in row.hidden_fields %}
-            {{ field }}
-        {% endfor %}
-        <div style='display: none;'>
-            {{ row.DELETE }}
-        </div>
+    <td style='position: relative;'
+    {% include 'bootstrap/errors.html' with errors=row.tto.errors %}>
+    <div class="input-prepend" style='position: absolute; left:-25px;'
+    {% if '__prefix__' in row.prefix %}
+    title='Удалить эту строку'
+    {% else %}
+    title='Пометить на удаление'
+    {% endif %}>
+    <a class="btn add-on delete btn-warning" href='#{{ row.prefix }}' tabindex="0">
+        <i class='icon-remove'></i></a>
+    </div>
+    {{ row.tto }}
+    {% for field in row.hidden_fields %}
+    {{ field }}
+    {% endfor %}
+    <div style='display: none;'>
+        {{ row.DELETE }}
+    </div>
     </td>
-    <td {% include 'bootstrap/errors.html' with errors=row.amount.errors %}>{{ row.amount }}</td>
-    <td {% include 'bootstrap/errors.html' with errors=row.brocken.errors %}>{{ row.brocken }}</td>
-    <td {% include 'bootstrap/errors.html' with errors=row.test.errors %}>{{ row.test }}</td>
+    <td
+    {% include 'bootstrap/errors.html' with errors=row.amount.errors %}>{{ row.amount }}</td>
+    <td
+    {% include 'bootstrap/errors.html' with errors=row.brocken.errors %}>{{ row.brocken }}</td>
+    <td
+    {% include 'bootstrap/errors.html' with errors=row.test.errors %}>{{ row.test }}</td>
 </tr>

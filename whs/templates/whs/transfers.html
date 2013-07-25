@@ -7,8 +7,10 @@
         <div class="span7">
             <h1>Таблица переводов</h1>
         </div>
-        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
-            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5"
+              style='margin-top: 10px;text-align:right'>
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year
+            month=datefilter.date__month %}
             <input type="submit" class="btn">
         </form>
     </div>
@@ -16,23 +18,23 @@
         <div class='span12'>
             <table class='table table-bordered'>
                 <tbody>
-                    <tr>
-                        <th>
-                            <span>В</span>
-                            <span class='pull-right'>Из</span>
-                        </th>
+                <tr>
+                    <th>
+                        <span>В</span>
+                        <span class='pull-right'>Из</span>
+                    </th>
                     {% for k in data.keys %}
-                        <th>{{ label|hash:k }}</th>
+                    <th>{{ label|hash:k }}</th>
                     {% endfor %}
-                    </tr>
-                    {% for k,d in data.items %}
-                    <tr>
-                        <th>{{ label|hash:k }}</th>
-                        {% for kf,v in d.items %}
-                            <td class='{% if k < kf %}bc-red{% elif k > kf %}bc-yellow{% endif %}'>{{ v }}</td>
-                        {% endfor %}
-                    </td>
-                    {% endfor %}
+                </tr>
+                {% for k,d in data.items %}
+                <tr>
+                <th>{{ label|hash:k }}</th>
+                {% for kf,v in d.items %}
+                <td class='{% if k < kf %}bc-red{% elif k > kf %}bc-yellow{% endif %}'>{{ v }}</td>
+                {% endfor %}
+                </td>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

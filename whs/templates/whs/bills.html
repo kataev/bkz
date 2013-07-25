@@ -10,17 +10,17 @@
             <table id='Bills' class="table table-bordered table-condensed">
                 <caption><h1>Накладные</h1></caption>
                 <thead>
-                    <tr>
-                        <th width=15px>#</th>
-                        <th width="50px">Дата</th>
-                        <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
-                        <th style='width:60px;'>Кол-во</th>
-                        <th style='width:100px;'>Цена</th>
-                    </tr>
+                <tr>
+                    <th width=15px>#</th>
+                    <th width="50px">Дата</th>
+                    <th>Имя <i title='Показать\Свернуть всё' class="icon-zoom-in pull-right"></i></th>
+                    <th style='width:60px;'>Кол-во</th>
+                    <th style='width:100px;'>Цена</th>
+                </tr>
                 </thead>
                 <tbody>
                 {% for b in object_list %}
-                        {% include 'whs/bill_tr.html' %}
+                {% include 'whs/bill_tr.html' %}
                 {% endfor %}
                 </tbody>
                 <tfoot>
@@ -35,13 +35,15 @@
         </div>
         {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks class='span9' %}
         <div class="span3">
-        {{ form.errors }}
+            {{ form.errors }}
             <form accept-chartset='utf-8' class="filter form-inline" action="" method="GET">
                 <fieldset>
-                    <legend style='margin-bottom:0'><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр накладных
+                    <legend style='margin-bottom:0'><i class="icon-search" style="vertical-align: baseline;"></i> Фильтр
+                        накладных
                     </legend>
                     <div class='control-group'>
-{% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+                        {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year
+                        month=datefilter.date__month %}
                     </div>
                     {{ filter.as_div }}
                     <div class='control-group'>

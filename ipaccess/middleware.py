@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AnonymousUser
 from bkz.ipaccess.models import IPAccess
 
+
 class IPAccessMiddleware(object):
     def process_request(self, request):
         if request.user == AnonymousUser():

@@ -8,13 +8,14 @@
             <h1 class="">
                 {{ begin|date:'Y F' }}
                 {% if begin.year != end.year or begin.month != end.month %}
-                    &mdash; {{ end|date:'Y F' }}
+                &mdash; {{ end|date:'Y F' }}
                 {% endif %}
             </h1>
         </div>
-        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5" style='margin-top: 10px;text-align:right'>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5"
+              style='margin-top: 10px;text-align:right'>
             {% with year=form.date__year month=form.date__month %}
-                {% include 'whs/widgets/year-month-select.html' %}
+            {% include 'whs/widgets/year-month-select.html' %}
             {% endwith %}
             <input type="submit" class="btn">
         </form>
@@ -44,23 +45,23 @@
                 </thead>
                 <tbody>
                 {% for b in Bricks %}
-                    <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}"
-                        class="{{ b.css }} {% if b.opers %}zero{% endif %}">
-                        <td class="name"><a title='{{ b.name }}'
-                                            href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
-                        {% for o in b.order %}
-                            <td> {{ b|hash:o }} </td>
-                        {% endfor %}
-                    </tr>
+                <tr id='brick_{{ b.pk }}' data-pk="{{ b.pk }}"
+                    class="{{ b.css }} {% if b.opers %}zero{% endif %}">
+                    <td class="name"><a title='{{ b.name }}'
+                                        href="{{ b.get_absolute_url }}">{{ b.label|safe }}</a></td>
+                    {% for o in b.order %}
+                    <td> {{ b|hash:o }}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr>
                     <th></th>
                     {% for o in order %}
-                        {% with field='sum '|add:o %}
-                        <th> {{ Bricks|func_pluck:field }} </th>
-                        {% endwith %}
+                    {% with field='sum '|add:o %}
+                    <th> {{ Bricks|func_pluck:field }}</th>
+                    {% endwith %}
                     {% endfor %}
                 </tr>
                 </tfoot>

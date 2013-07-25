@@ -1,25 +1,25 @@
 <form accept-chartset='utf-8' id='brickselect-buttons'>
-<ul class="nav nav-pills">
-    {% for item in brick_menu %}
+    <ul class="nav nav-pills">
+        {% for item in brick_menu %}
         <li class="dropdown counter">
             <a href="#{{ item.name }}" class="dropdown-toggle" role='button' data-toggle="dropdown">
                 <span class="label">0</span> {{ item.verbose_name }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu {{ item.name }}" role='menu'>
                 {% for k,v in item.items %}
-                    <li>
-                        <label class="{{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>
-                            {{ v }}
-                        </label>
-                    </li>
+                <li>
+                    <label class="{{ k }}"> <input type='checkbox' name='{{ item.name }}' value='{{ k }}'>
+                        {{ v }}
+                    </label>
+                </li>
                 {% endfor %}
             </ul>
         </li>
-    {% endfor %}
-<li class="dropdown">
-    <button class='btn btn-primary' style='margin-top:4px' type='submit'>Показать</button>
-    <button class='btn btn-small' type='reset'>Сбросить</button>
-</li>
-</ul>
+        {% endfor %}
+        <li class="dropdown">
+            <button class='btn btn-primary' style='margin-top:4px' type='submit'>Показать</button>
+            <button class='btn btn-small' type='reset'>Сбросить</button>
+        </li>
+    </ul>
 
 </form>

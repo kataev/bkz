@@ -5,10 +5,12 @@ from bkz.whs.models import *
 from bkz.lab.models import *
 from bkz.old.models import *
 
+
 class Command(BaseCommand):
     help = "Commands for lagasy db"
+
     def handle(self, *args, **options):
-        label,args = args[0],args[1:]
+        label, args = args[0], args[1:]
         if label == 'totals':
             self.totals()
         if label == 'set_old_brick':
@@ -25,20 +27,20 @@ class Command(BaseCommand):
                 b.total = t.total.total
                 b.save()
             except OldBrick.DoesNotExist:
-                print 'DNE',t.pk,t.prim
+                print 'DNE', t.pk, t.prim
 
-    def set_old_brick(self,pk,old):
+    def set_old_brick(self, pk, old):
         b = Brick.objects.get(pk=pk)
-        OldBrick.objects.create(brick=b,old=old,prim=DispTovar.objects.get(pk=old).prim)
-        print b,'ok'
+        OldBrick.objects.create(brick=b, old=old, prim=DispTovar.objects.get(pk=old).prim)
+        print b, 'ok'
 
-    def test_batch(self,year,month,day=None):
-        pluss = DispJurnal.objects.filter(plus__gt=0).filter(date__year=year,date__month=month)
+    def test_batch(self, year, month, day=None):
+        pluss = DispJurnal.objects.filter(plus__gt=0).filter(date__year=year, date__month=month)
         if day: pluss = pluss.filter(date__day=day)
         for plus in pluss.order_by('-date'):
             old = OldBrick.objects.get(old=plus.tov_id)
             brick = old.brick
-            part = Part.objects.filter(batch__date=plus.date,defect=brick.defect)
+            part = Part.objects.filter(batch__date=plus.date, defect=brick.defect)
             try:
                 part = part.get()
                 if brick.mark != part.batch.mark and brick.mark < 400:
@@ -48,18 +50,20 @@ class Command(BaseCommand):
                     part.brick = brick
                     part.save()
                 else:
-                    print 'amount not match', plus.date, brick,plus.plus, '!=' ,part.amount, part.batch.mark
+                    print 'amount not match', plus.date, brick, plus.plus, '!=', part.amount, part.batch.mark
             except Part.DoesNotExist:
-                print 'DNE',plus.date,brick,plus.plus
+                print 'DNE', plus.date, brick, plus.plus
             except Part.MultipleObjectsReturned:
-                print 'MOR',plus.date,brick
+                print 'MOR', plus.date, brick
+
     def import_batch(self):
         try:
-            for m in serializers.deserialize('json',file('../bkz_19_01_2013.json').read()):
+            for m in serializers.deserialize('json', file('../bkz_19_01_2013.json').read()):
                 name = m.object._meta.module_name.split('.')[-1].lower()
-                if name in ['batch','part','rowpart','cause','heatconduction','seonr','frostresistance','waterabsorption']:
+                if name in ['batch', 'part', 'rowpart', 'cause', 'heatconduction', 'seonr', 'frostresistance',
+                            'waterabsorption']:
                     if name == 'batch':
-                        m.object.volume=None
+                        m.object.volume = None
                     m.save()
         except serializers.base.DeserializationError:
             pass

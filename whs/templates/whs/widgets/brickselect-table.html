@@ -1,28 +1,29 @@
 <div class="{{ class|default:'span7' }}" style="display: none;" id="brickshow">
     <fieldset>
         <legend>
-        Выбор кирпича
-        <a class="btn btn-success back"><i class='icon-arrow-left icon-white'></i> Назад</a>
-    </legend>
-<div style='overflow: auto;height: 400px'>
-<table id='brickselect' class="table table-bordered table-condensed">
-    <thead>
-    <tr>
-        <th width=15px>#</th>
-        <th>Имя</th>
-        <th>Остатки</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for b in Bricks %}
-        <tr class="{{ b.css }}" id='brick-{{ b.pk }}'>
-            <td><input value="{{ b.pk }}" id='brickselect_{{ b.pk }}' class='radio' name='br_select' type="radio"></td>
-            <td class='name'><label for='brickselect_{{ b.pk }}'>{{ b.label|safe }}</label></td>
-            <td class="total"> {{ b.total }} </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
+            Выбор кирпича
+            <a class="btn btn-success back"><i class='icon-arrow-left icon-white'></i> Назад</a>
+        </legend>
+        <div style='overflow: auto;height: 400px'>
+            <table id='brickselect' class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th width=15px>#</th>
+                    <th>Имя</th>
+                    <th>Остатки</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for b in Bricks %}
+                <tr class="{{ b.css }}" id='brick-{{ b.pk }}'>
+                    <td><input value="{{ b.pk }}" id='brickselect_{{ b.pk }}' class='radio' name='br_select'
+                               type="radio"></td>
+                    <td class='name'><label for='brickselect_{{ b.pk }}'>{{ b.label|safe }}</label></td>
+                    <td class="total"> {{ b.total }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </fieldset>
 </div>

@@ -3,11 +3,11 @@
 {% block title %}Контрагенты{% endblock %}
 
 {% block container %}
-    <div class="container">
+<div class="container">
     <div class="pagination pagination-centered">
         <ul>
             {% for a in alphabet %}
-                <li><a href="?b={{ a }}">{{ a }}</a></li>
+            <li><a href="?b={{ a }}">{{ a }}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -22,29 +22,30 @@
         </thead>
         <tbody>
         {% for a in Agents %}
-            <tr class="">
-                <td>{{ a.pk }}</td>
-                <td><a href="{{ a.get_absolute_url }}">{{ a }}</a>
-                    {% if a.form %}
-                        <span class='label'>{{ a.get_form_display }}</span>
-                    {% else %}
-                        <span class='label label-success'>{{ a.get_form_display }}</span>
-                    {% endif %}
+        <tr class="">
+            <td>{{ a.pk }}</td>
+            <td><a href="{{ a.get_absolute_url }}">{{ a }}</a>
+                {% if a.form %}
+                <span class='label'>{{ a.get_form_display }}</span>
+                {% else %}
+                <span class='label label-success'>{{ a.get_form_display }}</span>
+                {% endif %}
                     <span class='label'>
-                        <a title='Показать накладные этого агента' href="{% url whs:Bill-list %}?agent={{ a.pk }}"><i class="icon-eye-open icon-white"></i></a>
+                        <a title='Показать накладные этого агента' href="{% url whs:Bill-list %}?agent={{ a.pk }}"><i
+                                class="icon-eye-open icon-white"></i></a>
                     </span>
                 <span class="label">
                     <a title='Создать накладную с этим контрагентом' href="{% url whs:Bill-add %}?agent={{ a.pk }}"><i
                             class="icon-pencil icon-white"></i></a>
                 </span>
-                </td>
-                <td>{{ a.address }}</td>
-                <td>{{ a.phone }}</td>
-            </tr>
+            </td>
+            <td>{{ a.address }}</td>
+            <td>{{ a.phone }}</td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
     </tbody>
     </table>
-    </div>
+</div>
 {% endblock %}

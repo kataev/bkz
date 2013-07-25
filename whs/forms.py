@@ -15,6 +15,7 @@ from itertools import chain
 from django.utils.encoding import force_unicode
 from django.utils.html import escape
 
+
 class AgentSelect(forms.Select):
     def render_options(self, choices, selected_choices):
         # Normalize to strings.
@@ -36,6 +37,7 @@ class AgentSelect(forms.Select):
 class BrickSelect(forms.widgets.Input):
     input_type = 'hidden'
 
+
 class NumberInput(forms.TextInput):
     input_type = 'number'
 
@@ -43,8 +45,9 @@ class NumberInput(forms.TextInput):
         super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
 
+
 class AmountInput(NumberInput):
-    def __init__(self,attrs=None):
+    def __init__(self, attrs=None):
         super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
         self.attrs['step'] = 1
@@ -56,6 +59,7 @@ class FloatInput(NumberInput):
         super(NumberInput, self).__init__(attrs=attrs)
         self.attrs['autocomplete'] = 'off'
         self.attrs['step'] = 0.01
+
 
 class BatchInput(forms.TextInput):
     input_type = 'number'
@@ -91,20 +95,23 @@ class MoneyInput(forms.TextInput):
         self.attrs['autocomplete'] = 'off'
 
 
-def get_date(self,der):
-        td = datetime.timedelta(days=1) 
-        if self.is_valid():
-            val = self.cleaned_data['date']
-        else:
-            val = datetime.date.today()
-        if der: return val + td
-        else:  return val - td
+def get_date(self, der):
+    td = datetime.timedelta(days=1)
+    if self.is_valid():
+        val = self.cleaned_data['date']
+    else:
+        val = datetime.date.today()
+    if der:
+        return val + td
+    else:
+        return val - td
+
 
 class DateForm(forms.Form):
     date = forms.DateField(widget=DateInput)
-    previous = property(lambda x: get_date(x,0))
-    next = property(lambda x: get_date(x,1))
-        
+    previous = property(lambda x: get_date(x, 0))
+    next = property(lambda x: get_date(x, 1))
+
 
 class BillForm(BootstrapMixin, forms.ModelForm):
     class Meta:
@@ -116,7 +123,7 @@ class BillForm(BootstrapMixin, forms.ModelForm):
             'agent': AgentSelect,
             'seller': AgentSelect,
             'info': forms.Textarea(attrs={'rows': 1}),
-            }
+        }
 
 
 class SoldForm(BootstrapMixin, forms.ModelForm):
@@ -132,11 +139,11 @@ class SoldForm(BootstrapMixin, forms.ModelForm):
             'price': MoneyInput,
             'delivery': MoneyInput,
             'info': forms.Textarea(attrs={'rows': 1}),
-            }
+        }
 
     def clean(self):
         data = self.cleaned_data
-        brick_from, brick, amount = data.get('brick_from'), data.get('brick'), data.get('amount',0)
+        brick_from, brick, amount = data.get('brick_from'), data.get('brick'), data.get('amount', 0)
         total = brick.total
         if brick_from:
             validate_transfer(brick_from, brick)
@@ -157,11 +164,12 @@ class PalletForm(BootstrapMixin, forms.ModelForm):
             'amount': AmountInput,
             'price': MoneyInput,
             'info': forms.Textarea(attrs={'rows': 1}),
-            }
+        }
 
 
 SoldFactory = inlineformset_factory(Bill, Sold, SoldForm, extra=0)
 PalletFactory = inlineformset_factory(Bill, Pallet, PalletForm, extra=0)
+
 
 class SoldFactory(SoldFactory):
     select_related = ('brick', 'brick_from')
@@ -192,7 +200,7 @@ class YearMonthFilter(forms.Form):
     @property
     def get_date(self):
         if self.is_valid():
-            return datetime.date(self.cleaned_data.get('date__year'),self.cleaned_data.get('date__month',1) or 1,1)
+            return datetime.date(self.cleaned_data.get('date__year'), self.cleaned_data.get('date__month', 1) or 1, 1)
         else:
             return datetime.date.today()
 
@@ -201,28 +209,31 @@ class YearMonthFilter(forms.Form):
         super(YearMonthFilter, self).__init__(*args, **kwargs)
         self.dates = model.objects.dates('date', 'month')[::-1]
 
+
 records_per_page = (
     (10, '10 записей на странице'),
     ('', '20 записей на странице'),
     (50, '50 записей на странице'),
     (100, '100 записей на странице'),
-    )
+)
+
 
 class BillFilter(BootstrapMixin, forms.Form):
-    page = forms.IntegerField(required=False,widget=forms.HiddenInput)    
-    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False,widget=AgentSelect)
-    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False,widget=BrickSelect)
+    page = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False, widget=AgentSelect)
+    brick = forms.ModelChoiceField(queryset=Brick.objects.all(), required=False, widget=BrickSelect)
     rpp = forms.ChoiceField(choices=records_per_page, initial='', required=False)
 
     class Meta:
         dates = Bill.objects.dates('date', 'month').reverse()
-        
+
+
 bill_group_by = (
     ('seller', u'Продавцу'),
     ('agent', u'Покупателю'),
     ('brick', u'Кирпичу'),
     ('brick_from', u'Кирпичу перевода'),
-    )
+)
 
 
 class BillAggregateFilter(BillFilter):
@@ -230,24 +241,26 @@ class BillAggregateFilter(BillFilter):
     group_by = forms.MultipleChoiceField(choices=bill_group_by)
 
 
-class AgentForm(BootstrapMixin,forms.ModelForm):
+class AgentForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Agent
-        widgets= {
-            'address':forms.Textarea(attrs={'rows':2}),
-            'info':forms.Textarea(attrs={'rows':2})
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 2}),
+            'info': forms.Textarea(attrs={'rows': 2})
         }
+
 
 agent_choices = (
     (0, 'Выбрать'),
     (1, 'Создать'),
-    )
+)
+
 
 class AgentCreateOrSelectForm(forms.Form):
     agent = forms.ModelChoiceField(queryset=Agent.objects.all(), required=False, )
 
 
-class SellerForm(BootstrapMixin,forms.ModelForm):
+class SellerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Seller
 
@@ -275,11 +288,12 @@ class PartSelect(forms.Select):
         del output[2:4]
         return u'\n'.join(output)
 
+
 class SortingForm(BootstrapMixin, forms.ModelForm):
-    def __init__(self,*args,**kwargs):
-        super(SortingForm,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(SortingForm, self).__init__(*args, **kwargs)
         if self['source'].value():
-            self.fields['type'].choices= self.fields['type'].choices[1:]
+            self.fields['type'].choices = self.fields['type'].choices[1:]
         else:
             self.fields['type'].initial = 0
             self.fields['type'].widget = forms.HiddenInput()
@@ -287,24 +301,28 @@ class SortingForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Sorting
         widgets = {
-            'source':forms.HiddenInput,
-            'type':forms.HiddenInput,
+            'source': forms.HiddenInput,
+            'type': forms.HiddenInput,
             'date': DateInput,
             'brick': BrickSelect,
             'amount': AmountInput,
             'info': forms.Textarea(attrs={'rows': 1}),
-            }
+        }
+
 
 class Write_offForm(forms.ModelForm):
     class Meta:
         model = Write_off
 
+
 Write_offFactory = inlineformset_factory(Inventory, Write_off, extra=0, form=Write_offForm, )
 
-class BrickForm(BootstrapMixin,forms.ModelForm):
+
+class BrickForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Brick
         exclude = ('total', 'css', 'label')
+
 
 class VerificationForm(forms.Form):
     csv = forms.FileField(label=u'Файл в формате csv')

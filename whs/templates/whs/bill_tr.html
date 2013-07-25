@@ -11,22 +11,22 @@
         <a title='Посмотреть агента' href="{{ b.agent.get_absolute_url }}">{{ b.agent|truncatewords:3 }}</a>
     </span>
         {% if b.seller.pk != 1 %}<i title='Продажа через {{ b.seller }}' class="icon-asterisk"></i>{% endif %}
-        <i class="icon-zoom-in pull-right" ></i>
+        <i class="icon-zoom-in pull-right"></i>
     </td>
     <td><strong>{{ b.amount }}</strong>/{{ b.tara }}</td>
     {% with total=b.in_total %}
-        <td>
-            <strong>
-                <span class='money'>{{ total }}</span>
-            </strong>
-        </td>
+    <td>
+        <strong>
+            <span class='money'>{{ total }}</span>
+        </strong>
+    </td>
     {% endwith %}
 </tr>
 <tbody class="opers" style='display: none' id='Bill_{{ b.pk }}'>
 {% for s in b.solds.all %}
-    {% include 'whs/sold_tr.html' %}
+{% include 'whs/sold_tr.html' %}
 {% endfor %}
 {% for p in b.pallets.all %}
-    {% include 'whs/pallete_tr.html' %}
+{% include 'whs/pallete_tr.html' %}
 {% endfor %}
 </tbody>

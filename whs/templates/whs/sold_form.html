@@ -1,16 +1,16 @@
 {% load bkz %}
-    <div class="tab-pane {% if forloop.parentloop.first and forloop.first %}active{% endif %}" id='{{ form.prefix }}'>
-            <fieldset class='Sold'>
-                <legend>
-                    <h2>
-                    {% if form.instance.pk %}
-                        {{ form.Meta.model|model_verbose_name }}
-                        <small>{{ form.instance|safe }}</small>
-                    {% else %}
-                        {{ form.instance|safe }}
-                    {% endif %}
-                    </h2>
-                </legend>
-                {{ form.as_div }}
-            </fieldset>
-    </div>
+<div class="tab-pane {% if forloop.parentloop.first and forloop.first %}active{% endif %}" id='{{ form.prefix }}'>
+    <fieldset class='Sold'>
+        <legend>
+            <h2>
+                {% if form.instance.pk %}
+                {{ form.Meta.model|model_verbose_name }}
+                <small>{{ form.instance|safe }}</small>
+                {% else %}
+                {{ form.instance|safe }}
+                {% endif %}
+            </h2>
+        </legend>
+        {{ form.as_div }}
+    </fieldset>
+</div>

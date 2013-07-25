@@ -1,24 +1,25 @@
 {% extends 'core/index.html' %}
 {% block container %}
-    <div class="container">
-        <div class="row">
-            <div class="span4 offset4 well" style='margin-top: 20px;'>
-                <form accept-chartset='utf-8' method="POST" action="" accept-charset="UTF-8">
+<div class="container">
+    <div class="row">
+        <div class="span4 offset4 well" style='margin-top: 20px;'>
+            <form accept-chartset='utf-8' method="POST" action="" accept-charset="UTF-8">
                 {% csrf_token %}
-                    <fieldset>
-                        <legend>Пожалуйста войдите</legend>
-                        {% if form.errors %}
-                            <div class="alert alert-error">
-                                <a class="close" data-dismiss="alert" href="#">×</a>Не правильное имя или пароль!
-                            </div>
-                        {% endif %}
-                        <input id="id_username" class="span4" type="text" name="username" placeholder="Имя пользователя" maxlength="30" />
-                        <input type="password" name="password" id="id_password" class="span4" placeholder="Пароль" />
-                        <button type="submit" name="submit" class="btn btn-info btn-block">Войти</button>
-                        <input type="hidden" name="next" value="{% url index %}" />
-                    </fieldset>
-                </form>
-            </div>
+                <fieldset>
+                    <legend>Пожалуйста войдите</legend>
+                    {% if form.errors %}
+                    <div class="alert alert-error">
+                        <a class="close" data-dismiss="alert" href="#">×</a>Не правильное имя или пароль!
+                    </div>
+                    {% endif %}
+                    <input id="id_username" class="span4" type="text" name="username" placeholder="Имя пользователя"
+                           maxlength="30"/>
+                    <input type="password" name="password" id="id_password" class="span4" placeholder="Пароль"/>
+                    <button type="submit" name="submit" class="btn btn-info btn-block">Войти</button>
+                    <input type="hidden" name="next" value="{% url index %}"/>
+                </fieldset>
+            </form>
         </div>
     </div>
+</div>
 {% endblock %}

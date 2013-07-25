@@ -2,29 +2,29 @@
 {% load bkz %}
 {% load url from future %}
 {% block form %}
-    <div class="container">
-            <form accept-chartset='utf-8' method="POST" action="" class='form-horizontal' id="form">
-                {% csrf_token %}
-            <div class="row">
-                <div class='span6'>
-                    <fieldset>
-                        <legend>
-                             {{ form.instance }}
-                        </legend>
-                        {{ form.as_div|default:form }}
-                    </fieldset>
-                </div>
-                {% block right %}
-                {% endblock %}
+<div class="container">
+    <form accept-chartset='utf-8' method="POST" action="" class='form-horizontal' id="form">
+        {% csrf_token %}
+        <div class="row">
+            <div class='span6'>
+                <fieldset>
+                    <legend>
+                        {{ form.instance }}
+                    </legend>
+                    {{ form.as_div|default:form }}
+                </fieldset>
             </div>
-            </form>
-    </div>
+            {% block right %}
+            {% endblock %}
+        </div>
+    </form>
+</div>
 {% endblock %}
 {% block bonus-button %}
-    {% if object.pk %}
-        <a href="{% url object.get_url.0 pk=object.pk|add:1 %}" class="btn"><i
-                class="icon-chevron-right"></i>
-                Следующий {{ object|model_verbose_name }}
-        </a>
-    {% endif %}
+{% if object.pk %}
+<a href="{% url object.get_url.0 pk=object.pk|add:1 %}" class="btn"><i
+        class="icon-chevron-right"></i>
+    Следующий {{ object|model_verbose_name }}
+</a>
+{% endif %}
 {% endblock %}

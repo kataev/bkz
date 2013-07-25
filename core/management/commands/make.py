@@ -3,33 +3,36 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Q
-from bkz.make.models import Warren,Forming
-from itertools import chain,groupby,tee,izip_longest
+from bkz.make.models import Warren, Forming
+from itertools import chain, groupby, tee, izip_longest
 from string import rjust
 import datetime
 
+
 class Command(BaseCommand):
     help = "Commands for make app"
+
     def handle(self, *args, **options):
         self.args = args
         label = args[0]
         if label:
-            getattr(self,label)()
+            getattr(self, label)()
 
     def tts_diff(self):
         date = self.args[1]
-    	formings = iter(Forming.objects.order_by('date','order').filter(date=date))
-    	warrens = iter(Warren.objects.order_by('date','order').filter(date=date))
-    	if len(self.args) == 3:
+        formings = iter(Forming.objects.order_by('date', 'order').filter(date=date))
+        warrens = iter(Warren.objects.order_by('date', 'order').filter(date=date))
+        if len(self.args) == 3:
             for i in range(int(self.args[2])):
                 formings.next()
-    	for f,w in izip_longest(formings,warrens,fillvalue=Forming()):
-    		print (f.tts == w.tts),'\t',rjust(str(f.tts),4),rjust(str(w.tts),4),'\t',rjust(str(f.pk),4),rjust(str(w.pk),4)
-    
+        for f, w in izip_longest(formings, warrens, fillvalue=Forming()):
+            print (f.tts == w.tts), '\t', rjust(str(f.tts), 4), rjust(str(w.tts), 4), '\t', rjust(str(f.pk), 4), rjust(
+                str(w.pk), 4)
+
     def warren_source(self):
         Warren.objects.all().update(source=None)
         source = None
-        for w in Warren.objects.all().order_by('date','order'):
+        for w in Warren.objects.all().order_by('date', 'order'):
             if w.cause.count():
                 w.source = None
             else:
@@ -40,29 +43,30 @@ class Command(BaseCommand):
 
     @transaction.commit_manually
     def warren_forming(self):
-        Warren.objects.all().update(forming=None,part=None)
+        Warren.objects.all().update(forming=None, part=None)
         delay = datetime.timedelta(1)
-        for w in Warren.objects.filter(date__year=2012,date__month=1).order_by('-date','order'):
-            forming = Forming.objects.filter(date__lt=w.date - delay).filter(empty=False).filter(tts=w.tts).order_by('-date')
+        for w in Warren.objects.filter(date__year=2012, date__month=1).order_by('-date', 'order'):
+            forming = Forming.objects.filter(date__lt=w.date - delay).filter(empty=False).filter(tts=w.tts).order_by(
+                '-date')
             if forming:
                 w.forming = forming[0]
                 try:
                     w.full_clean()
                 except ValidationError:
-                    print w.tts,'\t', w.date, [ f.date for f in forming[:2] ], forming[0].warren.date
+                    print w.tts, '\t', w.date, [f.date for f in forming[:2]], forming[0].warren.date
                 else:
                     w.save()
             else:
-                print 'dne',w
-        # transaction.commit()
+                print 'dne', w
+            # transaction.commit()
         transaction.rollback()
 
 
     @transaction.commit_manually
     def forming_warren(self):
-        Warren.objects.all().update(forming=None,part=None)
+        Warren.objects.all().update(forming=None, part=None)
         delay = datetime.timedelta(1)
-        for f in Forming.objects.filter(date__year=2012,date__month=1).order_by('-date','order'):
+        for f in Forming.objects.filter(date__year=2012, date__month=1).order_by('-date', 'order'):
             warrens = Warren.objects.filter(Q(date=f.date) | Q(date=f.date - delay)).filter(tts=f.tts).order_by('-date')
             if warrens:
                 w = warrens[0]
@@ -70,17 +74,17 @@ class Command(BaseCommand):
                     w.forming = f
                     w.save()
             else:
-                print 'dne',f
-        for w in Warren.objects.filter(date__year=2012,date__month=1).order_by('-date','order'):
+                print 'dne', f
+        for w in Warren.objects.filter(date__year=2012, date__month=1).order_by('-date', 'order'):
             if not w.forming:
                 formings = Forming.objects.filter(date__lt=w.date - delay).filter(tts=w.tts).order_by('-date')
-                print w.order, w, [ f.date for f in formings[:2] ]
+                print w.order, w, [f.date for f in formings[:2]]
         transaction.rollback()
 
 
     def forming_vacuum(self):
         vacuum = 0
-        for f in Forming.objects.filter(date__year=2012,date__month=1).order_by('date','order'):
+        for f in Forming.objects.filter(date__year=2012, date__month=1).order_by('date', 'order'):
             if not f.vacuum == vacuum:
                 vacuum = f.vacuum
             elif not f.order == 1:
@@ -90,15 +94,15 @@ class Command(BaseCommand):
 
     def show(self):
         if len(self.args[1]) > 3:
-            args = dict(date = self.args[1])
+            args = dict(date=self.args[1])
         else:
-            args = dict(tts = self.args[1])
+            args = dict(tts=self.args[1])
         print 'forming'
-        for f in Forming.objects.filter(**args).order_by('-date','order'):
-            print f.pk,'\t', rjust(str(f.order),2), f.date, rjust(str(f.tts),4),f.get_color_display(),f.width
+        for f in Forming.objects.filter(**args).order_by('-date', 'order'):
+            print f.pk, '\t', rjust(str(f.order), 2), f.date, rjust(str(f.tts), 4), f.get_color_display(), f.width
         print 'warren'
-        for f in Warren.objects.filter(**args).order_by('-date','order'):
-            print f.pk,'\t', rjust(str(f.order),2), f.date, rjust(str(f.tts),4), f.get_tto
+        for f in Warren.objects.filter(**args).order_by('-date', 'order'):
+            print f.pk, '\t', rjust(str(f.order), 2), f.date, rjust(str(f.tts), 4), f.get_tto
 
 
     def set(self):
@@ -109,47 +113,47 @@ class Command(BaseCommand):
                 model = Forming
             model.objects.filter(pk=self.args[2]).update(tts=self.args[3])
 
-    
+
     def test_order(self):
-        args = {'date__year':2012,'date__month':1}
-        for d in Forming.objects.filter(**args).dates('date','day'):
-            warrens = ' '.join( str(f.tts) for f in Warren.objects.filter(date=d))
-            formings = ' '.join( str(f.tts) for f in Forming.objects.filter(date=d))
-            print d, (warrens in formings),len(formings),len(warrens)
+        args = {'date__year': 2012, 'date__month': 1}
+        for d in Forming.objects.filter(**args).dates('date', 'day'):
+            warrens = ' '.join(str(f.tts) for f in Warren.objects.filter(date=d))
+            formings = ' '.join(str(f.tts) for f in Forming.objects.filter(date=d))
+            print d, (warrens in formings), len(formings), len(warrens)
 
 
     def fetch_path(self):
-        args = {'date__year':2012,'date__month':1}
-        for l,s in zip(Warren.objects.filter(**args),Warren.objects.using('server').filter(**args)):
+        args = {'date__year': 2012, 'date__month': 1}
+        for l, s in zip(Warren.objects.filter(**args), Warren.objects.using('server').filter(**args)):
             if l.pk == s.pk:
                 l.path = s.path
                 l.save()
             else:
                 print 'fail'
-    
+
 
     def forming_order(self):
-        args = {'date__year':2012,'date__month':1}
+        args = {'date__year': 2012, 'date__month': 1}
         tts = ''
         path = ''
         for f in Forming.objects.filter(**args):
-            tts+='{} '.format(f.tts)
+            tts += '{} '.format(f.tts)
             try:
                 p = str(f.warren.path)
             except Warren.DoesNotExist:
                 p = ''
-            path += rjust(p,4)
+            path += rjust(p, 4)
         print tts
         print path
 
     def chart(self):
         warrens = Warren.objects.filter(date='2012-01-14')
-        previos = Warren.objects.filter(date=warrens[0].date-datetime.timedelta(1)).filter(add__gt=0).get()
+        previos = Warren.objects.filter(date=warrens[0].date - datetime.timedelta(1)).filter(add__gt=0).get()
         lt = previos.row * (16 - previos.add) * -1
-        print lt,previos.add
-        amount_axis = [lt,]
+        print lt, previos.add
+        amount_axis = [lt, ]
         for w in warrens:
-            amount_axis.append(amount_axis[-1]+w.length)
+            amount_axis.append(amount_axis[-1] + w.length)
 
         # ammout_axis = [ [w.tts,w.length] for w in warrens ]
         print amount_axis

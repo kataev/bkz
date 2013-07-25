@@ -3,56 +3,62 @@
 {% block title %}Энергоресурсы{% endblock %}
 {% block container %}
 <div class="container" id='energy'>
-<div class="row">
-    <div class="span6">
-        <h1>Тепло <small>
-            {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
+    <div class="row">
+        <div class="span6">
+            <h1>Тепло
+                <small>
+                    {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
                     за {{ datefilter.get_date|date:'F Y'|lower }} года
-                {% else %}
+                    {% else %}
                     за {{ datefilter.get_date|date:'Y' }} год
-            {% endif %}
-            </small>
-        </h1>
+                    {% endif %}
+                </small>
+            </h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span6 dateform"
+              style='margin-top: 10px;text-align:right'>
+            {{ modelselect.model}}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year
+            month=datefilter.date__month %}
+            <input type="submit" class="btn">
+        </form>
     </div>
-    <form accept-chartset='utf-8' method="GET" action="" class="form-inline span6 dateform" style='margin-top: 10px;text-align:right'>
-        {{ modelselect.model}}
-        {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
-        <input type="submit" class="btn">
-    </form>
-</div>
-<form accept-chartset='utf-8' accept-chartset='utf-8' method="POST" action="{{ data.model.get_absolute_url }}" class='row'>
-    {% csrf_token %}
-    <fieldset class='span12'>
-    <table>
-        <thead>
-            <tr>
-                {% for field in object_list.empty_form.visible_fields %}
+    <form accept-chartset='utf-8' accept-chartset='utf-8' method="POST" action="{{ data.model.get_absolute_url }}"
+          class='row'>
+        {% csrf_token %}
+        <fieldset class='span12'>
+            <table>
+                <thead>
+                <tr>
+                    {% for field in object_list.empty_form.visible_fields %}
                     <th>{{ field.label|safe }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for form in object_list reversed %}
-            <tr id='{{ form.prefix }}' class='{{ form.instance.css }} {% if not form.instance.pk %}fake{% endif %}'>
-                {% for f in form.visible_fields %}
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for form in object_list reversed %}
+                <tr id='{{ form.prefix }}' class='{{ form.instance.css }} {% if not form.instance.pk %}fake{% endif %}'>
+                    {% for f in form.visible_fields %}
                     {% if forloop.first %}
                     <td class="input-prepend">
                         <span class='add-on'>
-                            <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter }}</a>
+                            <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ forloop.parentloop.counter
+                                }}</a>
                         </span>
                         {% for f in form.hidden_fields %}
-                            {{ f }}
+                        {{ f }}
                         {% endfor %}
                         {{ f }}
                     </td>
                     {% else %}
-                    <td {% include 'bootstrap/errors.html' with errors=object_list.errors %}>{{ f }}</td>
+                    <td
+                    {% include 'bootstrap/errors.html' with errors=object_list.errors %}>{{ f }}</td>
                     {% endif %}
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
-    </fieldset>
-</form>
+            </table>
+        </fieldset>
+    </form>
 </div>
 {% endblock %}

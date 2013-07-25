@@ -1,94 +1,95 @@
 {% extends 'core/form.html' %}
 {% load bkz %}
 {% block form %}
-    <div style='display: none'>
+<div style='display: none'>
+    {% for k,o in opers.iteritems %}
+    {% include 'whs/sold_form.html' with form=o.empty_form hide=1 only %}
+    {% endfor %}
+</div>
+<div class="container">
+    <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}"
+          id='form'>
+        {% csrf_token %}
         {% for k,o in opers.iteritems %}
-            {% include 'whs/sold_form.html' with form=o.empty_form hide=1 only %}
+        {{ o.management_form }}
         {% endfor %}
-    </div>
-    <div class="container">
-        <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
-            {% csrf_token %}
-            {% for k,o in opers.iteritems %}
-                {{ o.management_form }}
-            {% endfor %}
-            <div class="row">
+        <div class="row">
 
-                <div class="span5">
-                    <fieldset class="{{ form.Meta.model|class_name }} less">
-                        {% block main-fieldset %}
-                            <legend>
-                                <a href='{{ form.instance.absolute_url }}'>
-                                    <h1>
+            <div class="span5">
+                <fieldset class="{{ form.Meta.model|class_name }} less">
+                    {% block main-fieldset %}
+                    <legend>
+                        <a href='{{ form.instance.absolute_url }}'>
+                            <h1>
                                 {% if form.instance.pk %}
-                                    {{ form.Meta.model|model_verbose_name }}
-                                    <small>{{ form.instance|safe }}</small>
+                                {{ form.Meta.model|model_verbose_name }}
+                                <small>{{ form.instance|safe }}</small>
                                 {% else %}
-                                    {{ form.instance|safe }}
+                                {{ form.instance|safe }}
                                 {% endif %}
                             </h1>
-                                </a>
-                            </legend>
-                            {{ form.as_div }}
-                        {% endblock %}
-                    </fieldset>
-                    {% if opers %}
-                        <ul class="nav nav-list" id="opers">
-                            <li class="nav-header">
-                                <h4 style='margin-top: 0;'>Операции </h4>
+                        </a>
+                    </legend>
+                    {{ form.as_div }}
+                    {% endblock %}
+                </fieldset>
+                {% if opers %}
+                <ul class="nav nav-list" id="opers">
+                    <li class="nav-header">
+                        <h4 style='margin-top: 0;'>Операции </h4>
 
-                                <div class="btn-group">
-                                    <a class="btn btn-primary btn-success btn-mini">Добавить
-                                        <i class="icon-arrow-right icon-white"></i></a>
-                                    {% for k,o in opers.iteritems %}
-                                        <a class="btn btn-primary btn-mini form-add"
-                                           data-append=".tabbable .tab-content"
-                                           data-prefix='{{ o.prefix }}'>{{ o.model|model_verbose_name_plural }}</a>
-                                    {% endfor %}
-                                </div>
-                            </li>
+                        <div class="btn-group">
+                            <a class="btn btn-primary btn-success btn-mini">Добавить
+                                <i class="icon-arrow-right icon-white"></i></a>
                             {% for k,o in opers.iteritems %}
-                                {% for s in o %}
-                                    <li class="{% if forloop.parentloop.first and forloop.first %}active{% endif %}">
-                                        <a data-toggle='tab' href='#{{ s.prefix }}'>{{ s.instance|safe }}</a>
-                                    </li>
-                                {% endfor %}
+                            <a class="btn btn-primary btn-mini form-add"
+                               data-append=".tabbable .tab-content"
+                               data-prefix='{{ o.prefix }}'>{{ o.model|model_verbose_name_plural }}</a>
                             {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="span6 offset1" id="brickfade">
-                    {% if opers %}
-                        {% for k,o in opers.iteritems %}
-                            {% for e in o.non_form_errors %}
-                                <div class="alert alert-error">
-                                    <i class="icon-warning-sign"></i>
-                                    <strong>{{ e|safe }}</strong>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                        <div class="tabbable">
-                            {#  solds  #}
-                            <div class="tab-content">
-                                {% for k,o in opers.iteritems %}
-                                    {% for form in o %}
-                                        {% include 'whs/sold_form.html' with form=form forloop=forloop only %}
-                                    {% endfor %}
-                                {% endfor %}
-                            </div>
                         </div>
-                    {% endif %}
-                </div>
-                {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks class='span7' %}
+                    </li>
+                    {% for k,o in opers.iteritems %}
+                    {% for s in o %}
+                    <li class="{% if forloop.parentloop.first and forloop.first %}active{% endif %}">
+                        <a data-toggle='tab' href='#{{ s.prefix }}'>{{ s.instance|safe }}</a>
+                    </li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
-        </form>
-    </div>
+            <div class="span6 offset1" id="brickfade">
+                {% if opers %}
+                {% for k,o in opers.iteritems %}
+                {% for e in o.non_form_errors %}
+                <div class="alert alert-error">
+                    <i class="icon-warning-sign"></i>
+                    <strong>{{ e|safe }}</strong>
+                </div>
+                {% endfor %}
+                {% endfor %}
+                <div class="tabbable">
+                    {# solds #}
+                    <div class="tab-content">
+                        {% for k,o in opers.iteritems %}
+                        {% for form in o %}
+                        {% include 'whs/sold_form.html' with form=form forloop=forloop only %}
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% include 'whs/widgets/brickselect-table.html' with Bricks=Bricks class='span7' %}
+        </div>
+    </form>
+</div>
 {% endblock %}
 {% block bonus-button %}
-    {% if form.instance.pk %}
-        <a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
-            <i class="icon-print icon-white"></i>
-            Печать
-        </a>
-    {% endif %}
+{% if form.instance.pk %}
+<a class="btn btn-info" href={% url whs:Bill-print pk=form.instance.pk %}>
+<i class="icon-print icon-white"></i>
+Печать
+</a>
+{% endif %}
 {% endblock %}

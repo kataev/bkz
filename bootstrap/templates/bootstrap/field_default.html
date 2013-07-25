@@ -1,11 +1,11 @@
 <div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
-     class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
-    <label class="control-label" for="{{ label_id }}">{{ label|safe }}</label>
+class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
+<label class="control-label" for="{{ label_id }}">{{ label|safe }}</label>
 
-    <div class="controls">
-        {{ bf }}
-        <div class="help-inline">
-            {% include 'bootstrap/help_text.html' %}
-        </div>
+<div class="controls">
+    {{ bf }}
+    <div class="help-inline">
+        {% include 'bootstrap/help_text.html' %}
     </div>
+</div>
 </div>

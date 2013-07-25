@@ -4,7 +4,7 @@ import serial
 import socket
 import psycopg2
 from struct import pack, unpack
-from time import sleep,time
+from time import sleep, time
 from string import rjust
 from itertools import izip_longest
 
@@ -13,12 +13,15 @@ def bin(s):
     s = int(s)
     return str(s) if s <= 1 else bin(s >> 1) + str(s & 1)
 
+
 def tb(int_type, offset):
     mask = 1 << offset
     return int_type ^ mask
 
+
 def inv(data):
     return ''.join(str(tb(int(b), 0)) for b in data)
+
 
 def parse_response(data):
     s = ''.join(data)
@@ -33,18 +36,22 @@ def parse_response(data):
         return 0
     return a
 
+
 def parse_data(data, n):
     """ Parse termodat data """
-    return map(parse_response,izip_longest(*[iter(data)] * n))
+    return map(parse_response, izip_longest(*[iter(data)] * n))
+
 
 def termodat(a, b, n):
     """ Generate termodat request string.
         Address, start registers, end registers """
-    return rjust(hex(a).split("x")[1], 2, "0") + "03" + rjust(hex(b).split("x")[1], 4, "0") + rjust(hex(n).split("x")[1] , 4, "0")
+    return rjust(hex(a).split("x")[1], 2, "0") + "03" + rjust(hex(b).split("x")[1], 4, "0") + rjust(
+        hex(n).split("x")[1], 4, "0")
+
 
 def lrc(data):
-    l = sum(int(ch,16) for i,ch in enumerate(data) if i % 2)
-    h = sum(int(ch,16) for i,ch in enumerate(data) if not i % 2)
+    l = sum(int(ch, 16) for i, ch in enumerate(data) if i % 2)
+    h = sum(int(ch, 16) for i, ch in enumerate(data) if not i % 2)
     hi = inv(rjust(bin(h), 4, "0"))
     li = inv(rjust(bin(l), 4, "0"))
     return hex(int(hi, 2))[-1:] + hex(int(li, 2) + 1)[-1:]
@@ -107,13 +114,14 @@ def crc16(data):
 devices = [21, 22] # Список девайсов
 registers = [22, 34] # Список регистров, 22 - влага, 34 - темп
 
+
 def main():
     con_bkz = psycopg2.connect(user='bkz', host='192.168.1.3', database='bkz', password='')
     cur_bkz = con_bkz.cursor()
     con_cpu = psycopg2.connect(user='django', host='192.168.1.3', database='cpu', password='django')
     cur_cpu = con_cpu.cursor()
     carbon = socket.socket()
-    carbon.connect(('localhost',2013))
+    carbon.connect(('localhost', 2013))
 
     ser = serial.Serial('/dev/ttyAP1') # Ну ты понел
     while True: # Бесконечный циклянский
@@ -129,20 +137,21 @@ def main():
                     sleep(.4) # Если меньше 9 то еще поспать 400mc
                     write = ser.read(9)[3:-2][::-1]
                     value = round(unpack('f', write)[0], 3)
-                    dvt[r]=value
-                    cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (id, r, value) )
+                    dvt[r] = value
+                    cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (
+                    id, r, value))
                 sleep(.2)
                 ser.flushInput() # Очищяем
                 ser.flushOutput()
             cur_cpu.execute('INSERT INTO bkz_dvt%s (temp,hmdt,date) VALUES (%s, %s,NOW());', (id, dvt[34], dvt[22]))
-            carbon.sendall('\n'.join('cpu.%d.%d %f %d' % (id,r,v,time()) for r,v in dvt.items()) + '\n')
+            carbon.sendall('\n'.join('cpu.%d.%d %f %d' % (id, r, v, time()) for r, v in dvt.items()) + '\n')
         con_bkz.commit()
         con_cpu.commit()
 
         # Termodat part
         request = termodat(1, 0, 24)
-        ser.write(':'+request)
-        ser.write(lrc(request)+'\r\n')
+        ser.write(':' + request)
+        ser.write(lrc(request) + '\r\n')
         sleep(.4)
         if ser.inWaiting() == 0:
             ser.flushInput()
@@ -151,12 +160,16 @@ def main():
             data = ser.read(ser.inWaiting())
             a = parse_data(data[7:-4], 4)
             for r, value in enumerate(a):
-                cur_bkz.execute('INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value) )
-            carbon.sendall('\n'.join('cpu.%d.%s %f %d' % (1,r+1,v,time()) for r,v in enumerate(a)) + '\n')
-            cur_cpu.execute('INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(a)[1:-1])
+                cur_bkz.execute(
+                    'INSERT INTO cpu_value (datetime,code,field,value) VALUES (NOW(), %d, %s, %f);' % (1, r, value))
+            carbon.sendall('\n'.join('cpu.%d.%s %f %d' % (1, r + 1, v, time()) for r, v in enumerate(a)) + '\n')
+            cur_cpu.execute(
+                'INSERT INTO bkz_termodat22m (date,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22,t23,t24) VALUES (NOW(),%s);' % str(
+                    a)[1:-1])
             con_cpu.commit()
             con_bkz.commit()
     ser.close() # Зашил порт, по идее ни когда не выполнится.
+
 
 if __name__ == '__main__':
     main()

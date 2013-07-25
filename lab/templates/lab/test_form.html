@@ -1,22 +1,22 @@
 {% for f in form.visible_fields %}
-    <td>
-        {% if forloop.last %}
+<td>
+    {% if forloop.last %}
             <span class="btn btn-small add-on btn-warning" title="Пометить запись для удаления">
                 {{ f }}
             </span>
-            {% for f in form.hidden_fields %}
-                {{ f }}
-            {% endfor %}
-            {% for e in form.non_field_errors %}
-                <div class="alert alert-error">
-                    <strong>{{ e }}</strong>
-                </div>
-            {% endfor %}
-        {% else %}
-            {{ f }}
-        {% endif %}
-        {% for q in f.errors %}
-            <a rel="tooltip" class="badge badge-important" title="{{ q }}"><i class="icon-warning-sign"></i></a>
-        {% endfor %}
-    </td>
+    {% for f in form.hidden_fields %}
+    {{ f }}
+    {% endfor %}
+    {% for e in form.non_field_errors %}
+    <div class="alert alert-error">
+        <strong>{{ e }}</strong>
+    </div>
+    {% endfor %}
+    {% else %}
+    {{ f }}
+    {% endif %}
+    {% for q in f.errors %}
+    <a rel="tooltip" class="badge badge-important" title="{{ q }}"><i class="icon-warning-sign"></i></a>
+    {% endfor %}
+</td>
 {% endfor %}

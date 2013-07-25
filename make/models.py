@@ -22,7 +22,7 @@ class Forming(models.Model, UrlMixin):
 
     tts = models.IntegerField(u'№ ТТС')
     density = models.FloatField(u'Плот.')
-    vacuum = models.FloatField(u'Вак.',null=True,blank=True)
+    vacuum = models.FloatField(u'Вак.', null=True, blank=True)
     empty = models.BooleanField('Пуст.', default=False)
 
     order = models.IntegerField(u'Порядок', default=0)
@@ -49,19 +49,18 @@ class Forming(models.Model, UrlMixin):
         unique_together = ('date', 'tts')
         ordering = ('-date', 'order')
 
+
 path_c = (
-    (0,u'Неизвестно'),
-    (3,u'3 путь'), # Нак после сушки
+    (0, u'Неизвестно'),
+    (3, u'3 путь'), # Нак после сушки
 
-    (4,u'4 путь'), # Сушка
-    (5,u'5 путь'),
-    (6,u'6 путь'),
-    (7,u'7 путь'),
+    (4, u'4 путь'), # Сушка
+    (5, u'5 путь'),
+    (6, u'6 путь'),
+    (7, u'7 путь'),
 
-    (8,u'8 путь'), # Перед сушкой
-    )
-
-
+    (8, u'8 путь'), # Перед сушкой
+)
 
 
 class Warren(models.Model, UrlMixin):
@@ -72,11 +71,11 @@ class Warren(models.Model, UrlMixin):
     date = models.DateField(u'Дата', null=True, blank=True)
 
     tts = models.IntegerField(u'ТТС')
-    path = models.IntegerField(u'Путь',default=0)
+    path = models.IntegerField(u'Путь', default=0)
     tto = models.CharField(u'ТТО', null=True, blank=True, max_length=5)
     add = models.IntegerField(u'Кол-во', null=True, blank=True)
 
-    brocken = BrockenCharField(u'Брак', null=True,blank=True, max_length=10)
+    brocken = BrockenCharField(u'Брак', null=True, blank=True, max_length=10)
     cause = models.ManyToManyField('lab.Cause', verbose_name=u'Прич. брака', null=True, blank=True,
                                    limit_choices_to={'type': 'warren'})
 
@@ -110,22 +109,22 @@ class Warren(models.Model, UrlMixin):
             amount = 0
             if self.brocken:
                 if u'%' in self.brocken:
-                    amount = int(self.brocken.replace('%',''))
+                    amount = int(self.brocken.replace('%', ''))
                     amount = (1 - amount / 100. ) * length
                 elif u'п' in self.brocken:
-                    amount = int(self.brocken.replace(u'п',''))
+                    amount = int(self.brocken.replace(u'п', ''))
                     amount = (1 - amount * 0.33) * length
                 else:
                     amount = int(self.brocken)
-            return int(round(length-amount,0))
+            return int(round(length - amount, 0))
 
     @property
     def percent(self):
         if self.forming and self.tto:
             tto = (self.forming.width.tto * 2 / 3)
             tts = sum(w.forming.width.tts for w in self.consumer.all() if w.forming)
-            print tto,tts
-            return round((tts - tto)/tto,2)
+            print tto, tts
+            return round((tts - tto) / tto, 2)
 
 
     @property
@@ -133,13 +132,13 @@ class Warren(models.Model, UrlMixin):
         def get_add(previos):
             try:
                 previos = previos.get()
-                add = previos.add 
+                add = previos.add
             except Warren.DoesNotExist:
                 add = 16
             except Warren.MultipleObjectsReturned:
                 add = previos[0].add
             return add
-        
+
         if self.forming is not None:
             forming = self.forming
         else:
@@ -149,8 +148,8 @@ class Warren(models.Model, UrlMixin):
                 return 0
         row = forming.width.tto / (3 * 16)
 
-        add = get_add(Warren.objects.filter(date=self.date-datetime.timedelta(1)).filter(add__gt=0))
-        amount =  (16 - add) * row * 2
+        add = get_add(Warren.objects.filter(date=self.date - datetime.timedelta(1)).filter(add__gt=0))
+        amount = (16 - add) * row * 2
         add = get_add(Warren.objects.filter(date=self.date).filter(add__gt=0))
         amount -= (16 - add) * row * 2
         amount += Warren.objects.filter(date=self.date).exclude(tto='').count() * row * 16 * 2
@@ -159,9 +158,9 @@ class Warren(models.Model, UrlMixin):
     @property
     def row(self):
         if self.forming:
-            return 2 * self.forming.width.tto / (3 * 16) 
+            return 2 * self.forming.width.tto / (3 * 16)
         else:
-            return 0 
+            return 0
 
 
     class Meta:

@@ -3,68 +3,74 @@
 {% block title %}Производство{% endblock %}
 {% block script %}
 <script type="text/javascript">
-$(function(){
-    var tts = $('table a.tts')
-    tts.hover(function(e){
-        var number = $(this).text()
-        tts.filter(function(){ return $(this).text() != number }).css({opacity:0.35})
-    },function(e){
-        tts.removeAttr('style')
+    $(function () {
+        var tts = $('table a.tts')
+        tts.hover(function (e) {
+            var number = $(this).text()
+            tts.filter(function () {
+                return $(this).text() != number
+            }).css({opacity: 0.35})
+        }, function (e) {
+            tts.removeAttr('style')
+        })
     })
-})
 </script>
 {% endblock %}
 {% block container %}
 <div class="container">
     <div class="row">
         <div class="span7">
-            <h1>Производство <small>
-                {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
-                        за {{ datefilter.get_date|date:'F Y'|lower }} года
+            <h1>Производство
+                <small>
+                    {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
+                    за {{ datefilter.get_date|date:'F Y'|lower }} года
                     {% else %}
-                        за {{ datefilter.get_date|date:'Y' }} год
-                {% endif %}
+                    за {{ datefilter.get_date|date:'Y' }} год
+                    {% endif %}
                 </small>
             </h1>
         </div>
-        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform"
+              style='margin-top: 10px;text-align:right'>
             {{ modelselect.model}}
-            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year
+            month=datefilter.date__month %}
             <input type="submit" class="btn">
         </form>
     </div>
-        <table class="table table-bordered table-condensed" id=''>
-            <thead>
-                <tr>
-                    <th width="60px" rowspan="2">Дата</th>
-                    <th rowspan="2">№ телег</th>
-                    <th colspan="2">Кол-во</th>
-                </tr>
-                <tr>
-                    <th>Фор.</th>
-                    <th>Укл.</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for d, forming, warren in object_list %}
-            <tr>
-                <th class="{{ forming.0.css }}"> {{ d|date:'j N' }} </th>
-                <td>
+    <table class="table table-bordered table-condensed" id=''>
+        <thead>
+        <tr>
+            <th width="60px" rowspan="2">Дата</th>
+            <th rowspan="2">№ телег</th>
+            <th colspan="2">Кол-во</th>
+        </tr>
+        <tr>
+            <th>Фор.</th>
+            <th>Укл.</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for d, forming, warren in object_list %}
+        <tr>
+            <th class="{{ forming.0.css }}"> {{ d|date:'j N' }}</th>
+            <td>
                 {% for d,pk,tts,em,warren in forming %}
                 {# {{ warren }} #}
                 {% if warren %}
-                    <del><a title="{{ f }}" class="tts" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a></del>
+                <del><a title="{{ f }}" class="tts" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a></del>
                 {% else %}
-                    <a title="{{ f }}" class="tts text-error{% if em %}muted{% endif %}" href="{% url make:Forming-change pk=pk %}">{{ tts }}</a>
+                <a title="{{ f }}" class="tts text-error{% if em %}muted{% endif %}"
+                   href="{% url make:Forming-change pk=pk %}">{{ tts }}</a>
                 {% endif %}
                 {% endfor %}
-                </td>
-                <td> <a href="{% url make:forming %}?date={{ d.isoformat }}"> {{ forming|length }} </a> </td>
-                <td> <a href="{% url make:warren %}?date={{ d.isoformat }}"> {{ warren|length }} </a> </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            </td>
+            <td><a href="{% url make:forming %}?date={{ d.isoformat }}"> {{ forming|length }} </a></td>
+            <td><a href="{% url make:warren %}?date={{ d.isoformat }}"> {{ warren|length }} </a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 </div>
 {% endblock %}

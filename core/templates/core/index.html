@@ -7,21 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>БКЗ : {% block title %}Главная{% endblock %}</title>
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="{{ STATIC_URL }}bootstrap/bootstrap.css" rel="stylesheet">
     {% block head %}
     <style type="text/css">
-    #footer {display: none}
+        #footer {
+            display: none
+        }
     </style>
     {% endblock %}
-    <style> body { padding-top: 0; position: relative;} </style>
-    <style type="text/css" media="print"> .navbar, #footer { display: none } </style>
+    <style> body {
+        padding-top: 0;
+        position: relative;
+    } </style>
+    <style type="text/css" media="print"> .navbar, #footer {
+        display: none
+    } </style>
     <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}bootstrap/bootstrap-responsive.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/brick.css" rel="stylesheet">
-{#    <link href="/static/img/logo.png" rel='shortcut icon'>#}
-{#    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">#}
+    {#
+    <link href="/static/img/logo.png" rel='shortcut icon'>
+    #}
+    {#
+    <link rel="shortcut icon" href="{{ STATIC_URL }}/img/cargo/cargo3.png">
+    #}
 </head>
 <body data-spy='scroll' data-target='.navbar' data-offset='40' class='{{ level }}'>
 {% include 'core/navbar.html' %}
@@ -30,12 +41,16 @@
     <div class='row'>
         <div class='offset2 span8'>
             <img src="{{ STATIC_URL }}img/logo.svg" style='width:15%'>
+
             <h1 style='font-'>
                 <b>Березниковский</b><br/>кирпичный<br/>завод
             </h1>
+
             <h2>Информационная система</h2>
+
             <p>
             </p>
+
             <p>
                 <a class="btn btn-large btn-primary" href="{% url price %}">Прайс-лист цен на продукцию</a>
             </p>
@@ -44,7 +59,7 @@
                 <a class="btn btn-large btn-success" href="{% url presentation %}">Доклад</a>
             </p>
         </div>
-        
+
     </div>
 </div>
 {% endblock %}

@@ -1,106 +1,108 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
 {% block head %}
-    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
+<link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
 {% endblock %}
 {% block title %}ИТ{% endblock %}
 {% block container %}
-    <div class="container">
-        <div class='row'>
-            <table class="span4 table">
-                <caption><h2>Устройства</h2></caption>
-                <thead>
-                <tr>
-                    <th>Имя</th>
-                    <th>Место</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for d in divices %}
-                    {% if d.type_id == 1 %}
-                        <tr>
-                            <td><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></td>
-                            <td>{{ d.place }}</td>
-                            <td>{{ d.remains }}</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-            <table class="table span8">
-                <caption><h2>Закупки</h2></caption>
-                <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Расходник</th>
-                    <th>Кол-во</th>
-                    <th>Цена</th>
-                    <th>Сумма</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for w in cons %}
-                    <tr>
-                        <th>{{ w.date }}</th>
-                        <th>
-                            <a href="{{ w.get_absolute_url }}">{{ w.cartridge }}</a>
-                            <a class="" href='{% url it:Plug-add %}?bill={{ w.pk }}'>
-                                <i class="icon-minus"></i>
-                            </a>
-                        </th>
-                        <td>{{ w.amount }}</td>
-                        <td>{{ w.price }}</td>
-                        <td>{{ w.total }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div><div class='row'>
-            <table class="span4 table">
-                <caption><h2>Картриджи</h2></caption>
-                <thead>
-                <tr>
-                    <th>Имя</th>
-                    <th>Остатки</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for d in divices %}
-                    {% if d.type_id == 2 %}
-                        <tr {% if totals|hash:d.pk == 0 %}class="error" {% endif %}>
-                            <td><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></td>
-                            <td>
-                                {% with t=totals|hash:d.pk %}
+<div class="container">
+    <div class='row'>
+        <table class="span4 table">
+            <caption><h2>Устройства</h2></caption>
+            <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Место</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in divices %}
+            {% if d.type_id == 1 %}
+            <tr>
+                <td><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></td>
+                <td>{{ d.place }}</td>
+                <td>{{ d.remains }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table span8">
+            <caption><h2>Закупки</h2></caption>
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Расходник</th>
+                <th>Кол-во</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for w in cons %}
+            <tr>
+                <th>{{ w.date }}</th>
+                <th>
+                    <a href="{{ w.get_absolute_url }}">{{ w.cartridge }}</a>
+                    <a class="" href='{% url it:Plug-add %}?bill={{ w.pk }}'>
+                        <i class="icon-minus"></i>
+                    </a>
+                </th>
+                <td>{{ w.amount }}</td>
+                <td>{{ w.price }}</td>
+                <td>{{ w.total }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class='row'>
+        <table class="span4 table">
+            <caption><h2>Картриджи</h2></caption>
+            <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Остатки</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in divices %}
+            {% if d.type_id == 2 %}
+            <tr
+            {% if totals|hash:d.pk == 0 %}class="error" {% endif %}>
+            <td><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></td>
+            <td>
+                {% with t=totals|hash:d.pk %}
                                     <span class="label">{{ t }}
                                         <a class="btnbtn-mini" href='{% url it:Buy-add %}?cartridge={{ d.pk }}'><i
                                                 class="icon-plus"></i></a>
                                     </span>
-                                {% endwith %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-            <table class="table table-bordered span8">
-                <caption><h1>Список замен</h1></caption>
-                <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Накладная</th>
-                    <th>Принтер</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for b in replaces %}
-                    <tr>
-                        <td><a href="{{ b.get_absolute_url }}">{{ b.date }}</a></td>
-                        <td><a href="{{ b.bill.get_absolute_url }}">{{ b.bill }}</a></td>
-                        <td><a href="{{ b.printer.get_absolute_url }}">{{ b.printer }}</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>  
+                {% endwith %}
+            </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-bordered span8">
+            <caption><h1>Список замен</h1></caption>
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Накладная</th>
+                <th>Принтер</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for b in replaces %}
+            <tr>
+                <td><a href="{{ b.get_absolute_url }}">{{ b.date }}</a></td>
+                <td><a href="{{ b.bill.get_absolute_url }}">{{ b.bill }}</a></td>
+                <td><a href="{{ b.printer.get_absolute_url }}">{{ b.printer }}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

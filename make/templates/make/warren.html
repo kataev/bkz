@@ -3,127 +3,144 @@
 {% block head %}
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
-    <script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
-    <script type="text/javascript"> json = {{ json|safe }}</script>
-    <script type="text/javascript" src="/static/js/warren.js"></script>
+<script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
+<script type="text/javascript"> json = {
+{
+    json | safe
+}
+}</script>
+<script type="text/javascript" src="/static/js/warren.js"></script>
 
-    <style type="text/css">
-    #chart { overflow-x: auto;}
+<style type="text/css">
+    #chart {
+        overflow-x: auto;
+    }
+
     circle.wheel {
-        stroke:gray;
-        stroke-width:2px;
-        fill:none;
+        stroke: gray;
+        stroke-width: 2px;
+        fill: none;
     }
+
     .tto rect {
-        stroke:gray;
-        stroke-width:1px;
-        fill:whitesmoke;   
+        stroke: gray;
+        stroke-width: 1px;
+        fill: whitesmoke;
     }
+
     .axis path,
     .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
     }
 
     text {
         font-family: sans-serif;
         font-size: 11px;
-        text-anchor:middle;
+        text-anchor: middle;
     }
 
 
-    </style>
+</style>
 {% endblock %}
 {% block title %}Укладка {{ date|date:'j E Y, l' }}{% endblock %}
 {% block container %}
 <div class="container" id='forming'>
     <div class="row">
-            <div class="span8">
-                <h1 class='datehead'>
-                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Укладка <small>за {{ date|date:'j E Y, l' }}</small>
-                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
-                </h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
-                {{ dateform.date }}
-                <input type="submit" value='Показать' class="btn">
-            </form>
+        <div class="span8">
+            <h1 class='datehead'>
+                <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                Укладка
+                <small>за {{ date|date:'j E Y, l' }}</small>
+                <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+            </h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform"
+              style='margin-top: 10px;text-align:right'>
+            {{ dateform.date }}
+            <input type="submit" value='Показать' class="btn">
+        </form>
     </div>
     <form accept-chartset='utf-8' method="POST" id='form' class='row'>
         {% csrf_token %}
-        {{ factory.management_object }}    
-        {{ factory.management_form }}  
-    <fieldset class='span5'>
-        {% for e in factory.non_form_errors %}
-        {{ e }}
-        {% endfor %}
-        <table id='warren' class='sortable'>
-            <caption><h2>{{ factory.caption }}</h2></caption>
-            <thead>
+        {{ factory.management_object }}
+        {{ factory.management_form }}
+        <fieldset class='span5'>
+            {% for e in factory.non_form_errors %}
+            {{ e }}
+            {% endfor %}
+            <table id='warren' class='sortable'>
+                <caption><h2>{{ factory.caption }}</h2></caption>
+                <thead>
                 <tr>
-                {% for field in factory.empty_form.visible_fields %}
+                    {% for field in factory.empty_form.visible_fields %}
                     <th>{{ field.label|safe }}</th>
-                {% endfor %}
+                    {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-            {% for form in factory %}
+                </thead>
+                <tbody>
+                {% for form in factory %}
                 <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                     {% for f in form.visible_fields %}
-                        {% if forloop.first %}
-                        <td class="input-prepend">
+                    {% if forloop.first %}
+                    <td class="input-prepend">
                             <span class='add-on'>
-                                <a  tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
+                                <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
 
                             </span>
-                            {% for f in form.hidden_fields %}
-                                {{ f }}
-                            {% endfor %}
-                            {{ f }}
-                        </td>
-                        {% elif f.name == 'cause' %}
-                        <td class="input-append dropdown counter">
-                            {% if forloop.first %}{% for field in form.hidden_fields %} {{ field }} {% endfor %}{% endif %}
-                            <ul class="dropdown-menu" role='menu'>
+                        {% for f in form.hidden_fields %}
+                        {{ f }}
+                        {% endfor %}
+                        {{ f }}
+                    </td>
+                    {% elif f.name == 'cause' %}
+                    <td class="input-append dropdown counter">
+                        {% if forloop.first %}{% for field in form.hidden_fields %} {{ field }} {% endfor %}{% endif %}
+                        <ul class="dropdown-menu" role='menu'>
                             {{ f|removetags:'ul' }}
-                            </ul>
-                            <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
+                        </ul>
+                        <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button'
+                           data-toggle="dropdown">
                                 <span class='label {% if f.value|length %}label-warning{% endif %}'>
                                     {{ f.value|length }}
                                 </span> <b class="caret"></b>
-                            </a>
-                         </td>
-                        {% else %}
-                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
-                        {% endif %}
+                        </a>
+                    </td>
+                    {% else %}
+                    <td
+                    {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                    {% endif %}
                     {% endfor %}
                     <td> {% if form.instance.forming %}
-                    <a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}' 
-                        title="{{ form.instance.forming }}">Формовка</a>
-                    {% endif %}</td>
-                    {# <td>{% if form.instance.part %} #}
-                    {# <a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}'  #}
+                        <a class='btn btn-link' href='{{ form.instance.forming.get_absolute_url }}'
+                           title="{{ form.instance.forming }}">Формовка</a>
+                        {% endif %}
+                    </td>
+                    {#
+                    <td>{% if form.instance.part %} #}
+                        {# <a class='btn btn-link text-info' href='{{ form.instance.part.batch.get_absolute_url }}' #}
                         {# title="{{ form.instance.part.batch }}, {{ form.instance.part }}">Партия</a> #}
-                    {# {% endif %}</td> #}
+                        {# {% endif %}
+                    </td>
+                    #}
                     {% if form.errors %}
                     <td>
-                      {% for k,e in form.errors.items %}
-                      {{ e|removetags:'ul li' }}
-                      {% endfor %}
+                        {% for k,e in form.errors.items %}
+                        {{ e|removetags:'ul li' }}
+                        {% endfor %}
                     </td>
                     {% endif %}
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </fieldset>    
-    <div class="span7" id="chart">
+                {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+        <div class="span7" id="chart">
 
-    </div>
-</form>
+        </div>
+    </form>
 </div>
 <div class="form-actions">
     <div class="container">

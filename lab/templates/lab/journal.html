@@ -1,105 +1,113 @@
 {% extends 'core/index.html' %}
 {% load bkz %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
 {% endblock %}
 {% block title %}Журнал за {{ date|date:'j E Y' }}{% endblock %}
 {% block container %}
 <div class="container" id='journal'>
     <div class="row">
-            <div class="span7">
-                <h1 class='datehead'>
-                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Журнал <small>за {{ date|date:'j E Y, l' }}</small>
-                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
-                </h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform" style='margin-top: 10px;text-align:right'>
-                {{ dateform.date }}
-                <input type="submit" value='Показать' class="btn">
-            </form>
+        <div class="span7">
+            <h1 class='datehead'>
+                <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                Журнал
+                <small>за {{ date|date:'j E Y, l' }}</small>
+                <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+            </h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span5 dateform"
+              style='margin-top: 10px;text-align:right'>
+            {{ dateform.date }}
+            <input type="submit" value='Показать' class="btn">
+        </form>
     </div>
     <form accept-chartset='utf-8' method="POST" id='form' class='row'>
         {% csrf_token %}
-    {% for f in factory %}
-    {% if f.prefix == 'half' %}
-    <div class='row'>
-        {%endif%}
-    <fieldset class='{{ f.css_class }} {{ f.model|class_name }}'>
-    {{ f.management_object }}    
-    {{ f.management_form }}  
-    <table class='sortable'>
-    	    {% if f.prefix == 'QuarryFactory' %}
-            <caption><h2>{{ f.caption }}</h2></caption>
-            <thead>
-                <tr>
-                    <th colspan=2>Влажность</th>
-                    <th colspan=2>Показатели</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% with form=f.0 %}
-                <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+        {% for f in factory %}
+        {% if f.prefix == 'half' %}
+        <div class='row'>
+            {%endif%}
+            <fieldset class='{{ f.css_class }} {{ f.model|class_name }}'>
+                {{ f.management_object }}
+                {{ f.management_form }}
+                <table class='sortable'>
+                    {% if f.prefix == 'QuarryFactory' %}
+                    <caption><h2>{{ f.caption }}</h2></caption>
+                    <thead>
+                    <tr>
+                        <th colspan=2>Влажность</th>
+                        <th colspan=2>Показатели</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% with form=f.0 %}
+                    <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                         <td class="input-prepend">
                             <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>1</a> </span>
                             {% for f in form.hidden_fields %} {{ f }} {% endfor %} {{ form.datetime }}
                         </td>
                         <td> {{ form.humidity }}</td>
-                        <th><input type='text' value='Песок:' disabled='disabled' style='width:60px;text-align:right'></th>
+                        <th><input type='text' value='Песок:' disabled='disabled' style='width:60px;text-align:right'>
+                        </th>
                         <td>{{ form.sand }}</td>
-                </tr>
-                {% endwith %}
-                {% with form=f.1 %}
-                <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+                    </tr>
+                    {% endwith %}
+                    {% with form=f.1 %}
+                    <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                         <td class="input-prepend">
                             <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>2</a> </span>
                             {% for f in form.hidden_fields %} {{ f }} {% endfor %} {{ form.datetime }}
                         </td>
                         <td> {{ form.humidity }}</td>
-                        <th><input type='text' value='Глин:' disabled='disabled' style='width:60px;text-align:right'></th>
+                        <th><input type='text' value='Глин:' disabled='disabled' style='width:60px;text-align:right'>
+                        </th>
                         <td> {{ f.0.module_size }}</td>
-                </tr>
-                {% endwith %}
-                {% with form=f.2 %}
-                <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+                    </tr>
+                    {% endwith %}
+                    {% with form=f.2 %}
+                    <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                         <td class="input-prepend">
                             <span class='add-on'> <a href='{{ form.instance.get_absolute_url }}'>3</a> </span>
                             {% for f in form.hidden_fields %} {{ f }} {% endfor %} {{ form.datetime }}
                         </td>
                         <td> {{ form.humidity }}</td>
-                        <th><input type='text' value='Пласт:' disabled='disabled' style='width:60px;text-align:right'></th>
+                        <th><input type='text' value='Пласт:' disabled='disabled' style='width:60px;text-align:right'>
+                        </th>
                         <td> {{ f.0.dust }}</td>
-                </tr>
-                {% endwith %}
-                <tr>
-                    <th><input type='text' value='Среднее:' disabled='disabled' style='width:81px;border-radius: 4px 0 0 4px;text-align:right;float:right;'></th>
-                    <td>
-                        <input type='text' value='{{ f.queryset|func_pluck:'avg humidity'}}' disabled='disabled' style='width:50px'>
-                    </td>
-                    <th><input type='text' value='Пылев:' disabled='disabled' style='width:60px;text-align:right'></th>
-                    <td>{{ f.0.particle_size }}</td>
-                </tr>
-            {% else %}
-            <caption><h2>{{ f.caption }}</h2></caption>
-            <thead>
-                <tr>
-                    {% for field in f.empty_form.visible_fields %}
+                    </tr>
+                    {% endwith %}
+                    <tr>
+                        <th><input type='text' value='Среднее:' disabled='disabled'
+                                   style='width:81px;border-radius: 4px 0 0 4px;text-align:right;float:right;'></th>
+                        <td>
+                            <input type='text' value='{{ f.queryset|func_pluck:' avg humidity'}}' disabled='disabled'
+                            style='width:50px'>
+                        </td>
+                        <th><input type='text' value='Пылев:' disabled='disabled' style='width:60px;text-align:right'>
+                        </th>
+                        <td>{{ f.0.particle_size }}</td>
+                    </tr>
+                    {% else %}
+                    <caption><h2>{{ f.caption }}</h2></caption>
+                    <thead>
+                    <tr>
+                        {% for field in f.empty_form.visible_fields %}
                         <th>{{ field.label|safe }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-    		{% for form in f %}
-            {% if form.instance.pk or add %}
-    			<tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
-    				{% for f in form.visible_fields %}
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for form in f %}
+                    {% if form.instance.pk or add %}
+                    <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
+                        {% for f in form.visible_fields %}
                         {% if forloop.first %}
                         <td class="input-prepend">
                             <span class='add-on'>
                                 <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
                             </span>
                             {% for f in form.hidden_fields %}
-                                {{ f }}
+                            {{ f }}
                             {% endfor %}
                             {{ f }}
                         </td>
@@ -110,30 +118,32 @@
                         {% elif f.name == 'cause' %}
                         <td class="input-append dropdown counter">
                             <ul class="dropdown-menu" role='menu'>
-                            {{ f|removetags:'ul' }}
+                                {{ f|removetags:'ul' }}
                             </ul>
-                            <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button' data-toggle="dropdown">
+                            <a href="#{{ f.html_name }}" class="dropdown-toggle add-on" role='button'
+                               data-toggle="dropdown">
                                 <span class='label {% if f.value|length %}label-warning{% endif %}'>
                                     {{ f.value|length }}
                                 </span> <b class="caret"></b>
                             </a>
-                            
+
                         </td>
                         {% else %}
-                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                        <td
+                        {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
                         {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
                     {% endfor %}
-    			</tr>
-                {% endif %}
-    		{% endfor %}
-            {% endif %}
-    	</tbody>
-    </table>
-    </fieldset>
-    {% if f.prefix == 'bar' %}
-    </div>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </fieldset>
+            {% if f.prefix == 'bar' %}
+        </div>
         {%endif%}
-    {% endfor %}
+        {% endfor %}
 </div>
 {% if add %}
 <div class="form-actions">

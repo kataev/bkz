@@ -10,6 +10,7 @@
 
 from django.db import models
 
+
 class DispAgent(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.TextField()
@@ -25,15 +26,15 @@ class DispAgent(models.Model):
 
     class Meta:
         db_table = u'agent'
-        
+
 
 class DispJurnal(models.Model):
     id = models.IntegerField(primary_key=True)
-    tov = models.ForeignKey('DispTovar',db_column='tov',verbose_name=u'Товар')
+    tov = models.ForeignKey('DispTovar', db_column='tov', verbose_name=u'Товар')
     plus = models.IntegerField(u'Приход')
     minus = models.IntegerField(u'Отгрузка')
     poddon = models.IntegerField(u'Кол-во поддонов')
-    agent = models.ForeignKey('DispAgent',db_column='agent',verbose_name=u'Контрагент')
+    agent = models.ForeignKey('DispAgent', db_column='agent', verbose_name=u'Контрагент')
     akt = models.IntegerField(u'Номер акта при переводе')
     nakl = models.TextField(u'Номер накладной')
     makt = models.IntegerField(u'Перевод из')
@@ -64,12 +65,14 @@ class DispJurnal(models.Model):
             return u'workshop %d' % self.workshop
         else:
             return u'x3'
+
     def m(self):
         return self.price * self.minus
 
     class Meta:
         db_table = u'jurnal'
         ordering = ('-date',)
+
 
 class DispSclad(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -80,6 +83,7 @@ class DispSclad(models.Model):
 
     class Meta:
         db_table = u'sclad'
+
 
 class DispTovar(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -93,7 +97,7 @@ class DispTovar(models.Model):
     prim = models.TextField()
     sort = models.IntegerField()
     price = models.IntegerField()
-    total = models.ForeignKey('DispSclad',db_column='id')
+    total = models.ForeignKey('DispSclad', db_column='id')
 
     def __unicode__(self):
         return self.prim

@@ -8,93 +8,95 @@
             <h1>Характеристики {{ factory.model|model_verbose_name_plural|lower }}
                 <small>
                     {% if datefilter.is_valid and datefilter.cleaned_data.date__month %}
-                        за {{ datefilter.get_date|date:'F Y'|lower }} года
+                    за {{ datefilter.get_date|date:'F Y'|lower }} года
                     {% else %}
-                        за {{ datefilter.get_date|date:'Y' }} год
+                    за {{ datefilter.get_date|date:'Y' }} год
                     {% endif %}
                 </small>
-             </h1>
+            </h1>
         </div>
         <form accept-chartset='utf-8' method="GET" action="" class="dateform form-inline span12">
             {{ modelselect.model}}
-            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year month=datefilter.date__month %}
+            {% include 'whs/widgets/year-month-select.html' with form=datefilter year=datefilter.date__year
+            month=datefilter.date__month %}
             <input type="submit" class="btn">
         </form>
     </div>
     <div class='row'>
         <div class='span12'>
-        <table class='table table-bordered table-condensed table-striped'>
-            <thead>
+            <table class='table table-bordered table-condensed table-striped'>
+                <thead>
                 <tr>
                     {% for field in factory.empty_form.visible_fields %}
-                        {% if field.name in 'cavitation color width' %}
-                        {% else %}
-                        <th>{{ field.label|safe }}</th>
-                        {% endif %}
+                    {% if field.name in 'cavitation color width' %}
+                    {% else %}
+                    <th>{{ field.label|safe }}</th>
+                    {% endif %}
                     {% endfor %}
                 </tr>
-            </thead>
-            <tfoot>
+                </thead>
+                <tfoot>
                 <tr>
                     {% for field in factory.empty_form.visible_fields %}
-                        {% if field.name in 'cavitation color width' %}
-                        {% else %}
-                        <th>{{ field.label|safe }}</th>
-                        {% endif %}
+                    {% if field.name in 'cavitation color width' %}
+                    {% else %}
+                    <th>{{ field.label|safe }}</th>
+                    {% endif %}
                     {% endfor %}
                 </tr>
                 {{ form|delta:'del' }}
                 {{ form|avg:'del' }}
                 {% for func in functions %}
-                <tr >
+                <tr>
                     {% for field in factory.empty_form.visible_fields %}
                     {% with n=func|add:' '|add:field.name %}
-                        {% if forloop.first %}
-                            <th>{% cycle 'Максимум' 'Среднее' 'Минимум' %}</th>
-                        {% else %}
-                            {% if field.name in 'cavitation color width' %}
-                            {% else %}
-                                {% if field.name in 'tts path position size cause' %}<th></th>
-                                {% else %}
-                                {% with val=factory.queryset|func_pluck:n %} 
-                                <th>{{ val|default:'-----' }}</th>
-                                {{ val|avg:n }}
-                                {% endwith %}
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        {% endwith %}
+                    {% if forloop.first %}
+                    <th>{% cycle 'Максимум' 'Среднее' 'Минимум' %}</th>
+                    {% else %}
+                    {% if field.name in 'cavitation color width' %}
+                    {% else %}
+                    {% if field.name in 'tts path position size cause' %}
+                    <th></th>
+                    {% else %}
+                    {% with val=factory.queryset|func_pluck:n %}
+                    <th>{{ val|default:'-----' }}</th>
+                    {{ val|avg:n }}
+                    {% endwith %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endwith %}
                     {% endfor %}
                 </tr>
                 {% endfor %}
-            </tfoot>
-            <tbody>
-            {% for form in factory %}
-            {% if datefilter.is_valid and not datefilter.cleaned_data.date__month %}
+                </tfoot>
+                <tbody>
+                {% for form in factory %}
+                {% if datefilter.is_valid and not datefilter.cleaned_data.date__month %}
                 {% ifchanged form.instance.datetime.month %}
                 <tr class='info'>
                     <th colspan='{{ form.visible_fields|length }}'>{{ form.instance.datetime|date:'F' }}</th>
                 </tr>
                 {% endifchanged %}
-            {% endif %}
+                {% endif %}
 
-            {% if form.instance.pk %}
+                {% if form.instance.pk %}
                 <tr class=''>
                     {% for field in form.visible_fields %}
-                        {% if forloop.first %}
-                            <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>
-                        {% elif field.name in 'cavitation color width' %}
-                        {% else %}
-                                <td>
-                                    {{ field.value|default_if_none:'----' }}
-                                </td>
-                        {% endif %}
+                    {% if forloop.first %}
+                    <td><a href='{{ form.instance.get_absolute_url }}'>{{ form.instance }}</a></td>
+                    {% elif field.name in 'cavitation color width' %}
+                    {% else %}
+                    <td>
+                        {{ field.value|default_if_none:'----' }}
+                    </td>
+                    {% endif %}
                     {% endfor %}
                 </tr>
-            {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

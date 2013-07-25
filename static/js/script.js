@@ -8,8 +8,14 @@ $('.carousel').carousel()
 $('.collapse').collapse()
 $('#navbar').scrollspy()
 
-function change_field_order(){
-$('fieldset table').not(':last').each(function(i){$(this).find('tr').each(function(tr){$(this).find('td input').each(function(j){$(this).attr('tabindex',i*100+j)})})})
+function change_field_order() {
+    $('fieldset table').not(':last').each(function (i) {
+        $(this).find('tr').each(function (tr) {
+            $(this).find('td input').each(function (j) {
+                $(this).attr('tabindex', i * 100 + j)
+            })
+        })
+    })
 }
 
 function css_to_dict(prefix, val, from) {
@@ -39,18 +45,18 @@ function css_to_dict(prefix, val, from) {
     return base
 }
 
-$(function(){
+$(function () {
     $("#form").FormNavigate({
-      message: "Содержимое было изменено!\nВы уверены, что хотите покинуть страницу без сохранения?",
-      aOutConfirm: "button[type='submit'],.dropdown-toggle"
+        message: "Содержимое было изменено!\nВы уверены, что хотите покинуть страницу без сохранения?",
+        aOutConfirm: "button[type='submit'],.dropdown-toggle"
     });
 });
 
 $(function () {
-    $('select[name*="defect"]').change(function(e){
-        var $cause = $('#'+$(this).attr('id').replace('defect','cause')).parent()
+    $('select[name*="defect"]').change(function (e) {
+        var $cause = $('#' + $(this).attr('id').replace('defect', 'cause')).parent()
         if ($(this).val() == 'gost')$cause.hide();
-         else $cause.show();
+        else $cause.show();
     })
 
 
@@ -65,7 +71,9 @@ $(function () {
         var initial = $('#id_' + prefix + '-INITIAL_FORMS') //0
         var id = prefix + '-' + total.val()
         var v = total.attr('value')
-        var rep = function (index, value) { if (value) return value.replace(/__prefix__/g, v) }
+        var rep = function (index, value) {
+            if (value) return value.replace(/__prefix__/g, v)
+        }
         $(node).attr('id', rep)
         $('input, select', node).attr('name', rep).attr('id', rep)
         $('label[for]', node).attr('for', rep)
@@ -73,9 +81,9 @@ $(function () {
         var menu = $('<li><a href="#__prefix__" data-toggle="tab"><span></span></a></li>'
             .replace(/__prefix__/g, total.attr('value')))
         $(menu).addClass(prefix[0].toUpperCase() + prefix.slice(1)).appendTo(place_to)
-        $('span', menu).text($('legend',node).text())
+        $('span', menu).text($('legend', node).text())
 
-        $(node).on('click','a.delete',function(){
+        $(node).on('click', 'a.delete', function () {
             $(total).val(parseInt($(total).val()) - 1)
             $(node).remove()
         })
@@ -85,10 +93,10 @@ $(function () {
         $('a', menu).attr('href', '#' + id).removeClass('form-add')
     })
 
-    $('.delete').click(function(e){
+    $('.delete').click(function (e) {
         e.preventDefault()
         var dl = $($(this).attr('href')).find('[name*="DELETE"]')
-        dl.prop('checked',!dl.prop('checked'))
+        dl.prop('checked', !dl.prop('checked'))
         $(this).toggleClass('btn-warning').toggleClass('btn-danger')
         $(this).find('i').toggleClass('icon-remove').toggleClass('icon-trash')
     })
@@ -120,11 +128,11 @@ $(function () {
 
 $(function () {
     var options = {
-        symbol:"р",
-        decimal:",",
-        thousand:" ",
-        precision:2,
-        format:"%v <span class='ruble rel'>%s<span class='dot dborder'>.</span></span>"
+        symbol: "р",
+        decimal: ",",
+        thousand: " ",
+        precision: 2,
+        format: "%v <span class='ruble rel'>%s<span class='dot dborder'>.</span></span>"
     };
 
     $('span.money').each(function (id, n) {
@@ -141,17 +149,19 @@ $(function () {
 
     var $messages = $('#messages').popover('show')
 
-    setTimeout(function(e){$messages.popover('hide')},5000)
-    $('body.success,body.error').animate({'background-color':'#fff'},800)
+    setTimeout(function (e) {
+        $messages.popover('hide')
+    }, 5000)
+    $('body.success,body.error').animate({'background-color': '#fff'}, 800)
     if ($('').sortable) {
-    $('table.sortable tbody').sortable({update:function( event, ui) {
-        $(this).find('tr').each(function(i){ 
-            $(this).find('.add-on a').text(i+1)
-            if (!$(this).hasClass('fake'))
-            $(this).find('input[name*="order"]').val(i+1)
-        })
-    }})
-}
+        $('table.sortable tbody').sortable({update: function (event, ui) {
+            $(this).find('tr').each(function (i) {
+                $(this).find('.add-on a').text(i + 1)
+                if (!$(this).hasClass('fake'))
+                    $(this).find('input[name*="order"]').val(i + 1)
+            })
+        }})
+    }
 
 })
 
@@ -178,7 +188,7 @@ $(function () {
         color_select(this, val)
     })
 
-    $('fieldset').on('click','a.show',function(e){
+    $('fieldset').on('click', 'a.show', function (e) {
         e.preventDefault()
         $(e.delegateTarget).find('.row:hidden:first').show()
     })
@@ -263,78 +273,88 @@ $(tara_amount)
 
 $('[name="month"],[name*="month"]').change(function () {
     var year = $(':selected', this).parent().attr('label')
-    $(this).parents('form').find('[name="'+($(this).attr('name').replace('month','year'))+'"]').val(year)
+    $(this).parents('form').find('[name="' + ($(this).attr('name').replace('month', 'year')) + '"]').val(year)
 })
 
 $('form.filter').submit(function (e) {
     e.preventDefault()
-    var param = jQuery.param($(this).serializeArray().filter(function (e) { return e.value }))
+    var param = jQuery.param($(this).serializeArray().filter(function (e) {
+        return e.value
+    }))
     window.location.search = '?' + param
 })
 
-function avg_on_input(input,to_fixed){
-    var v = $(input).val().split('/').map(function(v){return v.replace(',','.')})
-    return (v.reduce(function(m,v){return m+parseFloat(v) },0)/v.length).toFixed(to_fixed || 2)
+function avg_on_input(input, to_fixed) {
+    var v = $(input).val().split('/').map(function (v) {
+        return v.replace(',', '.')
+    })
+    return (v.reduce(function (m, v) {
+        return m + parseFloat(v)
+    }, 0) / v.length).toFixed(to_fixed || 2)
 }
 
-$('.SlashSeparatedFloatField').each(function(){
-    $(this).wrap($('<div>').addClass('input-append').attr('title','Среднее арифметическое'))
+$('.SlashSeparatedFloatField').each(function () {
+    $(this).wrap($('<div>').addClass('input-append').attr('title', 'Среднее арифметическое'))
     var addon = $('<span>').addClass('add-on').text(avg_on_input(this)).insertAfter(this)
-    $(this).change(function(){ $(addon).text(avg_on_input(this)) })
+    $(this).change(function () {
+        $(addon).text(avg_on_input(this))
+    })
 })
 
-function get_area_and_volume(id,size) {
-    var val = $.map(size.split('x'),function(v){return parseFloat(v)})
-    var s = val[1]*val[id.indexOf('pressure') >= 0 ? 0 : 2 ]/1000
-    if (id.indexOf('pressure') >= 0) 
-        s-=0.243;
-    else 
-        s*=val[2]*2
-    return [s,val[0] * val[1] * val[2] / Math.pow(100*10,3)]
+function get_area_and_volume(id, size) {
+    var val = $.map(size.split('x'), function (v) {
+        return parseFloat(v)
+    })
+    var s = val[1] * val[id.indexOf('pressure') >= 0 ? 0 : 2 ] / 1000
+    if (id.indexOf('pressure') >= 0)
+        s -= 0.243;
+    else
+        s *= val[2] * 2
+    return [s, val[0] * val[1] * val[2] / Math.pow(100 * 10, 3)]
 }
 
 
-$(function(){
-    var readings = function(e){
+$(function () {
+    var readings = function (e) {
         var id = $(this).attr('id')
         var size = $(this).val()
-        var q = get_area_and_volume(id,size)
-        $('#'+id.replace('size','area')).val(q[0]).attr('title','Объем м³: '+q[1])
-        $('#'+id.replace('size','readings')).change()
+        var q = get_area_and_volume(id, size)
+        $('#' + id.replace('size', 'area')).val(q[0]).attr('title', 'Объем м³: ' + q[1])
+        $('#' + id.replace('size', 'readings')).change()
     }
     $("input[name*='size'][type='text']").not("input[name*='pressure']").mask('999 x 999 x 99')
     $(".pressure input[name*='size'][type='text']").mask('999.9 x 999.9 x 99.9').change(readings)
     $(".flexion input[name*='size'][type='text']").change(readings)
-    
 
-    $("input[name*='readings']").change(function(e){
+
+    $("input[name*='readings']").change(function (e) {
         var id = $(this).attr('id')
-        var s = $('#'+id.replace('readings','area')).val()
+        var s = $('#' + id.replace('readings', 'area')).val()
         var r = $(this).val()
-        if (s*r) {
+        if (s * r) {
             var v = 0
             if (id.indexOf('pressure') >= 0) {
                 //Сжатие
-                v = (r/s).toFixed(2)
+                v = (r / s).toFixed(2)
                 if ($('#width').val().split(' ')[0] > 1)
-                    v=(v * 1.2).toFixed(2)
+                    v = (v * 1.2).toFixed(2)
             }
             else {
                 //Изгиб
-                v = (192.498*r*0.6/s).toFixed(2)
+                v = (192.498 * r * 0.6 / s).toFixed(2)
             }
-            $('#'+id.replace('readings','value')).val(v)
+            $('#' + id.replace('readings', 'value')).val(v)
         }
     })
 
-    $('#form').on('change',"input[name='volume'],input[name='weight']",function(e){
+    $('#form').on('change', "input[name='volume'],input[name='weight']", function (e) {
         var id = $(e.delegateTarget).find('input[name="volume"]:checked').val()
         if (!id) return;
-        var size = $('#id_'+id+'-size').val()
+        var size = $('#id_' + id + '-size').val()
         var w = $('#id_weight').val()
         if (size && w) {
-            var vol = get_area_and_volume(id,size)[1]
-            var dens = (w/vol).toFixed(2)
+            var vol = get_area_and_volume(id, size)[1]
+            var dens = (w / vol).toFixed(2)
             $('#id_density').val(dens)
             var cad = ''
             if (dens <= 800) cad = 0.8;
@@ -352,12 +372,12 @@ $(function(){
     var $brickshow = $('#brickshow') // Див с кирпичами
 
     $brickselect.on('click', 'input', function (e) {
-            var target = $(e.delegateTarget).data('target')
-            var tr = $(this).parent().parent()
-            $(target).find('>span').attr('class', 'uneditable-input ' + $(tr).attr('class'))
-                .children('span').text($(tr).find('label').text().trim())
-            $(target).find('input[type=hidden]').val($(this).val())
-        })
+        var target = $(e.delegateTarget).data('target')
+        var tr = $(this).parent().parent()
+        $(target).find('>span').attr('class', 'uneditable-input ' + $(tr).attr('class'))
+            .children('span').text($(tr).find('label').text().trim())
+        $(target).find('input[type=hidden]').val($(this).val())
+    })
 
     // Инпуты кирпича
     $('.brickselect').each(function () {
@@ -386,25 +406,25 @@ $(function(){
             $brickselect.data('target', e.delegateTarget)
             var name = $(input).attr('name').split('-')
             var prefix = name[0] || ''
-            name = name[name.length > 0 ? name.length-1 : 0]
-            if (prefix.indexOf('solds') >= 0)  {
+            name = name[name.length > 0 ? name.length - 1 : 0]
+            if (prefix.indexOf('solds') >= 0) {
                 if (name == 'brick_from') var from = 0;
                 if (name == 'brick') var from = $('#' + input.attr('id') + '_from').val();
             }
             if (prefix.indexOf('sorting') >= 0) var from = $('input[name=brick]').val();
             var filter = css_to_dict(prefix, val, from)
             if (filter.length > 1)
-            $brickselect.find('tbody tr').hide().filter(filter).show()
+                $brickselect.find('tbody tr').hide().filter(filter).show()
             else
-            $brickselect.find('tbody tr').show()
+                $brickselect.find('tbody tr').show()
         })
-        $brickshow.on('click', 'a.back', function (e) {
-            $brickfade.show()
-            $brickshow.hide()
-        })
+    $brickshow.on('click', 'a.back', function (e) {
+        $brickfade.show()
+        $brickshow.hide()
+    })
 
     //Фильтер кирпича по кнопкам
-    $('#brickselect-buttons').on('submit', function (e) {
+    $('#brickselect-buttons').on('submit',function (e) {
         e.preventDefault()
         var data = $(this).serializeArray()
         var $rows = $bricks.find('tbody tr').hide()
@@ -414,33 +434,39 @@ $(function(){
             ar.push(data[d].value)
             dict[data[d].name] = ar
         }
-        for (var d in dict){
-            $rows = $rows.filter(function(i,row){
+        for (var d in dict) {
+            $rows = $rows.filter(function (i, row) {
                 var a
-                for (var i in dict[d]){ a = a || $(row).hasClass(dict[d][i]) }
+                for (var i in dict[d]) {
+                    a = a || $(row).hasClass(dict[d][i])
+                }
                 return a
             })
         }
         var totals = []
-        $rows.show().each(function(i,node) {
-             $(node).find('td').slice(1).each(function(i,node){totals[i]=(totals[i] || 0) + parseInt(this.innerHTML)})
+        $rows.show().each(function (i, node) {
+            $(node).find('td').slice(1).each(function (i, node) {
+                totals[i] = (totals[i] || 0) + parseInt(this.innerHTML)
+            })
         })
-        $bricks.find('tfoot tr').find('th').slice(1).each(function(i,node){node.innerHTML = totals[i]})
+        $bricks.find('tfoot tr').find('th').slice(1).each(function (i, node) {
+            node.innerHTML = totals[i]
+        })
 
-    }).on('reset',function(e){
+    }).on('reset', function (e) {
             $(this).find('span.label').removeClass('label-warning').text(0)
         })
 
 
-    $('.dropdown.counter').on('click','input[type="checkbox"]',function(e){
-            var name = $(this).attr('name')
-            var span = $(e.delegateTarget).find('a[href="#'+name+'"]').find('span.label')
-            if ($(this).prop('checked')) $(span).text(parseInt($(span).text())+1).addClass('label-warning')
-            else $(span).text(parseInt($(span).text())-1)
-            if (!parseInt($(span).text())) $(span).removeClass('label-warning')
-    }).each(function(node){
-        var span = $(this).find('span.label')
-        span.text($(this).find('input:checked').length)
-    })
-   
+    $('.dropdown.counter').on('click', 'input[type="checkbox"]',function (e) {
+        var name = $(this).attr('name')
+        var span = $(e.delegateTarget).find('a[href="#' + name + '"]').find('span.label')
+        if ($(this).prop('checked')) $(span).text(parseInt($(span).text()) + 1).addClass('label-warning')
+        else $(span).text(parseInt($(span).text()) - 1)
+        if (!parseInt($(span).text())) $(span).removeClass('label-warning')
+    }).each(function (node) {
+            var span = $(this).find('span.label')
+            span.text($(this).find('input:checked').length)
+        })
+
 })

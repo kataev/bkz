@@ -9,6 +9,7 @@ from django.test import TestCase
 from django import forms
 from forms import BootstrapForm, Fieldset
 
+
 class LoginForm(BootstrapForm):
     class Meta:
         layout = (

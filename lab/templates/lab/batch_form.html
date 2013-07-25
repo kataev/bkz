@@ -2,31 +2,32 @@
 {% load bkz %}
 {% load url from future %}
 {% block form %}
-    <div class="container">
-        <form id="form" accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}">
-            {% csrf_token %}
-            <div class="row">
-                {% for e in form.non_field_errors %}
-                    {{ e }}
-                {% endfor %}
-                <fieldset class='less span5'>
-                    <caption><h1>Партия</h1></caption>
+<div class="container">
+    <form id="form" accept-chartset='utf-8' class="form-horizontal" method="POST"
+          action="{{ form.instance.get_absolute_url }}">
+        {% csrf_token %}
+        <div class="row">
+            {% for e in form.non_field_errors %}
+            {{ e }}
+            {% endfor %}
+            <fieldset class='less span5'>
+                <caption><h1>Партия</h1></caption>
                 {{ form.as_div }}
-                </fieldset>
-                {% if form.instance.pk %}
-                    {% include 'lab/part_list.html' %}
-                {% endif %}
-            </div>
-        </form>
-    </div>
+            </fieldset>
+            {% if form.instance.pk %}
+            {% include 'lab/part_list.html' %}
+            {% endif %}
+        </div>
+    </form>
+</div>
 {% endblock %}
 {% block bonus-button %}
-    {% if form.instance.pk %}
-        <a class="btn btn-info" href={% url 'lab:Batch-print_akt' pk=form.instance.pk %}>
-            <i class="icon-print icon-white"></i> Печать акта
-        </a>
-        <a class="btn btn-info" href={% url 'lab:Batch-print_doc' pk=form.instance.pk %}>
-            <i class="icon-print icon-white"></i> Печать документа о качестве
-        </a>
-        {% endif %}
+{% if form.instance.pk %}
+<a class="btn btn-info" href={% url 'lab:Batch-print_akt' pk=form.instance.pk %}>
+<i class="icon-print icon-white"></i> Печать акта
+</a>
+<a class="btn btn-info" href={% url 'lab:Batch-print_doc' pk=form.instance.pk %}>
+<i class="icon-print icon-white"></i> Печать документа о качестве
+</a>
+{% endif %}
 {% endblock %}

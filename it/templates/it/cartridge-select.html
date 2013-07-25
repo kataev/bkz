@@ -1,22 +1,23 @@
 <select name='{{ f.html_name }}' id='{{ f.id_for_label }}'>
     {% if not f.field.required %}
-        <option value="" {% if not f.value %}selected="selected"{% endif %}>---------</option>
+    <option value=""
+    {% if not f.value %}selected="selected"{% endif %}>---------</option>
     {% endif %}
     <optgroup label="Выберите девайс:">
         {% for a in f.field.queryset %}
-            {% if a.cartridge.type %}
-            {% ifchanged a.cartridge.type %}
-                </optgroup>
-                <optgroup label="{{ a.cartridge.type|default_if_none:'Группы' }}">
-            {% endifchanged %}
-                {% else %}
-            {% ifchanged a.type %}
-                </optgroup>
-                <optgroup label="{{ a.type|default_if_none:'Группы' }}">
-            {% endifchanged %}
-            {% endif %}
-            <option value="{{ a.pk }}"
-                    {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
+        {% if a.cartridge.type %}
+        {% ifchanged a.cartridge.type %}
+    </optgroup>
+    <optgroup label="{{ a.cartridge.type|default_if_none:'Группы' }}">
+        {% endifchanged %}
+        {% else %}
+        {% ifchanged a.type %}
+    </optgroup>
+    <optgroup label="{{ a.type|default_if_none:'Группы' }}">
+        {% endifchanged %}
+        {% endif %}
+        <option value="{{ a.pk }}"
+        {% if a.pk == f.value|add:0 %}selected="selected"{% endif %}>{{ a }}</option>
         {% endfor %}
-        </optgroup>
+    </optgroup>
 </select>

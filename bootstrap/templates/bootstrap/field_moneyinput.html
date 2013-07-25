@@ -1,14 +1,14 @@
 <div id="div_{{ label_id }}" {% include 'bootstrap/errors.html' %}
-     class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
-    <label class="control-label" for="{{ label_id }}">{{ label }}</label>
+class="control-group{% if bf_raw.field.required %} required{% endif %}{% if errors %} error{% endif %}">
+<label class="control-label" for="{{ label_id }}">{{ label }}</label>
 
-    <div class="controls">
-        <div class="input-append moneyinput">
+<div class="controls">
+    <div class="input-append moneyinput">
         {{ bf }}
-            <span class="add-on">Руб</span>
-        </div>
-        <div class="help-inline">
-            {% include 'bootstrap/help_text.html' %}
-        </div>
+        <span class="add-on">Руб</span>
     </div>
+    <div class="help-inline">
+        {% include 'bootstrap/help_text.html' %}
+    </div>
+</div>
 </div>

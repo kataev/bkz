@@ -6,9 +6,10 @@ from energy.models import *
 class EnergyAdmin(admin.ModelAdmin):
     pass
 
+
 class TeploAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(Energy,EnergyAdmin)
-admin.site.register(Teplo,TeploAdmin)
+admin.site.register(Energy, EnergyAdmin)
+admin.site.register(Teplo, TeploAdmin)

@@ -6,9 +6,10 @@ from make.models import *
 class FormingAdmin(admin.ModelAdmin):
     pass
 
+
 class WarrenAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(Forming,FormingAdmin)
-admin.site.register(Warren,WarrenAdmin)
+admin.site.register(Forming, FormingAdmin)
+admin.site.register(Warren, WarrenAdmin)

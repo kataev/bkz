@@ -1,37 +1,49 @@
 {% extends 'core/index.html' %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
-    <script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
-    <script type="text/javascript">
-    var firing = {{ firing|safe }};
-    </script>
-    <script type="text/javascript" src="/static/js/cpu.js"></script>
+<script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/underscore-min.js"></script>
+<script type="text/javascript">
+    var firing = {
+    {
+        firing | safe
+    }
+    }
+    ;
+</script>
+<script type="text/javascript" src="/static/js/cpu.js"></script>
 {% endblock %}
 {% block head %}
-    <link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/css/cpu.css"/>
+<link type="text/css" rel="stylesheet" href="/static/css/colorbrewer.css"/>
+<link type="text/css" rel="stylesheet" href="/static/css/cpu.css"/>
 <style>
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
 
-.x.axis path {display: none; }
+    .x.axis path {
+        display: none;
+    }
 
-circle {
-  fill:white;
-  stroke-width:3px;
-}
+    circle {
+        fill: white;
+        stroke-width: 3px;
+    }
 
-.line {
-  fill: none;
-  stroke-width: 1.5px;
-}
+    .line {
+        fill: none;
+        stroke-width: 1.5px;
+    }
 
-.firing {stroke: #468847; }
-.target {stroke: #999999; }
+    .firing {
+        stroke: #468847;
+    }
+
+    .target {
+        stroke: #999999;
+    }
 </style>
 {% endblock %}
 {% block title %}ЦПУ{% endblock %}
@@ -39,19 +51,19 @@ circle {
 <div class='container'>
     <h1>Показания технологического процесса</h1>
     <ul class='inline'>
-      <li class='text-success'>Кривая обжига</li>
-      <li class='muted'>График № 4</li>
+        <li class='text-success'>Кривая обжига</li>
+        <li class='muted'>График № 4</li>
     </ul>
     <form class=''>
-      <select id='target'>
-        <option value="0">2</option>
-        <option value="1">3</option>
-        <option value="2" selected="selected">4</option>
-        <option value="3">5</option>
-        <option value="4">6</option>
-        <option value="5">7</option>
-        <option value="6">8</option>
-      </select>
+        <select id='target'>
+            <option value="0">2</option>
+            <option value="1">3</option>
+            <option value="2" selected="selected">4</option>
+            <option value="3">5</option>
+            <option value="4">6</option>
+            <option value="5">7</option>
+            <option value="6">8</option>
+        </select>
     </form>
     <div id='firing' class="span12"></div>
     <table id='help' class='span12 table table-bordered'>

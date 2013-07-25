@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class IPAccess(models.Model):
     ip = models.IPAddressField(unique=True, db_index=True)
     user = models.ForeignKey(User, verbose_name='user that authenticates')

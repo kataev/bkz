@@ -82,10 +82,10 @@ class Command(BaseCommand):
                             w.save()
                 except IndexError:
                     print d1, '<', w.date, '<', d2, w, w.tto, tto
-        args = {'date__year':2012,'date__month':1}
+        args = {'date__year': 2012, 'date__month': 1}
         for w in Warren.objects.exclude(tto=u'').filter(**args).order_by('date'):
             if not w.part:
-                print 'dne',w,w.tto
+                print 'dne', w, w.tto
 
     def enumerated(self):
         line = []

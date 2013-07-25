@@ -1,33 +1,34 @@
 {% extends 'core/form.html' %}
 {% load bkz %}
 {% block form %}
-    <div class="container">
-        <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}" id='form'>
-            {% csrf_token %}
-            {% for k,o in opers.iteritems %}
-                {{ o.management_form }}
-            {% endfor %}
-            <div class="row">
-                <div class='span5'>
-                    <fieldset class="{{ form.Meta.model|class_name }} less">
-                        <legend>
-                            <h1>{{ form.instance }} 
-                                <small>
+<div class="container">
+    <form accept-chartset='utf-8' class="form-horizontal" method="POST" action="{{ form.instance.get_absolute_url }}"
+          id='form'>
+        {% csrf_token %}
+        {% for k,o in opers.iteritems %}
+        {{ o.management_form }}
+        {% endfor %}
+        <div class="row">
+            <div class='span5'>
+                <fieldset class="{{ form.Meta.model|class_name }} less">
+                    <legend>
+                        <h1>{{ form.instance }}
+                            <small>
                                 {% if form.fields.type.initial == 0 or form.instance.type == 0 %}
-                                    В цех
+                                В цех
                                 {% elif form.fields.type.initial == 1 or form.instance.type == 1 %}
-                                    Из цеха
+                                Из цеха
                                 {% elif form.fields.type.initial == 2 or form.instance.type == 2 %}
-                                    Списанно
+                                Списанно
                                 {% endif %}
-                                </small>
-                            </h1>
-                        </legend>
+                            </small>
+                        </h1>
+                    </legend>
                     {{ form.as_div }}
-                    </fieldset>
-                </div>
-                {% include 'whs/widgets/brickselect-table.html' %}
+                </fieldset>
             </div>
-        </form>
-    </div>
+            {% include 'whs/widgets/brickselect-table.html' %}
+        </div>
+    </form>
+</div>
 {% endblock %}

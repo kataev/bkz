@@ -1,17 +1,18 @@
 import os
-from django.template import Context,RequestContext
+from django.template import Context, RequestContext
 from django.template.loader import get_template, select_template
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django import forms
 from django.utils.encoding import force_unicode
 
+
 class NoSuchFormField(Exception):
     """""The form field couldn't be resolved."""""
     pass
 
-class BootstrapMixin(object):
 
+class BootstrapMixin(object):
     def __init__(self, *args, **kwargs):
         super(BootstrapMixin, self).__init__(*args, **kwargs)
         if hasattr(self, 'Meta') and hasattr(self.Meta, 'custom_fields'):
@@ -75,7 +76,6 @@ class BootstrapMixin(object):
             else:
                 output.append(self.render_field(field))
 
-
         return separator.join(output)
 
     def render_field(self, field):
@@ -110,7 +110,7 @@ class BootstrapMixin(object):
         else:
 
             # Find field + widget type css classes
-            css_class = type(field_instance).__name__ + " " +  type(field_instance.widget).__name__
+            css_class = type(field_instance).__name__ + " " + type(field_instance.widget).__name__
 
             # Add an extra class, Required, if applicable
             if field_instance.required:
@@ -118,19 +118,20 @@ class BootstrapMixin(object):
 
             if field_instance.help_text:
                 # The field has a help_text, construct <span> tag
-                help_text = '<span class="help-%s">%s</span>' % (self.help_style, force_unicode(field_instance.help_text))
+                help_text = '<span class="help-%s">%s</span>' % (
+                self.help_style, force_unicode(field_instance.help_text))
             else:
                 help_text = u''
 
             field_hash = {
-                'class' : mark_safe(css_class),
-                'label' : mark_safe(bf.label or ''),
-                'help_text' :mark_safe(help_text),
-                'field' : field_instance,
-                'bf' : mark_safe(unicode(bf)),
-                'bf_raw' : bf,
-                'errors' : mark_safe(bf_errors),
-                'field_type' : mark_safe(field.__class__.__name__),
+                'class': mark_safe(css_class),
+                'label': mark_safe(bf.label or ''),
+                'help_text': mark_safe(help_text),
+                'field': field_instance,
+                'bf': mark_safe(unicode(bf)),
+                'bf_raw': bf,
+                'errors': mark_safe(bf_errors),
+                'field_type': mark_safe(field.__class__.__name__),
                 'label_id': bf._auto_id(),
             }
             if self.custom_fields.has_key(field):
@@ -139,7 +140,7 @@ class BootstrapMixin(object):
                 template = select_template([
                     os.path.join(self.template_base, 'field_%s.html' % type(field_instance.widget).__name__.lower()),
                     os.path.join(self.template_base, 'field_default.html'), ])
-            # Finally render the field
+                # Finally render the field
             output = template.render(Context(field_hash))
 
         return mark_safe(output)

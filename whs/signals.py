@@ -20,6 +20,7 @@ def sold_pre_save(instance, *args, **kwargs):
         brick.total += instance.amount
         brick.save()
 
+
 @receiver(post_save, sender=Sold)
 def sold_post_save(instance, *args, **kwargs):
     if instance.brick_from:

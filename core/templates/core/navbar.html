@@ -11,48 +11,52 @@
                 <i class="icon-logo"></i>
                 <abbr style="border: none" title="Березниковский кирпичный завод'">БКЗ</abbr>
             </a>
+
             <div class="nav-collapse">
                 <ul class="nav">
                     <li class="divider-vertical"></li>
                     {% for v in nav %}
-                        {% if v|length_is:1 %}
-                        <li class="divider-vertical"></li>
-                        {% else %}
-                        <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
-                        {% endif %}
+                    {% if v|length_is:1 %}
+                    <li class="divider-vertical"></li>
+                    {% else %}
+                    <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
+                    {% endif %}
                     {% endfor %}
                 </ul>
                 <ul class="nav pull-right">
-                {% if messages %}
-                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover" data-content="{% include 'core/messages.html' %}" data-html='true' data-original-title="<i class='icon-bell'></i> Сообщения"><span class="badge">{{ messages|length }}</span> Сообщения</a></li>
-                {% endif %}
-                {% load pytils_numeral %}
-                {% if user.is_authenticated %}
-                    <li><a href="#"> 
+                    {% if messages %}
+                    <li><a id='messages' href="#" data-trigger='hover' data-placement='bottom' rel="popover"
+                           data-content="{% include 'core/messages.html' %}" data-html='true'
+                           data-original-title="<i class='icon-bell'></i> Сообщения"><span class="badge">{{ messages|length }}</span>
+                        Сообщения</a></li>
+                    {% endif %}
+                    {% load pytils_numeral %}
+                    {% if user.is_authenticated %}
+                    <li><a href="#">
                         {% if user.is_superuser %}
                         <i class='icon-flag'></i>
                         {% else %}
                         <i class='icon-user'></i>
                         {% endif %}
-                         {{ user.first_name }} {{ user.last_name }} </a></li>
-                {% else %}
+                        {{ user.first_name }} {{ user.last_name }} </a></li>
+                    {% else %}
                     <li><a href="{% url 'login' %}"><i class='icon-user'></i> Гость</a></li>
-                {% endif %}
-                {% if menu|length %}
+                    {% endif %}
+                    {% if menu|length %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='icon-plus '></i>
                             Создать <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {% for v in menu %}
-                                {% if v|length_is:1 %}
-                                    <li class="{{ v.0 }}"></li>
-                                {% else %}
-                                    <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
-                                {% endif %}
+                            {% if v|length_is:1 %}
+                            <li class="{{ v.0 }}"></li>
+                            {% else %}
+                            <li><a href="{% url v.0 %}"> <i class="{{ v.1 }}"></i> {{ v.2 }}</a></li>
+                            {% endif %}
                             {% endfor %}
                         </ul>
                     </li>
-                {% endif %}
+                    {% endif %}
                 </ul>
             </div>
         </div>

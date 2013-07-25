@@ -2,113 +2,117 @@
 {% load bkz %}
 {% block head %}
 <style>
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
 
-.x.axis path {
-  display: none;
-}
+    .x.axis path {
+        display: none;
+    }
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
 </style>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
-    <script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
-    <script type="text/javascript" src="/static/js/forming.js"></script>
+<script type="text/javascript" src="/static/js/libs/jquery-ui-1.10.0.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/d3.v3.min.js"></script>
+<script type="text/javascript" src="/static/js/forming.js"></script>
 {% endblock %}
 {% block title %}Формовка {{ date|date:'j E Y, l' }}{% endblock %}
 {% block container %}
 <div class="container" id='forming'>
     <div class="row">
-            <div class="span8">
-                <h1 class='datehead'>
-                    <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
-                    Формовка <small>за {{ date|date:'j E Y, l' }}</small>
-                    <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
-                </h1>
-            </div>
-            <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform" style='margin-top: 10px;text-align:right'>
-                {{ dateform.date }}
-                <input type="submit" value='Показать' class="btn">
-            </form>
+        <div class="span8">
+            <h1 class='datehead'>
+                <a href='?date={{ dateform.previous.isoformat }}'><i class='icon-arrow-left'></i></a>
+                Формовка
+                <small>за {{ date|date:'j E Y, l' }}</small>
+                <a href='?date={{ dateform.next.isoformat }}'><i class='icon-arrow-right'></i></a>
+            </h1>
+        </div>
+        <form accept-chartset='utf-8' method="GET" action="" class="form-inline span4 dateform"
+              style='margin-top: 10px;text-align:right'>
+            {{ dateform.date }}
+            <input type="submit" value='Показать' class="btn">
+        </form>
     </div>
     <form accept-chartset='utf-8' method="POST" id='form' class='row'>
         {% csrf_token %}
-        {{ factory.management_object }}    
-        {{ factory.management_form }}  
+        {{ factory.management_object }}
+        {{ factory.management_form }}
         {% for e in factory.non_form_errors %}
         <div class='span12 alert alert-error'>
-          Ошибка! {{ e }}
+            Ошибка! {{ e }}
         </div>
         {% endfor %}
-    <fieldset class='span4'>
-        <table id="forming" class='sortable'>
-            <caption><h2>{{ factory.caption }}</h2></caption>
-            <thead>
+        <fieldset class='span4'>
+            <table id="forming" class='sortable'>
+                <caption><h2>{{ factory.caption }}</h2></caption>
+                <thead>
                 <tr>
-                {% for field in factory.empty_form.visible_fields %}
+                    {% for field in factory.empty_form.visible_fields %}
                     <th>{{ field.label|safe }}</th>
-                {% endfor %}
+                    {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-            {% for form in factory %}
+                </thead>
+                <tbody>
+                {% for form in factory %}
                 <tr id='{{ form.prefix }}' class='{% if not form.instance.pk %}fake{% endif %}'>
                     {% for f in form.visible_fields %}
-                        {% if forloop.first %}
-                        <td class="input-prepend">
+                    {% if forloop.first %}
+                    <td class="input-prepend">
                             <span class='add-on'>
                                 <a tabindex='-1' href='{{ form.instance.get_absolute_url }}'>{{ form.order.value }}</a>
                             </span>
-                            {% for f in form.hidden_fields %}
-                                {{ f }}
-                            {% endfor %}
-                            {{ f }}
+                        {% for f in form.hidden_fields %}
+                        {{ f }}
+                        {% endfor %}
+                        {{ f }}
 
-                        </td>
-                        {% elif f.name = 'empty' %}
-                        <td> <label style='margin-left:10px' class='checkbox'> {{ f }} </label> </td>
-                        {% else %}
-                        <td {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
-                        {% endif %}
+                    </td>
+                    {% elif f.name = 'empty' %}
+                    <td><label style='margin-left:10px' class='checkbox'> {{ f }} </label></td>
+                    {% else %}
+                    <td
+                    {% include 'bootstrap/errors.html' with errors=f.errors %}>{{ f }}</td>
+                    {% endif %}
                     {% endfor %}
                     <td>
-                      {% if form.instance.pk and form.instance.warren %}
-                      <a href='{{ form.instance.warren.get_absolute_url }}'title="{{ form.instance.warren }}">Укладка</a>
-                      {% elif form.instance.pk and not form.instance.empty %}
-                      <a href='#'></a>
-                      {% elif form.instance.empty %}
-                      <a href='#'>Пустая</a>
-                      {% endif %}
+                        {% if form.instance.pk and form.instance.warren %}
+                        <a href='{{ form.instance.warren.get_absolute_url }}'
+                           title="{{ form.instance.warren }}">Укладка</a>
+                        {% elif form.instance.pk and not form.instance.empty %}
+                        <a href='#'></a>
+                        {% elif form.instance.empty %}
+                        <a href='#'>Пустая</a>
+                        {% endif %}
                     </td>
                     {% if form.errors %}
                     <td>
-                      {% for k,e in form.errors.items %}
-                      {{ e|removetags:'ul li' }}
-                      {% endfor %}
+                        {% for k,e in form.errors.items %}
+                        {{ e|removetags:'ul li' }}
+                        {% endfor %}
                     </td>
                     {% endif %}
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </fieldset>    
-    <fieldset class='span4' style='padding-left:10px'>
+                {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+        <fieldset class='span4' style='padding-left:10px'>
             {{ widthcolor }}
-    </fieldset>
-    <div class="span8" id="chart">
+        </fieldset>
+        <div class="span8" id="chart">
 
-    </div>
-</form>
+        </div>
+    </form>
 </div>
 <div class="form-actions">
     <div class="container">

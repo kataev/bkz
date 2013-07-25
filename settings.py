@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import os, sys
+
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-INTERNAL_IPS = ('127.0.0.1','192.168.1.2','192.168.0.71')
-DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS' : False}
+INTERNAL_IPS = ('127.0.0.1', '192.168.1.2', '192.168.0.71')
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
 
 DEVSERVER_MODULES = ()
 
@@ -16,7 +17,7 @@ WEBODT_TEMPLATE_PATH = 'core/templates/'
 PROFILE_LOG_BASE = '/home/bteam/projects/logs/'
 ADMINS = (('Kataev Denis', 'bteamko@gmail.com'),)
 
-SHELL_PLUS_DONT_LOAD = ['sites','sessions','flatpages','south','admin','ipaccess']
+SHELL_PLUS_DONT_LOAD = ['sites', 'sessions', 'flatpages', 'south', 'admin', 'ipaccess']
 
 DATABASES = {
     'default': {
@@ -27,26 +28,26 @@ DATABASES = {
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5433', # Set to empty string for default. Not used with sqlite3.
     },
-    'server' : {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'bkz', # Or path to database file if using sqlite3.
-            'USER': 'bkz', # Not used with sqlite3.
-            'PASSWORD': 'bkz', # Not used with sqlite3.
-            'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '5432', # Set to empty string for default. Not used with sqlite3.
-        },
-   # 'default': {
-   #     'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': '../bkz_test.db', # Or path to database file if using sqlite3.
-   # },
-     # 'old': {
-     #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-     #     'NAME': 'disp', # Or path to database file if using sqlite3.
-     #     'USER': 'root', # Not used with sqlite3.
-     #     'PASSWORD': '89026441284', # Not used with sqlite3.
-     #     'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
-     #     'PORT': '', # Set to empty string for default. Not used with sqlite3.
-     # },
+    'server': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bkz', # Or path to database file if using sqlite3.
+        'USER': 'bkz', # Not used with sqlite3.
+        'PASSWORD': 'bkz', # Not used with sqlite3.
+        'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432', # Set to empty string for default. Not used with sqlite3.
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': '../bkz_test.db', # Or path to database file if using sqlite3.
+    # },
+    # 'old': {
+    #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+    #     'NAME': 'disp', # Or path to database file if using sqlite3.
+    #     'USER': 'root', # Not used with sqlite3.
+    #     'PASSWORD': '89026441284', # Not used with sqlite3.
+    #     'HOST': 'server', # Set to empty string for localhost. Not used with sqlite3.
+    #     'PORT': '', # Set to empty string for default. Not used with sqlite3.
+    # },
     # 'localhost': {
     #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
     #     'NAME': 'bteam', # Or path to database file if using sqlite3.
@@ -56,7 +57,6 @@ DATABASES = {
     #     'PORT': '', # Set to empty string for default. Not used with sqlite3.
     # },
 }
-    
 
 SOUTH_TESTS_MIGRATE = False
 
@@ -78,8 +78,7 @@ LANGUAGE_CODE = 'ru'
 
 LANGUAGES = (
     ('ru', 'Russian'),
-    )
-
+)
 
 SITE_ID = 1
 
@@ -119,7 +118,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'static/'),
     'static/'
-    )
+)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -127,19 +126,19 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    )
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'f%v!01v02pm%evmp#4v9v4%ocqy+peu*&_3j)*!6in&4)o9n%z'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-#    ('django.template.loaders.cached.Loader',(
+    #    ('django.template.loaders.cached.Loader',(
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#         'django.template.loaders.eggs.Loader',
-#    )
-#        ),
+    #         'django.template.loaders.eggs.Loader',
+    #    )
+    #        ),
 )
 
 MIDDLEWARE_CLASSES = (
@@ -153,7 +152,7 @@ MIDDLEWARE_CLASSES = (
     'bkz.ipaccess.middleware.IPAccessMiddleware',
     'bkz.middleware.Access',
     'linaro_django_pagination.middleware.PaginationMiddleware',
-    )
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -166,12 +165,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'bkz.context.bricks',
     'bkz.context.namespace',
     'bkz.context.flash',
-    )
+)
 
 ROOT_URLCONF = 'bkz.urls'
 
 TEMPLATE_DIRS = (
-    )
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -209,8 +208,8 @@ INSTALLED_APPS = (
     'south',
     'gunicorn',
     'webodt',
-    'linaro_django_pagination',    
-    )
+    'linaro_django_pagination',
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -231,9 +230,8 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-            },
-        }
+        },
+    }
 }
-
 
 handler500 = 'bkz.core.views.server_error'

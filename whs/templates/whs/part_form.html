@@ -1,9 +1,10 @@
 <tr>
-	<td> {{ form.instance.batch.date }}</td>
-	<td> {{ form.instance.batch.number }}</td>
-	<td> <a href='{{ form.instance.batch.get_absolute_url }}'> {{ form.instance.batch.get_full_name }} {{ form.instance }} </a></td>
-	<td>
-{{ form.id }}
-{{ form.as_div }}
-</td>
+    <td> {{ form.instance.batch.date }}</td>
+    <td> {{ form.instance.batch.number }}</td>
+    <td><a href='{{ form.instance.batch.get_absolute_url }}'> {{ form.instance.batch.get_full_name }} {{ form.instance
+        }} </a></td>
+    <td>
+        {{ form.id }}
+        {{ form.as_div }}
+    </td>
 </tr>
