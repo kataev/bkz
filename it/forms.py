@@ -46,7 +46,7 @@ class PlugForm(BootstrapMixin, forms.ModelForm):
             bill = Buy.objects.get(pk=self['bill'].value)
             self.fields['printer'].queryset = bill.cartridge.allowed.all()
             self.fields['bill'].widget.attrs['readonly'] = 'readonly'
-        except Buy.DoesNotExist:
+        except (Buy.DoesNotExist, ValueError) as e:
             self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
 
     class Meta:
