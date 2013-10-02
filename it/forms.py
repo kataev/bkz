@@ -48,6 +48,11 @@ class PlugForm(BootstrapMixin, forms.ModelForm):
             self.fields['bill'].widget.attrs['readonly'] = 'readonly'
         except (Buy.DoesNotExist, ValueError) as e:
             self.fields['printer'].queryset = Device.objects.filter(type__name=u'Принтеры')
+            
+    def clean_printer(self):
+        if not self.fields['printer'].queryset.count():
+            raise forms.ValidationError(u'Нет подходящих расходников у принтера, свяжите принтер'
+                                        u'с расходником на страничке принтера')
 
     class Meta:
         model = Plug
