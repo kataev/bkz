@@ -53,6 +53,8 @@ class PlugForm(BootstrapMixin, forms.ModelForm):
         if not self.fields['printer'].queryset.count():
             raise forms.ValidationError(u'Нет подходящих расходников у принтера, свяжите принтер'
                                         u'с расходником на страничке принтера')
+        else:
+            return self.cleaned_data.get('printer')
 
     class Meta:
         model = Plug
