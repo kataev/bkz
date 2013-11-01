@@ -7,8 +7,8 @@
     <ul>
         {% block previouslink %}
         {% if page_obj.has_previous %}
-        <li class="prev"><a href="?page{{ page_suffix }}={{ page_obj.previous_page_number }}{{ getvars }}">{{
-            previous_link_decorator|safe }}</a></li>
+        <li class="prev"><a href="?page{{ page_suffix }}={{ page_obj.previous_page_number }}{{ getvars }}">
+        {{ previous_link_decorator|safe }}</a></li>
         {% else %}
         {% if display_disabled_previous_link %}
         <li class="prev disabled"><a>{{ previous_link_decorator|safe }}</a></li>
@@ -30,8 +30,8 @@
         {% endblock pagelinks %}
         {% block nextlink %}
         {% if page_obj.has_next %}
-        <li class="next"><a href="?page{{ page_suffix }}={{ page_obj.next_page_number }}{{ getvars }}">{{
-            next_link_decorator|safe }}</a></li>
+        <li class="next"><a href="?page{{ page_suffix }}={{ page_obj.next_page_number }}{{ getvars }}">
+        {{ next_link_decorator|safe }}</a></li>
         {% else %}
         {% if display_disabled_next_link %}
         <li class="next disabled"><a>{{ next_link_decorator|safe }}</a></li>
