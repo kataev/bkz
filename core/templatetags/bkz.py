@@ -72,7 +72,11 @@ def hash(obj, key):
 
 @register.filter(name='func_pluck')
 def func_pluck(queryset, attr):
-    func, attr = attr.split(' ')
+    attr = attr.split(' ', 1)
+    if len(attr) == 2:
+        func, attr = attr
+    else:
+        return
     if func not in ('max', 'min', 'avg', 'sum'):
         raise template.TemplateSyntaxError('Func pluck error')
     try:
