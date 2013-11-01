@@ -72,6 +72,7 @@ def hash(obj, key):
 
 @register.filter(name='func_pluck')
 def func_pluck(queryset, attr):
+    attr = attr.strip()
     attr = attr.split(' ', 1)
     if len(attr) == 2:
         func, attr = attr
